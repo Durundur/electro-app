@@ -1,7 +1,6 @@
 <template>
 	<v-text-field
 		:loading="loading"
-		color="yellow-darken-2"
 		density="compact"
 		placeholder="Wyszukaj produkt"
 		type="text"

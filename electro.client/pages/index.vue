@@ -4,6 +4,14 @@
 	</div>
 	<Container>
 		<ProductsGrid header="Polecamy" :products="items"></ProductsGrid>
+		<v-row>
+			<v-col cols="4">
+				<SpecialOffer></SpecialOffer>
+			</v-col>
+			<v-col>
+				<ProductsGrid header="Polecamy" :products="items"></ProductsGrid>
+			</v-col>
+		</v-row>
 		<ProductsSlide header="Bestsellery" :products="items"></ProductsSlide>
 	</Container>
 </template>

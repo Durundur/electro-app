@@ -57,8 +57,6 @@ export default {
 :deep(.v-carousel) {
 	border-radius: 20px;
 }
-.carousel-item-container {
-}
 .active-label {
 	background: linear-gradient(to bottom, rgb(var(--v-theme-primary)) 5px, transparent 0px);
 	background-size: 100% 100%;

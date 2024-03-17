@@ -1,29 +1,44 @@
 <template>
-	<v-card class="ma-10 elevation-4" rounded="xl">
-		<v-card-title>
-			Gorący strzał
-			<v-spacer></v-spacer>
-			<v-btn class="text-none" color="primary" rounded="pill">
-				<div class="d-flex flex-column">
-					<span>Oszczędź</span>
-					<span>{{ offer.oldPrice - offer.newPrice }} zł</span>
+	<v-card :link="true" :to="`product/${offer.id}`" elevation="0" border rounded="lg">
+		<v-card-item>
+			<v-card-title>Gorący strzał</v-card-title>
+			<v-btn class="text-none discount my-1" height="auto" elevation="0" color="primary" rounded="lg">
+				<div class="d-flex flex-column py-1">
+					<span class="text-caption">Oszczędź</span>
+					<span class="text-body-1">{{ Math.round(offer.oldPrice - offer.newPrice) }} zł</span>
 				</div>
 			</v-btn>
-		</v-card-title>
+		</v-card-item>
 		<v-card-text>
 			<v-img :src="offer.image"></v-img>
-			<v-card-title>{{ offer.title }}</v-card-title>
-			<v-card-title class="text-center">{{ offer.newPrice }} zł</v-card-title>
+			<v-card-title class="product-name text-body-1">{{ offer.title }} </v-card-title>
+			<v-card-title class="text-center text-h6">{{ offer.newPrice }} zł</v-card-title>
 			<div class="d-flex align-center ga-2">
-				<span>pozostało:</span>
-				<span class="text-h6">{{ offer.remaningQuantity }}</span>
+				<span class="text-caption">pozostało:</span>
+				<span class="text-body-1">{{ offer.remaningQuantity }}</span>
 				<v-spacer></v-spacer>
-				<span>sprzedano:</span>
-				<span class="text-h6">{{ offer.soldQuantity }}</span>
+				<span class="text-caption">sprzedano:</span>
+				<span  class="text-body-1">{{ offer.soldQuantity }}</span>
 			</div>
-			<v-progress-linear color="primary" :height="20" rounded="pill" bg-color="grey-lighten" :model-value="progressBarWidth"></v-progress-linear>
-			<div>
-				<v-card-subtitle>Śpiesz się, oferta kończy się za:</v-card-subtitle>
+			<v-progress-linear color="primary" :height="20" rounded="pill" bg-color="grey-darken-1" :model-value="progressBarWidth"></v-progress-linear>
+			<div class="my-4">
+				<p class="text-center my-2 text-caption">Śpiesz się, oferta kończy się za:</p>
+				<div class="d-flex justify-center align-center ga-2">
+					<div style="position: relative">
+						<v-sheet rounded="lg" color="grey-lighten-3" class="pa-2 text-h6">11</v-sheet>
+						<div style="position: absolute" class="text-center w-100">godz.</div>
+					</div>
+					<span class="text-h6">:</span>
+					<div style="position: relative">
+						<v-sheet rounded="lg" color="grey-lighten-3" class="pa-2 text-h6">12</v-sheet>
+						<div style="position: absolute" class="text-center w-100">min</div>
+					</div>
+					<span class="text-h6">:</span>
+					<div style="position: relative">
+						<v-sheet rounded="lg" color="grey-lighten-3" class="pa-2 text-h6">57</v-sheet>
+						<div style="position: absolute" class="text-center w-100">sek.</div>
+					</div>
+				</div>
 			</div>
 		</v-card-text>
 	</v-card>
@@ -37,7 +52,7 @@ export default {
 			default: () => {
 				return {
 					id: null,
-					title: 'Samsung QE65Q80C QLED 4K 120Hz Dolby Atmos',
+					title: 'Samsung QE65Q80C QLED 4K 120Hz Dolby Atmos Samsung QE65Q80C QLED 4K 120Hz Dolby Atmos Samsung QE65Q80C QLED 4K 120Hz Dolby Atmos',
 					image: 'https://cdn.x-kom.pl/i/img/promotions/hot-shot-large,,hs_2024_3_7_9_31_22.PNG',
 					newPrice: 4349.0,
 					oldPrice: 4999.99,
@@ -58,5 +73,24 @@ export default {
 <style scoped>
 :deep(.v-progress-linear__determinate) {
 	border-radius: inherit;
+}
+.product-name {
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: normal;
+	padding: 0;
+}
+.discount {
+	position: absolute;
+	right: 0;
+	top: 0;
+	z-index: 1;
+}
+:deep(.v-card-item__content) {
+	position: relative;
+	overflow: visible;
 }
 </style>

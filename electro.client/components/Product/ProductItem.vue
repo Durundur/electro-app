@@ -1,6 +1,6 @@
 <template>
 	<v-hover v-slot="{ isHovering, props }">
-		<v-card class="ma-1" v-bind="props" :elevation="isHovering ? 4 : 0" :border="true" rounded="lg" href="/" hover :ripple="false">
+		<v-card class="ma-1" v-bind="props" :elevation="isHovering ? 2 : 0" :border="true" rounded="lg" href="/" hover :ripple="false">
 			<v-img aspect-ratio="7/6" :src="product.image"></v-img>
 			<v-card-text class="pa-2 text-body-1">
 				<div class="title">{{ product.title }}</div>

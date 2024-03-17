@@ -2,7 +2,7 @@
 	<v-app-bar :absolute="true" :floating="true">
 		<Container>
 			<v-row class="ma-0">
-				<NuxtLink style="display: block">
+				<NuxtLink to="/" style="display: block">
 					<Logo />
 				</NuxtLink>
 				<v-spacer></v-spacer>

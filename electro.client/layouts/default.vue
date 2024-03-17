@@ -1,6 +1,6 @@
 <template>
 	<v-app>
-		<Navbar />
+		<NavBar />
 		<v-main>
 			<slot></slot>
 		</v-main>
@@ -9,6 +9,9 @@
 </template>
 <style>
 * {
-	font-size: small;
+	font-size: 14px;
+}
+.nowrap-text{
+	white-space: break-spaces;
 }
 </style>

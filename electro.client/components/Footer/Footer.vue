@@ -8,8 +8,8 @@
 						<div class="d-flex align-center ga-4">
 							<v-icon color="primary" size="x-large">mdi-phone-outline</v-icon>
 							<div>
-								<p class="text-body-2 text-medium-emphasis">Masz pytania? Zadzwoń 24/7!</p>
-								<p class="text-h6">(800) 8001-8588, (0600) 874 548</p>
+								<p class="text-medium-emphasis">Masz pytania? Zadzwoń 24/7!</p>
+								<p class="text-body-1">(800) 8001-8588, (0600) 874 548</p>
 							</div>
 						</div>
 						<div>

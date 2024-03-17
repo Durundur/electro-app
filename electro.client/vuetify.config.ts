@@ -5,10 +5,10 @@ export default defineVuetifyConfiguration({
 	theme: {
 		themes: {
 			light: {
-				
 				colors: {
 					primary: colors.yellow.darken1
 				},
+				
 			}
 		}
 	}

@@ -1,16 +1,17 @@
 <template>
-	<v-hover v-slot="{ isHovering, props }">
-		<v-card class="ma-1" v-bind="props" :elevation="isHovering ? 2 : 0" :border="true" rounded="lg" href="/" hover :ripple="false">
-			<v-img aspect-ratio="7/6" :src="product.image"></v-img>
-			<v-card-text class="pa-2 text-body-1">
-				<div class="title">{{ product.title }}</div>
-			</v-card-text>
-			<v-card-text class="pa-2">
-				<div class="d-flex align-center" style="height: 40px">
-					<span class="text-body-1">{{ product.price }} zł</span>
+	<v-hover v-slot:default="{ isHovering, props }">
+		<v-card v-bind="props" link :to="`/product/${id}`" elevation="0" border rounded="lg">
+			<v-card-text>
+				<v-img aspect-ratio="1" :src="product.image"></v-img>
+				<span class="product-name">{{ product.title }}</span>
+				<div class="d-flex align-end product-price">
+					<div>
+						<span v-if="product.oldPrice" class="text-caption d-block text-decoration-line-through">{{ product.oldPrice }} zł</span>
+						<span class="text-body-1 d-block">{{ product.price }} zł</span>
+					</div>
 					<v-spacer></v-spacer>
 					<v-fade-transition>
-						<v-btn size="small" v-if="isHovering" color="success" icon="mdi-cart-plus"></v-btn>
+						<v-btn size="small" v-if="isHovering" color="success" icon="mdi-cart-outline"></v-btn>
 					</v-fade-transition>
 				</div>
 			</v-card-text>
@@ -31,15 +32,19 @@ export default {
 };
 </script>
 <style scoped>
-:deep(.v-card__overlay) {
-	background-color: inherit;
-}
-.title {
-	font-size: 1em;
-	line-height: 1em;
-	height: 2em;
+.product-name {
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
 	overflow: hidden;
-	white-space: normal;
 	text-overflow: ellipsis;
+	white-space: normal;
+	padding: 0;
+	font-size: inherit;
+	line-height: 1.5em;
+	height: 3em;
+}
+.product-price {
+	height: 3em;
 }
 </style>

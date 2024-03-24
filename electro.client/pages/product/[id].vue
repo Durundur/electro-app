@@ -8,7 +8,7 @@
 				<v-card flat>
 					<v-card-title class="px-0 nowrap-text">{{ name }}</v-card-title>
 					<NuxtLink class="d-flex align-center">
-						<ProductRating :rating="2.6" />
+						<ProductRatingStars v-model="rating" :disabled="true" />
 						<span class="ml-2 text-caption">(60 opinii)</span>
 					</NuxtLink>
 					<NuxtLink>
@@ -64,33 +64,42 @@
 						<v-btn class="text-none" variant="text" href="#opinions">Opinie (60)</v-btn>
 						<v-btn class="text-none" variant="text" href="#q&a">Pytania i odpowiedzi (9)</v-btn>
 					</v-card>
-					<v-divider class="border-opacity-100" color="primary"></v-divider>
+					<Divider></Divider>
 					<v-card flat id="description">
 						<v-card-title class="px-0">Opis</v-card-title>
 						<v-card-text v-html="desc" class="px-0"></v-card-text>
 					</v-card>
-					<v-divider class="border-opacity-100" color="primary"></v-divider>
+					<Divider></Divider>
 					<v-card flat id="specyfication">
 						<v-card-title class="px-0">Specyfikacja</v-card-title>
 						<v-card-text class="px-0">
 							<ProductSpecificationList :specification="specification"></ProductSpecificationList>
 						</v-card-text>
 					</v-card>
-					<v-divider class="border-opacity-100" color="primary"></v-divider>
-					<v-card flat id="accessories">
-						<v-card-title>Akcesoria</v-card-title>
-						<v-card-text></v-card-text>
-					</v-card>
-					<v-divider class="border-opacity-100" color="primary"></v-divider>
+					<!-- <Divider></Divider> -->
+					<!-- <v-card flat id="accessories">
+						<v-card-title class="px-0">Akcesoria</v-card-title>
+						<v-card-text class="px-0"></v-card-text>
+					</v-card> -->
+					<Divider></Divider>
 					<v-card flat id="opinions">
-						<v-card-title>Opinie</v-card-title>
-						<v-card-text></v-card-text>
+						<v-card-title class="px-0">Opinie</v-card-title>
+						<v-card-text class="px-0">
+							<div class="my-4">
+								<ProductRatingSummary />
+								<ProductAddOpinion :product="{ name, photos }" />
+							</div>
+							<ProductOpionionGrid :items="opionions"></ProductOpionionGrid>
+							<div class="mx-auto my-4 button-limit">
+								<v-btn class="text-none" variant="flat" color="primary" block>Pokaż więcej</v-btn>
+							</div>
+						</v-card-text>
 					</v-card>
-					<v-divider class="border-opacity-100" color="primary"></v-divider>
+					<!-- <Divider></Divider>
 					<v-card flat id="q&a">
-						<v-card-title>Pytania i odpowiedzi</v-card-title>
-						<v-card-text></v-card-text>
-					</v-card>
+						<v-card-title class="px-0">Pytania i odpowiedzi</v-card-title>
+						<v-card-text class="px-0"></v-card-text>
+					</v-card> -->
 				</v-card>
 			</v-col>
 		</v-row>
@@ -126,7 +135,76 @@ export default {
 				'Rozdzielczość aparatu - tył': ['50.0 Mpix', '48.0 Mpix - ultraszerokokątny', '64.0 Mpix - teleobiektyw'],
 				Łączność: ['5G', 'Wi-Fi', 'NFC', 'Bluetooth 5.4', 'LoraWan', 'BLE']
 			},
-			rewievs: {},
+			rating: 2.9,
+			opionions: [
+				{
+					createdAt: '10/31/2023',
+					rating: 4.5,
+					title: 'Great purchase!',
+					review:
+						'Our big family room TV stopped working. We didnt want to spend a lot. This was a great deal and the perfect size. It has Roku so its taking a bit to get used tit. Picture is crystal clear! We are very happy with our purchase',
+					authorName: 'John',
+					isVerifiedPurchase: true,
+					likes: 0,
+					dislikes: 10
+				},
+				{
+					createdAt: '11/31/2023',
+					rating: 4.3,
+					title: 'Świetny telefon',
+					review:
+						'Świetny telefon, działa jak burza. Jedyny mały minus to program zwrotu 400 zł, który jest tak na prawdę sprzedażą twoich danych jakimś zewnętrznym firmom. Moim zdaniem trochę nie fair polityka, bo można byłoby zwyczajnie obniżyć cenę urządzenia na start zamiast zmuszać do sprzedaży danych.',
+					authorName: 'Marek',
+					isVerifiedPurchase: false,
+					likes: 41,
+					dislikes: 5
+				},
+				{
+					createdAt: '1/31/2023',
+					rating: 3.45,
+					title: 'Ok',
+					review: 'Najlepszy telefon obecnie na rynku, genialny aparat, mega szybki.',
+					authorName: 'Kamil',
+					isVerifiedPurchase: true,
+					likes: 11,
+					dislikes: 5
+				},
+				{
+					createdAt: '19/31/2023',
+					rating: 3.45,
+					title: 'Ok',
+					review: `Dory smartfon.Używam iPhone 15 plus i do niego pomimo różnic w systemie porównam.Szybkość działania podobna,skaner twarzy
+gorszy,odcisk palca szybki,wyświetlacz dobry lecz nie ma wielkiej różnicy w oglądaniu ( onepus lepszy przy przewijaniu obrazu
+np.góra-dół).Przewaga oneplusa to to,że jest bardziej poręczny od iPhona 15 plus ,lepiej się go trzyma w ręku-jest jednak węższy.Jeżeli ktoś
+obawia się wielkości ekranu to niech się nie martwi,ten smarfon wymiarami bardzo podobny jak stary Samsung A 70. Super telefon . Pełnoprawny flagowiec. Wydajność , ekran, aparat , bateria na najwyższym poziomie . Wersja kolorystyczna`,
+					authorName: 'Radosław',
+					isVerifiedPurchase: true,
+					likes: 1,
+					dislikes: 0
+				},
+				{
+					createdAt: '1/31/2023',
+					rating: 3.45,
+					title: 'Ok',
+					review: 'Całkiem Ok',
+					authorName: 'Kamil',
+					isVerifiedPurchase: true,
+					likes: 11,
+					dislikes: 5
+				},
+				{
+					createdAt: '1/31/2023',
+					rating: 1.45,
+					title: 'Spoko',
+					review: `Smartfon działa i wygląda bardzo dobrze. Aparatu jeszcze nie przetestowałem, ale bateria, jej ładowanie i długość pracy jest rewelacja.
+Co prawda okazało się że najnowszy Snapdragon jest za nowy i np. gra Pokemon Go co jakiś czas się wywraca, ale to podobno wina Nintica i
+Unity, bo to samo jest na Samsungu S24 Ultra.`,
+					authorName: 'Kamil',
+					isVerifiedPurchase: true,
+					likes: 11,
+					dislikes: 5
+				}
+			],
 			desc: `<div class="row text-left fresh-content">
 	<div class="col-md-2 text-center">
 	<div class="col-md-10">
@@ -140,8 +218,11 @@ export default {
 	}
 };
 </script>
-<style>
+<style scoped>
 .border {
 	border-bottom: 0;
+}
+:deep(.v-progress-linear__determinate) {
+	border-radius: inherit;
 }
 </style>

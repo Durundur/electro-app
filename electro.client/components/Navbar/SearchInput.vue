@@ -9,13 +9,13 @@
 		single-line
 		rounded
 		flat
-		hide-details
-		prepend-inner-icon="mdi-magnify"
-		@click:prepend-inner="">
+		hide-details>
+		<template v-slot:['prepend-inner']>
+			<v-btn size="small" variant="plain" link to="/list" icon="mdi-magnify" />
+		</template>
 	</v-text-field>
 </template>
 <script>
-export default {
-};
+export default {};
 </script>
 <style scoped></style>

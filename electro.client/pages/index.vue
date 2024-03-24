@@ -3,16 +3,17 @@
 		<Carousel></Carousel>
 	</div>
 	<Container>
-		<ProductsGrid header="Polecamy" :products="items"></ProductsGrid>
-		<v-row>
-			<v-col cols="4">
+		<ProductsGrid header="Polecamy" :products="items" :cols="6" :sm="4"></ProductsGrid>
+		<Divider class="my-8" />
+		<v-row align="center" gap>
+			<v-col align-self="stretch" :cols="12" :sm="6">
 				<SpecialOffer></SpecialOffer>
 			</v-col>
 			<v-col>
-				<ProductsGrid header="Polecamy" :products="items"></ProductsGrid>
+				<ProductsGrid :max-items="4" header="Hity tygodnia" :products="items" :cols="6" :sm="6"></ProductsGrid>
 			</v-col>
 		</v-row>
-		<ProductsSlide header="Bestsellery" :products="items"></ProductsSlide>
+		<!-- <ProductsSlide header="Bestsellery" :products="items"></ProductsSlide> -->
 	</Container>
 </template>
 <script>
@@ -23,7 +24,8 @@ export default {
 				{
 					image: 'https://cdn.x-kom.pl/i/setup/images/prod/big/product-new-big,,2024/2/pr_2024_2_9_14_15_27_92_05.jpg',
 					title: 'Xiaomi 14 Ultra 16/512GB Black',
-					price: 6799.99
+					price: 6799.99,
+					oldPrice: 6899.99
 				},
 				{
 					image: 'https://cdn.x-kom.pl/i/setup/images/prod/big/product-new-big,,2023/6/pr_2023_6_26_15_14_19_493_00.jpg',
@@ -38,11 +40,12 @@ export default {
 				{
 					image: 'https://cdn.x-kom.pl/i/setup/images/prod/big/product-new-big,,2023/9/pr_2023_9_27_11_57_25_663_00.jpg',
 					title: 'Philips 55PML9008 55" MINILED 4K 120Hz Ambilight 3 Dolby Atmos',
-					price: 1249.0
+					price: 1249.0,
+					oldPrice: 1899.99
 				},
 				{
 					image: 'https://cdn.x-kom.pl/i/setup/images/prod/big/product-new-big,,2023/6/pr_2023_6_26_15_14_19_493_00.jpg',
-					title: 'Rode NT1 5th Gen Black - Mikrofon pojemnościowy',
+					title: 'Rode NT1',
 					price: 3999.99
 				},
 				{
@@ -54,6 +57,12 @@ export default {
 					image: 'https://cdn.x-kom.pl/i/setup/images/prod/big/product-new-big,,2020/9/pr_2020_9_23_13_23_42_498_00.jpg',
 					title: 'Samsung 1TB M.2 PCIe Gen4 NVMe 980 PRO',
 					price: 389.0
+				},
+				{
+					image: 'https://cdn.x-kom.pl/i/setup/images/prod/big/product-new-big,,2023/2/pr_2023_2_28_10_12_13_142_00.jpg',
+					title: 'AMD Ryzen 7 7800X3D',
+					price: 1649.0,
+					oldPrice: 1899.99
 				}
 			]
 		};

@@ -1,6 +1,6 @@
 <template>
-	<v-card :link="true" :to="`product/${offer.id}`" elevation="0" border rounded="lg">
-		<v-card-item>
+	<v-card :link="true" :to="`product/${offer.id}`" height="100%" elevation="0" border rounded="lg">
+		<v-card-item style="height: 10%">
 			<v-card-title>Gorący strzał</v-card-title>
 			<v-btn class="text-none discount my-1" height="auto" elevation="0" color="primary" rounded="lg">
 				<div class="d-flex flex-column py-1">
@@ -9,19 +9,19 @@
 				</div>
 			</v-btn>
 		</v-card-item>
-		<v-card-text>
+		<v-card-text style="height: 90%" class="d-flex flex-column ga-2">
 			<v-img :src="offer.image"></v-img>
-			<v-card-title class="product-name text-body-1">{{ offer.title }} </v-card-title>
-			<v-card-title class="text-center text-h6">{{ offer.newPrice }} zł</v-card-title>
-			<div class="d-flex align-center ga-2">
+			<v-card-title class="pa-0 product-name text-body-1">{{ offer.title }} </v-card-title>
+			<v-card-title class="pa-0 text-center text-h6">{{ offer.newPrice }} zł</v-card-title>
+			<div class="d-flex align-center ga-2 align-start">
 				<span class="text-caption">pozostało:</span>
 				<span class="text-body-1">{{ offer.remaningQuantity }}</span>
 				<v-spacer></v-spacer>
 				<span class="text-caption">sprzedano:</span>
-				<span  class="text-body-1">{{ offer.soldQuantity }}</span>
+				<span class="text-body-1">{{ offer.soldQuantity }}</span>
 			</div>
 			<v-progress-linear color="primary" :height="20" rounded="pill" bg-color="grey-darken-1" :model-value="progressBarWidth"></v-progress-linear>
-			<div class="my-4">
+			<div class="mb-5 align-end">
 				<p class="text-center my-2 text-caption">Śpiesz się, oferta kończy się za:</p>
 				<div class="d-flex justify-center align-center ga-2">
 					<div style="position: relative">
@@ -81,7 +81,7 @@ export default {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: normal;
-	padding: 0;
+	height: 4em;
 }
 .discount {
 	position: absolute;

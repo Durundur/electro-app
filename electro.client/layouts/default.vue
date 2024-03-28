@@ -19,9 +19,10 @@
 }
 
 .font-600 {
-	font-weight: 600;
+	font-weight: 600 !important;
 }
 .text-body-3{
-	font-size: 12px !important
+	font-size: 12px !important;
+	font-weight: inherit
 }
 </style>

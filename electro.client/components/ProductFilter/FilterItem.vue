@@ -2,15 +2,25 @@
 	<v-card flat>
 		<v-card-title class="py-0 text-body-2">{{ header }}</v-card-title>
 		<v-list class="py-0" density="compact">
-			<v-list-item v-for="(option, index) in options" :key="index" :active="selectedOptions.includes(option)"
-				@click="toggleOption(option)" active-class="font-600" height="10px" density="compact">
-				<v-checkbox :value="option" v-model="selectedOptions" color="primary" hide-details density="compact">
-					<template #label>{{ option }}</template>
+			<v-list-item @click="handleItemClick(option)" v-for="(option, index) in options" :key="index" :class="checkIfSelected(option)" density="compact">
+				<v-checkbox :value="option" :model-value="modelValue" color="primary" hide-details density="compact">
+					<template #label>
+						<span class="text-body-3">{{ option }}</span>
+					</template>
 				</v-checkbox>
 			</v-list-item>
 		</v-list>
 	</v-card>
 </template>
+
+<style scoped>
+:deep(.v-list-item--density-compact) {
+	min-height: unset;
+}
+:deep(.v-checkbox .v-selection-control) {
+	min-height: unset;
+}
+</style>
 
 <script>
 export default {
@@ -25,41 +35,20 @@ export default {
 			type: Array
 		}
 	},
-	data() {
-		return {
-			selectedOptions: this.modelValue || []
-		}
-	},
 	methods: {
-		toggleOption(option) {
-			if (this.selectedOptions.includes(option)) {
-				this.selectedOptions = this.selectedOptions.filter(item => item !== option);
+		handleItemClick(option) {
+			const currentState = [...this.modelValue];
+			const index = currentState.indexOf(option);
+			if (index === -1) {
+				currentState.push(option);
 			} else {
-				this.selectedOptions.push(option);
+				currentState.splice(index, 1);
 			}
-			this.$emit('update:modelValue', this.selectedOptions);
+			this.$emit('update:modelValue', currentState);
 		},
-	},
-	watch: {
-		modelValue: {
-			immediate: true,
-			handler(newValue) {
-				this.selectedOptions = newValue || [];
-			}
-		},
-		selectedOptions: {
-			deep: true,
-			handler(newValue) {
-				this.$emit('update:modelValue', newValue);
-			}
+		checkIfSelected(option) {
+			return this.modelValue.includes(option) ? 'font-600 bg-grey-lighten-3' : '';
 		}
 	}
-}
+};
 </script>
-
-<style scoped>
-:deep(.v-label--clickable) {
-	font-size: 12px;
-	opacity: 1;
-}
-</style>

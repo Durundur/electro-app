@@ -2,16 +2,17 @@
 	<v-card :flat="true">
 		<v-card-title class="text-body-1 py-0 font-600">Kategorie</v-card-title>
 		<v-list density="compact">
-			<v-list-group v-for="category, index in categories">
+			<v-list-group v-for="(category, index) in categories">
 				<template v-slot:activator="{ props }">
-					<v-list-item active-class="font-600" height="10px" density="compact" v-bind="props"
-						:title="category.namePl"></v-list-item>
+					<v-list-item active-class="font-600 bg-grey-lighten-3" density="compact" v-bind="props">
+						<span class="text-body-3">{{ category.namePl }}</span>
+					</v-list-item>
 				</template>
-
-				<v-list-group height="10px" v-for="subCategory, index in category.subCategories">
+				<v-list-group height="10px" v-for="(subCategory, index) in category.subCategories">
 					<template v-slot:activator="{ props }">
-						<v-list-item active-class="font-600 bg-grey-lighten-4" height="10px" density="compact"
-							v-bind="props" :title="subCategory.namePl"></v-list-item>
+						<v-list-item active-class="font-600 bg-grey-lighten-3" density="compact" v-bind="props">
+						<span class="text-body-3">{{ subCategory.namePl }}</span>
+						</v-list-item>
 					</template>
 				</v-list-group>
 			</v-list-group>
@@ -19,17 +20,8 @@
 	</v-card>
 </template>
 <style scoped>
-:deep(.v-list-item-title) {
-	font-size: 12px;
-	font-weight: inherit
-}
-
 :deep(.v-list-item--density-compact.v-list-item--one-line) {
-	min-height: 28px
-}
-
-.active-item {
-	background-color: #f6f6f6f6
+	min-height: unset;
 }
 </style>
 <script>

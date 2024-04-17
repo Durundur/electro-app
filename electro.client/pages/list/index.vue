@@ -4,7 +4,7 @@
 			<v-col cols="0" md="3" class="d-none d-md-block">
 				<v-sheet border class="h-100" rounded="lg">
 					<CategoryFilter />
-					<SpecificationFilter />
+					<ProductFilter/>
 				</v-sheet>
 			</v-col>
 			<v-col cols="12" md="9">
@@ -12,7 +12,7 @@
 					<v-col cols="12">
 						<v-sheet flat border rounded="lg" class="my-1 d-flex align-center">
 							<div class="d-md-none">
-								<ProductFilterDialog />
+								<ProductListFilterMenu/>
 							</div>
 							<v-select density="compact" label="Sortowanie"
 								:items="['Od najpopularniejszych', 'Ocena klientów: od najlepszej', 'Cena: od najtańszych', 'Cena: od najdroższych']"
@@ -23,11 +23,13 @@
 					<v-col cols="12" v-for="(product, index) in items">
 						<ProductListItem :product="product" />
 					</v-col>
+					<v-col cols="12" class="my-2">
+						<Pagination />
+					</v-col>
 				</v-row>
 			</v-col>
 		</v-row>
 	</Container>
-	<Pagination />
 </template>
 <script>
 export default {

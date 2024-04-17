@@ -12,7 +12,7 @@
 				</v-card-title>
 				<v-card-text>
 					<CategoryFilter />
-					<SpecificationFilter />
+					<ProductFilter />
 				</v-card-text>
 			</v-card>
 		</template>

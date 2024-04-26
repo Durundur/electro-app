@@ -1,6 +1,7 @@
 <template>
 	<v-app>
 		<NavBar />
+		<LoadingBar/>
 		<v-main>
 			<slot></slot>
 		</v-main>
@@ -8,10 +9,11 @@
 	</v-app>
 </template>
 <style>
+
+
 .nowrap-text {
 	white-space: break-spaces;
 }
-
 .default-text {
 	white-space: break-spaces;
 	opacity: 1;

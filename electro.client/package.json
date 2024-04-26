@@ -12,11 +12,13 @@
   "dependencies": {
     "@yeger/vue-masonry-wall": "^5.0.8",
     "nuxt": "^3.10.2",
+    "pinia": "^2.1.7",
     "vue": "^3.4.19",
     "vue-masonry": "^0.16.0",
     "vue-router": "^4.2.5"
   },
   "devDependencies": {
+    "@pinia/nuxt": "^0.5.1",
     "sass": "^1.71.1",
     "vuetify-nuxt-module": "^0.11.0"
   }

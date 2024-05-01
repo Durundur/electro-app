@@ -43,6 +43,14 @@
           >Ustawienia</v-list-item-subtitle
         >
       </v-list-item>
+      <v-list-item slim density="compact" @click="$auth.logout()">
+        <template v-slot:prepend>
+          <v-icon icon="mdi-logout"></v-icon>
+        </template>
+        <v-list-item-subtitle class="default-text"
+          >Wyloguj się</v-list-item-subtitle
+        >
+      </v-list-item>
     </v-list>
   </v-menu>
 </template>

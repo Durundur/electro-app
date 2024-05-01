@@ -1,7 +1,6 @@
 <template>
 	<v-app>
 		<NavBar />
-		<LoadingBar/>
 		<v-main>
 			<slot></slot>
 		</v-main>
@@ -10,6 +9,9 @@
 </template>
 <style>
 
+body{
+	font-size: 14px
+}
 
 .nowrap-text {
 	white-space: break-spaces;
@@ -23,8 +25,8 @@
 .font-600 {
 	font-weight: 600 !important;
 }
-.text-body-3{
+.text-body-3 {
 	font-size: 12px !important;
-	font-weight: inherit
+	font-weight: inherit;
 }
 </style>

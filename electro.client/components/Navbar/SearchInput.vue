@@ -1,6 +1,5 @@
 <template>
 	<v-text-field
-		:loading="loading"
 		density="compact"
 		placeholder="Wyszukaj produkt"
 		type="text"

@@ -56,7 +56,6 @@
   min-height: unset;
 }
 </style>
-
 <script>
 export default {
   props: {

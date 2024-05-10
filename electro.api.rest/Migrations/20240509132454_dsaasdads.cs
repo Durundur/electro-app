@@ -5,7 +5,7 @@
 namespace electro.api.rest.Migrations
 {
     /// <inheritdoc />
-    public partial class gropusFix : Migration
+    public partial class dsaasdads : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

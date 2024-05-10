@@ -33,7 +33,7 @@
 							<v-icon size="large"></v-icon>
 						</v-badge>
 					</v-btn>
-					<template>
+					<template v-if="!$auth.isLoggedIn()">
 						<v-btn
 							flat
 							size="small"
@@ -55,7 +55,7 @@
 							Załóż konto
 						</v-btn>
 					</template>
-					<AccountIconAndMenu />
+					<AccountIconAndMenu v-else/>
 				</div>
 			</v-row>
 		</Container>

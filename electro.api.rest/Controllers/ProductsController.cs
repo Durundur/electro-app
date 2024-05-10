@@ -1,6 +1,9 @@
-﻿using electro.api.rest.Models;
+﻿using AutoMapper;
+using electro.api.rest.Dtos;
+using electro.api.rest.Models;
 using electro.api.rest.Reposiotories.Interfaces;
 using electro.api.rest.Repositories;
+using electro.api.rest.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,66 +14,34 @@ namespace electro.api.rest.Controllers
     [Route("api/[controller]")]
     public class ProductsController : ControllerBase
     {
-        private readonly IProductRepository _productRepository;
+        private readonly IProductService _productService;
 
-        public ProductsController(IProductRepository productRepository)
+        public ProductsController(IProductService productService)
         {
-            _productRepository = productRepository;
+            _productService = productService;
         }
 
+
         [HttpGet]
-        public IEnumerable<ProductModel> GetProducts()
-        {
-            return _productRepository.GetAll();
+        public IActionResult GetProductsSummary() {
+
+            var products = _productService.GetProductsSummary();
+            return Ok(products);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<ProductModel> GetProduct(Guid id)
+        public IActionResult GetProductById(string id)
         {
-            var product = _productRepository.GetById(id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-            return product;
+            var product = _productService.GetProductById(id);
+            return Ok(product);
         }
+
 
         [HttpPost]
-        public ActionResult<ProductModel> AddProduct(ProductModel product)
+        public IActionResult CreateNewProduct(ProductDto product)
         {
-            var addedProduct = _productRepository.Add(product);
-            return CreatedAtAction(nameof(GetProduct), new { id = addedProduct.Id }, addedProduct);
-        }
-
-        [HttpPut("{id}")]
-        public IActionResult UpdateProduct(Guid id, ProductModel product)
-        {
-            if (id != product.Id)
-            {
-                return BadRequest();
-            }
-
-            var existingProduct = _productRepository.GetById(id);
-            if (existingProduct == null)
-            {
-                return NotFound();
-            }
-
-            _productRepository.Update(product);
-            return NoContent();
-        }
-
-        [HttpDelete("{id}")]
-        public IActionResult DeleteProduct(Guid id)
-        {
-            var existingProduct = _productRepository.GetById(id);
-            if (existingProduct == null)
-            {
-                return NotFound();
-            }
-
-            _productRepository.Delete(id);
-            return NoContent();
+            var newProduct = _productService.CreateProduct(product);
+            return Ok(newProduct);
         }
     }
 }

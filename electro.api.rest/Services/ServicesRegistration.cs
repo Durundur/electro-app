@@ -3,11 +3,11 @@ using electro.api.rest.Reposiotories.Interfaces;
 using electro.api.rest.Reposiotories;
 using electro.api.rest.Repositories;
 using electro.api.rest.Services.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 
 namespace electro.api.rest.Services
 {
@@ -16,8 +16,12 @@ namespace electro.api.rest.Services
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IProductService, ProductService>();
+
+
             services.AddScoped<IGroupRepository, GroupRepository>();
             services.AddScoped<IGroupService, GroupService>();
+
             services.AddTransient<IAuthService, AuthService>();
             return services;
         }   
@@ -26,7 +30,7 @@ namespace electro.api.rest.Services
         {
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseSqlServer(connectionString);
+                options.UseNpgsql(connectionString);
             });
             return services;
         }

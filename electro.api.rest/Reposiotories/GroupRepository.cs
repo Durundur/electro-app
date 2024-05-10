@@ -1,8 +1,6 @@
-﻿using electro.api.rest.Dtos;
-using electro.api.rest.Models;
+﻿using electro.api.rest.Models;
 using electro.api.rest.Reposiotories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
 
 namespace electro.api.rest.Reposiotories
 {

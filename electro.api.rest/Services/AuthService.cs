@@ -38,7 +38,7 @@ namespace electro.api.rest.Services
                     Message = "Successfully signed in."
                 };
                 user.RefreshToken = response.RefreshToken;
-                user.RefreshTokenExpiry = DateTime.Now.AddMinutes(Double.Parse(_configuration.GetSection("Jwt:RefreshTokenExpirationTimeMinutes").Value));
+                user.RefreshTokenExpiry = DateTime.Now.AddMinutes(Double.Parse(_configuration.GetSection("Jwt:RefreshTokenExpirationTimeMinutes").Value)).ToUniversalTime();
                 await _userManager.UpdateAsync(user);
                 return response;
             }
@@ -66,7 +66,7 @@ namespace electro.api.rest.Services
                     Message = "Successfully registered."
                 };
                 user.RefreshToken = response.RefreshToken;
-                user.RefreshTokenExpiry = DateTime.Now.AddMinutes(Double.Parse(_configuration.GetSection("Jwt:RefreshTokenExpirationTimeMinutes").Value));
+                user.RefreshTokenExpiry = DateTime.Now.AddMinutes(Double.Parse(_configuration.GetSection("Jwt:RefreshTokenExpirationTimeMinutes").Value)).ToUniversalTime();
                 await _userManager.UpdateAsync(user);
                 return response;
             }
@@ -98,7 +98,7 @@ namespace electro.api.rest.Services
             response.Success = true;
 
             user.RefreshToken = response.RefreshToken;
-            user.RefreshTokenExpiry = DateTime.Now.AddMinutes(Double.Parse(_configuration.GetSection("Jwt:RefreshTokenExpirationTimeMinutes").Value));
+            user.RefreshTokenExpiry = DateTime.Now.AddMinutes(Double.Parse(_configuration.GetSection("Jwt:RefreshTokenExpirationTimeMinutes").Value)).ToUniversalTime();
             await _userManager.UpdateAsync(user);
             return response;
         }
@@ -145,7 +145,7 @@ namespace electro.api.rest.Services
 
             var securityToken = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(Double.Parse(_configuration.GetSection("Jwt:ExpirationTimeMinutes").Value)),
+                expires: DateTime.Now.AddMinutes(Double.Parse(_configuration.GetSection("Jwt:ExpirationTimeMinutes").Value)).ToUniversalTime(),
                 signingCredentials: signingCred
                 );
 

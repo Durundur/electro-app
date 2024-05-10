@@ -1,16 +1,8 @@
 using electro.api.rest.Helpers;
-using electro.api.rest.Models;
-using electro.api.rest.Reposiotories;
-using electro.api.rest.Reposiotories.Interfaces;
-using electro.api.rest.Repositories;
 using electro.api.rest.Services;
-using electro.api.rest.Services.Interfaces;
 using electro.api.rest.Utils;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
+
 
 var builder = WebApplication.CreateBuilder(args);
 

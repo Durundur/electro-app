@@ -35,7 +35,7 @@
 				link
 				title="Nowy produkt"
 				prepend-icon="mdi-cart-outline"
-				to="/admin/products/edit"></v-list-item>
+				to="/admin/products/create"></v-list-item>
 			<v-list-item
 				link
 				title="Grupy"

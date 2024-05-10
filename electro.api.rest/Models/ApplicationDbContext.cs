@@ -15,17 +15,26 @@ namespace electro.api.rest.Models
         public DbSet<SubCategoryModel> SubCategories { get; set; }
         public DbSet<ProductSpecificationModel> ProductsSpecification { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ProductModel>()
+                .OwnsMany(product => product.Features, builder => { builder.ToJson(); })
+                .OwnsOne(product => product.Price, builder => { builder.ToJson(); });
 
+            modelBuilder.Entity<ProductSpecificationModel>()
+                .OwnsMany(product => product.Specification, builder => { builder.ToJson(); });
+
+            base.OnModelCreating(modelBuilder);
+        }
+
+        public ApplicationDbContext()
+        {
+
+        }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<ProductModel>()
-                .OwnsOne(product => product.Price, builder => { builder.ToJson(); });
-            base.OnModelCreating(modelBuilder);
-        }
-
+       
     }
 }

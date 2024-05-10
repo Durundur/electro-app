@@ -2,8 +2,12 @@
 
 namespace electro.api.rest.Reposiotories.Interfaces
 {
-    public interface IProductRepository : IRepository<ProductModel>
+    public interface IProductRepository
     {
-        IEnumerable<ProductModel> GetByGroup(int groupId);
+        ProductModel CreateProduct(ProductModel product);
+        bool DeleteProduct(string id);
+        IEnumerable<ProductModel> GetAllProducts();
+        ProductModel GetProductById(string id);
+        ProductModel UpdateProduct(ProductModel product);
     }
 }

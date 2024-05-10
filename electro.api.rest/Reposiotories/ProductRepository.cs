@@ -12,36 +12,36 @@ namespace electro.api.rest.Repositories
             _dbContext = dbContext;
         }
 
-        public ProductModel GetById(Guid id)
+        public ProductModel GetProductById(string id)
         {
-            return _dbContext.Products.FirstOrDefault(p => p.Id == id);
+            return _dbContext.Products.FirstOrDefault(p => p.Id.ToString().Equals(id));
         }
 
-        public IEnumerable<ProductModel> GetAll()
+        public IEnumerable<ProductModel> GetAllProducts()
         {
             return _dbContext.Products.ToList();
         }
 
-        public IEnumerable<ProductModel> GetByGroup(int groupId)
+        public bool DeleteProduct(string id)
         {
-            return _dbContext.Products.Where(p => p.Group.Id == groupId).ToList();
-        }
-
-        public void Delete(Guid id)
-        {
-            var product = _dbContext.Products.FirstOrDefault(p => p.Id == id); ;
+            var product = _dbContext.Products.FirstOrDefault(p => p.Id.ToString().Equals(id));
+            if (product == null)
+            {
+                return false;
+            }
             _dbContext.Products.Remove(product);
             _dbContext.SaveChanges();
+            return true;
         }
 
-        public ProductModel Update(ProductModel product)
+        public ProductModel UpdateProduct(ProductModel product)
         {
             _dbContext.Products.Update(product);
             _dbContext.SaveChanges();
             return product;
         }
 
-        public ProductModel Add(ProductModel product)
+        public ProductModel CreateProduct(ProductModel product)
         {
             _dbContext.Products.Add(product);
             _dbContext.SaveChanges();

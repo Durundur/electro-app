@@ -1,12 +1,5 @@
-﻿using AutoMapper;
-using electro.api.rest.Dtos;
-using electro.api.rest.Models;
-using electro.api.rest.Reposiotories.Interfaces;
-using electro.api.rest.Repositories;
-using electro.api.rest.Services.Interfaces;
+﻿using electro.api.rest.Dtos;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 
 namespace electro.api.rest.Controllers
 {

@@ -13,8 +13,8 @@ using electro.api.rest.Models;
 namespace electro.api.rest.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240509132454_dsaasdads")]
-    partial class dsaasdads
+    [Migration("20240511082908_groups")]
+    partial class groups
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -232,7 +232,7 @@ namespace electro.api.rest.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("IconUrl")
+                    b.Property<string>("Icon")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -240,7 +240,7 @@ namespace electro.api.rest.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("PhotoUrl")
+                    b.Property<string>("Photo")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -304,7 +304,7 @@ namespace electro.api.rest.Migrations
                     b.Property<int>("Availability")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("CategoryId")
+                    b.Property<int>("CategoryId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("CreatedAt")
@@ -314,7 +314,7 @@ namespace electro.api.rest.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("GroupId")
+                    b.Property<int>("GroupId")
                         .HasColumnType("integer");
 
                     b.Property<bool>("IsArchived")
@@ -334,7 +334,7 @@ namespace electro.api.rest.Migrations
                     b.Property<int>("StockQuantity")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("SubCategoryId")
+                    b.Property<int>("SubCategoryId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -556,39 +556,21 @@ namespace electro.api.rest.Migrations
                 {
                     b.HasOne("electro.api.rest.Models.CategoryModel", "Category")
                         .WithMany("Products")
-                        .HasForeignKey("CategoryId");
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("electro.api.rest.Models.GroupModel", "Group")
                         .WithMany("Products")
-                        .HasForeignKey("GroupId");
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("electro.api.rest.Models.SubCategoryModel", "SubCategory")
                         .WithMany("Products")
-                        .HasForeignKey("SubCategoryId");
-
-                    b.OwnsOne("electro.api.rest.Models.ProductPrice", "Price", b1 =>
-                        {
-                            b1.Property<Guid>("ProductModelId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<string>("Currency")
-                                .HasColumnType("text");
-
-                            b1.Property<decimal?>("NewPrice")
-                                .HasColumnType("numeric");
-
-                            b1.Property<decimal>("Price")
-                                .HasColumnType("numeric");
-
-                            b1.HasKey("ProductModelId");
-
-                            b1.ToTable("Products");
-
-                            b1.ToJson("Price");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ProductModelId");
-                        });
+                        .HasForeignKey("SubCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.OwnsMany("electro.api.rest.Models.ProductSpecificationField", "Features", b1 =>
                         {
@@ -617,6 +599,30 @@ namespace electro.api.rest.Migrations
                                 .HasForeignKey("ProductModelId");
                         });
 
+                    b.OwnsOne("electro.api.rest.Models.ProductPrice", "Price", b1 =>
+                        {
+                            b1.Property<Guid>("ProductModelId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Currency")
+                                .HasColumnType("text");
+
+                            b1.Property<decimal?>("NewPrice")
+                                .HasColumnType("numeric");
+
+                            b1.Property<decimal>("Price")
+                                .HasColumnType("numeric");
+
+                            b1.HasKey("ProductModelId");
+
+                            b1.ToTable("Products");
+
+                            b1.ToJson("Price");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProductModelId");
+                        });
+
                     b.Navigation("Category");
 
                     b.Navigation("Features");
@@ -637,15 +643,24 @@ namespace electro.api.rest.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("System.Collections.Generic.List<electro.api.rest.Models.ProductSpecificationField>", "Specification", b1 =>
+                    b.OwnsMany("electro.api.rest.Models.ProductSpecificationField", "Specification", b1 =>
                         {
                             b1.Property<Guid>("ProductSpecificationModelId")
                                 .HasColumnType("uuid");
 
-                            b1.Property<int>("Capacity")
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
                                 .HasColumnType("integer");
 
-                            b1.HasKey("ProductSpecificationModelId");
+                            b1.Property<string>("FieldName")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<List<string>>("FieldValue")
+                                .IsRequired()
+                                .HasColumnType("text[]");
+
+                            b1.HasKey("ProductSpecificationModelId", "Id");
 
                             b1.ToTable("ProductsSpecification");
 
@@ -657,8 +672,7 @@ namespace electro.api.rest.Migrations
 
                     b.Navigation("Product");
 
-                    b.Navigation("Specification")
-                        .IsRequired();
+                    b.Navigation("Specification");
                 });
 
             modelBuilder.Entity("electro.api.rest.Models.SubCategoryModel", b =>

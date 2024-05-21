@@ -41,6 +41,16 @@
 				title="Grupy"
 				prepend-icon="mdi-group"
 				to="/admin/groups"></v-list-item>
+			<v-list-item
+				link
+				title="Kategorie"
+				prepend-icon="mdi-group"
+				to="/admin/groups/categories"></v-list-item>
+				<v-list-item
+				link
+				title="Podkategorie"
+				prepend-icon="mdi-group"
+				to="/admin/groups/subcategories"></v-list-item>
 		</v-navigation-drawer>
 		<v-main>
 			<slot></slot>

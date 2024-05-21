@@ -11,30 +11,32 @@ namespace electro.api.rest.Reposiotories
         {
             _dbContext = dbContext;
         }
-        public IEnumerable<GroupModel> GetAll()
+        public IQueryable<GroupModel> GetGroups()
         {
             var groups = _dbContext.Groups
                 .Include(g => g.Categories)
-                    .ThenInclude(c => c.SubCategories)
-                .ToList();
+                .AsQueryable();
             return groups;
         }
 
-        public SubCategoryModel AddSubCategory(SubCategoryModel subCategory)
+        public GroupModel GetGroupById(int id)
         {
-            _dbContext.SubCategories.Add(subCategory);
-            _dbContext.SaveChanges();
-            return subCategory;
+            var group = _dbContext.Groups.FirstOrDefault(g => g.Id == id);
+            return group;
         }
 
-        public CategoryModel AddCategory(CategoryModel category)
+        public GroupModel UpdateGroup(GroupModel group)
         {
-            _dbContext.Categories.Add(category);
+            if (GetGroupById(group.Id) == null)
+            {
+                throw new FileNotFoundException("Group not found");
+            }
+            _dbContext.Groups.Update(group);
             _dbContext.SaveChanges();
-            return category;
+            return group;
         }
 
-        public GroupModel AddGroup(GroupModel group)
+        public GroupModel CreateGroup(GroupModel group)
         {
             _dbContext.Groups.Add(group);
             _dbContext.SaveChanges();
@@ -43,35 +45,84 @@ namespace electro.api.rest.Reposiotories
 
         public bool DeleteGroup(int id)
         {
-            var group = _dbContext.Groups.Include(g => g.Categories).FirstOrDefault(g => g.Id == id);
+            var group = GetGroups().FirstOrDefault(g => g.Id == id);
             if (group == null)
             {
-                throw new FileNotFoundException();
+                throw new FileNotFoundException("Group not found");
             }
-            else
+            if (group.Categories.Any())
             {
-                if (group.Categories.Any())
-                {
-                    throw new InvalidOperationException("Cannot delete group with associated categories");
-                }
-                _dbContext.Groups.Remove(group);
-                _dbContext.SaveChanges();
-                return true;
+                throw new InvalidOperationException("Cannot delete group with associated categories");
             }
+            _dbContext.Groups.Remove(group);
+            _dbContext.SaveChanges();
+            return true;
+
         }
+
+
+
+
+
+
+
+        public CategoryModel UpdateCategory(CategoryModel category)
+        {
+            _dbContext.Categories.Update(category);
+            _dbContext.SaveChanges();
+            return category;
+        }
+
+        public IQueryable<CategoryModel> GetCategories()
+        {
+            var categories = _dbContext.Categories
+                .Include(c => c.SubCategories)
+                .AsQueryable();
+            return categories;
+        }
+
+        public CategoryModel GetCategoryById(int id)
+        {
+            var category = _dbContext.Categories.FirstOrDefault(c => c.Id == id);
+            return category;
+        }
+
+        public IQueryable<SubCategoryModel> GetSubCategories()
+        {
+            var subCategories = _dbContext.SubCategories.AsQueryable();
+            return subCategories;
+        }
+
+        public SubCategoryModel CreateSubCategory(SubCategoryModel subCategory)
+        {
+            _dbContext.SubCategories.Add(subCategory);
+            _dbContext.SaveChanges();
+            return subCategory;
+        }
+
+        public CategoryModel CreateCategory(CategoryModel category)
+        {
+            _dbContext.Categories.Add(category);
+            _dbContext.SaveChanges();
+            return category;
+        }
+
+
+
+
 
         public bool DeleteCategory(int id)
         {
-            var category = _dbContext.Categories.FirstOrDefault(c => c.Id == id);
+            var category = _dbContext.Categories.Include(c => c.SubCategories).FirstOrDefault(c => c.Id == id);
             if (category == null)
             {
-                throw new FileNotFoundException();
+                throw new FileNotFoundException("Category not found");
             }
             else
             {
-                if (category.Group != null)
+                if (category.SubCategories.Any())
                 {
-                    throw new InvalidOperationException("Cannot delete category with associated group.");
+                    throw new InvalidOperationException("Cannot delete category with associated subcategory.");
                 }
                 _dbContext.Categories.Remove(category);
                 _dbContext.SaveChanges();
@@ -111,43 +162,20 @@ namespace electro.api.rest.Reposiotories
             return existing;
         }
 
-        public CategoryModel UpdateCategory(CategoryModel category)
-        {
-            var existing = _dbContext.Categories.FirstOrDefault(c => c.Id == category.Id);
-            if (existing == null)
-            {
-                throw new FileNotFoundException();
-            }
-            existing.Name = category.Name;
-            existing.GroupId = category.GroupId;
-            _dbContext.SaveChanges();
-            return existing;
-        }
 
-        public GroupModel UpdateGroup(GroupModel group)
-        {
-            var existing = _dbContext.Groups.FirstOrDefault(g => g.Id == group.Id);
-            if (existing == null)
-            {
-                throw new FileNotFoundException();
-            }
-            existing.Name = group.Name;
-            existing.IconUrl = group.IconUrl;
-            existing.PhotoUrl = group.PhotoUrl;
-            _dbContext.SaveChanges();
-            return existing;
-        }
+
+
     }
 }
 
 
 /*{
-    "name": "Laptopy i komputery",
+   "name": "Laptopy i komputery",
   "iconUrl": "https://cdn.x-kom.pl/i/assets/img/common/groups/default/small,,laptop_desktop.png",
   "photoUrl": "https://cdn.x-kom.pl/i/setup/images/prod/big/product-medium,,2023/9/pr_2023_9_1_13_18_44_843_00.jpg",
   "categories": [
     {
-        "id": 0,
+      "id": 0,
       "name": "Laptopy/Notebooki/Ultrabooki",
       "subCategories": [
         {

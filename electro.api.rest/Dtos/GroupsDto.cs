@@ -4,8 +4,8 @@
     {
         public int? Id { get; set; }
         public string Name { get; set; }
-        public string IconUrl { get; set; }
-        public string PhotoUrl { get; set; }
+        public string Icon { get; set; }
+        public string Photo { get; set; }
         public IEnumerable<CategoryDto>? Categories { get; set; }
     }
 

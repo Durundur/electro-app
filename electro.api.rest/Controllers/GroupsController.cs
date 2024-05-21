@@ -16,59 +16,74 @@ namespace electro.api.rest.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<GroupDto> GetAll()
-        {
-            return _groupService.GetAll();
+        public IActionResult GetGroups() {
+            var groups = _groupService.GetAllGroups();
+            return Ok(groups);
         }
 
-        [HttpPost("createGroup")]
-        public ActionResult<GroupDto> CreateGroup(GroupDto groupDto)
+        [HttpPost]
+        public IActionResult CreateGroup(GroupDto groupDto)
         {
-            var addedGroup = _groupService.AddGroup(groupDto);
-            return Ok(addedGroup);
+            var createdGroup = _groupService.CreateGroup(groupDto);
+            return Ok(createdGroup);
         }
 
-        [HttpDelete("deleteGroup/{id}")]
-        public ActionResult DeleteGroup(int id)
-        {
-            var deleted = _groupService.DeleteGroup(id);
-            if (!deleted)
-            {
-                return NotFound();
-            }
-            return Ok();
-        }
-
-        [HttpPut("updateGroup/{id}")]
-        public ActionResult<GroupDto> UpdateGroup(int id, GroupDto groupDto)
+        [HttpPut("{id}")]
+        public ActionResult UpdateGroup(int id, GroupDto groupDto)
         {
             if (id != groupDto.Id)
             {
                 return BadRequest();
             }
-            var updatedGroup = _groupService.UpdateGroup(groupDto);    
+            var updatedGroup = _groupService.UpdateGroup(groupDto);
             return Ok(updatedGroup);
         }
 
-        [HttpPost("createCategory")]
-        public ActionResult<CategoryDto> CreateCategory(CategoryDto categoryDto)
+        [HttpDelete("{id}")]
+        public ActionResult DeleteGroup(int id)
         {
-            var addedCategory = _groupService.AddCategory(categoryDto);
-            return Ok(addedCategory);
+            var ifDeleted = _groupService.DeleteGroup(id);
+            if (!ifDeleted)
+            {
+                return NotFound("Failure while deleting item");
+            }
+            return Ok(new Response("Successfully deleted item", true));
         }
 
-        [HttpDelete("deleteCategory/{id}")]
+        [HttpGet("categories")]
+        public IActionResult GetCategories()
+        {
+            var categories = _groupService.GetAllCategories();
+            var subCategoies = _groupService.GetFreeSubCategories();
+            return Ok(categories);
+        }
+
+        [HttpPost("categories")]
+        public IActionResult CreateCategory(CategoryDto categoryDto)
+        {
+            var createdCategory = _groupService.CreateCategory(categoryDto);
+            return Ok(createdCategory);
+        }
+
+        [HttpGet("categories/free")]
+        public IActionResult GetFreeCategories()
+        {
+            var freeCategories = _groupService.GetFreeCategories();
+            return Ok(freeCategories);
+        }
+
+        [HttpDelete("categories/{id}")]
         public ActionResult DeleteCategory(int id)
         {
-            var deleted = _groupService.DeleteCategory(id);
-            if (!deleted)
+            var ifDeleted = _groupService.DeleteCategory(id);
+            if (!ifDeleted)
             {
                 return NotFound();
             }
             return Ok();
         }
 
-        [HttpPut("updateCategory/{id}")]
+        [HttpPut("categories/{id}")]
         public ActionResult UpdateCategory(int id, CategoryDto categoryDto)
         {
             if (id != categoryDto.Id)
@@ -79,25 +94,25 @@ namespace electro.api.rest.Controllers
             return Ok(updatedCategory);
         }
 
-        [HttpPost("createSubCategory")]
-        public ActionResult<SubCategoryDto> CreateSubCategory(SubCategoryDto subCategoryDto)
+        [HttpPost("subcategories")]
+        public IActionResult CreateSubCategory(SubCategoryDto subCategoryDto)
         {
-            var addedSubCategory = _groupService.AddSubCategory(subCategoryDto);
-            return Ok(addedSubCategory);
+            var createdSubCategory = _groupService.CreateSubCategory(subCategoryDto);
+            return Ok(createdSubCategory);
         }
 
-        [HttpDelete("deleteSubCategory/{id}")]
+        [HttpDelete("subcategories/{id}")]
         public ActionResult DeleteSubCategory(int id)
         {
-            var deleted = _groupService.DeleteSubCategory(id);
-            if (!deleted)
+            var ifDeleted = _groupService.DeleteSubCategory(id);
+            if (!ifDeleted)
             {
                 return NotFound();
             }
             return Ok();
         }
 
-        [HttpPut("updateSubCategory/{id}")]
+        [HttpPut("subcategories/{id}")]
         public ActionResult UpdateSubCategory(int id, SubCategoryDto subCategoryDto)
         {
             if (id != subCategoryDto.Id)

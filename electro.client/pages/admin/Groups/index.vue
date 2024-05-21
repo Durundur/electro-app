@@ -6,31 +6,24 @@
 			rounded="lg">
 			<v-card-title class="d-flex justify-space-between align-center">
 				<span>Grupy</span>
-				<div>
-					<v-btn
-						color="success"
-						prepend-icon="mdi-plus"
-						variant="elevated"
-						class="text-none"
-						flat
-						size="small"
-						@click="addNewGroup">
-						Nowa grupa
-					</v-btn>
-					<v-btn
-						color="success"
-						prepend-icon="mdi-content-save"
-						variant="elevated"
-						class="text-none ml-4"
-						flat
-						size="small"
-						@click="saveGroups">
-						Zapisz
-					</v-btn>
-				</div>
+
+				<v-btn
+					color="success"
+					prepend-icon="mdi-plus"
+					variant="elevated"
+					class="text-none"
+					flat
+					size="small"
+					@click="addNewGroup">
+					Nowa grupa
+				</v-btn>
 			</v-card-title>
 			<v-card-text>
+				<template v-if="groups.length === 0">
+					<p class="text-center my-4">Brak dostępnych grup, utwórz nowe.</p>
+				</template>
 				<v-expansion-panels
+					v-else
 					flat
 					multiple
 					rounded="lg"
@@ -42,7 +35,11 @@
 						<v-expansion-panel-text>
 							<v-card flat>
 								<GroupForm
-									@delete-group="deleteGroup(index)"
+									@save-group="onSaveGroup(index)"
+									@delete-group="onDeleteGroup(index)"
+									@category-assign-remove="onCategoryAssignRemove"
+									@category-assign="onCategoryAssign"
+									:categories="categories"
 									v-model="groups[index]"></GroupForm>
 							</v-card>
 						</v-expansion-panel-text>
@@ -57,33 +54,73 @@
 	definePageMeta({
 		layout: "admin",
 	});
-	const nuxtApp = useNuxtApp();
+	const { $toast, $api } = useNuxtApp();
 
-	const groups = ref([]);
 	const expandedPanels = ref([]);
+	const groups = ref([]);
 	const categories = ref([]);
 
-	const { data, pending } = await useAsyncData(() =>
-		nuxtApp.$api.get("api/categories"),
+	const { data: groupsRes } = await useAsyncData(() => $api.get("api/groups"));
+
+	const { data: categoriesRes } = await useAsyncData(() =>
+		$api.get("api/groups/categories/free"),
 	);
-	categories.value - data.value.data;
+
+	groupsRes.value.ok
+		? (groups.value = groupsRes.value.data)
+		: $toast.error("Błąd podczas pobierania grup.");
+	categoriesRes.value.ok
+		? (categories.value = categoriesRes.value.data)
+		: $toast.error("Błąd podczas pobierania categorii.");
 
 	function addNewGroup() {
-		const groupsCount = groups.value.length;
-		groups.value.push({
+		groups.value.unshift({
 			name: "",
 			icon: "",
 			photo: "",
 			categories: [],
 		});
-		nextTick(() => expandedPanels.value.push(groupsCount));
+		nextTick(() => expandedPanels.value.unshift(0));
 	}
 
-	function saveGroups() {
-		const response = nuxtApp.$api.post("/api/groups", groups.value);
+	async function onSaveGroup(index) {
+		const group = groups.value.at(index);
+		if (group.id) {
+			const response = await $api.put(`api/groups/${group.id}`, group);
+			if (!response.ok) {
+				$toast.error(response.error.message);
+				return;
+			}
+		} else {
+			const response = await $api.post(`api/groups`, group);
+			if (!response.ok) {
+				$toast.error(response.error.message);
+				return;
+			}
+			groups.value = groups.value.with(index, response.data);
+		}
+		$toast.success("Pomyślnie zapisano");
 	}
 
-	function deleteGroup(index) {
+	async function onDeleteGroup(index) {
+		const group = groups.value.at(index);
+		if (group.id) {
+			const response = await $api.delete(`api/groups/${group.id}`);
+			if (!response.ok) {
+				$toast.error(response.error.message);
+				return;
+			}
+		}
 		groups.value.splice(index, 1);
+		$toast.success("Pomyślnie usunięto");
+	}
+
+	function onCategoryAssignRemove(category) {
+		categories.value.push(category);
+	}
+
+	function onCategoryAssign(category) {
+		const index = categories.value.findIndex((c) => c.id === category.id);
+		categories.value.splice(index, 1);
 	}
 </script>

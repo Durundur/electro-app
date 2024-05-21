@@ -22,9 +22,18 @@ export default defineNuxtPlugin((nuxtApp) => {
 			};
 			try {
 				const response = await fetch(url, requestOptions);
-				return { data: response._data, status: response.status };
+				return { data: response._data, ok: true, status: response.status };
 			} catch (error) {
-				return { data: error.data, status: error.status };
+				if (error.status) {
+					return { error: { ...error.data }, ok: false, status: error.status };
+				}
+				return {
+					error: {
+						message: "Błąd połączenia z serwerem",
+					},
+					ok: false,
+					status: error.status,
+				};
 			}
 		};
 	}

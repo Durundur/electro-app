@@ -16,24 +16,71 @@ namespace electro.api.rest.Services
             _groupRepository = groupRepository;
             _mapper = mapper;
         }
-
-        public GroupDto AddGroup(GroupDto group)
+        public IEnumerable<GroupDto> GetAllGroups()
         {
-            var groupModel = _groupRepository.AddGroup(_mapper.Map<GroupModel>(group));
-            if(group.Categories != null) {
-                foreach (var category in group.Categories)
-                {
-                    var categoryModel = _mapper.Map<CategoryModel>(category);
-                    categoryModel.GroupId = groupModel.Id;
-                    groupModel.Categories.Append(_groupRepository.UpdateCategory(categoryModel));
-                }
+            var groups = _groupRepository.GetGroups().ToArray();
+            return _mapper.Map<IEnumerable<GroupDto>>(groups);
+        }
+
+        public GroupDto CreateGroup(GroupDto group)
+        {
+            var groupModel = _mapper.Map<GroupModel>(group);
+            groupModel.Categories = group.Categories.Select(c => _groupRepository.GetCategoryById(c.Id.GetValueOrDefault())).ToArray();
+            _groupRepository.CreateGroup(groupModel);
+            return _mapper.Map<GroupDto>(groupModel);
+        }
+        //naprawa podczas dodawania do pustego kategorii
+        //czy w repository powinno byc sprawdzanie czy np. istnieje
+        public GroupDto UpdateGroup(GroupDto group)
+        {
+            var oldCategories = _groupRepository.GetCategories().Where(c => c.GroupId == group.Id).ToArray();
+            foreach(var category in oldCategories)
+            {
+                category.GroupId = null;
+                _groupRepository.UpdateCategory(category);
             }
+            var groupModel = _mapper.Map<GroupModel>(group);
+            groupModel.Categories = groupModel.Categories.Select(c => _groupRepository.GetCategoryById(c.Id)).ToArray();
+            _groupRepository.UpdateGroup(groupModel);
             return _mapper.Map<GroupDto>(groupModel);
         }
 
-        public CategoryDto AddCategory(CategoryDto category)
+        public bool DeleteGroup(int id)
         {
-            var categoryModel = _groupRepository.AddCategory(_mapper.Map<CategoryModel>(category));
+            return _groupRepository.DeleteGroup(id);
+        }
+
+
+        public IEnumerable<CategoryDto> GetAllCategories()
+        {
+            var categories = _groupRepository.GetCategories().ToArray();
+            return _mapper.Map<IEnumerable<CategoryDto>>(categories);
+        }
+
+        public IEnumerable<CategoryDto> GetFreeCategories()
+        {
+            var categories = _groupRepository.GetCategories().Where(c => c.GroupId == null).ToArray();
+            return _mapper.Map<IEnumerable<CategoryDto>>(categories);
+        }
+
+        public IEnumerable<SubCategoryDto> GetFreeSubCategories()
+        {
+            var categories = _groupRepository.GetSubCategories().Where(c => c.CategoryId == null).ToArray();
+            return _mapper.Map<IEnumerable<SubCategoryDto>>(categories);
+        }
+
+        public IEnumerable<SubCategoryDto> GetAllSubCategories()
+        {
+            var subCategories = _groupRepository.GetSubCategories().ToArray();
+            return _mapper.Map<IEnumerable<SubCategoryDto>>(subCategories);
+        }
+
+       
+
+
+        public CategoryDto CreateCategory(CategoryDto category)
+        {
+            var categoryModel = _groupRepository.CreateCategory(_mapper.Map<CategoryModel>(category));
             if(category.SubCategories != null)
             {
                 foreach (var subCategory in category.SubCategories)
@@ -47,22 +94,11 @@ namespace electro.api.rest.Services
             return _mapper.Map<CategoryDto>(categoryModel);
         }
 
-        public SubCategoryDto AddSubCategory(SubCategoryDto subCategory)
+        public SubCategoryDto CreateSubCategory(SubCategoryDto subCategory)
         {
-            var subCategoryModel = _groupRepository.AddSubCategory(_mapper.Map<SubCategoryModel>(subCategory));
+            var subCategoryModel = _groupRepository.CreateSubCategory(_mapper.Map<SubCategoryModel>(subCategory));
             return _mapper.Map<SubCategoryDto>(subCategoryModel);
-        }
-
-        public IEnumerable<GroupDto>GetAll()
-        {
-            var groupModels = _groupRepository.GetAll();
-            return _mapper.Map<IEnumerable<GroupDto>>(groupModels);
-        }
-
-        public bool DeleteGroup(int id)
-        {
-            return _groupRepository.DeleteGroup(id);
-        }
+        }  
 
         public bool DeleteCategory(int id)
         {
@@ -73,28 +109,7 @@ namespace electro.api.rest.Services
             return _groupRepository.DeleteSubCategory(id);
         }
 
-        public GroupDto UpdateGroup(GroupDto group)
-        {
-            var groupModel = _groupRepository.UpdateGroup(_mapper.Map<GroupModel>(group));
-
-            foreach (var categoryOld in groupModel.Categories)
-            {
-                categoryOld.GroupId = null;
-            }
-
-            if(group.Categories != null)
-            {
-                foreach (var category in group.Categories)
-                {
-                    var categoryModel = _mapper.Map<CategoryModel>(category);
-                    categoryModel.GroupId = groupModel.Id;
-                    _groupRepository.UpdateCategory(categoryModel);
-                }
-            }
-            
-
-            return _mapper.Map<GroupDto>(groupModel);
-        }
+        
 
         public CategoryDto UpdateCategory(CategoryDto category)
         {

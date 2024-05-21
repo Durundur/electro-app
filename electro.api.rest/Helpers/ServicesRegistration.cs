@@ -8,23 +8,23 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using electro.api.rest.Services;
+using electro.api.rest.Filters;
 
-namespace electro.api.rest.Services
+namespace electro.api.rest.Helpers
 {
     public static class ServicesRegistration
     {
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddScoped<IProductRepository, ProductRepository>();
-            services.AddScoped<IProductService, ProductService>();
-
-
             services.AddScoped<IGroupRepository, GroupRepository>();
-            services.AddScoped<IGroupService, GroupService>();
-
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IAuthService, AuthService>();
+
+            services.AddScoped<ExceptionFilter>();
             return services;
-        }   
+        }
 
         public static IServiceCollection AddDbService(this IServiceCollection services, string connectionString)
         {

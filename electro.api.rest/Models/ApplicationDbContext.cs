@@ -26,7 +26,7 @@ namespace electro.api.rest.Models
 
             base.OnModelCreating(modelBuilder);
         }
-
+              
         public ApplicationDbContext()
         {
 

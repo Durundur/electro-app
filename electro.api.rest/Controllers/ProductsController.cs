@@ -7,7 +7,7 @@ namespace electro.api.rest.Controllers
     [Route("api/[controller]")]
     public class ProductsController : ControllerBase
     {
-        private readonly IProductService _productService;
+        /*private readonly IProductService _productService;
 
         public ProductsController(IProductService productService)
         {
@@ -35,6 +35,6 @@ namespace electro.api.rest.Controllers
         {
             var newProduct = _productService.CreateProduct(product);
             return Ok(newProduct);
-        }
+        }*/
     }
 }

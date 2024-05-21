@@ -6,8 +6,8 @@
         public string Name { get; set; }
         public string Icon { get; set; }
         public string Photo { get; set; }
-        public IEnumerable<CategoryModel> Categories { get; set; } = new List<CategoryModel>();
-        public IEnumerable<ProductModel> Products { get; set; } = new List<ProductModel>();
+        public IList<CategoryModel> Categories { get; set; } = new List<CategoryModel>();
+        public IList<ProductModel> Products { get; set; } = new List<ProductModel>();
 
     }
 

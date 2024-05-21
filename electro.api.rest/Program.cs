@@ -1,5 +1,4 @@
 using electro.api.rest.Helpers;
-using electro.api.rest.Services;
 using electro.api.rest.Utils;
 using Microsoft.EntityFrameworkCore;
 
@@ -42,5 +41,5 @@ app.UseCors("allow_cors");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-await UserSampleData.SeedUsers(app.Services);
+//await UserSampleData.SeedUsers(app.Services);
 app.Run();

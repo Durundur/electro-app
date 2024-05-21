@@ -1,5 +1,7 @@
-﻿using electro.api.rest.Models;
+﻿using electro.api.rest.Exceptions;
+using electro.api.rest.Models;
 using electro.api.rest.Reposiotories.Interfaces;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace electro.api.rest.Reposiotories
@@ -13,77 +15,89 @@ namespace electro.api.rest.Reposiotories
         }
         public IQueryable<GroupModel> GetGroups()
         {
-            var groups = _dbContext.Groups
-                .Include(g => g.Categories)
-                .AsQueryable();
+            var groups = _dbContext.Groups.AsQueryable();
             return groups;
         }
 
-        public GroupModel GetGroupById(int id)
+        public async Task<GroupModel> GetGroupById(int id)
         {
-            var group = _dbContext.Groups.FirstOrDefault(g => g.Id == id);
+            var group = await _dbContext.Groups.FindAsync(id);
             return group;
         }
 
-        public GroupModel UpdateGroup(GroupModel group)
+        public async Task<GroupModel> UpdateGroup(GroupModel group)
         {
-            if (GetGroupById(group.Id) == null)
+            var existingGroup = await _dbContext.Groups.Include(g => g.Categories).FirstOrDefaultAsync(g => g.Id == group.Id);
+            if (existingGroup == null)
             {
-                throw new FileNotFoundException("Group not found");
+                throw new NotFoundException("Group not found");
             }
-            _dbContext.Groups.Update(group);
-            _dbContext.SaveChanges();
+            existingGroup.Name = group.Name;
+            existingGroup.Photo = group.Photo;
+            existingGroup.Icon = group.Icon;
+            existingGroup.Categories.Clear();
+            foreach (var category in group.Categories)
+            {
+                var existingCategory = await _dbContext.Categories.FindAsync(category.Id);
+                if (existingCategory == null)
+                {
+                    throw new InvalidOperationException($"Category {category.Name} not found");
+                }
+                if (existingCategory.GroupId != existingGroup.Id && existingCategory.GroupId != null)
+                {
+                    throw new InvalidOperationException($"Category {category.Name} is already assigned to another group and cannot be assigned again.");
+                }
+                existingGroup.Categories.Add(existingCategory);
+            }
+            return existingGroup;
+        }
+
+        public async Task<GroupModel> CreateGroup(GroupModel group)
+        {
+            var categoriesWithFK = new List<CategoryModel>();
+            foreach (var category in group.Categories)
+            {
+                var existingCategory = await _dbContext.Categories.FindAsync(category.Id);
+                if (existingCategory == null)
+                {
+                    throw new InvalidOperationException($"Category {category.Name} not found");
+                }
+                if (existingCategory.GroupId != null)
+                {
+                    throw new InvalidOperationException($"Category {category.Name} is already assigned to another group and cannot be assigned again.");
+                }
+                categoriesWithFK.Add(existingCategory);
+            }
+            group.Categories = categoriesWithFK;
+            await _dbContext.Groups.AddAsync(group);
             return group;
         }
 
-        public GroupModel CreateGroup(GroupModel group)
+        public async Task<bool> DeleteGroup(int id)
         {
-            _dbContext.Groups.Add(group);
-            _dbContext.SaveChanges();
-            return group;
-        }
-
-        public bool DeleteGroup(int id)
-        {
-            var group = GetGroups().FirstOrDefault(g => g.Id == id);
+            var group = await GetGroupById(id);
             if (group == null)
             {
-                throw new FileNotFoundException("Group not found");
+                throw new NotFoundException("Group not found");
             }
+            group.Categories = GetCategories().Where(c => c.GroupId == group.Id).ToList();
             if (group.Categories.Any())
             {
                 throw new InvalidOperationException("Cannot delete group with associated categories");
             }
             _dbContext.Groups.Remove(group);
-            _dbContext.SaveChanges();
             return true;
-
-        }
-
-
-
-
-
-
-
-        public CategoryModel UpdateCategory(CategoryModel category)
-        {
-            _dbContext.Categories.Update(category);
-            _dbContext.SaveChanges();
-            return category;
         }
 
         public IQueryable<CategoryModel> GetCategories()
         {
-            var categories = _dbContext.Categories
-                .Include(c => c.SubCategories)
-                .AsQueryable();
+            var categories = _dbContext.Categories.AsQueryable();
             return categories;
         }
 
-        public CategoryModel GetCategoryById(int id)
+        public async Task<CategoryModel> GetCategoryById(int id)
         {
-            var category = _dbContext.Categories.FirstOrDefault(c => c.Id == id);
+            var category = await _dbContext.Categories.FindAsync(id);
             return category;
         }
 
@@ -93,118 +107,70 @@ namespace electro.api.rest.Reposiotories
             return subCategories;
         }
 
-        public SubCategoryModel CreateSubCategory(SubCategoryModel subCategory)
+
+        public async Task<SubCategoryModel> GetSubCategoryById(int id)
         {
-            _dbContext.SubCategories.Add(subCategory);
-            _dbContext.SaveChanges();
+            var subCategory = await _dbContext.SubCategories.FindAsync(id);
             return subCategory;
         }
 
-        public CategoryModel CreateCategory(CategoryModel category)
+
+        public async Task<CategoryModel> CreateCategory(CategoryModel category)
         {
-            _dbContext.Categories.Add(category);
-            _dbContext.SaveChanges();
+            var subCategoriesWithFK = new List<SubCategoryModel>();
+            foreach (var subCategory in category.SubCategories)
+            {
+                var existingSubCategory = await _dbContext.SubCategories.FindAsync(subCategory.Id);
+                if (existingSubCategory == null)
+                {
+                    throw new InvalidOperationException($"Subcategory {subCategory.Name} not found");
+                }
+                if (existingSubCategory.CategoryId != null)
+                {
+                    throw new InvalidOperationException($"Subcategory {subCategory.Name} is already assigned to another category and cannot be assigned again.");
+                }
+                subCategoriesWithFK.Add(existingSubCategory);
+            }
+            category.SubCategories = subCategoriesWithFK;
+            await _dbContext.Categories.AddAsync(category);
             return category;
         }
 
-
-
-
-
-        public bool DeleteCategory(int id)
+        public Task<CategoryModel> UpdateCategory(CategoryModel category)
         {
-            var category = _dbContext.Categories.Include(c => c.SubCategories).FirstOrDefault(c => c.Id == id);
-            if (category == null)
-            {
-                throw new FileNotFoundException("Category not found");
-            }
-            else
-            {
-                if (category.SubCategories.Any())
-                {
-                    throw new InvalidOperationException("Cannot delete category with associated subcategory.");
-                }
-                _dbContext.Categories.Remove(category);
-                _dbContext.SaveChanges();
-                return true;
-            }
+            throw new NotImplementedException();
         }
 
-        public bool DeleteSubCategory(int id)
+        public async Task<bool> DeleteCategory(int id)
         {
-            var subCategory = _dbContext.SubCategories.FirstOrDefault(s => s.Id == id);
-            if (subCategory == null)
+            var category = await GetCategoryById(id);
+            if(category == null)
             {
-                throw new FileNotFoundException();
+                throw new NotFoundException("Category not found");
             }
-            else
+            await _dbContext.Entry(category).Collection(c => c.SubCategories).LoadAsync();
+            if (category.SubCategories.Any())
             {
-                if (subCategory.Category != null)
-                {
-                    throw new InvalidOperationException("Cannot delete subcategory with associated category.");
-                }
-                _dbContext.SubCategories.Remove(subCategory);
-                _dbContext.SaveChanges();
-                return true;
+                throw new InvalidOperationException("Cannot delete categoty with associated subcategories");
             }
+            _dbContext.Categories.Remove(category);
+            return true;
         }
 
-        public SubCategoryModel UpdateSubCategory(SubCategoryModel subCategory)
+        public async Task<SubCategoryModel> CreateSubCategory(SubCategoryModel subCategory)
         {
-            var existing = _dbContext.SubCategories.FirstOrDefault(s => s.Id == subCategory.Id);
-            if (existing == null)
-            {
-                throw new FileNotFoundException();
-            }
-            existing.Name = subCategory.Name;
-            existing.CategoryId = subCategory.CategoryId;
-            _dbContext.SaveChanges();
-            return existing;
+            await _dbContext.SubCategories.AddAsync(subCategory);
+            return subCategory;
         }
 
+        public Task<SubCategoryModel> UpdateSubCategory(SubCategoryModel subCategory)
+        {
+            throw new NotImplementedException();
+        }
 
-
-
+        public Task<bool> DeleteSubCategory(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
-
-
-/*{
-   "name": "Laptopy i komputery",
-  "iconUrl": "https://cdn.x-kom.pl/i/assets/img/common/groups/default/small,,laptop_desktop.png",
-  "photoUrl": "https://cdn.x-kom.pl/i/setup/images/prod/big/product-medium,,2023/9/pr_2023_9_1_13_18_44_843_00.jpg",
-  "categories": [
-    {
-      "id": 0,
-      "name": "Laptopy/Notebooki/Ultrabooki",
-      "subCategories": [
-        {
-            "id": 0,
-          "name": "Notebooki/Laptopy 16\""
-        },{
-            "id": 0,
-          "name": "Notebooki/Laptopy 15\""
-        },{
-            "id": 0,
-          "name": "Notebooki/Laptopy 14\""
-        }
-      ]
-    },{
-        "id": 0,
-      "name": "Tablety",
-      "subCategories": [
-        {
-            "id": 0,
-          "name": "Tablety 12\""
-        },{
-            "id": 0,
-          "name": "Tablety 7\""
-        }
-      ]
-    },{
-        "id": 0,
-      "name": "Laptopy 2 w 1",
-      "subCategories": []
-    }
-  ]
-}*/

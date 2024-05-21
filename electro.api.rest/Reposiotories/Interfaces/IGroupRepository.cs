@@ -5,24 +5,25 @@ namespace electro.api.rest.Reposiotories.Interfaces
     public interface IGroupRepository
     {
         IQueryable<GroupModel> GetGroups();
-        GroupModel GetGroupById(int id);
-        GroupModel CreateGroup(GroupModel group);
-        GroupModel UpdateGroup(GroupModel group);
-        bool DeleteGroup(int id);
+        Task<GroupModel> GetGroupById(int id);
+        Task<GroupModel> CreateGroup(GroupModel group);
+        Task<GroupModel> UpdateGroup(GroupModel group);
+        Task<bool> DeleteGroup(int id);
 
 
         IQueryable<CategoryModel> GetCategories();
-        CategoryModel GetCategoryById(int id);
-        CategoryModel CreateCategory(CategoryModel category);
-        CategoryModel UpdateCategory(CategoryModel category);
-        bool DeleteCategory(int id);
+        Task<CategoryModel> GetCategoryById(int id);
+        Task<CategoryModel> CreateCategory(CategoryModel category);
+        Task<CategoryModel> UpdateCategory(CategoryModel category);
+        Task<bool> DeleteCategory(int id);
 
 
 
         IQueryable<SubCategoryModel> GetSubCategories();
-        SubCategoryModel CreateSubCategory(SubCategoryModel subCategory);
-        SubCategoryModel UpdateSubCategory(SubCategoryModel subCategory);
-        bool DeleteSubCategory(int id);   
+        Task<SubCategoryModel> GetSubCategoryById(int id);
+        Task<SubCategoryModel> CreateSubCategory(SubCategoryModel subCategory);
+        Task<SubCategoryModel> UpdateSubCategory(SubCategoryModel subCategory);
+        Task<bool> DeleteSubCategory(int id);   
         
     }
 }

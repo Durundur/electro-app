@@ -1,56 +1,30 @@
 <template>
 	<v-container fluid>
 		<v-row>
-			<template v-for="(photo, index) in photosUrls">
-				<v-col
-					cols="6"
-					sm="3"
-					md="2">
-					<v-hover>
-						<template v-slot:default="{ isHovering, props }">
-							<v-sheet
-								v-bind="props"
-								flat
-								border
-								rounded="lg"
-								height="100%"
-								style="position: relative">
-								<v-img
-									cover
-									height="100%"
-									rounded="lg"
-									:aspect-ratio="4 / 3"
-									:src="photo"></v-img>
-								<div v-if="isHovering">
-									<v-btn
-										style="
-											position: absolute;
-											bottom: 5%;
-											left: 50%;
-											transform: translateX(-50%);
-										"
-										v-bind="props"
-										density="comfortable"
-										size="small"
-										variant="elevated"
-										color="error"
-										@click="deleteFile(index)"
-										icon="mdi-trash-can-outline"></v-btn>
-								</div>
-							</v-sheet>
-						</template>
-					</v-hover>
-				</v-col>
-			</template>
+			<v-col
+				v-for="(photo, index) in photos"
+				v-bind="props"
+				cols="6"
+				sm="4"
+				md="3">
+				<FileSquare
+					:index="index"
+					:file="photo"
+					:filesLenght="photos.length"
+					@delete-file="deleteFile(index)"
+					@move-file-forward="moveFile(index, 1)"
+					@move-file-backward="moveFile(index, -1)"></FileSquare>
+			</v-col>
 
 			<v-col
 				cols="6"
-				sm="3"
-				md="2">
+				sm="4"
+				md="3">
 				<v-responsive :aspect-ratio="4 / 3">
 					<v-hover>
 						<template v-slot:default="{ isHovering, props }">
-							<v-sheet
+							<v-card
+								link
 								v-bind="props"
 								flat
 								border
@@ -64,7 +38,7 @@
 								<p>Dodaj plik</p>
 								<label
 									for="uploader"
-									class="rounded-lg w-100 h-100"
+									class="rounded-lg w-100 h-100 cursor-pointer"
 									style="position: absolute"></label>
 								<input
 									@input="newFileHandler"
@@ -73,7 +47,7 @@
 									type="file"
 									multiple
 									accept=".jpg,.png" />
-							</v-sheet>
+							</v-card>
 						</template>
 					</v-hover>
 				</v-responsive>
@@ -105,18 +79,24 @@
 				files.splice(index, 1);
 				this.updateModelValue(files);
 			},
+			moveFile(index, direction) {
+				const files = [...this.modelValue];
+				const file = files.splice(index, 1);
+				files.splice(index + direction, 0, ...file);
+				this.updateModelValue(files);
+			},
 		},
 		computed: {
-			photosUrls() {
-				const urls = [];
+			photos() {
+				const photos = [];
 				this.modelValue.forEach((element) => {
 					if (element instanceof File) {
-						urls.push(URL.createObjectURL(element));
+						photos.push(URL.createObjectURL(element));
 					} else {
-						urls.push(element);
+						photos.push(element);
 					}
 				});
-				return urls;
+				return photos;
 			},
 		},
 	};

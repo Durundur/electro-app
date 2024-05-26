@@ -34,7 +34,6 @@
 						prepend-icon="mdi-content-save"
 						variant="elevated"
 						class="text-none mr-4"
-						flat
 						size="small"
 						type="submit">
 						Zapisz
@@ -46,8 +45,7 @@
 						variant="elevated"
 						size="small"
 						text="Usuń"
-						@click="emit('delete-subcategory')"
-						flat></v-btn>
+						@click="emit('delete-subcategory')"></v-btn>
 				</v-col>
 			</v-row>
 		</v-container>

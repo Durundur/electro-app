@@ -39,10 +39,21 @@
 								Nie pamiętasz hasła?
 							</v-btn>
 							<v-btn
+								class="text-none mt-4"
+								block
+								color="primary"
+								@click="
+									loginCredentails = {
+										email: 'admin@test.com',
+										password: '123',
+									}
+								">
+								Testowe konto
+							</v-btn>
+							<v-btn
 								type="submit"
 								class="text-none mt-4"
 								block
-								:loading="loading"
 								color="primary">
 								Zaloguj się
 							</v-btn>
@@ -98,7 +109,6 @@
 							block
 							type="submit"
 							class="text-none mb-4"
-							:loading="loading"
 							color="primary">
 							Oszyskaj hasło
 						</v-btn>
@@ -122,7 +132,6 @@
 		data() {
 			return {
 				showPass: false,
-				loading: false,
 				isResetPassVisible: false,
 				erorrMessage: "",
 				resetPassEmail: "",
@@ -136,11 +145,11 @@
 			async login() {
 				if (this.$refs.form.isValid) {
 					const response = await this.$nuxt.$auth.login(this.loginCredentails);
-					if (!response.success) {
+					if (!response.ok) {
 						this.loginCredentails.password = "";
-						this.$nuxt.$toast.error(response.message);
+						this.$nuxt.$toast.error(response.data.message);
 					} else {
-						this.$nuxt.$toast.success(response.message);
+						this.$nuxt.$toast.success(response.data.message);
 					}
 				}
 			},
@@ -150,12 +159,12 @@
 						"/api/auth/resetPassword",
 						resetPassEmail,
 					);
-					if (!response.success) {
-						this.$nuxt.$toast.error(response.message);
+					if (!response.ok) {
+						this.$nuxt.$toast.error(response.data.message);
 					} else {
 						this.resetPassEmail = "";
 						this.isResetPassVisible = true;
-						this.$nuxt.$toast.success(response.message);
+						this.$nuxt.$toast.success(response.data.message);
 					}
 				}
 			},

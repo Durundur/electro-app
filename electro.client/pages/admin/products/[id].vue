@@ -1,43 +1,39 @@
 <template>
 	<ProductForm
-		@save="saveProduct"
+		@save="onSaveProduct"
 		:defaultProduct="product"></ProductForm>
 </template>
-<script>
+<script setup>
 	import utlis from "~/utlis";
 	definePageMeta({
 		layout: "admin",
 	});
-	export default {
-		data() {
-			return {
-				product: {},
-			};
-		},
-		methods: {
-			async saveProduct() {
-				console.log(this.$nuxt.route.params.id);
-				// const files = this.product.photos;
-				// Promise.all(
-				// 	files.map(async (file, index) => {
-				// 		if (file instanceof File) {
-				// 			this.product.photos[index] = await utlis.convertFileToBase64(
-				// 				file,
-				// 			);
-				// 		} else {
-				// 			this.product.photos[index] = file;
-				// 		}
-				// 	}),
-				// ).then(async () => {
-				// 	const response = await this.$nuxt.$api.post(
-				// 		"api/products",
-				// 		this.product,
-				// 	);
-				// });
-			},
-			async getProduct() {
-				const response = await this.$nuxt.$api.get("api/products/");
-			},
-		},
-	};
+
+	const { $api, $toast } = useNuxtApp();
+	const route = useRoute();
+	const product = ref({});
+	const { data: productRes } = await useAsyncData(() =>
+		$api.get(`api/products/${route.params.id}`),
+	);
+	if (productRes.value.ok) {
+		product.value = productRes.value.data;
+	}
+
+	async function onSaveProduct(product) {
+		const files = product.photos;
+		if (files && files.length > 0) {
+			try {
+				const filesAsBase64 = await utlis.convertFilesToBase64Async(files);
+				product.photos = filesAsBase64;
+			} catch (ex) {
+				$toast.error("Błąd przetwarzania plików");
+				return;
+			}
+		}
+		const response = await $api.put(`api/products/${route.params.id}`, product);
+		if (!response.ok) {
+			$toast.error(response.data.message);
+		}
+		$toast.success("Pomyślnie zapisano");
+	}
 </script>

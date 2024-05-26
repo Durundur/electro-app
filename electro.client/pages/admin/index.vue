@@ -1,13 +1,9 @@
-<template>
-    asd
-</template>
+<template></template>
 <script>
-definePageMeta({
-    layout: 'admin'
-})
-export default {
-    data(){
-
-    }
-};
+	definePageMeta({
+		layout: "admin",
+	});
+	export default {
+		data() {},
+	};
 </script>

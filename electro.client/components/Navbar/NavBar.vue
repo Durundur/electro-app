@@ -46,7 +46,6 @@
 						</v-btn>
 						<v-btn
 							size="small"
-							flat
 							link
 							to="/auth/register"
 							variant="outlined"

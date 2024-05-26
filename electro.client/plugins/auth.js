@@ -4,34 +4,42 @@ export default defineNuxtPlugin((nuxtApp) => {
 		register,
 		logout,
 		refreshToken,
-		isLoggedIn
+		isLoggedIn,
 	});
 
 	const authStore = useAuthStore();
 
-	function isLoggedIn(){
-		return authStore.isLoggedIn
+	function isLoggedIn() {
+		return authStore.isLoggedIn;
 	}
 
 	async function login(credentials) {
 		const response = await nuxtApp.$api.post("api/auth/login", credentials);
-		if (response.success && response.jwtToken && response.refreshToken) {
-			authStore.saveStore(response.jwtToken, response.refreshToken, null);
+		if (response.ok && response.data.jwtToken && response.data.refreshToken) {
+			authStore.saveStore(
+				response.data.jwtToken,
+				response.data.refreshToken,
+				null,
+			);
 			await navigateTo("/");
-			return response
+			return response;
 		} else {
-			return response
+			return response;
 		}
 	}
 
 	async function register(credentials) {
 		const response = await nuxtApp.$api.post("api/auth/register", credentials);
-		if (response.success && response.jwtToken && response.refreshToken) {
-			authStore.saveStore(response.jwtToken, response.refreshToken, null);
+		if (response.ok && response.data.jwtToken && response.data.refreshToken) {
+			authStore.saveStore(
+				response.data.jwtToken,
+				response.data.refreshToken,
+				null,
+			);
 			await navigateTo("/");
-			return response
-		}else{
-			return response
+			return response;
+		} else {
+			return response;
 		}
 	}
 
@@ -40,9 +48,16 @@ export default defineNuxtPlugin((nuxtApp) => {
 	}
 
 	async function refreshToken() {
-		const response = await nuxtApp.$api.post("api/auth/refreshToken", authStore.getStore());
-		if (response.success && response.jwtToken && response.refreshToken) {
-			authStore.saveStore(response.jwtToken, response.refreshToken, null);
+		const response = await nuxtApp.$api.post(
+			"api/auth/refreshToken",
+			authStore.getStore(),
+		);
+		if (response.ok && response.data.jwtToken && response.data.refreshToken) {
+			authStore.saveStore(
+				response.data.jwtToken,
+				response.data.refreshToken,
+				null,
+			);
 		} else {
 			logout();
 			await navigateTo("/");

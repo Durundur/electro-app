@@ -10,9 +10,7 @@
 				<v-btn
 					color="success"
 					prepend-icon="mdi-content-save"
-					variant="elevated"
 					class="text-none"
-					flat
 					size="small"
 					@click="emitSaveEvent">
 					Zapisz
@@ -22,7 +20,7 @@
 				<v-row>
 					<v-col>
 						<v-text-field
-							v-model="product.name"
+							v-model.trim="product.name"
 							density="compact"
 							variant="outlined"
 							label="Nazwa"
@@ -33,7 +31,8 @@
 				<v-row>
 					<v-col>
 						<v-text-field
-							v-model="product.price.price"
+							v-model.number="product.price.price"
+							type="number"
 							density="compact"
 							variant="outlined"
 							label="Cena"
@@ -42,7 +41,8 @@
 					</v-col>
 					<v-col>
 						<v-text-field
-							v-model="product.price.newPrice"
+							v-model.number="product.price.newPrice"
+							type="number"
 							density="compact"
 							variant="outlined"
 							label="Nowa Cena"
@@ -61,7 +61,11 @@
 				<v-row>
 					<v-col>
 						<v-select
-							v-model="product.group"
+							v-model="selectedGroup"
+							:items="groups"
+							clearable
+							item-title="name"
+							return-object
 							density="compact"
 							variant="outlined"
 							label="Grupa"
@@ -69,19 +73,28 @@
 					</v-col>
 					<v-col>
 						<v-select
-							v-model="product.category"
+							v-model="selectedCategory"
+							:items="categories"
+							clearable
+							return-object
+							item-title="name"
 							density="compact"
 							variant="outlined"
 							label="Kategoria"
+							no-data-text="Brak opcji dla wybranej grupy."
 							hide-details="auto"></v-select>
 					</v-col>
 					<v-col>
 						<v-select
-							v-model="product.subCategory"
+							v-model="selectedSubCategory"
+							:items="subCategories"
+							clearable
+							return-object
+							item-title="name"
 							density="compact"
 							variant="outlined"
-							:items="[]"
 							label="Podkategoria"
+							no-data-text="Brak opcji dla wybranej kategorii."
 							hide-details="auto"></v-select>
 					</v-col>
 				</v-row>
@@ -105,7 +118,6 @@
 			<v-card-title>Opis</v-card-title>
 			<v-card-text>
 				<QuillEditor
-					style="min-height: 300px"
 					:modules="quillModules"
 					v-model:content="product.description"
 					contentType="html"
@@ -165,7 +177,7 @@
 				<v-row>
 					<v-col cols="4">
 						<v-text-field
-							v-model="product.stockQuantity"
+							v-model.number="product.stockQuantity"
 							density="compact"
 							variant="outlined"
 							label="Dostępna ilość"
@@ -193,56 +205,113 @@
 		</v-card>
 	</v-container>
 </template>
-<script>
+<script setup>
 	import BlotFormatter from "quill-blot-formatter/dist/BlotFormatter";
 	import ImageCompress from "quill-image-compress";
 	definePageMeta({
 		layout: "admin",
 	});
-	export default {
-		props: {
-			defaultProduct: {
-				type: Object,
-				required: true,
+	const props = defineProps({
+		defaultProduct: {
+			type: Object,
+			required: true,
+		},
+	});
+	const { $api } = useNuxtApp();
+	const emit = defineEmits(["save"]);
+
+	const product = ref({ ...props.defaultProduct });
+	const groups = ref([]);
+	const selectedGroup = ref(product.value.group || null);
+	const selectedCategory = ref(product.value.category || null);
+	const selectedSubCategory = ref(product.value.subCategory || null);
+
+	const { data: groupsRes } = await useAsyncData(() =>
+		$api.get("api/groups/allGroups"),
+	);
+
+	if (groupsRes.value.ok) {
+		groups.value = groupsRes.value.data;
+	} else {
+		$toast.error("Błąd podczas pobierania kategorii.");
+	}
+
+	const categories = computed(() => {
+		if (selectedGroup.value) {
+			const { id, name } = selectedGroup.value;
+			const group = groups.value.find((g) => g.id === id && g.name === name);
+			return group?.categories || [];
+		}
+		return [];
+	});
+
+	const subCategories = computed(() => {
+		if (selectedCategory.value) {
+			const { id, name } = selectedCategory.value;
+			const category = categories.value.find(
+				(c) => c.id === id && c.name === name,
+			);
+			return category?.subCategories || [];
+		}
+		return [];
+	});
+
+	watch(selectedGroup, (newVal) => {
+		if (newVal && newVal.id && newVal.name) {
+			product.value.group = { id: newVal.id, name: newVal.name };
+		} else {
+			product.value.group = null;
+			selectedCategory.value = null;
+			selectedSubCategory.value = null;
+		}
+	});
+
+	watch(selectedCategory, (newVal) => {
+		if (newVal && newVal.id && newVal.name) {
+			product.value.category = { id: newVal.id, name: newVal.name };
+		} else {
+			product.value.category = null;
+			selectedSubCategory.value = null;
+		}
+	});
+
+	watch(selectedSubCategory, (newVal) => {
+		if (newVal && newVal.id && newVal.name) {
+			product.value.subCategory = { id: newVal.id, name: newVal.name };
+		} else {
+			product.value.subCategory = null;
+		}
+	});
+
+	function emitSaveEvent() {
+		emit("save", product.value);
+	}
+
+	const quillModules = ref([
+		{
+			name: "blotFormatter",
+			module: BlotFormatter,
+		},
+		{
+			name: "imageCompress",
+			module: ImageCompress,
+			options: {
+				quality: 0.7, // default
+				maxWidth: 1000, // default
+				maxHeight: 1000, // default
+				imageType: "image/jpeg", // default
+				debug: true, // default
+				suppressErrorLogging: false, // default
+				insertIntoEditor: undefined, // default
 			},
 		},
-		data() {
-			return {
-				quillModules: [
-					{
-						name: "blotFormatter",
-						module: BlotFormatter,
-					},
-					{
-						name: "imageCompress",
-						module: ImageCompress,
-						options: {
-							quality: 0.7, // default
-							maxWidth: 1000, // default
-							maxHeight: 1000, // default
-							imageType: "image/jpeg", // default
-							debug: true, // default
-							suppressErrorLogging: false, // default
-							insertIntoEditor: undefined, // default
-						},
-					},
-				],
-				product: { ...this.defaultProduct },
-			};
-		},
-		methods: {
-			emitSaveEvent() {
-				this.$emit("save", this.product);
-			},
-		},
-	};
+	]);
 </script>
 <style scoped>
-	.ql-container,
-	.ql-editor {
-		min-height: inherit;
-	}
 	.v-tooltip :deep(.v-overlay__content) {
 		font-size: 10px;
+	}
+	:deep(.ql-editor) {
+		min-height: 300px;
 	}
 </style>

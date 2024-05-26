@@ -66,3 +66,8 @@
 		},
 	};
 </script>
+<style>
+.invisible {
+		visibility: hidden;
+	}
+</style>

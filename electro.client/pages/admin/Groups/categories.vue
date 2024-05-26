@@ -11,7 +11,6 @@
 					prepend-icon="mdi-plus"
 					variant="elevated"
 					class="text-none"
-					flat
 					size="small"
 					@click="addNewCategory">
 					Nowa kategoria
@@ -32,6 +31,8 @@
 								<CategoryForm
 									@save-category="onSaveCategory(index)"
 									@delete-category="onDeleteCategory(index)"
+									@subcategory-assign-remove="onSubCategoryAssignRemove"
+									@subcategory-assign="onSubCategoryAssign"
 									:subCategories="subCategories"
 									v-model="categories[index]"></CategoryForm>
 							</v-card>
@@ -111,5 +112,14 @@
 		}
 		categories.value.splice(index, 1);
 		$toast.success("Pomyślnie usunięto");
+	}
+
+	function onSubCategoryAssignRemove(subCategory) {
+		subCategories.value.push(subCategory);
+	}
+
+	function onSubCategoryAssign(subCategory) {
+		const index = subCategories.value.findIndex((s) => s.id === subCategory.id);
+		subCategories.value.splice(index, 1);
 	}
 </script>

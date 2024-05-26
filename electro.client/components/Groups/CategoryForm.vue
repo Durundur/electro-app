@@ -63,8 +63,7 @@
 						variant="elevated"
 						size="small"
 						text="Usuń"
-						@click="emit('delete-group')"
-						flat></v-btn>
+						@click="emit('delete-category')"></v-btn>
 				</v-col>
 			</v-row>
 		</v-container>
@@ -74,7 +73,12 @@
 	defineProps({
 		subCategories: Array,
 	});
-	const emit = defineEmits(["delete-category", "save-category"]);
+	const emit = defineEmits([
+		"delete-category",
+		"save-category",
+		"subcategory-assign-remove",
+		"subcategory-assign",
+	]);
 	const model = defineModel({ type: Object });
 	const form = ref(null);
 
@@ -83,4 +87,18 @@
 			emit("save-category");
 		}
 	}
+
+	watch(
+		() => model.value.subCategories,
+		(newVal, oldVal) => {
+			const addedItems = newVal.filter((c) => !oldVal.includes(c));
+			const removedItems = oldVal.filter((cat) => !newVal.includes(cat));
+			if (addedItems.length) {
+				addedItems.forEach((i) => emit("subcategory-assign", i));
+			}
+			if (removedItems.length) {
+				removedItems.forEach((i) => emit("subcategory-assign-remove", i));
+			}
+		},
+	);
 </script>

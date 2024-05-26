@@ -12,7 +12,6 @@
 					prepend-icon="mdi-plus"
 					variant="elevated"
 					class="text-none"
-					flat
 					size="small"
 					@click="addNewSubCategory">
 					Nowa podkategoria

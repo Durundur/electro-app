@@ -12,9 +12,8 @@
 						prepend-icon="mdi-plus"
 						variant="elevated"
 						class="text-none"
-						flat
 						size="small"
-						to="/admin/products/edit">
+						to="/admin/products/create">
 						Dodaj nowy
 					</v-btn>
 				</v-card-title>
@@ -63,7 +62,7 @@
 								style="align-items: center">
 								<div style="width: 48px">
 									<v-img
-										:src="item.photo"
+										:src="item.photos[0]"
 										height="48"></v-img>
 									<v-tooltip
 										activator="parent"
@@ -85,13 +84,25 @@
 						</template>
 						<template v-slot:item.group="{ item }">
 							<div class="d-flex flex-row ga-1">
-								<v-chip size="x-small">{{ item.group }}</v-chip>
-								<v-chip size="x-small">{{ item.category }}</v-chip>
-								<v-chip size="x-small">{{ item.subCategory }}</v-chip>
+								<v-chip
+									v-if="item.group"
+									size="x-small">
+									{{ item.group?.name }}
+								</v-chip>
+								<v-chip
+									v-if="item.category"
+									size="x-small">
+									{{ item.category?.name }}
+								</v-chip>
+								<v-chip
+									v-if="item.subCategory"
+									size="x-small">
+									{{ item.subCategory?.name }}
+								</v-chip>
 							</div>
 						</template>
 						<template v-slot:item.stockQuantity="{ item }">
-							<div class="text-end">
+							<div class="text-center">
 								<v-chip
 									:color="item.stockQuantity > 2 ? 'green' : 'red'"
 									:text="item.stockQuantity"
@@ -114,8 +125,7 @@
 	</Suspense>
 </template>
 <script setup>
-	import { ref } from "vue";
-	const nuxtApp = useNuxtApp();
+	const { $api, $toast } = useNuxtApp();
 	definePageMeta({
 		layout: "admin",
 	});
@@ -124,15 +134,20 @@
 		//{ title: "Zdjęcia", key: "image", sortable: false },
 		{ title: "Nazwa", key: "name", sortable: true },
 		{ title: "Grupy", key: "group", sortable: false },
-		{ title: "Pozostało", key: "stockQuantity", sortable: true },
+		{ title: "Stan magazynowy", key: "stockQuantity", sortable: true },
 		{ title: "", key: "actions", sortable: false },
 	]);
 	const expandFilters = ref(false);
 	const products = ref([]);
-	const { data, pending } = await useAsyncData(() =>
-		nuxtApp.$api.get("api/Products"),
+
+	const { data: productsRes } = await useAsyncData(() =>
+		$api.get("api/Products"),
 	);
-	products.value = data.value.data;
+	if (productsRes.value.ok) {
+		products.value = productsRes.value.data;
+	} else {
+		$toast.error("Błąd podczas pobierania dancyh");
+	}
 </script>
 <style>
 	:deep(.v-table) {

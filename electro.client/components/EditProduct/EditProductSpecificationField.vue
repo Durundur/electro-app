@@ -30,7 +30,6 @@
 						v-bind="props"
 						density="comfortable"
 						size="x-small"
-						variant="elevated"
 						color="success"
 						icon="mdi-plus"
 						@click="addFieldValue"></v-btn>

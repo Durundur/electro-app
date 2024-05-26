@@ -6,13 +6,11 @@
 			rounded="lg">
 			<v-card-title class="d-flex justify-space-between align-center">
 				<span>Grupy</span>
-
 				<v-btn
 					color="success"
 					prepend-icon="mdi-plus"
 					variant="elevated"
 					class="text-none"
-					flat
 					size="small"
 					@click="addNewGroup">
 					Nowa grupa

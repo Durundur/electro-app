@@ -1,14 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations.Schema;
-
+﻿
 namespace electro.api.rest.Models
 {
     public class ProductModel : BaseModel
     {
         public string Name { get; set; }
         public ProductPrice Price { get; set; }
+        public int? GroupId { get; set; }
         public GroupModel Group { get; set; }
+        public int? CategoryId { get; set; }
         public CategoryModel Category { get; set; }
+        public int? SubCategoryId { get; set; }
         public SubCategoryModel SubCategory { get; set; }
         public List<byte[]> Photos { get; set; }
         public string Description { get; set; }

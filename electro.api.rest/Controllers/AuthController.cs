@@ -10,7 +10,6 @@ namespace electro.api.rest.Controllers
     [Route("/api/[controller]")]
     public class AuthController: ControllerBase
     {
-
         private readonly IAuthService _authService;
 
         public AuthController(IAuthService authService)

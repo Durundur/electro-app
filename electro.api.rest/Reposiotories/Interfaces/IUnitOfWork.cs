@@ -3,6 +3,8 @@
     public interface IUnitOfWork
     {
         IGroupRepository Groups { get; }
+
+        IProductRepository Products { get; }
         Task CompleteAsync();
     }
 }

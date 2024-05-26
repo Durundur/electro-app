@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using electro.api.rest.Models;
@@ -12,9 +13,11 @@ using electro.api.rest.Models;
 namespace electro.api.rest.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240525124923_addFKInProductModel")]
+    partial class addFKInProductModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -196,7 +199,7 @@ namespace electro.api.rest.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Addresses", (string)null);
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("electro.api.rest.Models.CategoryModel", b =>
@@ -218,7 +221,7 @@ namespace electro.api.rest.Migrations
 
                     b.HasIndex("GroupId");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("electro.api.rest.Models.GroupModel", b =>
@@ -243,7 +246,7 @@ namespace electro.api.rest.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Groups", (string)null);
+                    b.ToTable("Groups");
                 });
 
             modelBuilder.Entity("electro.api.rest.Models.OpinionModel", b =>
@@ -289,7 +292,7 @@ namespace electro.api.rest.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Opinions", (string)null);
+                    b.ToTable("Opinions");
                 });
 
             modelBuilder.Entity("electro.api.rest.Models.ProductModel", b =>
@@ -345,7 +348,7 @@ namespace electro.api.rest.Migrations
 
                     b.HasIndex("SubCategoryId");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("electro.api.rest.Models.ProductSpecificationModel", b =>
@@ -362,7 +365,7 @@ namespace electro.api.rest.Migrations
                     b.HasIndex("ProductId")
                         .IsUnique();
 
-                    b.ToTable("ProductsSpecification", (string)null);
+                    b.ToTable("ProductsSpecification");
                 });
 
             modelBuilder.Entity("electro.api.rest.Models.SubCategoryModel", b =>
@@ -384,7 +387,7 @@ namespace electro.api.rest.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("SubCategories", (string)null);
+                    b.ToTable("SubCategories");
                 });
 
             modelBuilder.Entity("electro.api.rest.Models.UserModel", b =>
@@ -563,7 +566,7 @@ namespace electro.api.rest.Migrations
                         .WithMany("Products")
                         .HasForeignKey("SubCategoryId");
 
-                    b.OwnsMany("electro.api.rest.Models.ProductModel.Features#electro.api.rest.Models.ProductSpecificationField", "Features", b1 =>
+                    b.OwnsMany("electro.api.rest.Models.ProductSpecificationField", "Features", b1 =>
                         {
                             b1.Property<Guid>("ProductModelId")
                                 .HasColumnType("uuid");
@@ -582,7 +585,7 @@ namespace electro.api.rest.Migrations
 
                             b1.HasKey("ProductModelId", "Id");
 
-                            b1.ToTable("Products", (string)null);
+                            b1.ToTable("Products");
 
                             b1.ToJson("Features");
 
@@ -590,7 +593,7 @@ namespace electro.api.rest.Migrations
                                 .HasForeignKey("ProductModelId");
                         });
 
-                    b.OwnsOne("electro.api.rest.Models.ProductModel.Price#electro.api.rest.Models.ProductPrice", "Price", b1 =>
+                    b.OwnsOne("electro.api.rest.Models.ProductPrice", "Price", b1 =>
                         {
                             b1.Property<Guid>("ProductModelId")
                                 .HasColumnType("uuid");
@@ -606,7 +609,7 @@ namespace electro.api.rest.Migrations
 
                             b1.HasKey("ProductModelId");
 
-                            b1.ToTable("Products", (string)null);
+                            b1.ToTable("Products");
 
                             b1.ToJson("Price");
 
@@ -634,7 +637,7 @@ namespace electro.api.rest.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsMany("electro.api.rest.Models.ProductSpecificationModel.Specification#electro.api.rest.Models.ProductSpecificationField", "Specification", b1 =>
+                    b.OwnsMany("electro.api.rest.Models.ProductSpecificationField", "Specification", b1 =>
                         {
                             b1.Property<Guid>("ProductSpecificationModelId")
                                 .HasColumnType("uuid");
@@ -653,7 +656,7 @@ namespace electro.api.rest.Migrations
 
                             b1.HasKey("ProductSpecificationModelId", "Id");
 
-                            b1.ToTable("ProductsSpecification", (string)null);
+                            b1.ToTable("ProductsSpecification");
 
                             b1.ToJson("Specification");
 

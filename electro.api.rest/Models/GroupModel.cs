@@ -17,8 +17,8 @@
         public string Name { get; set; }
         public int? GroupId { get; set; }
         public GroupModel? Group { get; set; }
-        public IEnumerable<SubCategoryModel> SubCategories { get; set; } = new List<SubCategoryModel>();
-        public IEnumerable<ProductModel> Products { get; set; } = new List<ProductModel>();
+        public IList<SubCategoryModel> SubCategories { get; set; } = new List<SubCategoryModel>();
+        public IList<ProductModel> Products { get; set; } = new List<ProductModel>();
     }
 
     public class SubCategoryModel
@@ -27,6 +27,6 @@
         public string Name { get; set; }
         public int? CategoryId { get; set; }
         public CategoryModel? Category { get; set; }
-        public IEnumerable<ProductModel> Products { get; set; } = new List<ProductModel>();
+        public IList<ProductModel> Products { get; set; } = new List<ProductModel>();
     }
 }

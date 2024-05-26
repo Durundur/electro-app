@@ -1,5 +1,9 @@
-﻿using electro.api.rest.Dtos;
+﻿using AutoMapper;
+using electro.api.rest.Dtos;
+using electro.api.rest.Models;
+using electro.api.rest.Reposiotories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace electro.api.rest.Controllers
 {
@@ -7,34 +11,54 @@ namespace electro.api.rest.Controllers
     [Route("api/[controller]")]
     public class ProductsController : ControllerBase
     {
-        /*private readonly IProductService _productService;
+        private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public ProductsController(IProductService productService)
+        public ProductsController(IMapper mapper, IUnitOfWork unitOfWork)
         {
-            _productService = productService;
+            _mapper = mapper;
+            _unitOfWork = unitOfWork;
         }
 
 
         [HttpGet]
-        public IActionResult GetProductsSummary() {
-
-            var products = _productService.GetProductsSummary();
-            return Ok(products);
+        public IActionResult GetProducts()
+        {
+            var products = _unitOfWork.Products.GetProducts().Include(p => p.Group).Include(p => p.Category).Include(p => p.SubCategory).ToList();
+            var productsDto = _mapper.Map<IEnumerable<ProductDto>>(products);
+            return Ok(productsDto);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetProductById(string id)
+        public async Task<IActionResult> GetProductById(string id)
         {
-            var product = _productService.GetProductById(id);
-            return Ok(product);
+            var product = await _unitOfWork.Products.GetProductById(id);
+            return Ok(_mapper.Map<ProductDto>(product));
         }
 
 
         [HttpPost]
-        public IActionResult CreateNewProduct(ProductDto product)
+        public async Task<IActionResult> CreateProduct(ProductDto product)
         {
-            var newProduct = _productService.CreateProduct(product);
-            return Ok(newProduct);
-        }*/
+            var productModel = _mapper.Map<ProductModel>(product);
+            var createdProduct = await _unitOfWork.Products.CreateProduct(productModel);
+            await _unitOfWork.CompleteAsync();
+            return Ok(_mapper.Map<ProductDto>(createdProduct));
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateProduct(string id, ProductDto product)
+        {
+            if (id != product.Id.ToString())
+            {
+                return BadRequest();
+            }
+            var productModel = _mapper.Map<ProductModel>(product);
+            var updatedProduct = await _unitOfWork.Products.UpdateProduct(productModel);
+            await _unitOfWork.CompleteAsync();
+            return Ok(_mapper.Map<ProductDto>(updatedProduct));
+        }
+
+
     }
 }

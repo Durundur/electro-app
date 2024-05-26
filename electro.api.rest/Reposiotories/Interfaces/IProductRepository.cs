@@ -4,10 +4,10 @@ namespace electro.api.rest.Reposiotories.Interfaces
 {
     public interface IProductRepository
     {
-        ProductModel CreateProduct(ProductModel product);
-        bool DeleteProduct(string id);
-        IEnumerable<ProductModel> GetAllProducts();
-        ProductModel GetProductById(string id);
-        ProductModel UpdateProduct(ProductModel product);
+        Task<ProductModel> CreateProduct(ProductModel product);
+        Task DeleteProduct(string id);
+        Task<ProductModel> GetProductById(string id);
+        IQueryable<ProductModel> GetProducts();
+        Task<ProductModel> UpdateProduct(ProductModel product);
     }
 }

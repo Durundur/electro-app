@@ -45,7 +45,7 @@ namespace electro.api.rest.Reposiotories
                 }
                 if (existingCategory.GroupId != existingGroup.Id && existingCategory.GroupId != null)
                 {
-                    throw new InvalidOperationException($"Category {category.Name} is already assigned to another group and cannot be assigned again.");
+                    throw new InvalidOperationException($"Category {existingCategory.Name} is already assigned to another group and cannot be assigned again.");
                 }
                 existingGroup.Categories.Add(existingCategory);
             }
@@ -64,7 +64,7 @@ namespace electro.api.rest.Reposiotories
                 }
                 if (existingCategory.GroupId != null)
                 {
-                    throw new InvalidOperationException($"Category {category.Name} is already assigned to another group and cannot be assigned again.");
+                    throw new InvalidOperationException($"Category {existingCategory.Name} is already assigned to another group and cannot be assigned again.");
                 }
                 categoriesWithFK.Add(existingCategory);
             }
@@ -127,7 +127,7 @@ namespace electro.api.rest.Reposiotories
                 }
                 if (existingSubCategory.CategoryId != null)
                 {
-                    throw new InvalidOperationException($"Subcategory {subCategory.Name} is already assigned to another category and cannot be assigned again.");
+                    throw new InvalidOperationException($"Subcategory {existingSubCategory.Name} is already assigned to another category and cannot be assigned again.");
                 }
                 subCategoriesWithFK.Add(existingSubCategory);
             }
@@ -136,9 +136,29 @@ namespace electro.api.rest.Reposiotories
             return category;
         }
 
-        public Task<CategoryModel> UpdateCategory(CategoryModel category)
+        public async Task<CategoryModel> UpdateCategory(CategoryModel category)
         {
-            throw new NotImplementedException();
+            var existingCategory = await _dbContext.Categories.Include(c => c.SubCategories).FirstOrDefaultAsync(c => c.Id == category.Id);
+            if (existingCategory == null)
+            {
+                throw new NotFoundException("Category not found");
+            }
+            existingCategory.Name = category.Name;
+            existingCategory.SubCategories.Clear();
+            foreach (var subCategory in category.SubCategories)
+            {
+                var existingSubCategory = await _dbContext.SubCategories.FindAsync(subCategory.Id);
+                if (existingSubCategory == null)
+                {
+                    throw new InvalidOperationException($"Subcategory {subCategory.Name} not found");
+                }
+                if (existingSubCategory.CategoryId != existingCategory.Id && existingSubCategory.CategoryId != null)
+                {
+                    throw new InvalidOperationException($"Subcategory {existingSubCategory.Name} is already assigned to another category and cannot be assigned again.");
+                }
+                existingCategory.SubCategories.Add(existingSubCategory);
+            }
+            return existingCategory;
         }
 
         public async Task<bool> DeleteCategory(int id)
@@ -149,9 +169,9 @@ namespace electro.api.rest.Reposiotories
                 throw new NotFoundException("Category not found");
             }
             await _dbContext.Entry(category).Collection(c => c.SubCategories).LoadAsync();
-            if (category.SubCategories.Any())
+            if (category.SubCategories.Any() || category.GroupId != null)
             {
-                throw new InvalidOperationException("Cannot delete categoty with associated subcategories");
+                throw new InvalidOperationException("Cannot delete categoty with associated subcategories or group");
             }
             _dbContext.Categories.Remove(category);
             return true;
@@ -163,14 +183,26 @@ namespace electro.api.rest.Reposiotories
             return subCategory;
         }
 
-        public Task<SubCategoryModel> UpdateSubCategory(SubCategoryModel subCategory)
+        public async Task<bool> DeleteSubCategory(int id)
         {
-            throw new NotImplementedException();
+            var existingSubCategory = await GetSubCategoryById(id);
+            if(existingSubCategory == null)
+            {
+                throw new NotFoundException("Subcategory not found");
+            }
+            if(existingSubCategory.CategoryId != null)
+            {
+                throw new InvalidOperationException("Cannot delete subcategory with associated category");
+            }
+            _dbContext.SubCategories.Remove(existingSubCategory);
+            return true;
         }
 
-        public Task<bool> DeleteSubCategory(int id)
+        public async Task<SubCategoryModel> UpdateSubCategory(SubCategoryModel subCategory)
         {
-            throw new NotImplementedException();
+            var existingSubCategory = await GetSubCategoryById(subCategory.Id);
+            existingSubCategory.Name = subCategory.Name;
+            return existingSubCategory;
         }
     }
 }

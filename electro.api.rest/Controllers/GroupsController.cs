@@ -24,6 +24,14 @@ namespace electro.api.rest.Controllers
             _unitOfWork = unitOfWork;
         }
 
+        [HttpGet("allGroups")]
+        public async Task<IActionResult> GetAllGroupsCategoriesSubCategories()
+        {
+            var groups = await _unitOfWork.Groups.GetGroups().Include(g => g.Categories).ThenInclude(c => c.SubCategories).ToListAsync();
+            var groupsDto = _mapper.Map<IEnumerable<GroupDto>>(groups);
+            return Ok(groupsDto);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetGroups() {
             var groups = await _unitOfWork.Groups.GetGroups().Include(g => g.Categories).ToListAsync();
@@ -48,9 +56,9 @@ namespace electro.api.rest.Controllers
             {
                 return BadRequest();
             }
-            await _unitOfWork.Groups.UpdateGroup(groupModel);
+            var updatedGroup = await _unitOfWork.Groups.UpdateGroup(groupModel);
             await _unitOfWork.CompleteAsync();
-            return Ok(groupModel);
+            return Ok(_mapper.Map<GroupDto>(updatedGroup));
         }
 
         [HttpDelete("{id}")]
@@ -84,7 +92,22 @@ namespace electro.api.rest.Controllers
             var categoryModel = _mapper.Map<CategoryModel>(categoryDto);
             var createdCategory = await _unitOfWork.Groups.CreateCategory(categoryModel);
             await _unitOfWork.CompleteAsync();
-            return Ok(_mapper.Map<CategoryDto>(createdCategory));
+            var createdCategoryDto = _mapper.Map<CategoryDto>(createdCategory);
+            return Ok(createdCategoryDto);
+        }
+
+        [HttpPut("categories/{id}")]
+        public async Task<IActionResult> UpdateCategory(int id, CategoryDto categoryDto)
+        {
+            var categoryModel = _mapper.Map<CategoryModel>(categoryDto);
+            if (id != categoryDto.Id)
+            {
+                return BadRequest();
+            }
+            var updatedCategory = await _unitOfWork.Groups.UpdateCategory(categoryModel);
+            await _unitOfWork.CompleteAsync();
+            var updatedCategoryDto = _mapper.Map<CategoryDto>(updatedCategory);
+            return Ok(updatedCategoryDto);
         }
 
         [HttpDelete("categories/{id}")]
@@ -94,24 +117,6 @@ namespace electro.api.rest.Controllers
             await _unitOfWork.CompleteAsync();
             return Ok();
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         [HttpGet("subcategories")]
@@ -136,7 +141,8 @@ namespace electro.api.rest.Controllers
             var subCategoryModel = _mapper.Map<SubCategoryModel>(subCategoryDto);
             var createdSubCategory = await _unitOfWork.Groups.CreateSubCategory(subCategoryModel);
             await _unitOfWork.CompleteAsync();
-            return Ok(_mapper.Map<SubCategoryDto>(createdSubCategory));
+            var createdSubCategoryDto = _mapper.Map<SubCategoryDto>(createdSubCategory);
+            return Ok(createdSubCategoryDto);
         }
 
         [HttpDelete("subcategories/{id}")]
@@ -148,38 +154,20 @@ namespace electro.api.rest.Controllers
         }
 
 
-
-
-
-        /*        
-
+        [HttpPut("subcategories/{id}")]
+        public async Task<IActionResult> UpdateSubCategory(int id, SubCategoryDto subCategoryDto)
+        {
+            var subCategoryModel = _mapper.Map<SubCategoryModel>(subCategoryDto);
+            if (id != subCategoryDto.Id)
+            {
+                return BadRequest();
+            }
+            var updatedSubCategory = await _unitOfWork.Groups.UpdateSubCategory(subCategoryModel);
+            await _unitOfWork.CompleteAsync();
+            var updatedSubCategoryDto = _mapper.Map<SubCategoryDto>(updatedSubCategory);
+            return Ok(updatedSubCategoryDto);
+        }
                
-
-               [HttpPut("categories/{id}")]
-               public async Task<IActionResult> UpdateCategory(int id, CategoryDto categoryDto)
-               {
-                   if (id != categoryDto.Id)
-                   {
-                       return BadRequest();
-                   }
-                   var updatedCategory = _groupService.UpdateCategory(categoryDto);
-                   return Ok(updatedCategory);
-               }
-
-               
-
-               
-
-               [HttpPut("subcategories/{id}")]
-               public async Task<IActionResult> UpdateSubCategory(int id, SubCategoryDto subCategoryDto)
-               {
-                   if (id != subCategoryDto.Id)
-                   {
-                       return BadRequest();
-                   }
-                   var updatedSubCategory = _groupService.UpdateSubCategory(subCategoryDto);
-                   return Ok(updatedSubCategory);
-               }*/
     }
 
 }

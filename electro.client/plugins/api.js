@@ -1,4 +1,6 @@
 export default defineNuxtPlugin((nuxtApp) => {
+	const config = useRuntimeConfig();
+
 	nuxtApp.provide("api", {
 		get: request("GET"),
 		post: request("POST"),
@@ -7,7 +9,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 	});
 
 	const fetch = (url, options = {}) =>
-		$fetch.raw(`https://localhost:5555/${url}`, options);
+		$fetch.raw(`${config.public.API_URL}/${url}`, options);
 
 	const authStore = useAuthStore();
 

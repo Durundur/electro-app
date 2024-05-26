@@ -5,7 +5,7 @@ export default defineNuxtConfig({
 	modules: ["vuetify-nuxt-module", "@pinia/nuxt"],
 	runtimeConfig: {
 		public: {
-			baseURL: process.env.API_URL || "localhost:5555",
+			API_URL: process.env.API_URL,
 		},
 	},
 	vuetify: {
@@ -19,5 +19,4 @@ export default defineNuxtConfig({
 			pathPrefix: false,
 		},
 	],
-	
 });

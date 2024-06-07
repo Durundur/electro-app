@@ -25,6 +25,9 @@ namespace electro.api.rest.Utils
             CreateMap<CategoryModel, GroupSummaryDto>();
             CreateMap<SubCategoryModel, GroupSummaryDto>();
 
+            CreateMap<OpinionModel, OpinionDto>();
+            CreateMap<OpinionDto, OpinionModel>();
+
 
             CreateMap<ProductModel, ProductDto>()
                 .ForMember(dest => dest.Specification, opt => opt.MapFrom(src => src.Specification.Specification))

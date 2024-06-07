@@ -85,15 +85,23 @@ namespace electro.api.rest.Repositories
 
         public async Task<ProductModel> UpdateProduct(ProductModel product)
         {
-            var exsistingProduct = await _dbContext.Products.AsNoTracking().FirstOrDefaultAsync(p => p.Id == product.Id);
-            if(exsistingProduct == null)
+            var existingProduct = await _dbContext.Products.Include(p => p.Specification).FirstOrDefaultAsync(p => p.Id == product.Id);
+            if(existingProduct == null)
             {
                 throw new NotFoundException("Product not found.");
             }
-            _dbContext.Products.Attach(product);
-            _dbContext.Products.Entry(product).State = EntityState.Modified;
-            _dbContext.ProductsSpecification.Attach(product.Specification);
-            _dbContext.Entry(product.Specification).State = EntityState.Modified;
+            existingProduct.Name = product.Name;
+            existingProduct.Price = product.Price;
+            existingProduct.GroupId = product.GroupId;
+            existingProduct.CategoryId = product.CategoryId;
+            existingProduct.SubCategoryId = product.SubCategoryId;
+            existingProduct.Photos = product.Photos;
+            existingProduct.Description = product.Description;
+            existingProduct.Specification = product.Specification;
+            existingProduct.Features = product.Features;
+            existingProduct.StockQuantity = product.StockQuantity;
+            existingProduct.IsPublished = product.IsPublished;
+            existingProduct.IsArchived = product.IsArchived;
             return product;
         }
     }

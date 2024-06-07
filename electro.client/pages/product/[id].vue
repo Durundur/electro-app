@@ -4,8 +4,15 @@
 			<v-col
 				cols="12"
 				sm="6"
-				align-self="center">
-				<v-img :src="product.photos[0]"></v-img>
+				align-self="stretch"
+				class="pr-2">
+				<v-carousel
+					hide-delimiters
+					:show-arrows="product.photos.length > 1">
+					<v-carousel-item
+						v-for="photo in product.photos"
+						:src="photo"></v-carousel-item>
+				</v-carousel>
 			</v-col>
 			<v-col
 				cols="12"
@@ -19,9 +26,14 @@
 								{{ product.name }}
 							</v-card-title>
 							<NuxtLink class="d-flex align-center">
-								<ProductRatingStars
-									v-model="rating"
-									:disabled="true" />
+								<v-rating
+									v-model="product.rating"
+									half-increments
+									color="primary"
+									hover
+									readonly
+									size="x-small"
+									density="comfortable"></v-rating>
 								<span class="ml-2 text-caption">
 									({{ product.opinions?.length }} opinii)
 								</span>
@@ -71,7 +83,7 @@
 						class="order-2 order-sm-1 order-lg-last">
 						<v-card flat>
 							<v-card-title class="px-0">
-								{{ product.price.price }} zł
+								{{ $formatters.priceFormatter(product.price.price) }} zł
 							</v-card-title>
 							<v-row
 								:no-gutters="true"
@@ -225,11 +237,14 @@
 						<v-card-title class="px-0">Opinie</v-card-title>
 						<v-card-text class="px-0">
 							<div class="my-4">
-								<ProductRatingSummary />
-								<ProductAddOpinion :product="{ name, photos }" />
+								<ProductRatingSummary :opinions="product.opinions" />
+								<ProductAddOpinion
+									:product="product"
+									@new-opinion="onNewOpinion" />
 							</div>
 							<ProductOpionionGrid
-								:items="product.opinions"></ProductOpionionGrid>
+								:items="product.opinions"
+								@update-opinion="onUpdateOpinion"></ProductOpionionGrid>
 							<div class="mx-auto my-4 button-limit">
 								<v-btn
 									class="text-none"
@@ -265,76 +280,19 @@
 		product.value = productRes.value.data;
 	}
 
-	//       rating: 2.9,
-	//       opionions: [
-	//         {
-	//           createdAt: "10/31/2023",
-	//           rating: 4.5,
-	//           title: "Great purchase!",
-	//           review:
-	//             "Our big family room TV stopped working. We didnt want to spend a lot. This was a great deal and the perfect size. It has Roku so its taking a bit to get used tit. Picture is crystal clear! We are very happy with our purchase",
-	//           authorName: "John",
-	//           isVerifiedPurchase: true,
-	//           likes: 0,
-	//           dislikes: 10,
-	//         },
-	//         {
-	//           createdAt: "11/31/2023",
-	//           rating: 4.3,
-	//           title: "Świetny telefon",
-	//           review:
-	//             "Świetny telefon, działa jak burza. Jedyny mały minus to program zwrotu 400 zł, który jest tak na prawdę sprzedażą twoich danych jakimś zewnętrznym firmom. Moim zdaniem trochę nie fair polityka, bo można byłoby zwyczajnie obniżyć cenę urządzenia na start zamiast zmuszać do sprzedaży danych.",
-	//           authorName: "Marek",
-	//           isVerifiedPurchase: false,
-	//           likes: 41,
-	//           dislikes: 5,
-	//         },
-	//         {
-	//           createdAt: "1/31/2023",
-	//           rating: 3.45,
-	//           title: "Ok",
-	//           review:
-	//             "Najlepszy telefon obecnie na rynku, genialny aparat, mega szybki.",
-	//           authorName: "Kamil",
-	//           isVerifiedPurchase: true,
-	//           likes: 11,
-	//           dislikes: 5,
-	//         },
-	//         {
-	//           createdAt: "19/31/2023",
-	//           rating: 3.45,
-	//           title: "Ok",
-	//           review: `Dory smartfon.Używam iPhone 15 plus i do niego pomimo różnic w systemie porównam.Szybkość działania podobna,skaner twarzy
-	// gorszy,odcisk palca szybki,wyświetlacz dobry lecz nie ma wielkiej różnicy w oglądaniu ( onepus lepszy przy przewijaniu obrazu
-	// np.góra-dół).Przewaga oneplusa to to,że jest bardziej poręczny od iPhona 15 plus ,lepiej się go trzyma w ręku-jest jednak węższy.Jeżeli ktoś
-	// obawia się wielkości ekranu to niech się nie martwi,ten smarfon wymiarami bardzo podobny jak stary Samsung A 70. Super telefon . Pełnoprawny flagowiec. Wydajność , ekran, aparat , bateria na najwyższym poziomie . Wersja kolorystyczna`,
-	//           authorName: "Radosław",
-	//           isVerifiedPurchase: true,
-	//           likes: 1,
-	//           dislikes: 0,
-	//         },
-	//         {
-	//           createdAt: "1/31/2023",
-	//           rating: 3.45,
-	//           title: "Ok",
-	//           review: "Całkiem Ok",
-	//           authorName: "Kamil",
-	//           isVerifiedPurchase: true,
-	//           likes: 11,
-	//           dislikes: 5,
-	//         },
-	//         {
-	//           createdAt: "1/31/2023",
-	//           rating: 1.45,
-	//           title: "Spoko",
-	//           review: `Smartfon działa i wygląda bardzo dobrze. Aparatu jeszcze nie przetestowałem, ale bateria, jej ładowanie i długość pracy jest rewelacja.
-	// Co prawda okazało się że najnowszy Snapdragon jest za nowy i np. gra Pokemon Go co jakiś czas się wywraca, ale to podobno wina Nintica i
-	// Unity, bo to samo jest na Samsungu S24 Ultra.`,
-	//           authorName: "Kamil",
-	//           isVerifiedPurchase: true,
-	//           likes: 11,
-	//           dislikes: 5,
-	//         },
+	function onNewOpinion(newOpinion) {
+		product.value.opinions = [...product.value.opinions, newOpinion];
+	}
+
+	function onUpdateOpinion(updatedOpinion) {
+		console.log(updatedOpinion);
+		const opinions = [...product.value.opinions];
+		const index = opinions.findIndex((o) => o.id === updatedOpinion.id);
+		if (index !== -1) {
+			opinions.splice(index, 1, updatedOpinion);
+			product.value.opinions = opinions;
+		}
+	}
 </script>
 <style scoped>
 	.border {

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace electro.api.rest.Models
 {
-    public class ApplicationDbContext : IdentityDbContext<UserModel, IdentityRole<Guid>, Guid>
+    public class ApplicationDbContext : IdentityDbContext<UserModel, RoleModel, Guid>
     {
         public DbSet<UserModel> Users {  get; set; }
         public DbSet<AddressModel> Addresses { get; set; }

@@ -186,7 +186,7 @@
 					</v-col>
 					<v-col cols="12">
 						<v-checkbox
-							:model-value="product.isArchived"
+							v-model="product.isArchived"
 							color="primary"
 							hide-details
 							density="compact"
@@ -194,7 +194,7 @@
 					</v-col>
 					<v-col cols="12">
 						<v-checkbox
-							:model-value="product.isPublished"
+							v-model="product.isPublished"
 							color="primary"
 							hide-details
 							density="compact"

@@ -1,17 +1,25 @@
 <template>
-	<MasonryWall :items="items" :gap="16">
+	<MasonryWall
+		:items="items"
+		:gap="16">
 		<template #default="{ item, column, row, index }">
-			<ProductOpinion :opinion="item" />
+			<ProductOpinion
+				@update-opinion="onUpdateOpinion"
+				:opinion="item" />
 		</template>
 	</MasonryWall>
 </template>
-<script>
-export default {
-	props: {
+<script setup>
+	const props = defineProps({
 		items: {
-			type: Array
-		}
+			type: Array,
+		},
+	});
+
+	const emit = defineEmits("update-opinion");
+
+	function onUpdateOpinion(updatedOpinion) {
+		emit("update-opinion", updatedOpinion);
 	}
-};
 </script>
 <style></style>

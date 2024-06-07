@@ -1,9 +1,10 @@
 <template>
 	<v-app-bar
+		:height="100"
 		:absolute="true"
-		:floating="true">
+		floating>
 		<Container>
-			<v-row class="ma-0">
+			<v-row class="ma-0 pt-2">
 				<NuxtLink
 					to="/"
 					style="display: block">
@@ -54,7 +55,10 @@
 							Załóż konto
 						</v-btn>
 					</template>
-					<AccountIconAndMenu v-else/>
+					<AccountIconAndMenu v-else />
+				</div>
+				<div class="pt-2">
+					<Categories />
 				</div>
 			</v-row>
 		</Container>
@@ -67,4 +71,3 @@
 		},
 	};
 </script>
-<style></style>

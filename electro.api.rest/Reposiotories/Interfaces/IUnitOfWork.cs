@@ -5,6 +5,8 @@
         IGroupRepository Groups { get; }
 
         IProductRepository Products { get; }
+
+        IOpinionRepository Opinions { get; }
         Task CompleteAsync();
     }
 }

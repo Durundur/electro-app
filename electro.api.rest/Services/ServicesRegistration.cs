@@ -8,10 +8,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
-using electro.api.rest.Services;
 using electro.api.rest.Filters;
 
-namespace electro.api.rest.Helpers
+namespace electro.api.rest.Services
 {
     public static class ServicesRegistration
     {
@@ -37,7 +36,7 @@ namespace electro.api.rest.Helpers
 
         public static IServiceCollection AddJwtAuth(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddIdentity<UserModel, IdentityRole<Guid>>(options =>
+            services.AddIdentity<UserModel, RoleModel>(options =>
             {
                 options.Password.RequiredLength = 3;
                 options.Password.RequireNonAlphanumeric = false;
@@ -55,14 +54,14 @@ namespace electro.api.rest.Helpers
                 {
                     options.TokenValidationParameters = new TokenValidationParameters()
                     {
-                        ValidateActor = true,
                         ValidateIssuer = true,
-                        ValidateAudience = true,
-                        RequireExpirationTime = true,
+                        ValidIssuer = configuration.GetSection("Jwt:Issuer").Value,
                         ValidateIssuerSigningKey = true,
-                        ValidIssuer = configuration["Jwt:Issuer"],
-                        ValidAudience = configuration["Jwt:Issuer"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetSection("Jwt:Key").Value)),
+                        RequireExpirationTime = true,
+
+                        ValidateActor = false,
+                        ValidateAudience = false,
                     };
                 });
             return services;

@@ -1,12 +1,15 @@
 ﻿using AutoMapper;
 using electro.api.rest.Dtos;
+using electro.api.rest.Filters;
 using electro.api.rest.Models;
 using electro.api.rest.Reposiotories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace electro.api.rest.Controllers
 {
+    [ServiceFilter(typeof(ExceptionFilter))]
     [ApiController]
     [Route("api/[controller]")]
     public class ProductsController : ControllerBase
@@ -38,6 +41,7 @@ namespace electro.api.rest.Controllers
 
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateProduct(ProductDto product)
         {
             var productModel = _mapper.Map<ProductModel>(product);
@@ -47,6 +51,7 @@ namespace electro.api.rest.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateProduct(string id, ProductDto product)
         {
             if (id != product.Id.ToString())

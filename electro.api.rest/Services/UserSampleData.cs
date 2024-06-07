@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Data;
 using Microsoft.AspNetCore.Authentication;
 
-namespace electro.api.rest.Helpers
+namespace electro.api.rest.Services
 {
     public static class UserSampleData
     {
@@ -15,11 +15,11 @@ namespace electro.api.rest.Helpers
             {
                 var cntx = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<UserModel>>();
-                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<RoleModel>>();
                 if (!await cntx.Database.EnsureCreatedAsync())
                 {
-                    var adminRole = new IdentityRole<Guid>("Admin");
-                    var userRole = new IdentityRole<Guid>("User");
+                    var adminRole = new RoleModel("Admin");
+                    var userRole = new RoleModel("User");
 
                     await roleManager.CreateAsync(adminRole);
                     await roleManager.CreateAsync(userRole);

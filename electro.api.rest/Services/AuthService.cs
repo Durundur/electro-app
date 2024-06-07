@@ -3,7 +3,9 @@ using electro.api.rest.Models;
 using electro.api.rest.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -14,13 +16,13 @@ namespace electro.api.rest.Services
     public class AuthService : IAuthService
     {
         private readonly UserManager<UserModel> _userManager;
-        //private readonly UserManager<IdentityRole<Guid>> _roleManager;
+        private readonly RoleManager<RoleModel> _roleManager;
         private readonly IConfiguration _configuration;
 
-        public AuthService(UserManager<UserModel> userManager, IConfiguration configuration)
+        public AuthService(UserManager<UserModel> userManager, RoleManager<RoleModel> roleManager, IConfiguration configuration)
         {
             _userManager = userManager;
-            //_roleManager = roleManager;
+            _roleManager = roleManager;
             _configuration = configuration;
         }
 
@@ -30,9 +32,10 @@ namespace electro.api.rest.Services
 
             if (user != null && await _userManager.CheckPasswordAsync(user, credentials.Password))
             {
+                var userRoles = await _userManager.GetRolesAsync(user);
                 var response = new AuthResponseDto()
                 {
-                    JwtToken = this.GenerateTokenString(user.Email),
+                    JwtToken = this.GenerateTokenString(user, userRoles),
                     RefreshToken = this.GenerateRefreshTokenString(),
                     Success = true,
                     Message = "Successfully signed in."
@@ -58,9 +61,21 @@ namespace electro.api.rest.Services
             };
             var userResult = await _userManager.CreateAsync(user, credentials.Password);
             if(userResult.Succeeded) {
+
+                var userRole = await _roleManager.FindByNameAsync("User");
+                if(userRole == null)
+                {
+                    var roleResult = await _roleManager.CreateAsync(new RoleModel("User"));
+                    if(!roleResult.Succeeded)
+                    {
+                        throw new InvalidOperationException("Cant create account");
+                    }
+                    await _userManager.AddToRolesAsync(user, new List<string>() { "User" });
+                }
+                var userRoles = await _userManager.GetRolesAsync(user);
                 var response = new AuthResponseDto()
                 {
-                    JwtToken = this.GenerateTokenString(user.Email),
+                    JwtToken = this.GenerateTokenString(user, userRoles),
                     RefreshToken = this.GenerateRefreshTokenString(),
                     Success = true,
                     Message = "Successfully registered."
@@ -93,7 +108,9 @@ namespace electro.api.rest.Services
             if (user is null || user.RefreshToken != jwt.RefreshToken || user.RefreshTokenExpiry < DateTime.Now)
                 return response;
 
-            response.JwtToken = this.GenerateTokenString(user.Email);
+            var userRoles = await _userManager.GetRolesAsync(user);
+
+            response.JwtToken = this.GenerateTokenString(user, userRoles);
             response.RefreshToken = this.GenerateRefreshTokenString();
             response.Success = true;
 
@@ -131,19 +148,23 @@ namespace electro.api.rest.Services
             return Convert.ToBase64String(randomNumber);
         }
 
-        private string GenerateTokenString(string email, string role = "ADMIN")
+        private string GenerateTokenString(UserModel user, IEnumerable<string> roles)
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Email,email),
-                new Claim(ClaimTypes.Role, role),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Email,user.Email)
             };
-
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
             var staticKey = _configuration.GetSection("Jwt:Key").Value;
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(staticKey));
             var signingCred = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
 
             var securityToken = new JwtSecurityToken(
+                issuer: _configuration.GetSection("Jwt:Issuer").Value,
                 claims: claims,
                 expires: DateTime.Now.AddMinutes(Double.Parse(_configuration.GetSection("Jwt:ExpirationTimeMinutes").Value)).ToUniversalTime(),
                 signingCredentials: signingCred

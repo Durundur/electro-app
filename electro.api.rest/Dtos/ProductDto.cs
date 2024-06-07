@@ -17,5 +17,6 @@ namespace electro.api.rest.Dtos
         public int StockQuantity { get; set; }
         public bool IsArchived { get; set; }
         public bool IsPublished { get; set; }
+        public List<OpinionDto> Opinions { get; set; } = new List<OpinionDto>();
     }
 }

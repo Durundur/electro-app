@@ -7,6 +7,7 @@
 		<p class="d-block text-center mb-4">Masz ten produkt?</p>
 		<div class="mx-auto my-4 button-limit">
 			<v-dialog
+				v-model="isDialogOpen"
 				max-width="520px"
 				persistent>
 				<template v-slot:activator="{ props: activatorProps }">
@@ -35,16 +36,24 @@
 									:src="product.photos[0]"></v-img>
 								<span>{{ product.name }}</span>
 							</div>
-							<div class="d-flex flex-column my-4">
-								<span class="d-block text-center">Twoja ocena produktu</span>
-								<ProductRatingStars v-model="rating" />
+							<div class="my-4 text-center">
+								<p>Twoja ocena produktu</p>
+								<v-rating
+									v-model="opinion.rating"
+									half-increments
+									color="primary"
+									hover></v-rating>
 							</div>
 							<span class="d-block mb-4">
 								Napisz, co myślisz o tym produkcie:
 							</span>
-							<div>
-								<v-form>
+							<v-form
+								ref="opinionForm"
+								@submit.prevent="onSubmitOpinion">
+								<div>
 									<v-textarea
+										v-model="opinion.review"
+										:rules="$v.required"
 										persistent-hint
 										hint="Pamiętaj, że Twoja opinia powinna dotyczyć produktu i jego funkcjonalności."
 										density="compact"
@@ -53,24 +62,28 @@
 										variant="outlined"
 										class="mb-4"></v-textarea>
 									<v-text-field
+										v-model="opinion.authorDisplayName"
+										:rules="$v.required"
 										density="compact"
 										variant="outlined"
 										label="Imię"></v-text-field>
 									<v-text-field
+										:rules="$v.required"
 										density="compact"
 										variant="outlined"
 										label="E-mail"></v-text-field>
-								</v-form>
-							</div>
-							<div class="d-flex">
-								<v-spacer></v-spacer>
-								<v-btn
-									class="text-none"
-									color="primary"
-									variant="elevated">
-									Dodaj opinię
-								</v-btn>
-							</div>
+								</div>
+								<div class="d-flex">
+									<v-spacer></v-spacer>
+									<v-btn
+										class="text-none"
+										color="primary"
+										variant="elevated"
+										type="submit">
+										Dodaj opinię
+									</v-btn>
+								</div>
+							</v-form>
 						</v-card-text>
 					</v-card>
 				</template>
@@ -78,24 +91,40 @@
 		</div>
 	</v-sheet>
 </template>
-<script>
-	export default {
-		props: {
-			product: {
-				type: Object,
-			},
+<script setup>
+	const props = defineProps({
+		product: {
+			type: Object,
+			required: true,
 		},
-		data() {
-			return {
-				rating: 2,
-			};
-		},
-		watch: {
-			rating(v) {
-				console.log(v);
-			},
-		},
-	};
+	});
+	const { $api, $toast } = useNuxtApp();
+	const emit = defineEmits(["new-opinion"]);
+	const isDialogOpen = ref(false);
+	const opinion = ref({
+		review: "",
+		authorDisplayName: "",
+		rating: null,
+		productId: null,
+	});
+	const opinionForm = ref(null);
+
+	async function onSubmitOpinion() {
+		if (opinionForm.value.isValid) {
+			opinion.value.productId = props.product.id;
+			const response = await $api.post(
+				`api/opinions/product/${props.product.id}`,
+				opinion.value,
+			);
+			if (!response.ok) {
+				$toast.error("Błąd podczas dodawania opinii");
+				return;
+			}
+			$toast.success("Pomyślnie dodano opinię");
+			isDialogOpen.value = false;
+			emit("new-opinion", response.data);
+		}
+	}
 </script>
 <style>
 	@media only screen and (min-width: 600px) {

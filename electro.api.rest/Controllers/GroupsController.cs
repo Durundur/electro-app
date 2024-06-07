@@ -5,6 +5,7 @@ using electro.api.rest.Filters;
 using electro.api.rest.Models;
 using electro.api.rest.Reposiotories.Interfaces;
 using electro.api.rest.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,6 +34,7 @@ namespace electro.api.rest.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetGroups() {
             var groups = await _unitOfWork.Groups.GetGroups().Include(g => g.Categories).ToListAsync();
             var groupsDto = _mapper.Map<IEnumerable<GroupDto>>(groups);
@@ -40,6 +42,7 @@ namespace electro.api.rest.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateGroup(GroupDto groupDto)
         {
             var groupModel = _mapper.Map<GroupModel>(groupDto);
@@ -49,6 +52,7 @@ namespace electro.api.rest.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateGroup(int id, GroupDto groupDto)
         {
             var groupModel = _mapper.Map<GroupModel>(groupDto);
@@ -62,6 +66,7 @@ namespace electro.api.rest.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteGroup(int id)
         {
             await _unitOfWork.Groups.DeleteGroup(id);
@@ -70,6 +75,7 @@ namespace electro.api.rest.Controllers
         }
 
         [HttpGet("categories")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetCategories()
         {
             var categories = await _unitOfWork.Groups.GetCategories().Include(c => c.SubCategories).ToListAsync();
@@ -78,6 +84,7 @@ namespace electro.api.rest.Controllers
         }
 
         [HttpGet("categories/free")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetFreeCategories()
         {
             var categories = await _unitOfWork.Groups.GetCategories().Where(c => c.GroupId == null).ToListAsync();
@@ -87,6 +94,7 @@ namespace electro.api.rest.Controllers
 
 
         [HttpPost("categories")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateCategory(CategoryDto categoryDto)
         {
             var categoryModel = _mapper.Map<CategoryModel>(categoryDto);
@@ -97,6 +105,7 @@ namespace electro.api.rest.Controllers
         }
 
         [HttpPut("categories/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateCategory(int id, CategoryDto categoryDto)
         {
             var categoryModel = _mapper.Map<CategoryModel>(categoryDto);
@@ -111,6 +120,7 @@ namespace electro.api.rest.Controllers
         }
 
         [HttpDelete("categories/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
             await _unitOfWork.Groups.DeleteCategory(id);
@@ -120,6 +130,7 @@ namespace electro.api.rest.Controllers
 
 
         [HttpGet("subcategories")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetSubCategories()
         {
             var subCategories = await _unitOfWork.Groups.GetSubCategories().ToListAsync();
@@ -128,6 +139,7 @@ namespace electro.api.rest.Controllers
         }
 
         [HttpGet("subcategories/free")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetFreeSubCategories()
         {
             var subCategories = await _unitOfWork.Groups.GetSubCategories().Where(s => s.CategoryId == null).ToListAsync();
@@ -136,6 +148,7 @@ namespace electro.api.rest.Controllers
         }
 
         [HttpPost("subcategories")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateSubCategory(SubCategoryDto subCategoryDto)
         {
             var subCategoryModel = _mapper.Map<SubCategoryModel>(subCategoryDto);
@@ -146,6 +159,7 @@ namespace electro.api.rest.Controllers
         }
 
         [HttpDelete("subcategories/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteSubCategory(int id)
         {
             await _unitOfWork.Groups.DeleteSubCategory(id);
@@ -155,6 +169,7 @@ namespace electro.api.rest.Controllers
 
 
         [HttpPut("subcategories/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateSubCategory(int id, SubCategoryDto subCategoryDto)
         {
             var subCategoryModel = _mapper.Map<SubCategoryModel>(subCategoryDto);

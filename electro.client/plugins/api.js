@@ -26,6 +26,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 				const response = await fetch(url, requestOptions);
 				return { data: response._data, ok: true, status: response.status };
 			} catch (error) {
+				console.log(error);
 				if (error.status) {
 					return { error: { ...error.data }, ok: false, status: error.status };
 				}

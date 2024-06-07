@@ -9,7 +9,8 @@ namespace electro.api.rest.Models
         public bool IsActive { set; get; }
         public string? RefreshToken { set; get; }
         public DateTime RefreshTokenExpiry { set; get; }
-        public IEnumerable<AddressModel> Address { get; set; } = new List<AddressModel>();
+        public IList<AddressModel> Address { get; set; } = new List<AddressModel>();
+        public IList<OpinionModel> Opinions { set; get; } = new List<OpinionModel>();
 
     }
 }

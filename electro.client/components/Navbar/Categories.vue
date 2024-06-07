@@ -1,48 +1,152 @@
 <template>
-	<v-sheet color="grey-lighten-4">
-		<v-row>
-			<div class="icon-container">
-				<v-icon>mdi-laptop</v-icon>
-				<div>Laptopy i komputery</div>
-			</div>
-			<div class="icon-container">
-				<v-icon>mdi-cellphone</v-icon>
-				<div>Smartfony i smartwatche</div>
-			</div>
-			<div class="icon-container">
-				<v-icon>mdi-controller</v-icon>
-				<div>Gaming i streaming</div>
-			</div>
-			<div class="icon-container">
-				<v-icon>mdi-memory</v-icon>
-				<div>Podzespoły komputerowe</div>
-			</div>
-			<div class="icon-container">
-				<v-icon>mdi-printer</v-icon>
-				<div>Urządzenia peryferyjne</div>
-			</div>
-			<div class="icon-container">
-				<v-icon>mdi-television-play</v-icon>
-				<div>TV i audio</div>
-			</div>
-			<div class="icon-container">
-				<v-icon>mdi-home-city-outline</v-icon>
-				<div>Smartfony i lifestyle</div>
-			</div>
+	<v-container
+		fluid
+		class="pa-0">
+		<v-row
+			no-gutters
+			align="center">
+			<v-col
+				:cols="groups.length / 12"
+				v-for="group in groups"
+				:key="group.id">
+				<v-menu
+					open-on-hover
+					width="600">
+					<template v-slot:activator="{ props }">
+						<v-btn
+							variant="text"
+							class="text-none w-100"
+							v-bind="props"
+							stacked
+							density="compact"
+							slim
+							size="small">
+							{{ group.name }}
+						</v-btn>
+					</template>
+					<v-card @mouseleave="clearHoverCategory">
+						<v-container>
+							<v-row>
+								<v-col
+									cols="6"
+									class="pa-0"
+									@mouseenter="clearHideTimeout"
+									@mouseleave="setHideTimeout">
+									<v-list density="compact">
+										<v-list-item
+											slim
+											density="compact">
+											<div
+												class="d-flex flex-row justify-space-between align-center">
+												<span>{{ group.name }}</span>
+												<v-btn
+													class="text-none"
+													variant="plain"
+													density="compact"
+													slim>
+													wszystkie
+												</v-btn>
+											</div>
+										</v-list-item>
+										<v-list-item
+											v-for="(category, index) in group.categories"
+											:active="
+												hoverCategory.id == category.id &&
+												hoverCategory.name === category.name
+											"
+											link
+											slim
+											density="compact"
+											:key="index"
+											:append-icon="
+												category.subCategories.length > 0
+													? 'mdi-chevron-right'
+													: ''
+											"
+											@mouseenter="setHoverCategory(category)">
+											{{ category.name }}
+										</v-list-item>
+									</v-list>
+								</v-col>
+								<v-col
+									cols="6"
+									class="pa-0 pl-2">
+									<v-img
+										v-if="!hoverCategory.id && !hoverCategory.name"
+										:src="group.photo"></v-img>
+									<v-list
+										v-if="hoverCategory.subCategories"
+										density="compact">
+										<v-list-item
+											slim
+											density="compact">
+											<div
+												class="d-flex flex-row justify-space-between align-baseline">
+												<span>{{ hoverCategory.name }}</span>
+												<v-btn
+													class="text-none"
+													variant="plain"
+													density="compact"
+													slim>
+													wszystkie
+												</v-btn>
+											</div>
+										</v-list-item>
+										<v-list-item
+											v-for="(
+												subCategory, index
+											) in hoverCategory.subCategories"
+											:key="index"
+											slim
+											density="compact"
+											link>
+											{{ subCategory.name }}
+										</v-list-item>
+									</v-list>
+									<v-btn
+										v-if="hoverCategory.subCategories?.length === 0"
+										class="text-none"
+										variant="outlined"
+										density="compact"
+										slim
+										block>
+										Pokaż {{ hoverCategory.name }}
+									</v-btn>
+								</v-col>
+							</v-row>
+						</v-container>
+					</v-card>
+				</v-menu>
+			</v-col>
 		</v-row>
-	</v-sheet>
+	</v-container>
 </template>
-<style>
-.icon-container {
-	display: flex;
-	flex-direction: row;
-	max-width: 130px;
-	align-items: center;
-	gap: 8px;
-}
-.icon-container:hover {
-	background-color: #fff;
-	border-top-left-radius: 10px;
-	border-top-right-radius: 10px;
-}
+
+<script setup>
+	import { ref } from "vue";
+
+	const { $api } = useNuxtApp();
+	const groups = ref([]);
+	const hoverCategory = ref({});
+
+	const { data: groupsRes } = await useAsyncData(() =>
+		$api.get("api/groups/allGroups"),
+	);
+	if (groupsRes.value.ok) {
+		groups.value = groupsRes.value.data;
+	}
+
+	const setHoverCategory = (category) => {
+		hoverCategory.value = category;
+	};
+
+	const clearHoverCategory = () => {
+		hoverCategory.value = {};
+	};
+</script>
+
+<style scoped>
+	:deep(.v-list-item--density-compact.v-list-item--one-line) {
+		min-height: unset;
+	}
 </style>

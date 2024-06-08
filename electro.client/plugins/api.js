@@ -1,24 +1,34 @@
 export default defineNuxtPlugin((nuxtApp) => {
 	const config = useRuntimeConfig();
+	const authStore = useAuthStore();
 
 	nuxtApp.provide("api", {
 		get: request("GET"),
 		post: request("POST"),
 		put: request("PUT"),
 		delete: request("DELETE"),
+		fetch,
 	});
 
-	const fetch = (url, options = {}) =>
-		$fetch.raw(`${config.public.API_URL}/${url}`, options);
-
-	const authStore = useAuthStore();
+	function fetch(url, options = {}) {
+		return $fetch.raw(`${config.public.API_URL}/${url}`, options);
+	}
 
 	function request(method) {
 		return async (url, body) => {
+			if (!(await authStore.ensureTokenValidity())) {
+				return {
+					error: {
+						message: "Błąd uwierzytelniania",
+					},
+					ok: false,
+					status: 401,
+				};
+			}
 			const requestOptions = {
 				method,
 				headers: {
-					...authStore.getAuthHeader,
+					...authStore.getTokenHeader(),
 				},
 				body: body ? body : null,
 			};
@@ -26,16 +36,30 @@ export default defineNuxtPlugin((nuxtApp) => {
 				const response = await fetch(url, requestOptions);
 				return { data: response._data, ok: true, status: response.status };
 			} catch (error) {
-				console.log(error);
 				if (error.status) {
-					return { error: { ...error.data }, ok: false, status: error.status };
+					if ([401, 403].includes(error.status)) {
+						authStore.logout();
+						await navigateTo("/auth/login");
+						return {
+							error: {
+								message: "Błąd uwierzytelniania",
+							},
+							ok: false,
+							status: error.status,
+						};
+					}
+					return {
+						error: { ...error.data },
+						ok: false,
+						status: error.status,
+					};
 				}
 				return {
 					error: {
 						message: "Błąd połączenia z serwerem",
 					},
 					ok: false,
-					status: error.status,
+					status: 500,
 				};
 			}
 		};

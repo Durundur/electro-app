@@ -8,7 +8,7 @@
 					<v-card-title>Zaloguj się</v-card-title>
 					<v-card-text>
 						<v-form
-							ref="form"
+							ref="loginForm"
 							@submit.prevent="login()">
 							<v-text-field
 								density="compact"
@@ -35,7 +35,7 @@
 							<v-btn
 								variant="text"
 								class="text-none"
-								@click="isResetPassVisible = true">
+								@click="resetPassDialog = true">
 								Nie pamiętasz hasła?
 							</v-btn>
 							<v-btn
@@ -82,7 +82,7 @@
 		<v-dialog
 			max-width="520px"
 			class="rounded-lg"
-			v-model="isResetPassVisible"
+			v-model="resetPassDialog"
 			:persistent="true">
 			<v-card
 				rounded="lg"
@@ -116,7 +116,7 @@
 							block
 							class="text-none"
 							@click="
-								isResetPassVisible = false;
+								resetPassDialog = false;
 								$refs.resetPassForm.reset();
 							">
 							Anuluj
@@ -127,47 +127,31 @@
 		</v-dialog>
 	</Container>
 </template>
-<script>
-	export default {
-		data() {
-			return {
-				showPass: false,
-				isResetPassVisible: false,
-				erorrMessage: "",
-				resetPassEmail: "",
-				loginCredentails: {
-					email: "",
-					password: "",
-				},
-			};
-		},
-		methods: {
-			async login() {
-				if (this.$refs.form.isValid) {
-					const response = await this.$nuxt.$auth.login(this.loginCredentails);
-					if (!response.ok) {
-						this.loginCredentails.password = "";
-						this.$nuxt.$toast.error(response.data.message);
-					} else {
-						this.$nuxt.$toast.success(response.data.message);
-					}
-				}
-			},
-			resetPassword() {
-				if (this.$refs.resetPassForm.isValid) {
-					const response = this.$nuxt.api.post(
-						"/api/auth/resetPassword",
-						resetPassEmail,
-					);
-					if (!response.ok) {
-						this.$nuxt.$toast.error(response.data.message);
-					} else {
-						this.resetPassEmail = "";
-						this.isResetPassVisible = true;
-						this.$nuxt.$toast.success(response.data.message);
-					}
-				}
-			},
-		},
-	};
+<script setup>
+	import { useAuthStore } from "#imports";
+	const authStore = useAuthStore();
+	const { $toast } = useNuxtApp();
+	const showPass = ref(false);
+	const resetPassDialog = ref(false);
+	const loginCredentails = ref({
+		email: "",
+		password: "",
+	});
+
+	const resetPassEmail = ref("");
+	const loginForm = ref(null);
+	const resetPassForm = ref(null);
+
+	async function login() {
+		if (loginForm.value.isValid) {
+			const { ok, _data: data } = await authStore.login(loginCredentails.value);
+			if (!ok) {
+				loginCredentails.value.password = "";
+				$toast.error(data.message);
+			} else {
+				$toast.success(data.message);
+			}
+		}
+	}
+	async function resetPassword() {}
 </script>

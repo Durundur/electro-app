@@ -38,7 +38,10 @@ namespace electro.api.rest.Services
                     JwtToken = this.GenerateTokenString(user, userRoles),
                     RefreshToken = this.GenerateRefreshTokenString(),
                     Success = true,
-                    Message = "Successfully signed in."
+                    Message = "Successfully signed in.",
+                    Roles = userRoles,
+                    UserId = user.Id.ToString(),
+                    TokenExpiry = DateTime.Now.AddMinutes(Double.Parse(_configuration.GetSection("Jwt:ExpirationTimeMinutes").Value)).ToUniversalTime(),
                 };
                 user.RefreshToken = response.RefreshToken;
                 user.RefreshTokenExpiry = DateTime.Now.AddMinutes(Double.Parse(_configuration.GetSection("Jwt:RefreshTokenExpirationTimeMinutes").Value)).ToUniversalTime();
@@ -78,7 +81,10 @@ namespace electro.api.rest.Services
                     JwtToken = this.GenerateTokenString(user, userRoles),
                     RefreshToken = this.GenerateRefreshTokenString(),
                     Success = true,
-                    Message = "Successfully registered."
+                    Message = "Successfully registered.",
+                    Roles = userRoles,
+                    UserId = user.Id.ToString(),
+                    TokenExpiry = DateTime.Now.AddMinutes(Double.Parse(_configuration.GetSection("Jwt:ExpirationTimeMinutes").Value)).ToUniversalTime(),
                 };
                 user.RefreshToken = response.RefreshToken;
                 user.RefreshTokenExpiry = DateTime.Now.AddMinutes(Double.Parse(_configuration.GetSection("Jwt:RefreshTokenExpirationTimeMinutes").Value)).ToUniversalTime();
@@ -95,25 +101,28 @@ namespace electro.api.rest.Services
         public async Task<AuthResponseDto> RefreshToken(RefreshTokenRequest jwt)
         {
             var principal = GetTokenPrincipal(jwt.JwtToken);
+            if (principal == null)
+                return new AuthResponseDto() { Success = false, Message = "Invalid JWT token" };
 
-            var response = new AuthResponseDto
-            {
-                Success = false,
-            };
-            if (principal?.Identity?.Name is null)
-                return response;
+            var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+                return new AuthResponseDto() { Success = false, Message = "Invalid JWT token" };
 
-            var user = await _userManager.FindByNameAsync(principal.Identity.Name);
-
-            if (user is null || user.RefreshToken != jwt.RefreshToken || user.RefreshTokenExpiry < DateTime.Now)
-                return response;
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null || user.RefreshToken != jwt.RefreshToken || user.RefreshTokenExpiry < DateTime.Now)
+                return new AuthResponseDto() { Success = false };
 
             var userRoles = await _userManager.GetRolesAsync(user);
-
-            response.JwtToken = this.GenerateTokenString(user, userRoles);
-            response.RefreshToken = this.GenerateRefreshTokenString();
-            response.Success = true;
-
+            var response = new AuthResponseDto()
+            {
+                JwtToken = this.GenerateTokenString(user, userRoles),
+                RefreshToken = this.GenerateRefreshTokenString(),
+                Success = true,
+                Message = "Successfully refreshed token.",
+                Roles = userRoles,
+                UserId = user.Id.ToString(),
+                TokenExpiry = DateTime.Now.AddMinutes(Double.Parse(_configuration.GetSection("Jwt:ExpirationTimeMinutes").Value)).ToUniversalTime(),
+            };
             user.RefreshToken = response.RefreshToken;
             user.RefreshTokenExpiry = DateTime.Now.AddMinutes(Double.Parse(_configuration.GetSection("Jwt:RefreshTokenExpirationTimeMinutes").Value)).ToUniversalTime();
             await _userManager.UpdateAsync(user);
@@ -122,16 +131,17 @@ namespace electro.api.rest.Services
 
         private ClaimsPrincipal? GetTokenPrincipal(string token)
         {
-
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("Jwt:Key").Value));
-
-            var validation = new TokenValidationParameters
+            var validation = new TokenValidationParameters()
             {
-                IssuerSigningKey = securityKey,
-                ValidateLifetime = false,
-                ValidateActor = false,
                 ValidateIssuer = true,
-                ValidateAudience = true,
+                ValidIssuer = _configuration.GetSection("Jwt:Issuer").Value,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("Jwt:Key").Value)),
+                RequireExpirationTime = true,
+                ValidateLifetime = false,
+
+                ValidateActor = false,
+                ValidateAudience = false,
             };
             return new JwtSecurityTokenHandler().ValidateToken(token, validation, out _);
         }

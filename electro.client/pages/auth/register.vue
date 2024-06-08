@@ -2,10 +2,14 @@
 	<Container>
 		<v-row class="my-4">
 			<v-col>
-				<v-card rounded="lg" :elevation="4">
+				<v-card
+					rounded="lg"
+					:elevation="4">
 					<v-card-title>Załóż konto</v-card-title>
 					<v-card-text>
-						<v-form ref="form" @submit.prevent="register()">
+						<v-form
+							ref="form"
+							@submit.prevent="register()">
 							<v-text-field
 								v-model="registerCredentials.firstName"
 								:rules="$v.required"
@@ -14,8 +18,7 @@
 								label="Imię"
 								prepend-inner-icon="mdi-account"
 								hide-details="auto"
-								class="mb-4"
-							></v-text-field>
+								class="mb-4"></v-text-field>
 							<v-text-field
 								v-model="registerCredentials.lastName"
 								:rules="$v.required"
@@ -24,8 +27,7 @@
 								label="Nazwisko"
 								prepend-inner-icon="mdi-account"
 								hide-details="auto"
-								class="mb-4"
-							></v-text-field>
+								class="mb-4"></v-text-field>
 							<v-text-field
 								v-model="registerCredentials.email"
 								:rules="$v.required"
@@ -34,8 +36,7 @@
 								label="Email"
 								prepend-inner-icon="mdi-email-outline"
 								hide-details="auto"
-								class="mb-4"
-							></v-text-field>
+								class="mb-4"></v-text-field>
 							<v-text-field
 								v-model="registerCredentials.password"
 								:rules="$v.required"
@@ -44,14 +45,10 @@
 								label="Hasło"
 								prepend-inner-icon="mdi-lock-outline"
 								:type="showPass ? 'text' : 'password'"
-								:append-inner-icon="
-									showPass ? 'mdi-eye' : 'mdi-eye-off'
-								"
+								:append-inner-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
 								@click:append-inner="showPass = !showPass"
 								hide-details="auto"
-								class="mb-4"
-							>
-							</v-text-field>
+								class="mb-4"></v-text-field>
 							<v-text-field
 								v-model="registerCredentials.repeatPassword"
 								:rules="$v.required"
@@ -61,9 +58,7 @@
 								type="password"
 								prepend-inner-icon="mdi-lock-outline"
 								hide-details="auto"
-								class="mb-4"
-							>
-							</v-text-field>
+								class="mb-4"></v-text-field>
 							<v-checkbox
 								v-model="registerCredentials.rulesConfirmation"
 								:rules="$v.checkBoxRequired"
@@ -72,16 +67,15 @@
 								color="primary"
 								label="Akceptuję regulamin sklepu"
 								hide-details="auto"
-								class="mb-4"
-							></v-checkbox>
+								class="mb-4"></v-checkbox>
 							<v-btn
 								type="submit"
 								class="text-none"
 								block
 								:loading="loading"
-								color="primary"
-								>Załóż konto</v-btn
-							>
+								color="primary">
+								Załóż konto
+							</v-btn>
 						</v-form>
 					</v-card-text>
 				</v-card>
@@ -96,9 +90,9 @@
 							block
 							color="primary"
 							variant="tonal"
-							class="text-none"
-							>Zaloguj się</v-btn
-						>
+							class="text-none">
+							Zaloguj się
+						</v-btn>
 					</v-card-text>
 				</v-card>
 				<BenefitsList />
@@ -106,38 +100,35 @@
 		</v-row>
 	</Container>
 </template>
-<script>
-export default {
-	data() {
-		return {
-			showPass: false,
-			loading: false,
-			registerCredentials: {
-				firstName: "",
-				lastName: "",
-				email: "",
-				password: "",
-				repeatPassword: "",
-				rulesConfirmation: false,
-			},
-		};
-	},
-	methods: {
-		async register() {
-			if (this.$refs.form.isValid) {
-				const response = await this.$nuxt.$auth.register(this.registerCredentials);
-				if(response.success){
-					this.$nuxt.$toast.success(response.message)
-				}else{
-					this.$nuxt.$toast.error(response.message)
-				}
+<script setup>
+	const showPass = ref(false);
+	const registerCredentials = ref({
+		firstName: "",
+		lastName: "",
+		email: "",
+		password: "",
+		repeatPassword: "",
+		rulesConfirmation: false,
+	});
+	const registerForm = ref(null);
+	const authStore = useAuthStore();
+	const { $toast, $pinia } = useNuxtApp();
+
+	async function register() {
+		if (registerForm.isValid) {
+			const { ok, _data: data } = await authStore.register(
+				registerCredentials.value,
+			);
+			if (ok) {
+				$toast.success(data.message);
+			} else {
+				$toast.error(data.message);
 			}
-		},
-	},
-};
+		}
+	}
 </script>
 <style scoped>
-:deep(.v-input__details) {
-	padding-left: 16px;
-}
+	:deep(.v-input__details) {
+		padding-left: 16px;
+	}
 </style>

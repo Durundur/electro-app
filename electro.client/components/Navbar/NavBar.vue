@@ -34,7 +34,8 @@
 							<v-icon size="large"></v-icon>
 						</v-badge>
 					</v-btn>
-					<template v-if="!$auth.isLoggedIn()">
+					<AccountIconAndMenu v-if="authStore.isLoggedIn" />
+					<template v-else>
 						<v-btn
 							flat
 							size="small"
@@ -55,7 +56,6 @@
 							Załóż konto
 						</v-btn>
 					</template>
-					<AccountIconAndMenu v-else />
 				</div>
 				<div class="pt-2">
 					<Categories />
@@ -64,10 +64,6 @@
 		</Container>
 	</v-app-bar>
 </template>
-<script>
-	export default {
-		data() {
-			return {};
-		},
-	};
+<script setup>
+	const authStore = useAuthStore();
 </script>

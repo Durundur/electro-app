@@ -122,6 +122,7 @@
 			}
 			$toast.success("Pomyślnie dodano opinię");
 			isDialogOpen.value = false;
+			opinionForm.value.reset();
 			emit("new-opinion", response.data);
 		}
 	}

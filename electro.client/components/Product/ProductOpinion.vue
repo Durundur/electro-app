@@ -40,7 +40,8 @@
 				slim
 				density="comfortable"
 				color="success"
-				variant="outlined"
+				variant="text"
+				:active="opinion?.userAction === 'Like'"
 				prepend-icon="mdi-thumb-up-outline"
 				@click="onRateOpinion('like')">
 				{{ opinion.likes }}
@@ -50,7 +51,8 @@
 				density="comfortable"
 				class="ml-4"
 				color="error"
-				variant="outlined"
+				variant="text"
+				:active="opinion?.userAction === 'Dislike'"
 				prepend-icon="mdi-thumb-down-outline"
 				@click="onRateOpinion('dislike')">
 				{{ opinion.dislikes }}

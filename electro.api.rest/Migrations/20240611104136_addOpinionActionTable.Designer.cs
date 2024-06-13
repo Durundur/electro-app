@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using electro.api.rest.Models;
@@ -12,9 +13,11 @@ using electro.api.rest.Models;
 namespace electro.api.rest.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240611104136_addOpinionActionTable")]
+    partial class addOpinionActionTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -302,9 +305,6 @@ namespace electro.api.rest.Migrations
                     b.Property<int>("Availability")
                         .HasColumnType("integer");
 
-                    b.Property<float>("AvgOpinionsRating")
-                        .HasColumnType("real");
-
                     b.Property<int?>("CategoryId")
                         .HasColumnType("integer");
 
@@ -327,9 +327,6 @@ namespace electro.api.rest.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<int>("OpinionsCount")
-                        .HasColumnType("integer");
 
                     b.Property<List<byte[]>>("Photos")
                         .IsRequired()

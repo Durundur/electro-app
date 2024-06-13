@@ -20,6 +20,8 @@ namespace electro.api.rest.Models
         public bool IsArchived { get; set; }
         public bool IsPublished { get; set; }
         public List<OpinionModel> Opinions { get; set; } = new List<OpinionModel>();
+        public int OpinionsCount { get; set; } = 0;
+        public float AvgOpinionsRating { get; set; } = 0;
     }
 
     public enum AvailabilityState

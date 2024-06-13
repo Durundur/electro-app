@@ -6,6 +6,8 @@ using electro.api.rest.Reposiotories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata.Ecma335;
+using System.Security.Claims;
 
 namespace electro.api.rest.Controllers
 {
@@ -35,8 +37,19 @@ namespace electro.api.rest.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProductById(string id)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var product = await _unitOfWork.Products.GetProductById(id);
-            return Ok(_mapper.Map<ProductDto>(product));
+            var productDto = _mapper.Map<ProductDto>(product);
+            if (productDto == null) return NotFound();
+            foreach (var opinion in productDto?.Opinions)
+            {
+                var userAction = product.Opinions
+                    .FirstOrDefault(o => o.Id == opinion.Id)?
+                    .OpinionsActions
+                    .FirstOrDefault(oa => oa.UserId.ToString() == userId)?.ActionType;
+                opinion.UserAction = userAction?.ToString();
+            }
+            return Ok(productDto);
         }
 
 

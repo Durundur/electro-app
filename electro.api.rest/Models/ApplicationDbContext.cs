@@ -10,10 +10,13 @@ namespace electro.api.rest.Models
         public DbSet<AddressModel> Addresses { get; set; }
         public DbSet<ProductModel> Products { get; set; }
         public DbSet<OpinionModel> Opinions { get; set; }
+        public DbSet<OpinionActionModel> OpinionsActions { get; set; }
         public DbSet<GroupModel> Groups { get; set; }
         public DbSet<CategoryModel> Categories { get; set; }
         public DbSet<SubCategoryModel> SubCategories { get; set; }
         public DbSet<ProductSpecificationModel> ProductsSpecification { get; set; }
+
+        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -23,6 +23,7 @@ namespace electro.api.rest.Repositories
             return products;
         }
 
+        
         public async Task<ProductModel> GetProductById(string id)
         {
             var product = await _dbContext.Products
@@ -30,6 +31,7 @@ namespace electro.api.rest.Repositories
                 .Include(p => p.Category)
                 .Include(p => p.SubCategory)
                 .Include(p => p.Opinions)
+                .ThenInclude(o => o.OpinionsActions)
                 .Include(p => p.Specification)
                 .FirstOrDefaultAsync(p => p.Id.ToString() == id);
             return product;

@@ -27,7 +27,7 @@
 							</v-card-title>
 							<NuxtLink class="d-flex align-center">
 								<v-rating
-									v-model="product.rating"
+									v-model="product.avgOpinionsRating"
 									half-increments
 									color="primary"
 									hover
@@ -35,7 +35,7 @@
 									size="x-small"
 									density="comfortable"></v-rating>
 								<span class="ml-2 text-caption">
-									({{ product.opinions?.length }} opinii)
+									({{ product.opinionsCount }} opinii)
 								</span>
 							</NuxtLink>
 							<NuxtLink>
@@ -237,7 +237,9 @@
 						<v-card-title class="px-0">Opinie</v-card-title>
 						<v-card-text class="px-0">
 							<div class="my-4">
-								<ProductRatingSummary :opinions="product.opinions" />
+								<ProductRatingSummary
+									:product="product"
+									@fetch-opinions="onFetchOpinions" />
 								<ProductAddOpinion
 									:product="product"
 									@new-opinion="onNewOpinion" />
@@ -285,13 +287,23 @@
 	}
 
 	function onUpdateOpinion(updatedOpinion) {
-		console.log(updatedOpinion);
 		const opinions = [...product.value.opinions];
 		const index = opinions.findIndex((o) => o.id === updatedOpinion.id);
 		if (index !== -1) {
 			opinions.splice(index, 1, updatedOpinion);
 			product.value.opinions = opinions;
 		}
+	}
+
+	async function onFetchOpinions(rating) {
+		const response = await $api.get(
+			`api/opinions/product/${product.value.id}/rating/${rating}`,
+		);
+		const { ok, data } = response;
+		if (!ok) {
+			$toast.error("Błąd podczas pobierania opinii");
+		}
+		product.value.opinions = data;
 	}
 </script>
 <style scoped>

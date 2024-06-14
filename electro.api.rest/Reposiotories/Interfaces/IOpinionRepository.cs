@@ -7,7 +7,7 @@ namespace electro.api.rest.Reposiotories.Interfaces
     {
         Task<OpinionModel> CreateOpinionAsync(OpinionModel opinion);
         Task<OpinionModel> RateOpinionAsync(Guid  opinionId, Guid userId, OpinionActionType actionType);
-        Task<IEnumerable<OpinionModel>> GetOpinionsByRatingAsync(Guid prodcutId, int rating);
+        IQueryable<OpinionModel> GetOpinions(Guid prodcutId);
         Task<IEnumerable<OpinionsStats>> GetOpinionsStatsAsync(Guid productId);
     }
 }

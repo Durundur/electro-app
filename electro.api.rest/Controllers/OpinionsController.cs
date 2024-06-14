@@ -5,8 +5,8 @@ using electro.api.rest.Models;
 using electro.api.rest.Reposiotories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration.UserSecrets;
 using System.Security.Claims;
+using static electro.api.rest.Dtos.Filters;
 
 namespace electro.api.rest.Controllers
 {
@@ -31,24 +31,35 @@ namespace electro.api.rest.Controllers
             return Ok(stats.Reverse());
         }
 
-        [HttpGet("product/{productId}/rating/{rating}")]
-        public async Task<IActionResult> GetOpinionsByRating(Guid productId, int rating)
+
+        [HttpGet("product/{productId}")]
+        [HttpGet("product/{productId}/rating/{rating?}")]
+        public async Task<IActionResult> GetOpinionsToProduct(Guid productId, int? rating, [FromQuery] PaginationFilter paginationFilter)
         {
+            var validPaginationFilter = new PaginationFilter(paginationFilter.PageNumber, paginationFilter.PageSize);
             var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (rating > 5 || rating < 1) return BadRequest("Invalid parameters.");
-            var opinons = await _unitOfWork.Opinions.GetOpinionsByRatingAsync(productId, rating);
-            var opinionsDto = _mapper.Map<IEnumerable<OpinionDto>>(opinons);
+            IQueryable<OpinionModel> opinions = _unitOfWork.Opinions.GetOpinions(productId);
+
+            if (rating.HasValue)
+            {
+                opinions = opinions.Where(o => Math.Ceiling(o.Rating) == rating.Value);
+            }
+            opinions = opinions.OrderByDescending(o => o.CreatedAt);
+            var pagedOpinions = PagedDto<OpinionModel>.ToPagedDto(opinions, validPaginationFilter);
+            var opinionsDto = _mapper.Map<IEnumerable<OpinionDto>>(pagedOpinions.Data);
             foreach (var opinion in opinionsDto)
             {
-                var userAction = opinons
+                var userAction = opinions
                     .FirstOrDefault(o => o.Id == opinion.Id)?
                     .OpinionsActions
                     .FirstOrDefault(oa => oa.UserId.ToString() == userIdString)?.ActionType;
                 opinion.UserAction = userAction?.ToString();
             }
-            return Ok(opinionsDto);
+            var stats = await _unitOfWork.Opinions.GetOpinionsStatsAsync(productId);
+            var opinionsResponse = new PagedDto<OpinionDto>(opinionsDto, validPaginationFilter.PageNumber, validPaginationFilter.PageSize, pagedOpinions.TotalItems);
+            return Ok(new { stats = stats.Reverse(), opinions = opinionsResponse });
         }
-            
+
         [HttpPost("product/{productId}")]
         [Authorize(Roles = "Admin, User")]
         public async Task<IActionResult> CreateOpinion(OpinionDto opinion, string productId)

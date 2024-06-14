@@ -24,7 +24,7 @@ namespace electro.api.rest.Repositories
                 throw new NotFoundException("Product not found");
             }
             product.OpinionsCount++;
-            product.AvgOpinionsRating += opinion.Rating / 2;
+            product.AvgOpinionsRating = ((product.AvgOpinionsRating * (product.OpinionsCount - 1)) + opinion.Rating) / product.OpinionsCount;
             opinion.Product = product;
             _dbContext.Opinions.Add(opinion);
             return opinion;
@@ -75,9 +75,9 @@ namespace electro.api.rest.Repositories
             return opinion;
         }
 
-        public async Task<IEnumerable<OpinionModel>> GetOpinionsByRatingAsync(Guid productId, int rating)
+        public IQueryable<OpinionModel> GetOpinions(Guid productId)
         {
-            var opinons = await _dbContext.Opinions.Include(o => o.OpinionsActions).Where(o => o.ProductId == productId && Math.Ceiling(o.Rating) == rating).ToListAsync();
+            var opinons = _dbContext.Opinions.Include(o => o.OpinionsActions).Where(o => o.ProductId == productId).AsQueryable();
             return opinons;
         }
 

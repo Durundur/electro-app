@@ -238,8 +238,10 @@
 						<v-card-text class="px-0">
 							<div class="my-4">
 								<ProductRatingSummary
-									:product="product"
-									@fetch-opinions="onFetchOpinions" />
+									:opinionsStats="opinionsStats"
+									:avgOpinionsRating="product.avgOpinionsRating"
+									:opinionsCount="product.opinionsCount"
+									@fetch-opinions="fetchOpinions" />
 								<ProductAddOpinion
 									:product="product"
 									@new-opinion="onNewOpinion" />
@@ -249,6 +251,16 @@
 								@update-opinion="onUpdateOpinion"></ProductOpionionGrid>
 							<div class="mx-auto my-4 button-limit">
 								<v-btn
+									v-if="
+										opinionsPagination.pageNumber <
+										opinionsPagination.totalPages
+									"
+									@click="
+										fetchOpinions(
+											ratingFilter,
+											opinionsPagination.pageNumber + 1,
+										)
+									"
 									class="text-none"
 									color="primary"
 									block>
@@ -273,17 +285,30 @@
 	const { $api } = useNuxtApp();
 	const route = useRoute();
 	const product = ref({});
+	const opinionsStats = ref([]);
+	const opinionsPagination = ref({});
+	const ratingFilter = ref(null);
 
 	const { data: productRes } = await useAsyncData(() =>
 		$api.get(`api/products/${route.params.id}`),
 	);
-
 	if (productRes.value.ok) {
 		product.value = productRes.value.data;
 	}
 
+	const { data: opinionsRes } = await useAsyncData(() =>
+		$api.get(`api/opinions/product/${product.value.id}`),
+	);
+	if (opinionsRes.value.ok) {
+		const { stats, opinions } = opinionsRes.value.data;
+		const { data, ...pagination } = opinions;
+		product.value.opinions = data;
+		opinionsPagination.value = pagination;
+		opinionsStats.value = stats;
+	}
+
 	function onNewOpinion(newOpinion) {
-		product.value.opinions = [...product.value.opinions, newOpinion];
+		product.value.opinions = [newOpinion, ...product.value.opinions];
 	}
 
 	function onUpdateOpinion(updatedOpinion) {
@@ -295,15 +320,30 @@
 		}
 	}
 
-	async function onFetchOpinions(rating) {
-		const response = await $api.get(
-			`api/opinions/product/${product.value.id}/rating/${rating}`,
-		);
+	async function fetchOpinions(rating, page = 1) {
+		ratingFilter.value = rating;
+		let url = `api/opinions/product/${product.value.id}`;
+		if (rating !== null) {
+			url += `/rating/${rating}`;
+		}
+		if (page) {
+			const params = new URLSearchParams();
+			params.append("PageNumber", page);
+			url += `?${params.toString()}`;
+		}
+		const response = await $api.get(url);
 		const { ok, data } = response;
 		if (!ok) {
 			$toast.error("Błąd podczas pobierania opinii");
+			return;
 		}
-		product.value.opinions = data;
+		const { stats, opinions } = data;
+		const { data: opinionsItems, ...pagination } = opinions;
+		if (page !== 1)
+			product.value.opinions = [...product.value.opinions, ...opinionsItems];
+		else product.value.opinions = [...opinionsItems];
+		opinionsPagination.value = pagination;
+		opinionsStats.value = stats;
 	}
 </script>
 <style scoped>

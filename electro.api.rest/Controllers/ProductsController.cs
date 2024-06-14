@@ -37,18 +37,9 @@ namespace electro.api.rest.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProductById(string id)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var product = await _unitOfWork.Products.GetProductById(id);
             var productDto = _mapper.Map<ProductDto>(product);
             if (productDto == null) return NotFound();
-            foreach (var opinion in productDto?.Opinions)
-            {
-                var userAction = product.Opinions
-                    .FirstOrDefault(o => o.Id == opinion.Id)?
-                    .OpinionsActions
-                    .FirstOrDefault(oa => oa.UserId.ToString() == userId)?.ActionType;
-                opinion.UserAction = userAction?.ToString();
-            }
             return Ok(productDto);
         }
 

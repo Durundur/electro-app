@@ -254,21 +254,21 @@
 	const breadcrumbs = computed(() => {
 		const breadcrumbs = [];
 		const { group, category, subCategory } = product.value;
-		group.name
+		group?.name
 			? breadcrumbs.push({
 					title: group.name,
 					to: `/search/group/${group.id}`,
 					disabled: false,
 			  })
 			: null;
-		category.name
+		category?.name
 			? breadcrumbs.push({
 					title: category.name,
 					to: `/search/group/${group.id}/category/${category.id}`,
 					disabled: false,
 			  })
 			: null;
-		subCategory.name
+		subCategory?.name
 			? breadcrumbs.push({
 					title: subCategory.name,
 					to: `/search/group/${group.id}/category/${category.id}/subcategory/${subCategory.id}`,

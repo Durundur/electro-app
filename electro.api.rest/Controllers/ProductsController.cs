@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata.Ecma335;
 using System.Security.Claims;
+using static electro.api.rest.Dtos.Filters;
 
 namespace electro.api.rest.Controllers
 {
@@ -25,7 +26,6 @@ namespace electro.api.rest.Controllers
             _unitOfWork = unitOfWork;
         }
 
-
         [HttpGet]
         public IActionResult GetProducts()
         {
@@ -33,6 +33,41 @@ namespace electro.api.rest.Controllers
             var productsDto = _mapper.Map<IEnumerable<ProductDto>>(products);
             return Ok(productsDto);
         }
+
+
+        [HttpPost("search")]
+        public IActionResult SearchProducts([FromQuery] PaginationFilter paginationFilter, [FromBody] ProductFilter productFilter, [FromQuery] string? query = "")
+        {
+            var productsQuery = _unitOfWork.Products.GetProducts()
+                .Include(p => p.Group)
+                .Include(p => p.Category)
+                .Include(p => p.SubCategory)
+                .Include(p => p.Specification)
+                .AsQueryable();
+
+            if (productFilter.Group.HasValue)
+            {
+                productsQuery = productsQuery.Where(p => p.GroupId == productFilter.Group.Value);
+            }
+            if (productFilter.Category.HasValue)
+            {
+                productsQuery = productsQuery.Where(p => p.CategoryId == productFilter.Category.Value);
+            }
+            if (productFilter.Subcategory.HasValue)
+            {
+                productsQuery = productsQuery.Where(p => p.SubCategoryId == productFilter.Subcategory.Value);
+            }
+
+            if (!string.IsNullOrEmpty(query))
+            {
+                productsQuery = productsQuery.Where(p => p.Name.ToLower().Contains(query.ToLower()));
+            }
+
+            var productsDto = _mapper.Map<IEnumerable<ProductDto>>(productsQuery).AsQueryable();
+            var response = PagedDto<ProductDto>.ToPagedDto(productsDto, paginationFilter);
+            return Ok(response);
+        }
+
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProductById(string id)

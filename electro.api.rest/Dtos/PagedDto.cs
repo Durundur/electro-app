@@ -20,10 +20,20 @@ namespace electro.api.rest.Dtos
             TotalPages = (int)Math.Ceiling(TotalItems / (double)pageSize);
         }
 
-        public static PagedDto<T> ToPagedDto(IQueryable<T> source, PaginationFilter paginationFiler)
+        public static PagedDto<T> ToPagedDto(IQueryable<T> source, PaginationFilter paginationFilter)
         {
-            var items = source.Skip((paginationFiler.PageNumber - 1) * paginationFiler.PageSize).Take(paginationFiler.PageSize).ToList();
-            return new PagedDto<T>(items, paginationFiler.PageNumber, paginationFiler.PageSize, source.Count());
+            var totalItems = source.Count();
+            var totalPages = (int)Math.Ceiling(totalItems / (double)paginationFilter.PageSize);
+            if (paginationFilter.PageNumber > totalPages)
+            {
+                paginationFilter.PageNumber = totalPages;
+            }
+            if(paginationFilter.PageNumber < 1)
+            {
+                paginationFilter.PageNumber = 1;
+            }
+            var items = source.Skip((paginationFilter.PageNumber - 1) * paginationFilter.PageSize).Take(paginationFilter.PageSize).ToList();
+            return new PagedDto<T>(items, paginationFilter.PageNumber, paginationFilter.PageSize, totalItems);
         }
     }
 }

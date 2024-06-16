@@ -8,14 +8,22 @@
             public int PageSize { get; set; }
             public PaginationFilter()
             {
-                this.PageNumber = 1;
-                this.PageSize = 10;
+                PageNumber = 1;
+                PageSize = 5;
             }
             public PaginationFilter(int pageNumber, int pageSize)
             {
-                this.PageNumber = pageNumber < 1 ? 1 : pageNumber;
-                this.PageSize = pageSize;
+                PageNumber = pageNumber < 1 ? 1 : pageNumber;
+                PageSize = pageSize;
             }
         }
+
+        public class ProductFilter
+        {
+            public int? Group { get; set; }
+            public int? Category { get; set; }
+            public int? Subcategory { get; set; }
+        }
+
     }
 }

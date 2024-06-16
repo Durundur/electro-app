@@ -8,47 +8,46 @@
 			border
 			rounded="lg">
 			<v-card-text>
-				<v-row dense>
+				<v-row
+					dense
+					align="stretch">
 					<v-col
 						cols="12"
-						sm="3">
+						sm="3"
+						align-self="center">
 						<v-img
 							class="mx-auto"
 							:aspect-ratio="4 / 3"
 							:max-width="200"
-							:src="product.image"></v-img>
+							:src="product.photos[0]"></v-img>
 					</v-col>
 					<v-col
 						cols="12"
 						sm="7"
-						align-center>
+						align-self="start"
+						style="min-height: 140px">
 						<v-card-subtitle class="px-0 text-body-2 default-text product-name">
 							{{ product.name }}
 						</v-card-subtitle>
-						<div
-							v-if="showRating"
-							class="d-flex align-center ga-2 text-caption">
+						<div class="d-flex align-center ga-2 text-caption">
 							<v-rating
-								v-model="rating"
+								v-model="product.avgOpinionsRating"
 								half-increments
 								color="primary"
 								hover
 								readonly
 								size="x-small"
 								density="comfortable"></v-rating>
-							<span class="text-caption">({{ product.noOfOpinions }})</span>
+							<span class="text-caption">({{ product.opinionsCount }})</span>
 						</div>
-						<div v-if="showDetails">
-							<div v-for="(detail, index) in product.details">
-								<span class="text-caption text-truncate d-block">
-									{{ detail.name }}: {{ detail.value }}
-								</span>
-							</div>
+						<div>
+							<ProductFeaturesList :features="product.features" />
 						</div>
 					</v-col>
 					<v-col
 						cols="12"
-						sm="2">
+						sm="2"
+						align-self="stretch">
 						<div
 							class="d-flex flex-row flex-sm-column align-end justify-space-between h-100">
 							<div class="d-flex flex-column justify-end">
@@ -56,20 +55,23 @@
 									style="height: 20px"
 									class="text-caption d-block text-decoration-line-through text-sm-end text-sm-body-2">
 									{{
-										product.oldPrice
-											? $formatters.priceFormatter(product.oldPrice) + "zł"
+										product.price.newPrice
+											? $formatters.priceFormatter(product.price.newPrice) +
+											  "zł"
 											: null
 									}}
 								</span>
-								<span class="text-body-1 d-block text-sm-h5">
-									{{ $formatters.priceFormatter(product.price) }} zł
+								<span
+									class="d-block text-h6"
+									style="white-space: nowrap">
+									{{ $formatters.priceFormatter(product.price.price) }} zł
 								</span>
 							</div>
 							<v-spacer></v-spacer>
 							<v-fade-transition>
 								<v-btn
 									size="small"
-									v-if="isHovering"
+									v-if="true || isHovering"
 									color="success"
 									icon="mdi-cart-outline"></v-btn>
 							</v-fade-transition>
@@ -80,22 +82,13 @@
 		</v-card>
 	</v-hover>
 </template>
-<script>
-	export default {
-		props: {
-			showDetails: {
-				type: Boolean,
-				default: true,
-			},
-			showRating: {
-				type: Boolean,
-				default: true,
-			},
-			product: {
-				type: Object,
-			},
+<script setup>
+	const props = defineProps({
+		product: {
+			type: Object,
+			required: true,
 		},
-	};
+	});
 </script>
 <style scoped>
 	.product-name {
@@ -105,6 +98,5 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: normal;
-		height: 3em;
 	}
 </style>

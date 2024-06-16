@@ -8,13 +8,28 @@
 		single-line
 		rounded
 		flat
-		hide-details>
-		<template v-slot:['prepend-inner']>
-			<v-btn size="small" variant="plain" link to="/list" icon="mdi-magnify" />
+		hide-details
+		v-model="query"
+		@keyup.enter="onSearchClick">
+		<template v-slot:prepend-inner>
+			<v-btn
+				@click="onSearchClick"
+				size="small"
+				variant="plain"
+				icon="mdi-magnify" />
 		</template>
 	</v-text-field>
 </template>
-<script>
-export default {};
+
+<script setup>
+	const query = ref("");
+	const router = useRouter();
+
+	function onSearchClick() {
+		const queryParams = {};
+		if (query.value) {
+			queryParams["query"] = query.value;
+		}
+		router.push({ path: "/search", query: { ...queryParams } });
+	}
 </script>
-<style scoped></style>

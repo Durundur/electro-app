@@ -3,7 +3,7 @@
 		:items="items"
 		:gap="16">
 		<template #default="{ item, column, row, index }">
-			<ProductOpinion
+			<Opinion
 				@update-opinion="onUpdateOpinion"
 				:opinion="item" />
 		</template>

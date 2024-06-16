@@ -25,6 +25,6 @@
 	"devDependencies": {
 		"@pinia/nuxt": "^0.5.1",
 		"sass": "^1.71.1",
-		"vuetify-nuxt-module": "^0.11.0"
+		"vuetify-nuxt-module": "^0.14.1"
 	}
 }

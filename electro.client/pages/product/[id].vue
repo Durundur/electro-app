@@ -1,11 +1,14 @@
 <template>
 	<Container>
+		<v-breadcrumbs
+			class="pa-0 mt-4"
+			:items="breadcrumbs"></v-breadcrumbs>
 		<v-row :no-gutters="true">
 			<v-col
 				cols="12"
 				sm="6"
 				align-self="stretch"
-				class="pr-2">
+				class="pr-sm-4">
 				<v-carousel
 					hide-delimiters
 					:show-arrows="product.photos.length > 1">
@@ -22,7 +25,7 @@
 						cols="12"
 						class="order-0">
 						<v-card flat>
-							<v-card-title class="px-0 nowrap-text">
+							<v-card-title class="px-0 pt-0 nowrap-text">
 								{{ product.name }}
 							</v-card-title>
 							<NuxtLink class="d-flex align-center">
@@ -52,18 +55,7 @@
 							flat
 							:no-gutters="true">
 							<v-card-text class="px-0">
-								<div v-for="(field, index) in product.features">
-									<span class="text-caption text-truncate d-block">
-										{{ field.fieldName }}:
-										<template v-for="(fieldVal, i) in field.fieldValue">
-											{{
-												`${fieldVal}${
-													i !== field.fieldValue.length - 1 ? ", " : ""
-												}`
-											}}
-										</template>
-									</span>
-								</div>
+								<ProductFeaturesList :features="product.features" />
 								<v-btn
 									link
 									href="#specification"
@@ -111,60 +103,12 @@
 							</v-row>
 
 							<div class="mt-4">
-								<v-card
-									class="my-1"
-									link
-									border
-									elevation="0"
-									:rounded="false"
-									density="compact">
-									<v-card-text class="d-flex align-center ga-3">
-										<v-icon>mdi-check-circle-outline</v-icon>
-										<div class="d-flex flex-column">
-											<span class="text-start">Dostępny</span>
-											<span class="text-caption">Dowiedz się więcej</span>
-										</div>
-									</v-card-text>
-								</v-card>
-
-								<v-card
-									class="my-1"
-									link
-									border
-									elevation="0"
-									:rounded="false"
-									density="compact">
-									<v-card-text class="d-flex align-center ga-3">
-										<v-icon>mdi-clock-outline</v-icon>
-										<div class="d-flex flex-column">
-											<span class="text-start">
-												Kup teraz, a otrzymasz jutro
-											</span>
-											<span class="text-caption">Dowiedz się więcej</span>
-										</div>
-									</v-card-text>
-								</v-card>
-
-								<v-card
-									link
-									border
-									elevation="0"
-									:rounded="false"
-									density="compact">
-									<v-card-text class="d-flex align-center ga-3">
-										<v-icon>mdi-truck-outline</v-icon>
-										<div class="d-flex flex-column">
-											<span class="text-start">Darmowa dostawa</span>
-											<span class="text-caption">Sprawdź szczegóły</span>
-										</div>
-									</v-card-text>
-								</v-card>
+								<PurchaseInfo />
 							</div>
 						</v-card>
 					</v-col>
 				</v-row>
 			</v-col>
-
 			<v-col cols="12">
 				<v-card flat>
 					<v-card
@@ -242,13 +186,13 @@
 									:avgOpinionsRating="product.avgOpinionsRating"
 									:opinionsCount="product.opinionsCount"
 									@fetch-opinions="fetchOpinions" />
-								<ProductAddOpinion
+								<OpinionCreate
 									:product="product"
 									@new-opinion="onNewOpinion" />
 							</div>
-							<ProductOpionionGrid
+							<OpionionGrid
 								:items="product.opinions"
-								@update-opinion="onUpdateOpinion"></ProductOpionionGrid>
+								@update-opinion="onUpdateOpinion"></OpionionGrid>
 							<div class="mx-auto my-4 button-limit">
 								<v-btn
 									v-if="
@@ -306,6 +250,33 @@
 		opinionsPagination.value = pagination;
 		opinionsStats.value = stats;
 	}
+
+	const breadcrumbs = computed(() => {
+		const breadcrumbs = [];
+		const { group, category, subCategory } = product.value;
+		group.name
+			? breadcrumbs.push({
+					title: group.name,
+					to: `/search/group/${group.id}`,
+					disabled: false,
+			  })
+			: null;
+		category.name
+			? breadcrumbs.push({
+					title: category.name,
+					to: `/search/group/${group.id}/category/${category.id}`,
+					disabled: false,
+			  })
+			: null;
+		subCategory.name
+			? breadcrumbs.push({
+					title: subCategory.name,
+					to: `/search/group/${group.id}/category/${category.id}/subcategory/${subCategory.id}`,
+					disabled: false,
+			  })
+			: null;
+		return breadcrumbs;
+	});
 
 	function onNewOpinion(newOpinion) {
 		product.value.opinions = [newOpinion, ...product.value.opinions];

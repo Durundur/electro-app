@@ -9,7 +9,7 @@
 				:sm="sm"
 				:md="md"
 				v-for="(product, index) in productsToShow">
-				<ProductItem :product="product"></ProductItem>
+				<ProductGridItem :product="product"></ProductGridItem>
 			</v-col>
 		</v-row>
 	</v-card>

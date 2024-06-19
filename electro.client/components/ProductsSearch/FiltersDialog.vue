@@ -21,10 +21,18 @@
 					<span>Kategorie i filtry</span>
 				</v-card-title>
 				<v-card-text>
-					<CategoryFilter />
+					<CategoryFilter v-model="model" />
 					<FeaturesFilter />
 				</v-card-text>
 			</v-card>
 		</template>
 	</v-dialog>
 </template>
+<script setup>
+	const model = defineModel({
+		activeCategories: {
+			type: Object,
+			required: true,
+		},
+	});
+</script>

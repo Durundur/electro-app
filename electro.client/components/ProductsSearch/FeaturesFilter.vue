@@ -1,7 +1,7 @@
 <template>
 	<v-card :flat="true">
 		<v-card-title
-			class="d-flex justify-space-between align-center text-body-1 py-0 font-600">
+			class="d-flex justify-space-between align-center text-body-1 font-600">
 			Filtry
 			<v-btn
 				variant="tonal"

@@ -1,6 +1,8 @@
 <template>
 	<v-card :flat="true">
-		<v-card-title class="text-body-1 py-0 font-600">Kategorie</v-card-title>
+		<v-card-title class="text-body-1 py-0 pt-2 font-600">
+			Kategorie
+		</v-card-title>
 		<v-list density="compact">
 			<ListGroup
 				v-for="(group, index) in groupsCategoriesSubCategories"
@@ -103,6 +105,16 @@
 
 <script setup>
 	const { $api } = useNuxtApp();
+	const model = defineModel({
+		activeCategories: {
+			type: Object,
+			default: {
+				group: {},
+				categoty: {},
+				subCategory: {},
+			},
+		},
+	});
 	const route = useRoute();
 	const groupsCategoriesSubCategories = ref([]);
 
@@ -114,19 +126,56 @@
 	}
 
 	const isGroupActive = (groupId) => {
-		return route.path.includes(`/search/group/${groupId}`);
+		if (route.path.includes(`/search/group/${groupId}`)) {
+			const groupName = groupsCategoriesSubCategories.value.find(
+				(g) => g.id == groupId,
+			).name;
+			model.value["group"] = {
+				id: groupId,
+				name: groupName,
+			};
+			return true;
+		}
+		return false;
 	};
 
 	const isCategoryActive = (groupId, categoryId) => {
-		return route.path.includes(
-			`/search/group/${groupId}/category/${categoryId}`,
-		);
+		if (
+			route.path.includes(`/search/group/${groupId}/category/${categoryId}`)
+		) {
+			const group = groupsCategoriesSubCategories.value.find(
+				(g) => g.id == groupId,
+			);
+			const category = group.categories.find((c) => c.id === categoryId);
+			model.value["category"] = {
+				id: categoryId,
+				name: category.name,
+			};
+			return true;
+		}
+		return false;
 	};
 
 	const isSubCategoryActive = (groupId, categoryId, subCategoryId) => {
-		return route.path.includes(
-			`/search/group/${groupId}/category/${categoryId}/subcategory/${subCategoryId}`,
-		);
+		if (
+			route.path.includes(
+				`/search/group/${groupId}/category/${categoryId}/subcategory/${subCategoryId}`,
+			)
+		) {
+			const group = groupsCategoriesSubCategories.value.find(
+				(g) => g.id == groupId,
+			);
+			const category = group.categories.find((c) => c.id === categoryId);
+			const subCategory = category.subCategories.find(
+				(s) => s.id === subCategoryId,
+			);
+			model.value["subCategory"] = {
+				id: subCategoryId,
+				name: subCategory.name,
+			};
+			return true;
+		}
+		return false;
 	};
 </script>
 

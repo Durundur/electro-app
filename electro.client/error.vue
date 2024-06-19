@@ -5,16 +5,16 @@
 				<v-row justify="center">
 					<v-col cols="12">
 						<p class="text-h2 text-center text-primary font-weight-bold">
-							{{ error.statusCode }}
+							{{ error?.statusCode }}
 						</p>
 					</v-col>
 					<v-col cols="12">
 						<p class="text-center text-h6">Upps.</p>
 						<p class="text-center text-h6 font-weight-bold">
 							{{
-								error.statusCode === 404
+								error?.statusCode === 404
 									? "Strona o podanym adresie nie istnieje."
-									: error.message
+									: error?.message
 							}}
 						</p>
 					</v-col>
@@ -31,5 +31,7 @@
 </template>
 <script setup>
 	const error = useError();
-	const handleError = () => clearError({ redirect: "/" });
+	const handleError = () => {
+		clearError({ redirect: "/" });
+	};
 </script>

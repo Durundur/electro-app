@@ -17,6 +17,7 @@ export const useAuthStore = defineStore("auth", () => {
 		roles.value = user.roles ?? null;
 		tokenExpiry.value = user.tokenExpiry ?? null;
 	};
+	loadFromLocalStorage();
 
 	const isLoggedIn = computed(() => {
 		return (
@@ -178,8 +179,6 @@ export const useAuthStore = defineStore("auth", () => {
 	const logout = () => {
 		clearStore();
 	};
-
-	loadFromLocalStorage();
 
 	return {
 		userId,

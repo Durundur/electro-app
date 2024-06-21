@@ -42,6 +42,10 @@ namespace electro.api.rest.Utils
                 .ForMember(dest => dest.Group, opt => opt.MapFrom((src, dest, destMember, context) => context.Mapper.Map<GroupModel>(src.Group)))
                 .ForMember(dest => dest.Category, opt => opt.MapFrom((src, dest, destMember, context) => context.Mapper.Map<CategoryModel>(src.Category)))
                 .ForMember(dest => dest.SubCategory, opt => opt.MapFrom((src, dest, destMember, context) => context.Mapper.Map<SubCategoryModel>(src.SubCategory)));
+
+            CreateMap<CartDto, CartModel>();
+
+            CreateMap<CartModel, CartDto>();
         }
     }
 }

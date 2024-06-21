@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using electro.api.rest.Models;
@@ -12,9 +13,11 @@ using electro.api.rest.Models;
 namespace electro.api.rest.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240620134848_addCartEntity")]
+    partial class addCartEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -198,6 +201,34 @@ namespace electro.api.rest.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Carts");
+                });
+
+            modelBuilder.Entity("electro.api.rest.Models.CartProduct", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("CartModelId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Count")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CartModelId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("CartProduct");
                 });
 
             modelBuilder.Entity("electro.api.rest.Models.CategoryModel", b =>
@@ -599,28 +630,22 @@ namespace electro.api.rest.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("System.Collections.Generic.List<electro.api.rest.Models.CartProduct>", "Products", b1 =>
-                        {
-                            b1.Property<Guid>("CartModelId")
-                                .HasColumnType("uuid");
+                    b.Navigation("User");
+                });
 
-                            b1.Property<int>("Capacity")
-                                .HasColumnType("integer");
+            modelBuilder.Entity("electro.api.rest.Models.CartProduct", b =>
+                {
+                    b.HasOne("electro.api.rest.Models.CartModel", null)
+                        .WithMany("Products")
+                        .HasForeignKey("CartModelId");
 
-                            b1.HasKey("CartModelId");
-
-                            b1.ToTable("Carts");
-
-                            b1.ToJson("Products");
-
-                            b1.WithOwner()
-                                .HasForeignKey("CartModelId");
-                        });
-
-                    b.Navigation("Products")
+                    b.HasOne("electro.api.rest.Models.ProductModel", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("electro.api.rest.Models.CategoryModel", b =>
@@ -794,6 +819,11 @@ namespace electro.api.rest.Migrations
                         .HasForeignKey("CategoryId");
 
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("electro.api.rest.Models.CartModel", b =>
+                {
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("electro.api.rest.Models.CategoryModel", b =>

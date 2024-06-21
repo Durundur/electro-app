@@ -1,6 +1,6 @@
 <template>
 	<v-card flat>
-		<v-card-title class="py-0 text-body-2">{{ header }}</v-card-title>
+		<v-card-title class="py-1 text-body-2">{{ header }}</v-card-title>
 		<v-list
 			class="py-0"
 			density="compact">

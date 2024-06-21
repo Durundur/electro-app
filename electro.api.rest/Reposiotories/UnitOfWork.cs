@@ -12,6 +12,7 @@ namespace electro.api.rest.Reposiotories
         public IGroupRepository Groups { get; private set; }
         public IProductRepository Products { get; private set; }
         public IOpinionRepository Opinions { get; private set; }
+        public ICartRepository Carts { get; private set; }
 
         public UnitOfWork(ApplicationDbContext context)
         {
@@ -19,6 +20,7 @@ namespace electro.api.rest.Reposiotories
             Groups = new GroupRepository(_context);
             Products = new ProductRepository(_context, this);
             Opinions = new OpinionRepository(_context);
+            Carts = new CartRepository(_context);
         }
 
         public async Task CompleteAsync()

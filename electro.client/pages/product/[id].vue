@@ -79,24 +79,17 @@
 							</v-card-title>
 							<v-row
 								:no-gutters="true"
-								align="stretch">
-								<v-col
-									cols="3"
-									class="mr-4">
-									<v-select
-										:value="1"
-										:hide-details="true"
-										density="compact"
-										:items="[1, 2, 3, 4, 5, 6, 7, 8, '9+']"
-										variant="outlined"></v-select>
-								</v-col>
+								align="stretch"
+								justify="space-between">
+								<QuantitySelector v-model="productQuantity"></QuantitySelector>
 								<v-col cols="8">
 									<v-btn
 										height="100%"
 										block
 										prepend-icon="mdi-cart-plus"
 										color="success"
-										class="text-none">
+										class="text-none"
+										@click="onAddToCart">
 										Dodaj do koszyka
 									</v-btn>
 								</v-col>
@@ -225,13 +218,15 @@
 		</v-row>
 	</Container>
 </template>
-<script setup>
+<script setup>;
+	const cartStore = useCartStore();
 	const { $api } = useNuxtApp();
 	const route = useRoute();
 	const product = ref({});
 	const opinionsStats = ref([]);
 	const opinionsPagination = ref({});
 	const ratingFilter = ref(null);
+	const productQuantity = ref(1);
 
 	const { data: productRes } = await useAsyncData(() =>
 		$api.get(`api/products/${route.params.id}`),
@@ -315,6 +310,21 @@
 		else product.value.opinions = [...opinionsItems];
 		opinionsPagination.value = pagination;
 		opinionsStats.value = stats;
+	}
+
+	function onAddToCart() {
+		const p = product.value;
+		const productToAdd = {
+			count: productQuantity.value,
+			id: p.id,
+			price: {
+				price: p.price.price,
+				oldPrice: p.price.oldPrice,
+			},
+			photo: p.photos[0],
+			name: p.name,
+		};
+		cartStore.addToCart(productToAdd);
 	}
 </script>
 <style scoped>

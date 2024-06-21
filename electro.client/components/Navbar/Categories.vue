@@ -15,7 +15,7 @@
 					<template v-slot:activator="{ props }">
 						<v-btn
 							variant="text"
-							class="text-none w-100"
+							class="text-none text-center w-100"
 							v-bind="props"
 							stacked
 							density="compact"

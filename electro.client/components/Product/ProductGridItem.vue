@@ -15,7 +15,7 @@
 				<div class="d-flex align-end product-price">
 					<div>
 						<span
-							v-if="product.oldPrice"
+							v-if="product.price.oldPrice"
 							class="text-caption d-block text-decoration-line-through">
 							{{ $formatters.priceFormatter(product.price.oldPrice) }} zł
 						</span>

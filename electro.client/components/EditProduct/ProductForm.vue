@@ -41,11 +41,11 @@
 					</v-col>
 					<v-col>
 						<v-text-field
-							v-model.number="product.price.newPrice"
+							v-model.number="product.price.oldPrice"
 							type="number"
 							density="compact"
 							variant="outlined"
-							label="Nowa Cena"
+							label="Stara Cena"
 							hide-details="auto"></v-text-field>
 					</v-col>
 					<v-col>

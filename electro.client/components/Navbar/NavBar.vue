@@ -27,7 +27,9 @@
 					<v-btn
 						size="small"
 						variant="text"
-						icon="mdi-cart-outline">
+						icon="mdi-cart-outline"
+						link
+						to="/cart">
 						<v-badge
 							color="primary"
 							content="10">

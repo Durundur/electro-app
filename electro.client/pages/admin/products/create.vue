@@ -17,7 +17,7 @@
 		category: null,
 		subCategory: null,
 		price: {
-			newPrice: null,
+			oldPrice: null,
 			price: null,
 			currency: "",
 		},

@@ -55,8 +55,8 @@
 									style="height: 20px"
 									class="text-caption d-block text-decoration-line-through text-sm-end text-sm-body-2">
 									{{
-										product.price.newPrice
-											? $formatters.priceFormatter(product.price.newPrice) +
+										product.price.oldPrice
+											? $formatters.priceFormatter(product.price.oldPrice) +
 											  "zł"
 											: null
 									}}
@@ -71,7 +71,7 @@
 							<v-fade-transition>
 								<v-btn
 									size="small"
-									v-if="true || isHovering"
+									v-if="isHovering"
 									color="success"
 									icon="mdi-cart-outline"></v-btn>
 							</v-fade-transition>

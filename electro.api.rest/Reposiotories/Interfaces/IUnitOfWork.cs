@@ -7,6 +7,7 @@
         IProductRepository Products { get; }
 
         IOpinionRepository Opinions { get; }
+        ICartRepository Carts { get; }
         Task CompleteAsync();
     }
 }

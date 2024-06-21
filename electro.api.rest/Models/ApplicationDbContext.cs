@@ -15,7 +15,7 @@ namespace electro.api.rest.Models
         public DbSet<CategoryModel> Categories { get; set; }
         public DbSet<SubCategoryModel> SubCategories { get; set; }
         public DbSet<ProductSpecificationModel> ProductsSpecification { get; set; }
-
+        public DbSet<CartModel> Carts { get; set; }
         
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -26,6 +26,9 @@ namespace electro.api.rest.Models
 
             modelBuilder.Entity<ProductSpecificationModel>()
                 .OwnsMany(product => product.Specification, builder => { builder.ToJson(); });
+
+            modelBuilder.Entity<CartModel>()
+                .OwnsOne(cart => cart.Products, builder => { builder.ToJson(); });
 
             base.OnModelCreating(modelBuilder);
         }

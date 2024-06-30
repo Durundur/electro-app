@@ -90,7 +90,6 @@
 	</Container>
 	<EmptyCart v-else></EmptyCart>
 </template>
-
 <script setup>
 	const cartStore = useCartStore();
 	const cart = computed(() => cartStore.cart);

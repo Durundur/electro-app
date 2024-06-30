@@ -1,6 +1,6 @@
 <template>
 	<Container>
-		<v-row class="my-4">
+		<v-row class="py-4">
 			<v-col>
 				<v-card
 					rounded="lg"

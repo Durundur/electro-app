@@ -13,8 +13,8 @@ using electro.api.rest.Models;
 namespace electro.api.rest.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240620135327_addCartEntity2")]
-    partial class addCartEntity2
+    [Migration("20240629214530_cartFeat")]
+    partial class cartFeat
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -602,26 +602,44 @@ namespace electro.api.rest.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("System.Collections.Generic.List<electro.api.rest.Models.CartProduct>", "Products", b1 =>
+                    b.OwnsMany("electro.api.rest.Models.CartProduct", "Products", b1 =>
                         {
                             b1.Property<Guid>("CartModelId")
                                 .HasColumnType("uuid");
 
-                            b1.Property<int>("Capacity")
+                            b1.Property<Guid>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("Count")
                                 .HasColumnType("integer");
 
-                            b1.HasKey("CartModelId");
+                            b1.Property<string>("Name")
+                                .IsRequired()
+                                .HasColumnType("text");
 
-                            b1.ToTable("Carts");
+                            b1.Property<Guid>("ProductId")
+                                .HasColumnType("uuid");
 
-                            b1.ToJson("Products");
+                            b1.HasKey("CartModelId", "Id");
+
+                            b1.HasIndex("ProductId");
+
+                            b1.ToTable("CartProduct");
 
                             b1.WithOwner()
                                 .HasForeignKey("CartModelId");
+
+                            b1.HasOne("electro.api.rest.Models.ProductModel", "Product")
+                                .WithMany()
+                                .HasForeignKey("ProductId")
+                                .OnDelete(DeleteBehavior.Cascade)
+                                .IsRequired();
+
+                            b1.Navigation("Product");
                         });
 
-                    b.Navigation("Products")
-                        .IsRequired();
+                    b.Navigation("Products");
 
                     b.Navigation("User");
                 });

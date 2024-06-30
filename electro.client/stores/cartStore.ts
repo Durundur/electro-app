@@ -5,7 +5,7 @@ import { useAuthStore } from "@/stores/authStore";
 
 interface Product {
 	count: number;
-	id: string;
+	productId: string;
 	price: {
 		price: number;
 		oldPrice: number | null;
@@ -20,63 +20,83 @@ interface Cart {
 	totalPrice: number;
 }
 
+interface CartVerificationResponse {
+	cart: Cart;
+	messages: string[];
+}
+
 export const useCartStore = defineStore("cart", () => {
 	const authStore = useAuthStore();
 	const { $api } = useNuxtApp();
-	const cart = ref<Cart>({
-		productsCount: 0,
-		totalPrice: 0,
-		products: [],
-	});
+	const cart = ref<Cart>({ productsCount: 0, totalPrice: 0, products: [] });
+	const messages = ref<string[]>([]);
 
-	const getCart = async (): Promise<Cart> => {
-		if (authStore.isLoggedIn) {
-			const { ok, data } = await $api.get("/carts");
-			if (ok) {
-				return data;
-			}
-		} else {
-			const savedCart = JSON.parse(
-				localStorage.getItem("electro-store") || "null",
-			);
-			if (savedCart) {
-				return savedCart;
-			}
+	const isLoggedIn = computed(() => authStore.isLoggedIn);
+
+	const fetchCartFromAPI = async (): Promise<Cart | null> => {
+		const { ok, data } = await $api.get("api/carts");
+		if (!ok) {
+			console.error("Failed to fetch cart from API");
+			return null;
 		}
-		return {
-			productsCount: 0,
-			totalPrice: 0,
-			products: [],
-		};
+		return data;
 	};
 
-	onMounted(async () => {
-		cart.value = await getCart();
-		updateCartTotals();
-	});
+	const getCartFromLocalStorage = (): Cart | null => {
+		const savedCart = localStorage.getItem("electro-store");
+		return savedCart ? JSON.parse(savedCart) : null;
+	};
 
-	const addToCart = async (product: Product) => {
-		const existingProduct = cart.value.products.find(
-			(item) => item.id === product.id,
-		);
-		if (existingProduct) {
-			existingProduct.count = existingProduct.count + 1;
-		} else {
-			cart.value.products.push(product);
+	const getCart = async (): Promise<Cart> => {
+		if (isLoggedIn.value) {
+			return (
+				(await fetchCartFromAPI()) || {
+					productsCount: 0,
+					totalPrice: 0,
+					products: [],
+				}
+			);
 		}
-		updateCartTotals();
-		if (authStore.isLoggedIn) {
-			await syncCart();
-		} else {
+
+		return (
+			getCartFromLocalStorage() || {
+				productsCount: 0,
+				totalPrice: 0,
+				products: [],
+			}
+		);
+	};
+
+	const updateLocalStorage = () => {
+		if (!isLoggedIn.value) {
 			localStorage.setItem("electro-store", JSON.stringify(cart.value));
 		}
 	};
 
-	const syncCart = async () => {
-		const { ok, data } = await $api.post("/carts", cart.value);
-		if (!ok) {
-			console.error("Failed to sync cart with API");
+	const verifyCart = async (
+		cartToVerify: Cart,
+	): Promise<CartVerificationResponse> => {
+		try {
+			const { ok, data } = await $api.post("api/carts/verify", cartToVerify);
+			if (!ok) throw new Error("Failed to verify cart with API");
+			return data as CartVerificationResponse;
+		} catch (error) {
+			console.error(error);
+			return {
+				cart: cartToVerify,
+				messages: ["Wystąpił błąd podczas weryfikacji koszyka"],
+			};
 		}
+	};
+
+	const verifyCartAndUpdateStore = async (cartToVerify: Cart) => {
+		const { cart: verifiedCart, messages: messagesResponse } = await verifyCart(
+			cartToVerify,
+		);
+		cart.value = verifiedCart;
+		messages.value = messagesResponse;
+		updateCartTotals();
+		updateLocalStorage();
 	};
 
 	const updateCartTotals = () => {
@@ -90,65 +110,55 @@ export const useCartStore = defineStore("cart", () => {
 		);
 	};
 
-	const clearCart = () => {
-		cart.value.products = [];
-		cart.value.productsCount = 0;
-		cart.value.totalPrice = 0;
-		localStorage.removeItem("electro-store");
-		if (authStore.isLoggedIn) {
-			syncCart();
-		}
-	};
-
-	const removeProduct = (productId: string) => {
-		const index = cart.value.products.findIndex((p) => p.id === productId);
-		cart.value.products.splice(index, 1);
-		updateCartTotals();
-		if (authStore.isLoggedIn) {
-			syncCart();
+	const addToCart = async (product: Product) => {
+		const existingProduct = cart.value.products.find(
+			(item) => item.productId === product.productId,
+		);
+		if (existingProduct) {
+			existingProduct.count += product.count;
 		} else {
-			localStorage.setItem("electro-store", JSON.stringify(cart.value));
+			cart.value.products.push({ ...product });
 		}
-	};
-
-	const verifyCart = async () => {
-		if (authStore.isLoggedIn) {
-			const { ok, data } = await $api.get("/carts");
-			if (ok) {
-				cart.value = data;
-				updateCartTotals();
-			} else {
-				console.error("Failed to verify cart with API");
-			}
-		}
+		await verifyCartAndUpdateStore(cart.value);
 	};
 
 	const changeProductQuantity = async (
 		productId: string,
 		newQuantity: number,
 	) => {
-		const product = cart.value.products.find((p) => p.id === productId);
+		const product = cart.value.products.find((p) => p.productId === productId);
 		if (product) {
-			if (newQuantity <= 0) {
-				removeProduct(product.id);
-			} else {
-				product.count = newQuantity;
-			}
-			updateCartTotals();
-			if (authStore.isLoggedIn) {
-				syncCart();
-			} else {
-				localStorage.setItem("electro-store", JSON.stringify(cart.value));
-			}
+			product.count = newQuantity;
+			await verifyCartAndUpdateStore(cart.value);
 		}
+	};
+
+	const removeProduct = async (productId: string) => {
+		cart.value.products = cart.value.products.filter((p) => p.productId !== productId);
+		await verifyCartAndUpdateStore(cart.value);
+	};
+
+	const clearCart = async () => {
+		const emptyCart = { productsCount: 0, totalPrice: 0, products: [] };
+		await verifyCartAndUpdateStore(emptyCart);
+	};
+
+	onMounted(async () => {
+		const initialCart = await getCart();
+		await verifyCartAndUpdateStore(initialCart);
+	});
+
+	const removeMessage = (messageId: number) => {
+		messages.value.splice(messageId, 1);
 	};
 
 	return {
 		cart,
+		messages,
 		addToCart,
+		changeProductQuantity,
 		removeProduct,
 		clearCart,
-		verifyCart,
-		changeProductQuantity,
+		removeMessage,
 	};
 });

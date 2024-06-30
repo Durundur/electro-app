@@ -1,11 +1,22 @@
 <template>
-	<Container>
+	<Container v-if="cart?.productsCount">
 		<v-row no-gutters>
 			<v-col
 				cols="12"
 				md="8"
 				class="py-0">
 				<v-card flat>
+					<v-card-text class="pa-0">
+						<v-alert
+							class="mt-4 mb-2 text-body-3"
+							type="warning"
+							variant="tonal"
+							v-for="(message, index) in cartStore.messages"
+							@click:close="cartStore.removeMessage(index)"
+							:text="message"
+							closable
+							density="compact"></v-alert>
+					</v-card-text>
 					<v-card-title class="px-0 text-h6 font-weight-medium d-flex">
 						<p>Koszyk ({{ cart.productsCount }})</p>
 						<v-spacer></v-spacer>
@@ -26,7 +37,7 @@
 							rounded="lg">
 							<template
 								v-for="(product, index) in cart.products"
-								:key="product.id">
+								:key="product.productId">
 								<CartListItem :product="product" />
 								<v-divider v-if="index !== cart.products.length - 1" />
 							</template>
@@ -50,8 +61,10 @@
 						</span>
 					</v-card-title>
 					<v-card-text class="text-body-1 text-bold">
-						<v-divider class=""></v-divider>
-						<div class="my-2 text-body-2 text-green">
+						<v-divider></v-divider>
+						<div
+							v-if="savings > 0"
+							class="my-2 text-body-2 text-green">
 							<p class="d-inline-block text-start w-50">Oszczędzasz</p>
 							<p class="d-inline-block text-end w-50">
 								{{ $formatters.priceFormatter(savings) }} zł
@@ -75,6 +88,7 @@
 			</v-col>
 		</v-row>
 	</Container>
+	<EmptyCart v-else></EmptyCart>
 </template>
 
 <script setup>

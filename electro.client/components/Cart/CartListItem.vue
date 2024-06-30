@@ -7,9 +7,11 @@
 				dense
 				align="center"
 				class="w-100">
-				<v-col cols="3">
+				<v-col
+					cols="3"
+					sm="2">
 					<NuxtLink
-						:to="`/product/${product.id}`"
+						:to="`/product/${product.productId}`"
 						style="display: block; text-decoration: none; color: unset">
 						<v-img
 							class="mx-auto"
@@ -24,7 +26,7 @@
 						align="center">
 						<v-col>
 							<NuxtLink
-								:to="`/product/${product.id}`"
+								:to="`/product/${product.productId}`"
 								style="display: block; text-decoration: none; color: unset">
 								<p class="text-body-2">{{ product.name }}</p>
 							</NuxtLink>
@@ -33,7 +35,12 @@
 							align="center"
 							sm="3"
 							class="d-none d-sm-block">
-							<QuantitySelector v-model="quantity"></QuantitySelector>
+							<QuantitySelector
+								:model-value="product.count"
+								@update:model-value="
+									(newValue) =>
+										cartStore.changeProductQuantity(product.productId, newValue)
+								"></QuantitySelector>
 						</v-col>
 						<v-col
 							align="center"
@@ -53,14 +60,19 @@
 							variant="text"
 							icon="mdi-trash-can-outline"
 							class="text-none pa-2"
-							@click="cartStore.removeProduct(product.id)"></v-btn>
+							@click="cartStore.removeProduct(product.productId)"></v-btn>
 					</v-row>
 					<v-row
 						dense
 						align="center"
 						class="d-flex d-sm-none">
 						<v-col>
-							<QuantitySelector v-model="quantity"></QuantitySelector>
+							<QuantitySelector
+								:model-value="product.count"
+								@update:model-value="
+									(newValue) =>
+										cartStore.changeProductQuantity(product.productId, newValue)
+								"></QuantitySelector>
 						</v-col>
 						<v-col align="end">
 							<span class="text-no-wrap">
@@ -81,11 +93,4 @@
 		},
 	});
 	const cartStore = useCartStore();
-	const quantity = ref(props.product.count || 1);
-	watch(
-		() => quantity.value,
-		() => {
-			cartStore.changeProductQuantity(props.product.id, quantity.value);
-		},
-	);
 </script>

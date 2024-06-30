@@ -8,19 +8,21 @@
 			size="x-small"
 			variant="tonal"
 			icon="mdi-minus"
-			@click="model--"
-            :disabled="model <= 0"></v-btn>
-		<span>{{ model }}</span>
+			@click="emit('update:modelValue', --modelValue)"
+			:disabled="model <= 0"></v-btn>
+		<span>{{ modelValue }}</span>
 		<v-btn
 			size="x-small"
 			variant="tonal"
 			icon="mdi-plus"
-			@click="model++"></v-btn>
+			@click="emit('update:modelValue', ++modelValue)"></v-btn>
 	</v-sheet>
 </template>
 <script setup>
-	const model = defineModel({
-		type: Number,
-		default: 1,
+	const emit = defineEmits(["update:modelValue"]);
+	const props = defineProps({
+		modelValue: {
+			type: Number,
+		},
 	});
 </script>

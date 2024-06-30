@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace electro.api.rest.Migrations
 {
     /// <inheritdoc />
-    public partial class addCartEntity : Migration
+    public partial class cartFeat : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -38,19 +38,20 @@ namespace electro.api.rest.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    CartModelId = table.Column<Guid>(type: "uuid", nullable: false),
                     ProductId = table.Column<Guid>(type: "uuid", nullable: false),
                     Count = table.Column<int>(type: "integer", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    CartModelId = table.Column<Guid>(type: "uuid", nullable: true)
+                    Name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CartProduct", x => x.Id);
+                    table.PrimaryKey("PK_CartProduct", x => new { x.CartModelId, x.Id });
                     table.ForeignKey(
                         name: "FK_CartProduct_Carts_CartModelId",
                         column: x => x.CartModelId,
                         principalTable: "Carts",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_CartProduct_Products_ProductId",
                         column: x => x.ProductId,
@@ -58,11 +59,6 @@ namespace electro.api.rest.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CartProduct_CartModelId",
-                table: "CartProduct",
-                column: "CartModelId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CartProduct_ProductId",

@@ -13,12 +13,17 @@ namespace electro.api.rest.Models
 
     public class CartProduct
     {
-        public ProductModel Product { get; set; }
-        [ForeignKey(nameof(ProductModel))]
         public Guid Id { get; set; }
+        public ProductModel Product { get; set; }
+        public Guid ProductId { get; set; }
+        public CartModel Cart { get; set; }
+        public Guid CartId { get; set; }
         public int Count { get; set; }
         [NotMapped]
         public ProductPrice Price { get; set; }
+        [NotMapped]
         public string Name { get; set; }
+        [NotMapped]
+        public string Photo {  get; set; } = string.Empty;
     }
 }

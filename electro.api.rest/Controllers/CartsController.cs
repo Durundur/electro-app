@@ -29,10 +29,24 @@ namespace electro.api.rest.Controllers
         {
             var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (!Guid.TryParse(userIdString, out var userId)) return BadRequest();
-            var cart = await _unitOfWork.Carts.GetCart(userId);
+            var cart = await _unitOfWork.Carts.GetUserCart(userId);
+            await _unitOfWork.CompleteAsync();
             var cartDto = _mapper.Map<CartDto>(cart);
-            
             return Ok(cartDto);
+        }
+
+        [HttpPost("verify")]
+        public async Task<IActionResult> VerifyCart(CartDto cartDto)
+        {
+            var cartModel = _mapper.Map<CartModel>(cartDto);
+            var response = await _unitOfWork.Carts.VerifyCart(cartModel);
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (Guid.TryParse(userIdString, out var userId))
+            {
+                await _unitOfWork.Carts.UpdateCart(response.Cart, userId);
+                await _unitOfWork.CompleteAsync();
+            }
+            return Ok(_mapper.Map<CartVerificationResponseDto>(response));
         }
     }
 }

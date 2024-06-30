@@ -31,8 +31,9 @@
 						link
 						to="/cart">
 						<v-badge
+							:model-value="cartStore.cart.productsCount > 0"
 							color="primary"
-							content="10">
+							:content="cartStore.cart.productsCount">
 							<v-icon size="large"></v-icon>
 						</v-badge>
 					</v-btn>
@@ -68,4 +69,5 @@
 </template>
 <script setup>
 	const authStore = useAuthStore();
+	const cartStore = useCartStore();
 </script>

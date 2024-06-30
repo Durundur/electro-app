@@ -218,7 +218,7 @@
 		</v-row>
 	</Container>
 </template>
-<script setup>;
+<script setup>
 	const cartStore = useCartStore();
 	const { $api } = useNuxtApp();
 	const route = useRoute();
@@ -316,7 +316,7 @@
 		const p = product.value;
 		const productToAdd = {
 			count: productQuantity.value,
-			id: p.id,
+			productId: p.id,
 			price: {
 				price: p.price.price,
 				oldPrice: p.price.oldPrice,

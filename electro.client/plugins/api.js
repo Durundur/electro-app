@@ -1,7 +1,7 @@
 export default defineNuxtPlugin((nuxtApp) => {
 	const config = useRuntimeConfig();
 	const authStore = useAuthStore();
-
+	const loading = useLoadingIndicator();
 	nuxtApp.provide("api", {
 		get: request("GET"),
 		post: request("POST"),
@@ -16,6 +16,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 
 	function request(method) {
 		return async (url, body) => {
+			loading.start();
 			if (!(await authStore.ensureTokenValidity())) {
 				return {
 					error: {
@@ -61,6 +62,8 @@ export default defineNuxtPlugin((nuxtApp) => {
 					ok: false,
 					status: 500,
 				};
+			} finally {
+				loading.finish();
 			}
 		};
 	}

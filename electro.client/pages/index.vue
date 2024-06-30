@@ -1,5 +1,5 @@
 <template>
-	<div class="my-4">
+	<div class="py-4">
 		<Carousel></Carousel>
 	</div>
 	<Container>

@@ -17,16 +17,6 @@
 					<v-btn
 						size="small"
 						variant="text"
-						icon="mdi-heart-outline">
-						<v-badge
-							color="primary"
-							content="1">
-							<v-icon size="large"></v-icon>
-						</v-badge>
-					</v-btn>
-					<v-btn
-						size="small"
-						variant="text"
 						icon="mdi-cart-outline"
 						link
 						to="/cart">

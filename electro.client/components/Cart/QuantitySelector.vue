@@ -8,14 +8,24 @@
 			size="x-small"
 			variant="tonal"
 			icon="mdi-minus"
-			@click="emit('update:modelValue', --modelValue)"
-			:disabled="model <= 0"></v-btn>
+			@click="
+				{
+					let v = modelValue;
+					updateValue(--v);
+				}
+			"
+			:disabled="modelValue <= 0"></v-btn>
 		<span>{{ modelValue }}</span>
 		<v-btn
 			size="x-small"
 			variant="tonal"
 			icon="mdi-plus"
-			@click="emit('update:modelValue', ++modelValue)"></v-btn>
+			@click="
+				{
+					let v = modelValue;
+					updateValue(++v);
+				}
+			"></v-btn>
 	</v-sheet>
 </template>
 <script setup>
@@ -25,4 +35,7 @@
 			type: Number,
 		},
 	});
+	const updateValue = (newValue) => {
+		emit("update:modelValue", newValue);
+	};
 </script>

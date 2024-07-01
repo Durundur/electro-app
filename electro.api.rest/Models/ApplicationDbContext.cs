@@ -27,9 +27,6 @@ namespace electro.api.rest.Models
             modelBuilder.Entity<ProductSpecificationModel>()
                 .OwnsMany(product => product.Specification, builder => { builder.ToJson(); });
 
-            modelBuilder.Entity<CartModel>()
-                .OwnsMany(cart => cart.Products);
-
             base.OnModelCreating(modelBuilder);
         }
               

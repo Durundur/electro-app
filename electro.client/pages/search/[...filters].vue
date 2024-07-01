@@ -1,5 +1,5 @@
 <template>
-	<Container class="pa-4">
+	<Container>
 		<v-breadcrumbs
 			class="px-0 py-2"
 			:items="breadcrumbs"></v-breadcrumbs>
@@ -86,7 +86,7 @@
 	await useAsyncData("products", getProducts);
 
 	watch(
-		() => route.query,
+		() => route.fullPath,
 		async () => await getProducts(),
 		{ deep: true },
 	);

@@ -31,9 +31,7 @@
 							<v-row>
 								<v-col
 									cols="6"
-									class="pa-0"
-									@mouseenter="clearHideTimeout"
-									@mouseleave="setHideTimeout">
+									class="pa-0">
 									<v-list density="compact">
 										<v-list-item
 											slim

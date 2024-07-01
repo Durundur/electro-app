@@ -1,7 +1,7 @@
 <template>
 	<Container>
 		<v-breadcrumbs
-			class="pa-0 mt-4"
+			class="pa-0 pt-4"
 			:items="breadcrumbs"></v-breadcrumbs>
 		<v-row :no-gutters="true">
 			<v-col
@@ -174,7 +174,7 @@
 						<v-card-title class="px-0">Opinie</v-card-title>
 						<v-card-text class="px-0">
 							<div class="my-4">
-								<ProductRatingSummary
+								<RatingSummary
 									:opinionsStats="opinionsStats"
 									:avgOpinionsRating="product.avgOpinionsRating"
 									:opinionsCount="product.opinionsCount"

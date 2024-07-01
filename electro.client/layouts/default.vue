@@ -2,7 +2,9 @@
 	<v-app>
 		<NavBar />
 		<v-main>
-			<slot></slot>
+			<LoadingContainer>
+				<slot></slot>
+			</LoadingContainer>
 		</v-main>
 		<Footer />
 	</v-app>
@@ -30,5 +32,8 @@
 	}
 	.invisible {
 		visibility: hidden;
+	}
+	.min-main-content-height {
+		min-height: 322.2px;
 	}
 </style>

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace electro.api.rest.Models
 {
@@ -13,6 +14,7 @@ namespace electro.api.rest.Models
 
     public class CartProduct
     {
+        [Key]
         public Guid Id { get; set; }
         public ProductModel Product { get; set; }
         public Guid ProductId { get; set; }

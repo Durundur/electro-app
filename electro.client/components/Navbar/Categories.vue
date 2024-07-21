@@ -21,7 +21,6 @@
 							density="compact"
 							slim
 							size="small"
-							link
 							:to="`/search/group/${group.id}`">
 							{{ group.name }}
 						</v-btn>
@@ -44,7 +43,6 @@
 													variant="plain"
 													density="compact"
 													slim
-													link
 													:to="`/search/group/${group.id}`">
 													wszystkie
 												</v-btn>
@@ -56,7 +54,6 @@
 												hoverCategory.id == category.id &&
 												hoverCategory.name === category.name
 											"
-											link
 											:to="`/search/group/${group.id}/category/${category.id}`"
 											slim
 											density="compact"
@@ -91,7 +88,6 @@
 													variant="plain"
 													density="compact"
 													slim
-													link
 													:to="`/search/group/${group.id}/category/${hoverCategory.id}`">
 													wszystkie
 												</v-btn>
@@ -104,7 +100,6 @@
 											:key="index"
 											slim
 											density="compact"
-											link
 											:to="`/search/group/${group.id}/category/${subCategory.categoryId}/subcategory/${subCategory.id}`">
 											{{ subCategory.name }}
 										</v-list-item>
@@ -115,7 +110,8 @@
 										variant="outlined"
 										density="compact"
 										slim
-										block>
+										block
+										:to="`/search/group/${group.id}/category/${hoverCategory.id}`">
 										Pokaż {{ hoverCategory.name }}
 									</v-btn>
 								</v-col>

@@ -2,37 +2,16 @@ import { defineStore } from "pinia";
 import { ref, computed, onMounted } from "vue";
 import { useNuxtApp } from "#app";
 import { useAuthStore } from "@/stores/authStore";
+import type { Product, Cart, CartVerificationResponse } from "~/types/cart";
 
-interface Product {
-	count: number;
-	productId: string;
-	price: {
-		price: number;
-		oldPrice: number | null;
-	};
-	photo: string;
-	name: string;
-}
-
-interface Cart {
-	products: Product[];
-	productsCount: number;
-	totalPrice: number;
-}
-
-interface CartVerificationResponse {
-	cart: Cart;
-	messages: string[];
-}
 
 export const useCartStore = defineStore("cart", () => {
 	const authStore = useAuthStore();
 	const { $api } = useNuxtApp();
 	const cart = ref<Cart>({ productsCount: 0, totalPrice: 0, products: [] });
 	const messages = ref<string[]>([]);
-
 	const isLoggedIn = computed(() => authStore.isLoggedIn);
-
+	
 	const fetchCartFromAPI = async (): Promise<Cart | null> => {
 		const { ok, data } = await $api.get("api/carts");
 		if (!ok) {

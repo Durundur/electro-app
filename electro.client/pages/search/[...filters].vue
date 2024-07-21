@@ -64,7 +64,7 @@
 					</template>
 					<template v-else>
 						<v-col cols="12">
-							<NoResults />
+							<NoResults>Brak wyników dla wybranych filtrów</NoResults>
 						</v-col>
 					</template>
 				</v-row>

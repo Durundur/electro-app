@@ -8,8 +8,8 @@
 					<v-card-title>Załóż konto</v-card-title>
 					<v-card-text>
 						<v-form
-							ref="form"
-							@submit.prevent="register()">
+							ref="registerForm"
+							@submit.prevent="register">
 							<v-text-field
 								v-model="registerCredentials.firstName"
 								:rules="$v.required"
@@ -34,6 +34,7 @@
 								density="compact"
 								variant="outlined"
 								label="Email"
+								autocomplete="username"
 								prepend-inner-icon="mdi-email-outline"
 								hide-details="auto"
 								class="mb-4"></v-text-field>
@@ -48,6 +49,7 @@
 								:append-inner-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
 								@click:append-inner="showPass = !showPass"
 								hide-details="auto"
+								autocomplete="new-password"
 								class="mb-4"></v-text-field>
 							<v-text-field
 								v-model="registerCredentials.repeatPassword"
@@ -58,6 +60,7 @@
 								type="password"
 								prepend-inner-icon="mdi-lock-outline"
 								hide-details="auto"
+								autocomplete="new-password"
 								class="mb-4"></v-text-field>
 							<v-checkbox
 								v-model="registerCredentials.rulesConfirmation"
@@ -85,7 +88,6 @@
 					<v-card-title>Masz już konto?</v-card-title>
 					<v-card-text>
 						<v-btn
-							:link="true"
 							to="/auth/login"
 							block
 							color="primary"
@@ -110,19 +112,17 @@
 		repeatPassword: "",
 		rulesConfirmation: false,
 	});
-	const registerForm = ref(null);
 	const authStore = useAuthStore();
-	const { $toast, $pinia } = useNuxtApp();
+	const { $toast } = useNuxtApp();
+    const registerForm = ref(null);
 
 	async function register() {
-		if (registerForm.isValid) {
-			const { ok, _data: data } = await authStore.register(
-				registerCredentials.value,
-			);
+		if (registerForm.value.isValid) {
+			const { ok, _data: data } = await authStore.register(registerCredentials.value);
 			if (ok) {
-				$toast.success(data.message);
+                $toast.success("Błąd podczas rejestracji");
 			} else {
-				$toast.error(data.message);
+				$toast.error("Pomyślnie zarejestrowano");
 			}
 		}
 	}

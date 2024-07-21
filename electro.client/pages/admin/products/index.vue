@@ -115,7 +115,6 @@
 								icon="mdi-pencil"
 								size="x-small"
 								variant="text"
-								link
 								:to="`/admin/products/${item.id}`"></v-btn>
 						</template>
 					</v-data-table>

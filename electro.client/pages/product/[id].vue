@@ -57,7 +57,6 @@
 							<v-card-text class="px-0">
 								<ProductFeaturesList :features="product.features" />
 								<v-btn
-									link
 									href="#specification"
 									variant="tonal"
 									density="compact"

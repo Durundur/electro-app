@@ -18,7 +18,8 @@
 								hide-details="auto"
 								variant="outlined"
 								label="Email"
-								prepend-inner-icon="mdi-email-outline"></v-text-field>
+								prepend-inner-icon="mdi-email-outline"
+								autocomplete="username"></v-text-field>
 							<v-text-field
 								ref="passwordInput"
 								v-model="loginCredentails.password"
@@ -31,7 +32,8 @@
 								prepend-inner-icon="mdi-lock-outline"
 								:type="showPass ? 'text' : 'password'"
 								:append-inner-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
-								@click:append-inner="showPass = !showPass"></v-text-field>
+								@click:append-inner="showPass = !showPass"
+								autocomplete="current-password"></v-text-field>
 							<v-btn
 								variant="text"
 								class="text-none"
@@ -66,7 +68,6 @@
 					<v-card-title>Nie masz konta?</v-card-title>
 					<v-card-text>
 						<v-btn
-							:link="true"
 							to="/auth/register"
 							block
 							color="primary"
@@ -95,7 +96,7 @@
 					</p>
 					<v-form
 						ref="resetPassForm"
-						@submit.prevent="resetPassword()">
+						@submit.prevent="resetPassword">
 						<v-text-field
 							v-model="resetPassEmail"
 							class="mb-4"
@@ -106,10 +107,7 @@
 							hide-details="auto"
 							prepend-inner-icon="mdi-email-outline"></v-text-field>
 						<v-btn
-							block
-							type="submit"
-							class="text-none mb-4"
-							color="primary">
+							block type="submit" class="text-none mb-4" color="primary">
 							Oszyskaj hasło
 						</v-btn>
 						<v-btn
@@ -128,7 +126,6 @@
 	</Container>
 </template>
 <script setup>
-	import { useAuthStore } from "#imports";
 	const authStore = useAuthStore();
 	const { $toast } = useNuxtApp();
 	const showPass = ref(false);
@@ -137,7 +134,6 @@
 		email: "",
 		password: "",
 	});
-
 	const resetPassEmail = ref("");
 	const loginForm = ref(null);
 	const resetPassForm = ref(null);
@@ -147,9 +143,9 @@
 			const { ok, _data: data } = await authStore.login(loginCredentails.value);
 			if (!ok) {
 				loginCredentails.value.password = "";
-				$toast.error(data.message);
+				$toast.error("Błąd logowania");
 			} else {
-				$toast.success(data.message);
+				$toast.success("Pomyślnie zalogowano");
 			}
 		}
 	}

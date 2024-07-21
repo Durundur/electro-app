@@ -18,7 +18,6 @@
 						size="small"
 						variant="text"
 						icon="mdi-cart-outline"
-						link
 						to="/cart">
 						<v-badge
 							:model-value="cartStore.cart.productsCount > 0"
@@ -32,7 +31,6 @@
 						<v-btn
 							flat
 							size="small"
-							link
 							to="/auth/login"
 							variant="elevated"
 							color="primary"
@@ -41,7 +39,6 @@
 						</v-btn>
 						<v-btn
 							size="small"
-							link
 							to="/auth/register"
 							variant="outlined"
 							color="primary"

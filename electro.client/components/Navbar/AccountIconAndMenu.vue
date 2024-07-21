@@ -62,7 +62,7 @@
 			<v-list-item
 				slim
 				density="compact"
-				@click="authStore.logout()">
+				@click="authStore.logout">
 				<template v-slot:prepend>
 					<v-icon icon="mdi-logout"></v-icon>
 				</template>
@@ -75,8 +75,7 @@
 </template>
 <script setup>
 	const authStore = useAuthStore();
-
-	const isAdmin = computed(() => authStore.roles.includes("Admin"));
+	const isAdmin = computed(() => authStore.store.roles.includes("Admin"));
 </script>
 <style scoped>
 	:deep(.v-list-item__content) {

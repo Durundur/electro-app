@@ -13,7 +13,7 @@ export default defineNuxtConfig({
 			script: [
 				process.env.NODE_ENV === "production"
 					? {
-							src: "http://34.45.156.182:20917/getinfo",
+							src: "https://umami.durundur.online/getinfo",
 							defer: "true",
 							"data-website-id": "ce5b3686-ef1d-4b1b-a8b7-4c888436a587",
 					  }

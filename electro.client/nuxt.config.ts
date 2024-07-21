@@ -11,11 +11,13 @@ export default defineNuxtConfig({
 	app: {
 		head: {
 			script: [
-				{
-					src: "http://34.45.156.182:20917/getinfo",
-					defer: "true",
-					"data-website-id": "ce5b3686-ef1d-4b1b-a8b7-4c888436a587",
-				},
+				process.env.NODE_ENV === "production"
+					? {
+							src: "http://34.45.156.182:20917/getinfo",
+							defer: "true",
+							"data-website-id": "ce5b3686-ef1d-4b1b-a8b7-4c888436a587",
+					  }
+					: {},
 			],
 		},
 	},

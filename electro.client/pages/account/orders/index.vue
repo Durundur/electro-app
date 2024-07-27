@@ -37,10 +37,10 @@
 			},
 			status: OrderStatus.Delivery,
 			recipient: {
-				email: "0bogusz0@gmail.com",
-				firstName: "Łukasz",
-				lastName: "Bogusz",
-				phoneNumber: "793 684 211",
+				email: "tomek@gmail.com",
+				firstName: "Tomasz",
+				lastName: "Rak",
+				phoneNumber: "643 684 222",
 			},
 			totalPrice: { GrossValue: 138.99, NetValue: 113, TaxValue: 25.99 },
 			products: [
@@ -96,10 +96,10 @@
 			},
 			status: OrderStatus.Delivery,
 			recipient: {
-				email: "0bogusz0@gmail.com",
-				firstName: "Łukasz",
-				lastName: "Bogusz",
-				phoneNumber: "793 684 211",
+				email: "tomek@gmail.com",
+				firstName: "Tomasz",
+				lastName: "Rak",
+				phoneNumber: "965 684 222",
 			},
 			totalPrice: { GrossValue: 138.99, NetValue: 113, TaxValue: 25.99 },
 			products: [
@@ -155,10 +155,10 @@
 			},
 			status: OrderStatus.Delivery,
 			recipient: {
-				email: "0bogusz0@gmail.com",
-				firstName: "Łukasz",
-				lastName: "Bogusz",
-				phoneNumber: "793 684 211",
+				email: "tomek@gmail.com",
+				firstName: "Toszasz",
+				lastName: "Rak",
+				phoneNumber: "767 684 222",
 			},
 			totalPrice: { GrossValue: 138.99, NetValue: 113, TaxValue: 25.99 },
 			products: [

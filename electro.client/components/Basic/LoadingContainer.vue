@@ -1,7 +1,7 @@
 <template>
-	<div class="loading-wrapper">
+	<div class="loading-container">
 		<div
-			v-if="loading.isLoading.value"
+			v-if="isLoading"
 			class="loading-overlay">
 			<div
 				class="loading-spinner-container"
@@ -9,7 +9,7 @@
 				<LoadingSpinner />
 			</div>
 		</div>
-		<div :class="{ 'content-dimmed': loading.isLoading.value }">
+		<div :class="{ 'content-dimmed': isLoading }">
 			<slot></slot>
 		</div>
 	</div>
@@ -18,9 +18,9 @@
 <script setup>
 	const loading = useLoadingIndicator();
 	const spinnerStyle = ref({});
-
+	const isLoading = computed(() => loading.isLoading.value);
 	const checkScrollAndAdjustPosition = () => {
-		const content = document.querySelector(".loading-wrapper");
+		const content = document.querySelector(".loading-container");
 		if (content.scrollHeight > window.innerHeight) {
 			spinnerStyle.value = {
 				position: "fixed",
@@ -57,7 +57,7 @@
 </script>
 
 <style>
-	.loading-wrapper {
+	.loading-container {
 		position: relative;
 	}
 

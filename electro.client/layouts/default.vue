@@ -36,4 +36,9 @@
 	.min-main-content-height {
 		min-height: 322.2px;
 	}
+
+	.card-title{
+		padding: unset 0;
+	}
+
 </style>

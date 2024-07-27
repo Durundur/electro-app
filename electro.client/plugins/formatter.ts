@@ -3,10 +3,14 @@ export default defineNuxtPlugin((nuxtApp) => {
 		return price.toFixed(2).replace(".", ",");
 	}
 
-	function dateFormatter(date: string) {
+	function dateFormatter(
+		date: string,
+		timeStyle: TimeStyleType = "short",
+		dateStyle: DateStyleType = "long",
+	) {
 		return new Date(date).toLocaleString("pl-PL", {
-			timeStyle: "short",
-			dateStyle: "long",
+			timeStyle,
+			dateStyle,
 		});
 	}
 
@@ -19,3 +23,6 @@ export default defineNuxtPlugin((nuxtApp) => {
 		},
 	};
 });
+
+type TimeStyleType = NonNullable<Intl.DateTimeFormatOptions["timeStyle"]>;
+type DateStyleType = NonNullable<Intl.DateTimeFormatOptions["dateStyle"]>;

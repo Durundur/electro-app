@@ -1,9 +1,6 @@
-export default {
-	convertFileToBase64Async,
-	convertFilesToBase64Async,
-};
+import { type IOrderProuct } from "~/types/order";
 
-function convertFileToBase64Async(file) {
+function convertFileToBase64Async(file: File) {
 	return new Promise((resolve, reject) => {
 		const fileReader = new FileReader();
 		fileReader.readAsDataURL(file);
@@ -16,7 +13,7 @@ function convertFileToBase64Async(file) {
 	});
 }
 
-async function convertFilesToBase64Async(files) {
+async function convertFilesToBase64Async(files: (File | string)[]) {
 	const base64Files = await Promise.all(
 		files.map((file) => {
 			if (file instanceof File) {
@@ -28,3 +25,13 @@ async function convertFilesToBase64Async(files) {
 	);
 	return base64Files;
 }
+
+function countTotalOrderProductsQuantity(products: IOrderProuct[]) {
+	return products.reduce((acc, item) => acc + item.count, 0);
+}
+
+export default {
+	convertFileToBase64Async,
+	convertFilesToBase64Async,
+	countTotalOrderProductsQuantity,
+};

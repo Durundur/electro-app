@@ -1,10 +1,12 @@
 <template>
 	<v-app-bar
-		:height="100"
 		:absolute="true"
-		floating>
-		<Container>
-			<v-row class="ma-0 pt-2">
+		:height="100">
+		<Container class="pb-0">
+			<v-row
+				no-gutters
+				align="center"
+				class="my-2">
 				<NuxtLink
 					to="/"
 					style="display: block">
@@ -47,9 +49,9 @@
 						</v-btn>
 					</template>
 				</div>
-				<div class="pt-2">
-					<Categories />
-				</div>
+			</v-row>
+			<v-row no-gutters>
+				<Categories />
 			</v-row>
 		</Container>
 	</v-app-bar>

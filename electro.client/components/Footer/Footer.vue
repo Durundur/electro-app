@@ -1,6 +1,6 @@
 <template>
 	<v-footer app :absolute="true" :elevation="6" color="grey-lighten-4" class="px-0 py-4">
-		<Container>
+		<Container class="pb-0">
 			<v-row :no-gutters="true">
 				<v-col cols="12" md="4">
 					<div class="d-flex flex-column ga-4">

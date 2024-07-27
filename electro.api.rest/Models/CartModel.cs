@@ -9,13 +9,11 @@ namespace electro.api.rest.Models
         public Guid UserId { get; set; }
         public int ProductsCount { get; set; }
         public decimal TotalPrice { get; set; }
-        public List<CartProduct> Products { get; set; }
+        public List<CartProductModel> Products { get; set; }
     }
 
-    public class CartProduct
+    public class CartProductModel
     {
-        [Key]
-        public Guid Id { get; set; }
         public ProductModel Product { get; set; }
         public Guid ProductId { get; set; }
         public CartModel Cart { get; set; }

@@ -16,7 +16,7 @@ namespace electro.api.rest.Reposiotories
         
         public async Task<CartModel> UpdateCart(CartModel cart, Guid userId)
         {
-            var existingCart = await _dbContext.Carts.FirstOrDefaultAsync(c => c.UserId == userId);
+            var existingCart = await _dbContext.Carts.Include(c => c.Products).FirstOrDefaultAsync(c => c.UserId == userId);
             if (existingCart != null)
             {
                 existingCart.TotalPrice = cart.TotalPrice;
@@ -45,7 +45,7 @@ namespace electro.api.rest.Reposiotories
             {
                 Cart = new CartModel
                 {
-                    Products = new List<CartProduct>(),
+                    Products = new List<CartProductModel>(),
                 },
                 Messages = new List<string>()
             };
@@ -88,7 +88,7 @@ namespace electro.api.rest.Reposiotories
             return response;
         }
 
-        
+
         public async Task<CartModel> GetUserCart(Guid userId)
         {
             var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == userId);
@@ -98,17 +98,6 @@ namespace electro.api.rest.Reposiotories
                 .ThenInclude(cp => cp.Product)
                 .FirstOrDefaultAsync(c => c.UserId == userId);
 
-            foreach (var cartProduct in cart.Products)
-            {
-                var product = cartProduct.Product;
-                var photoBytes = product.Photos.FirstOrDefault();
-                if (photoBytes != null)
-                {
-                    cartProduct.Photo = "data:image/jpeg;charset=utf-8;base64," + Convert.ToBase64String(photoBytes);
-                }
-                cartProduct.Name = product.Name;
-                cartProduct.Price = product.Price;
-            }
             if (cart == null)
             {
                 cart = new CartModel
@@ -117,9 +106,23 @@ namespace electro.api.rest.Reposiotories
                     UserId = userId,
                     ProductsCount = 0,
                     TotalPrice = 0,
-                    Products = new List<CartProduct>()
+                    Products = new List<CartProductModel>()
                 };
                 _dbContext.Carts.Add(cart);
+            }
+            else
+            {
+                foreach (var cartProduct in cart.Products)
+                {
+                    var product = cartProduct.Product;
+                    var photoBytes = product.Photos.FirstOrDefault();
+                    if (photoBytes != null)
+                    {
+                        cartProduct.Photo = "data:image/jpeg;charset=utf-8;base64," + Convert.ToBase64String(photoBytes);
+                    }
+                    cartProduct.Name = product.Name;
+                    cartProduct.Price = product.Price;
+                }
             }
             return cart;
         }

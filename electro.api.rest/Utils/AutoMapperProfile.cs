@@ -47,11 +47,12 @@ namespace electro.api.rest.Utils
 
             CreateMap<CartModel, CartDto>();
 
-            CreateMap<CartProduct, CartProductDto>();
-            CreateMap<CartProductDto, CartProduct>();
+            CreateMap<CartProductModel, CartProductDto>();
+            CreateMap<CartProductDto, CartProductModel>();
 
             CreateMap<CartVerificationResponse, CartVerificationResponseDto>();
             CreateMap<CartVerificationResponseDto, CartVerificationResponse>();
         }
     }
 }
+    

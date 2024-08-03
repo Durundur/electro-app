@@ -1,6 +1,6 @@
 <template>
 	<v-text-field
-		v-bind="$props"
+		v-bind="restProps"
 		:model-value="modelValue"
 		@update:model-value="$emit('update:modelValue', $event)"
 		hide-details
@@ -47,6 +47,8 @@
 		density: "compact",
 		modelValue: "",
 	});
+
+	const { size, ...restProps } = props;
 
 	const emit = defineEmits<{
 		(e: "update:modelValue", value: string | number): void;

@@ -1,6 +1,6 @@
 import type { Product } from "./cart";
 
-export interface IDeliveryAddress {
+export interface IAddress {
 	street: String;
 	buildingNumber: String;
 	city: String;
@@ -15,15 +15,17 @@ export interface IRecipient {
 	email: string;
 }
 
-export interface IPayment {
-	method: PaymentMethod;
+export enum EOrderCustomerType {
+	Invidual = "Invidual",
+	Company = "Company",
 }
 
 export interface IOrder {
 	id: string;
 	number: string;
-	status: OrderStatus;
-	deliveryAddress: IDeliveryAddress;
+	status: EOrderStatus;
+	deliveryMethod: EOrderDeliveryMethod
+	deliveryAddress: IAddress;
 	recipient: IRecipient;
 	payment: IPayment;
 	products: IOrderProuct[];
@@ -32,13 +34,27 @@ export interface IOrder {
 	updatedAt: Date;
 }
 
+export interface IOrderProuct extends Product {}
+
 export interface IPrice {
 	GrossValue: number;
 	NetValue: number;
 	TaxValue: number;
 }
 
-export enum OrderStatus {
+export interface IPayment {
+	method: EPaymentMethod;
+}
+
+export enum EPaymentMethod {
+	OnlinePayment = "OnlinePayment",
+	OnlineByCard = "OnlineByCard",
+	Blik = "Blik",
+	BankTransfer = "Bank transfer",
+	OnDelivery = "On delivery",
+}
+
+export enum EOrderStatus {
 	New = "New",
 	Paid = "Paid",
 	InProgress = "In progress",
@@ -46,17 +62,15 @@ export enum OrderStatus {
 	Delivered = "Delivered",
 }
 
-export const OrderStatusTranslations: Record<OrderStatus, string> = {
-	[OrderStatus.New]: "Nowe",
-	[OrderStatus.Paid]: "Zapłacone",
-	[OrderStatus.InProgress]: "W realizacji",
-	[OrderStatus.Delivery]: "W dostawie",
-	[OrderStatus.Delivered]: "Dostarczono",
-};
-export enum PaymentMethod {
-	Blik,
-	"Bank Transfer",
-	"On delivery",
+export enum EOrderDeliveryMethod {
+	ParcelLocker = "Parcel locker",
+	Courier = "Courier",
 }
 
-export interface IOrderProuct extends Product {}
+export const OrderStatusTranslations: Record<EOrderStatus, string> = {
+	[EOrderStatus.New]: "Nowe",
+	[EOrderStatus.Paid]: "Zapłacone",
+	[EOrderStatus.InProgress]: "W realizacji",
+	[EOrderStatus.Delivery]: "W dostawie",
+	[EOrderStatus.Delivered]: "Dostarczono",
+};

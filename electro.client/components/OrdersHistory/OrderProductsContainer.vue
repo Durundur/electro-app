@@ -1,15 +1,16 @@
 <template>
 	<v-card
 		flat
-		border
+		:border="!disableBorder"
 		rounded="lg">
 		<v-row
+			:class="{ 'pa-2': !disableBorder, 'mr-0': maxHeight !== '100%' }"
 			dense
-			class="ma-0"
 			:style="containerStyle">
 			<v-col
 				cols="12"
-				md="6"
+				:sm="sm"
+				:md="md"
 				v-for="(product, index) in products"
 				:key="index">
 				<slot
@@ -24,12 +25,19 @@
 	export interface IOrderProductsContainerProps {
 		products: IOrderProuct[];
 		maxHeight: string;
+		sm?: number;
+		md?: number;
+		disableBorder?: boolean;
 	}
 	export interface IOrderProductsContainerSlotProps {
 		product: IOrderProuct;
 		index: number;
 	}
-	const props = defineProps<IOrderProductsContainerProps>();
+	const props = withDefaults(defineProps<IOrderProductsContainerProps>(), {
+		sm: 12,
+		md: 6,
+		disableBorder: false,
+	});
 	const slots = defineSlots<{
 		default(props: IOrderProductsContainerSlotProps): any;
 	}>();

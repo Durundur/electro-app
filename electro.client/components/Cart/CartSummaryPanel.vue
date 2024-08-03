@@ -5,7 +5,7 @@
 		rounded="lg"
 		class="pa-4 text-body-1 text-bold">
 		<div class="mb-2">
-			<p class="d-inline-block text-start w-50">Łączna kwota</p>
+			<p class="d-inline-block text-start w-50">Wartość produktów</p>
 			<p class="d-inline-block text-end w-50">
 				{{ $formatters.priceFormatter(totalPrice) }} zł
 			</p>
@@ -29,7 +29,8 @@
 			block
 			append-icon="mdi-chevron-right"
 			color="success"
-			class="text-none">
+			class="text-none"
+			to="/checkout">
 			Dostawa i płatność
 		</v-btn>
 	</v-card>

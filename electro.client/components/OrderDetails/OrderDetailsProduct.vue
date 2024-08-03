@@ -28,7 +28,6 @@
 		</v-card-text>
 	</v-card>
 </template>
-
 <script lang="ts" setup>
 	import type { IOrderProuct } from "~/types/order";
 	const props = defineProps<{

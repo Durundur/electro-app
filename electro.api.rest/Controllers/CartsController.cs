@@ -1,12 +1,11 @@
 ﻿using AutoMapper;
-using electro.api.rest.Dtos;
-using electro.api.rest.Filters;
-using electro.api.rest.Models;
+using electro.api.rest.ActionFilters;
+using electro.api.rest.Dtos.Cart;
+using electro.api.rest.Extensions;
+using electro.api.rest.Models.Cart;
 using electro.api.rest.Reposiotories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 namespace electro.api.rest.Controllers
 {
     [ServiceFilter(typeof(ExceptionFilter))]
@@ -14,39 +13,48 @@ namespace electro.api.rest.Controllers
     [Route("api/[controller]")]
     public class CartsController : ControllerBase
     {
-        private readonly IMapper _mapper;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper mapper;
+        private readonly IUnitOfWork unitOfWork;
 
         public CartsController(IMapper mapper, IUnitOfWork unitOfWork)
         {
-            _mapper = mapper;
-            _unitOfWork = unitOfWork;
+            this.mapper = mapper;
+            this.unitOfWork = unitOfWork;
         }
 
         [HttpGet]
         [Authorize(Roles = "Admin, User")]
         public async Task<IActionResult> GetUserCart()
         {
-            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (!Guid.TryParse(userIdString, out var userId)) return BadRequest();
-            var cart = await _unitOfWork.Carts.GetUserCart(userId);
-            await _unitOfWork.CompleteAsync();
-            var cartDto = _mapper.Map<CartDto>(cart);
+            var userId = User.GetAuthenticatedUserId();
+            var cart = await unitOfWork.Carts.GetUserCart(userId);
+            await unitOfWork.CompleteAsync();
+            var cartDto = mapper.Map<CartDto>(cart);
             return Ok(cartDto);
         }
 
         [HttpPost("verify")]
-        public async Task<IActionResult> VerifyCart(CartDto cartDto)
+        public async Task<IActionResult> VerifyCart(CartDto verifyCartDto)
         {
-            var cartModel = _mapper.Map<CartModel>(cartDto);
-            var response = await _unitOfWork.Carts.VerifyCart(cartModel);
-            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (Guid.TryParse(userIdString, out var userId))
+            var result = await unitOfWork.Carts.VerifyCart(verifyCartDto);
+            var userId = User.GetAuthenticatedUserId();
+            if (User.Identity.IsAuthenticated)
             {
-                await _unitOfWork.Carts.UpdateCart(response.Cart, userId);
-                await _unitOfWork.CompleteAsync();
+                var cartProducts = result.Products.Select(p => new CartProductModel()
+                {
+                    ProductId = p.ProductId,
+                    Quantity = p.Quantity
+                }).ToList();
+                var cart = new CartModel()
+                {
+                    TotalPrice = result.TotalPrice,
+                    ProductsCount = result.ProductsCount,
+                    Products = cartProducts,
+                };
+                await unitOfWork.Carts.UpdateUserCart(cart, userId);
+                await unitOfWork.CompleteAsync();
             }
-            return Ok(_mapper.Map<CartVerificationResponseDto>(response));
+            return Ok(result);
         }
     }
 }

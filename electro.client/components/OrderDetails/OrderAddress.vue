@@ -11,8 +11,9 @@
 	</v-card>
 </template>
 <script setup lang="ts">
-	import type { IDeliveryAddress } from "~/types/order";
+	import type { IAddressBase } from "~/types/Common/Address";
+
 	const props = defineProps<{
-		address: IDeliveryAddress;
+		address: IAddressBase;
 	}>();
 </script>

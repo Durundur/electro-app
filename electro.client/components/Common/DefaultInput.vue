@@ -16,8 +16,6 @@
 </template>
 
 <script setup lang="ts">
-	import { computed } from "vue";
-
 	interface IDefaultInput {
 		size?: "x-small" | "small" | "default" | "large";
 		placeholder?: string;

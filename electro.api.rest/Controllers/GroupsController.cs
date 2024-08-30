@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
-using electro.api.rest.Dtos;
-using electro.api.rest.Exceptions;
-using electro.api.rest.Filters;
-using electro.api.rest.Models;
+using electro.api.rest.ActionFilters;
+using electro.api.rest.DTOs.ProductHierarchy;
+using electro.api.rest.Models.ProductHierarchy;
 using electro.api.rest.Reposiotories.Interfaces;
-using electro.api.rest.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,28 +14,28 @@ namespace electro.api.rest.Controllers
     [Route("/api/[controller]")]
     public class GroupsController : ControllerBase
     {
-        private readonly IMapper _mapper;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper mapper;
+        private readonly IUnitOfWork unitOfWork;
 
         public GroupsController(IMapper mapper, IUnitOfWork unitOfWork)
         {
-            _mapper = mapper;
-            _unitOfWork = unitOfWork;
+            this.mapper = mapper;
+            this.unitOfWork = unitOfWork;
         }
 
         [HttpGet("allGroups")]
         public async Task<IActionResult> GetAllGroupsCategoriesSubCategories()
         {
-            var groups = await _unitOfWork.Groups.GetGroups().Include(g => g.Categories).ThenInclude(c => c.SubCategories).ToListAsync();
-            var groupsDto = _mapper.Map<IEnumerable<GroupDto>>(groups);
+            var groups = await unitOfWork.ProductHierarchy.GetGroups().Include(g => g.Categories).ThenInclude(c => c.SubCategories).ToListAsync();
+            var groupsDto = mapper.Map<IEnumerable<GroupDto>>(groups);
             return Ok(groupsDto);
         }
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetGroups() {
-            var groups = await _unitOfWork.Groups.GetGroups().Include(g => g.Categories).ToListAsync();
-            var groupsDto = _mapper.Map<IEnumerable<GroupDto>>(groups);
+            var groups = await unitOfWork.ProductHierarchy.GetGroups().Include(g => g.Categories).ToListAsync();
+            var groupsDto = mapper.Map<IEnumerable<GroupDto>>(groups);
             return Ok(groupsDto);
         }
 
@@ -45,32 +43,32 @@ namespace electro.api.rest.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateGroup(GroupDto groupDto)
         {
-            var groupModel = _mapper.Map<GroupModel>(groupDto);
-            var createdGroup = await _unitOfWork.Groups.CreateGroup(groupModel);
-            await _unitOfWork.CompleteAsync();
-            return Ok(_mapper.Map<GroupDto>(createdGroup));
+            var groupModel = mapper.Map<GroupModel>(groupDto);
+            var createdGroup = await unitOfWork.ProductHierarchy.CreateGroup(groupModel);
+            await unitOfWork.CompleteAsync();
+            return Ok(mapper.Map<GroupDto>(createdGroup));
         }
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateGroup(int id, GroupDto groupDto)
         {
-            var groupModel = _mapper.Map<GroupModel>(groupDto);
+            var groupModel = mapper.Map<GroupModel>(groupDto);
             if (id != groupDto.Id)
             {
                 return BadRequest();
             }
-            var updatedGroup = await _unitOfWork.Groups.UpdateGroup(groupModel);
-            await _unitOfWork.CompleteAsync();
-            return Ok(_mapper.Map<GroupDto>(updatedGroup));
+            var updatedGroup = await unitOfWork.ProductHierarchy.UpdateGroup(groupModel);
+            await unitOfWork.CompleteAsync();
+            return Ok(mapper.Map<GroupDto>(updatedGroup));
         }
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteGroup(int id)
         {
-            await _unitOfWork.Groups.DeleteGroup(id);
-            await _unitOfWork.CompleteAsync();
+            await unitOfWork.ProductHierarchy.DeleteGroup(id);
+            await unitOfWork.CompleteAsync();
             return Ok();
         }
 
@@ -78,8 +76,8 @@ namespace electro.api.rest.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetCategories()
         {
-            var categories = await _unitOfWork.Groups.GetCategories().Include(c => c.SubCategories).ToListAsync();
-            var categoriesDto = _mapper.Map<IEnumerable<CategoryDto>>(categories);
+            var categories = await unitOfWork.ProductHierarchy.GetCategories().Include(c => c.SubCategories).ToListAsync();
+            var categoriesDto = mapper.Map<IEnumerable<CategoryDto>>(categories);
             return Ok(categoriesDto);
         }
 
@@ -87,8 +85,8 @@ namespace electro.api.rest.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetFreeCategories()
         {
-            var categories = await _unitOfWork.Groups.GetCategories().Where(c => c.GroupId == null).ToListAsync();
-            var categoriesDto = _mapper.Map<IEnumerable<CategoryDto>>(categories);
+            var categories = await unitOfWork.ProductHierarchy.GetCategories().Where(c => c.GroupId == null).ToListAsync();
+            var categoriesDto = mapper.Map<IEnumerable<CategoryDto>>(categories);
             return Ok(categoriesDto);
         }
 
@@ -97,10 +95,10 @@ namespace electro.api.rest.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateCategory(CategoryDto categoryDto)
         {
-            var categoryModel = _mapper.Map<CategoryModel>(categoryDto);
-            var createdCategory = await _unitOfWork.Groups.CreateCategory(categoryModel);
-            await _unitOfWork.CompleteAsync();
-            var createdCategoryDto = _mapper.Map<CategoryDto>(createdCategory);
+            var categoryModel = mapper.Map<CategoryModel>(categoryDto);
+            var createdCategory = await unitOfWork.ProductHierarchy.CreateCategory(categoryModel);
+            await unitOfWork.CompleteAsync();
+            var createdCategoryDto = mapper.Map<CategoryDto>(createdCategory);
             return Ok(createdCategoryDto);
         }
 
@@ -108,14 +106,14 @@ namespace electro.api.rest.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateCategory(int id, CategoryDto categoryDto)
         {
-            var categoryModel = _mapper.Map<CategoryModel>(categoryDto);
+            var categoryModel = mapper.Map<CategoryModel>(categoryDto);
             if (id != categoryDto.Id)
             {
                 return BadRequest();
             }
-            var updatedCategory = await _unitOfWork.Groups.UpdateCategory(categoryModel);
-            await _unitOfWork.CompleteAsync();
-            var updatedCategoryDto = _mapper.Map<CategoryDto>(updatedCategory);
+            var updatedCategory = await unitOfWork.ProductHierarchy.UpdateCategory(categoryModel);
+            await unitOfWork.CompleteAsync();
+            var updatedCategoryDto = mapper.Map<CategoryDto>(updatedCategory);
             return Ok(updatedCategoryDto);
         }
 
@@ -123,8 +121,8 @@ namespace electro.api.rest.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
-            await _unitOfWork.Groups.DeleteCategory(id);
-            await _unitOfWork.CompleteAsync();
+            await unitOfWork.ProductHierarchy.DeleteCategory(id);
+            await unitOfWork.CompleteAsync();
             return Ok();
         }
 
@@ -133,8 +131,8 @@ namespace electro.api.rest.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetSubCategories()
         {
-            var subCategories = await _unitOfWork.Groups.GetSubCategories().ToListAsync();
-            var subCategoriesDto = _mapper.Map<IEnumerable<SubCategoryDto>>(subCategories);
+            var subCategories = await unitOfWork.ProductHierarchy.GetSubCategories().ToListAsync();
+            var subCategoriesDto = mapper.Map<IEnumerable<SubCategoryDto>>(subCategories);
             return Ok(subCategoriesDto);
         }
 
@@ -142,8 +140,8 @@ namespace electro.api.rest.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetFreeSubCategories()
         {
-            var subCategories = await _unitOfWork.Groups.GetSubCategories().Where(s => s.CategoryId == null).ToListAsync();
-            var subCategoriesDto = _mapper.Map<IEnumerable<SubCategoryDto>>(subCategories);
+            var subCategories = await unitOfWork.ProductHierarchy.GetSubCategories().Where(s => s.CategoryId == null).ToListAsync();
+            var subCategoriesDto = mapper.Map<IEnumerable<SubCategoryDto>>(subCategories);
             return Ok(subCategoriesDto);
         }
 
@@ -151,10 +149,10 @@ namespace electro.api.rest.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateSubCategory(SubCategoryDto subCategoryDto)
         {
-            var subCategoryModel = _mapper.Map<SubCategoryModel>(subCategoryDto);
-            var createdSubCategory = await _unitOfWork.Groups.CreateSubCategory(subCategoryModel);
-            await _unitOfWork.CompleteAsync();
-            var createdSubCategoryDto = _mapper.Map<SubCategoryDto>(createdSubCategory);
+            var subCategoryModel = mapper.Map<SubCategoryModel>(subCategoryDto);
+            var createdSubCategory = await unitOfWork.ProductHierarchy.CreateSubCategory(subCategoryModel);
+            await unitOfWork.CompleteAsync();
+            var createdSubCategoryDto = mapper.Map<SubCategoryDto>(createdSubCategory);
             return Ok(createdSubCategoryDto);
         }
 
@@ -162,8 +160,8 @@ namespace electro.api.rest.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteSubCategory(int id)
         {
-            await _unitOfWork.Groups.DeleteSubCategory(id);
-            await _unitOfWork.CompleteAsync();
+            await unitOfWork.ProductHierarchy.DeleteSubCategory(id);
+            await unitOfWork.CompleteAsync();
             return Ok();
         }
 
@@ -172,17 +170,15 @@ namespace electro.api.rest.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateSubCategory(int id, SubCategoryDto subCategoryDto)
         {
-            var subCategoryModel = _mapper.Map<SubCategoryModel>(subCategoryDto);
+            var subCategoryModel = mapper.Map<SubCategoryModel>(subCategoryDto);
             if (id != subCategoryDto.Id)
             {
                 return BadRequest();
             }
-            var updatedSubCategory = await _unitOfWork.Groups.UpdateSubCategory(subCategoryModel);
-            await _unitOfWork.CompleteAsync();
-            var updatedSubCategoryDto = _mapper.Map<SubCategoryDto>(updatedSubCategory);
+            var updatedSubCategory = await unitOfWork.ProductHierarchy.UpdateSubCategory(subCategoryModel);
+            await unitOfWork.CompleteAsync();
+            var updatedSubCategoryDto = mapper.Map<SubCategoryDto>(updatedSubCategory);
             return Ok(updatedSubCategoryDto);
         }
-               
     }
-
 }

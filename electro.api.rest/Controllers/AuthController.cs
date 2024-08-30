@@ -1,7 +1,5 @@
-﻿using electro.api.rest.Dtos;
-using electro.api.rest.Services;
+﻿using electro.api.rest.Dtos.Auth;
 using electro.api.rest.Services.Interfaces;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
 namespace electro.api.rest.Controllers
@@ -10,17 +8,17 @@ namespace electro.api.rest.Controllers
     [Route("/api/[controller]")]
     public class AuthController: ControllerBase
     {
-        private readonly IAuthService _authService;
+        private readonly IAuthService authService;
 
         public AuthController(IAuthService authService)
         {
-            _authService = authService;
+            this.authService = authService;
         }
 
         [HttpPost("Login")]
-        public async Task<ActionResult> Login(AuthRequestDto credentials)
+        public async Task<ActionResult> Login(LoginDto credentials)
         {
-            var loginResult = await _authService.Login(credentials);
+            var loginResult = await authService.Login(credentials);
             if(loginResult.Success)
             {
                 return Ok(loginResult);
@@ -29,9 +27,9 @@ namespace electro.api.rest.Controllers
         }
 
         [HttpPost("Register")]
-        public async Task<ActionResult> Register(AuthRequestDto credentials) 
+        public async Task<ActionResult> Register(RegisterDto credentials) 
         {
-            var reqisterResult = await _authService.Register(credentials);
+            var reqisterResult = await authService.Register(credentials);
             if (reqisterResult.Success)
             {
                 return Ok(reqisterResult);
@@ -40,9 +38,9 @@ namespace electro.api.rest.Controllers
         }
 
         [HttpPost("RefreshToken")]
-        public async Task<ActionResult> RefreshToken(RefreshTokenRequest jwt)
+        public async Task<ActionResult> RefreshToken(RefreshTokenDto jwt)
         { 
-            var response = await _authService.RefreshToken(jwt);
+            var response = await authService.RefreshToken(jwt);
             if (response.Success)
             {
                 return Ok(response);

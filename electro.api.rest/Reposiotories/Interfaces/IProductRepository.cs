@@ -1,4 +1,4 @@
-﻿using electro.api.rest.Models;
+﻿using electro.api.rest.Models.Product;
 
 namespace electro.api.rest.Reposiotories.Interfaces
 {

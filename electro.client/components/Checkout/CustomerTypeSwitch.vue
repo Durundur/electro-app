@@ -2,7 +2,8 @@
 	<SubCardTitle>Kupujesz jako</SubCardTitle>
 	<SelectableOptionGroup
 		horizontal
-		:options="deliveryMethods"
+		:defaultOption="customerTypeOptions.at(0)"
+		:options="customerTypeOptions"
 		option-border
 		:container-border="false"
 		v-model="model">
@@ -12,18 +13,18 @@
 	</SelectableOptionGroup>
 </template>
 <script lang="ts" setup>
-	import { EOrderCustomerType } from "~/types/order";
-	import type { Options } from "../Common/SelectableOptionGroup.vue";
+	import { CustomerType } from "~/types/Common/Recipient";
+	import type { Option } from "../Common/SelectableOptionGroup.vue";
 
-	const model = defineModel<EOrderCustomerType>();
-	const deliveryMethods: Options[] = [
+	const model = defineModel<CustomerType>();
+	const customerTypeOptions: Option<CustomerType>[] = [
 		{
 			label: "Osoba prywatna",
-			value: EOrderCustomerType.Invidual,
+			value: CustomerType.Invidual,
 		},
 		{
 			label: "Firma",
-			value: EOrderCustomerType.Company,
+			value: CustomerType.Company,
 		},
 	];
 </script>

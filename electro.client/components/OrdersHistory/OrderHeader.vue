@@ -5,26 +5,23 @@
 		<v-chip
 			variant="outlined"
 			color="grey">
-			{{
-				createdAt.toLocaleString("pl-PL", {
-					dateStyle: "full",
-				})
-			}}
+			{{ $formatters.dateFormatter(createdAt) }}
 		</v-chip>
 		<v-chip
 			class="ml-6"
 			variant="tonal"
 			color="success">
-			{{ OrderStatusTranslations[status] }}
+			{{ status }}
 		</v-chip>
 	</div>
 </template>
 <script lang="ts" setup>
-	import { OrderStatusTranslations, type OrderStatus } from "~/types/order";
+	import type { OrderStatus } from "~/types/Order/Order";
+
 	export interface IOrderHeaderProps {
-		number: string;
+		number: number;
 		status: OrderStatus;
-		createdAt: Date;
+		createdAt: string;
 	}
 	const props = defineProps<IOrderHeaderProps>();
 </script>

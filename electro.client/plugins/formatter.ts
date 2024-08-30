@@ -1,6 +1,6 @@
 export default defineNuxtPlugin((nuxtApp) => {
 	function priceFormatter(price: number) {
-		return price.toFixed(2).replace(".", ",");
+		return `${price.toFixed(2).replace(".", ",")} zł`;
 	}
 
 	function dateFormatter(

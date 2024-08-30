@@ -1,6 +1,6 @@
 <template>
 	<Container>
-		<v-row class="py-4">
+		<v-row>
 			<v-col>
 				<v-card>
 					<v-card-title>Zaloguj się</v-card-title>

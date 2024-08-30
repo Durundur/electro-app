@@ -16,12 +16,11 @@
 				</span>
 				<p class="text-no-wrap font-weight-bold mt-2">
 					<span>
-						{{ $formatters.priceFormatter(product.price.price) }}
+						{{ $formatters.priceFormatter(product.price.value) }}
 					</span>
-					<span>zł</span>
 					<span class="px-2 text-grey-darken-1 text-body-2">&times</span>
 					<span class="text-grey-darken-1 text-body-2">
-						{{ product.count }} szt.
+						{{ product.quantity }} szt.
 					</span>
 				</p>
 			</div>

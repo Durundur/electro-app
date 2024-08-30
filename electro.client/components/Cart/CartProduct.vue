@@ -33,7 +33,7 @@
 						sm="3"
 						class="d-none d-sm-block">
 						<QuantitySelector
-							:model-value="product.count"
+							:model-value="product.quantity"
 							@update:model-value="
 								(newValue) =>
 									cartStore.changeProductQuantity(product.productId, newValue)
@@ -44,12 +44,12 @@
 						sm="3"
 						class="d-none d-sm-block">
 						<p
-							v-if="product.price.oldPrice"
+							v-if="product.price.oldPriceValue"
 							class="text-no-wrap text-caption d-block text-decoration-line-through">
-							{{ $formatters.priceFormatter(product.price.oldPrice) }} zł
+							{{ $formatters.priceFormatter(product.price.oldPriceValue) }}
 						</p>
 						<p class="text-no-wrap">
-							{{ $formatters.priceFormatter(product.price.price) }} zł
+							{{ $formatters.priceFormatter(product.price.value) }}
 						</p>
 					</v-col>
 					<v-btn
@@ -65,7 +65,7 @@
 					class="d-flex d-sm-none">
 					<v-col>
 						<QuantitySelector
-							:model-value="product.count"
+							:model-value="product.quantity"
 							@update:model-value="
 								(newValue) =>
 									cartStore.changeProductQuantity(product.productId, newValue)
@@ -73,7 +73,7 @@
 					</v-col>
 					<v-col align="end">
 						<span class="text-no-wrap">
-							{{ $formatters.priceFormatter(product.price.price) }} zł
+							{{ $formatters.priceFormatter(product.price.value) }}
 						</span>
 					</v-col>
 				</v-row>
@@ -81,12 +81,12 @@
 		</v-row>
 	</div>
 </template>
-<script setup>
-	const props = defineProps({
-		product: {
-			type: Object,
-			required: true,
-		},
-	});
+<script lang="ts" setup>
+	import type { ICartProduct } from "~/types/Cart/Cart";
+
+	export interface ICartProductProps {
+		product: ICartProduct;
+	}
+	const props = defineProps<ICartProductProps>();
 	const cartStore = useCartStore();
 </script>

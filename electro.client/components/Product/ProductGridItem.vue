@@ -17,10 +17,10 @@
 						<span
 							v-if="product.price.oldPrice"
 							class="text-caption d-block text-decoration-line-through">
-							{{ $formatters.priceFormatter(product.price.oldPrice) }} zł
+							{{ $formatters.priceFormatter(product.price.oldPriceValue) }}
 						</span>
 						<span class="text-body-1 d-block">
-							{{ $formatters.priceFormatter(product.price.price) }} zł
+							{{ $formatters.priceFormatter(product.price.value) }}
 						</span>
 					</div>
 					<v-spacer></v-spacer>

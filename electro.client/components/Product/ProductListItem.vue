@@ -56,15 +56,14 @@
 									class="text-caption d-block text-decoration-line-through text-sm-end text-sm-body-2">
 									{{
 										product.price.oldPrice
-											? $formatters.priceFormatter(product.price.oldPrice) +
-											  "zł"
+											? $formatters.priceFormatter(product.price.oldPriceValue)
 											: null
 									}}
 								</span>
 								<span
 									class="d-block text-h6"
 									style="white-space: nowrap">
-									{{ $formatters.priceFormatter(product.price.price) }} zł
+									{{ $formatters.priceFormatter(product.price.value) }}
 								</span>
 							</div>
 							<v-spacer></v-spacer>

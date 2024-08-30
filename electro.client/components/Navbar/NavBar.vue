@@ -2,7 +2,7 @@
 	<v-app-bar
 		:absolute="true"
 		:height="100">
-		<Container class="pb-0">
+		<Container style="padding-bottom: 0 !important">
 			<v-row
 				no-gutters
 				align="center"

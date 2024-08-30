@@ -9,7 +9,9 @@
 				<LoadingSpinner />
 			</div>
 		</div>
-		<div :class="{ 'content-dimmed': isLoading }">
+		<div
+			class="h-100"
+			:class="{ 'content-dimmed': isLoading }">
 			<slot></slot>
 		</div>
 	</div>
@@ -59,6 +61,7 @@
 <style>
 	.loading-container {
 		position: relative;
+		height: 100%;
 	}
 
 	.loading-overlay {

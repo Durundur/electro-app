@@ -5,14 +5,17 @@
 		flat
 		rounded="lg"
 		class="pa-2">
-		<p>{{ recipient.firstName }} {{ recipient.lastName }}</p>
+		<p>{{ recipient.name }}</p>
 		<p>tel. {{ recipient.phoneNumber }}</p>
 		<p>email: {{ recipient.email }}</p>
 	</v-card>
 </template>
 <script setup lang="ts">
-	import type { IRecipient } from "~/types/order";
+	import type { IAddressBase } from "~/types/Common/Address";
+	import type { IRecipient } from "~/types/Common/Recipient";
+
 	const props = defineProps<{
 		recipient: IRecipient;
+		address: IAddressBase;
 	}>();
 </script>

@@ -1,14 +1,14 @@
 ﻿using AutoMapper;
+using electro.api.rest.ActionFilters;
 using electro.api.rest.Dtos;
-using electro.api.rest.Filters;
-using electro.api.rest.Models;
+using electro.api.rest.Dtos.Product;
+using electro.api.rest.Models.Product;
+using electro.api.rest.QueryFilters;
 using electro.api.rest.Reposiotories.Interfaces;
+using electro.api.rest.Utils.PagedResult;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Metadata.Ecma335;
-using System.Security.Claims;
-using static electro.api.rest.Dtos.Filters;
 
 namespace electro.api.rest.Controllers
 {
@@ -17,28 +17,28 @@ namespace electro.api.rest.Controllers
     [Route("api/[controller]")]
     public class ProductsController : ControllerBase
     {
-        private readonly IMapper _mapper;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper mapper;
+        private readonly IUnitOfWork unitOfWork;
 
         public ProductsController(IMapper mapper, IUnitOfWork unitOfWork)
         {
-            _mapper = mapper;
-            _unitOfWork = unitOfWork;
+            this.mapper = mapper;
+            this.unitOfWork = unitOfWork;
         }
 
         [HttpGet]
         public IActionResult GetProducts()
         {
-            var products = _unitOfWork.Products.GetProducts().Include(p => p.Group).Include(p => p.Category).Include(p => p.SubCategory).ToList();
-            var productsDto = _mapper.Map<IEnumerable<ProductDto>>(products);
+            var products = unitOfWork.Products.GetProducts().Include(p => p.Group).Include(p => p.Category).Include(p => p.SubCategory).ToList();
+            var productsDto = mapper.Map<IEnumerable<ProductDto>>(products);
             return Ok(productsDto);
         }
 
 
         [HttpPost("search")]
-        public IActionResult SearchProducts([FromQuery] PaginationFilter paginationFilter, [FromBody] ProductFilter productFilter, [FromQuery] string? query = "")
+        public async Task<IActionResult> SearchProducts([FromQuery] PaginationFilter paginationFilter, [FromBody] ProductFilter productFilter, [FromQuery] string? query = "")
         {
-            var productsQuery = _unitOfWork.Products.GetProducts()
+            var productsQuery = unitOfWork.Products.GetProducts()
                 .Include(p => p.Group)
                 .Include(p => p.Category)
                 .Include(p => p.SubCategory)
@@ -62,18 +62,20 @@ namespace electro.api.rest.Controllers
             {
                 productsQuery = productsQuery.Where(p => p.Name.ToLower().Contains(query.ToLower()));
             }
-
-            var productsDto = _mapper.Map<IEnumerable<ProductDto>>(productsQuery).AsQueryable();
-            var response = PagedDto<ProductDto>.ToPagedDto(productsDto, paginationFilter);
-            return Ok(response);
+            var pagedResponse = await PagedResultFactory.CreatePagedResultAsync<ProductDto, ProductModel>(
+                productsQuery,
+                paginationFilter,
+                (items) => mapper.Map<IEnumerable<ProductDto>>(items));
+            
+            return Ok(pagedResponse);
         }
 
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProductById(string id)
         {
-            var product = await _unitOfWork.Products.GetProductById(id);
-            var productDto = _mapper.Map<ProductDto>(product);
+            var product = await unitOfWork.Products.GetProductById(id);
+            var productDto = mapper.Map<ProductDto>(product);
             if (productDto == null) return NotFound();
             return Ok(productDto);
         }
@@ -83,10 +85,10 @@ namespace electro.api.rest.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateProduct(ProductDto product)
         {
-            var productModel = _mapper.Map<ProductModel>(product);
-            var createdProduct = await _unitOfWork.Products.CreateProduct(productModel);
-            await _unitOfWork.CompleteAsync();
-            return Ok(_mapper.Map<ProductDto>(createdProduct));
+            var productModel = mapper.Map<ProductModel>(product);
+            var createdProduct = await unitOfWork.Products.CreateProduct(productModel);
+            await unitOfWork.CompleteAsync();
+            return Ok(mapper.Map<ProductDto>(createdProduct));
         }
 
         [HttpPut("{id}")]
@@ -97,12 +99,10 @@ namespace electro.api.rest.Controllers
             {
                 return BadRequest();
             }
-            var productModel = _mapper.Map<ProductModel>(product);
-            var updatedProduct = await _unitOfWork.Products.UpdateProduct(productModel);
-            await _unitOfWork.CompleteAsync();
-            return Ok(_mapper.Map<ProductDto>(updatedProduct));
+            var productModel = mapper.Map<ProductModel>(product);
+            var updatedProduct = await unitOfWork.Products.UpdateProduct(productModel);
+            await unitOfWork.CompleteAsync();
+            return Ok(mapper.Map<ProductDto>(updatedProduct));
         }
-
-
     }
 }

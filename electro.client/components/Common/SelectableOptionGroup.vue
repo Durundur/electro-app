@@ -5,7 +5,7 @@
 		rounded="lg">
 		<v-radio-group
 			hide-details="auto"
-			v-model="model"
+			v-model="proxy"
 			ripple
 			:inline="horizontal">
 			<v-radio
@@ -14,7 +14,7 @@
 				:value="option.value"
 				class="rounded-lg flex-1-1-0 text-body-2"
 				:class="{
-					'selection-active': model === option.value,
+					'selection-active': proxy === option.value,
 					border: optionBorder,
 				}">
 				<template #label>
@@ -27,24 +27,40 @@
 	</v-card>
 </template>
 
-<script lang="ts" setup>
-	export interface Options {
-		value: any;
+<script lang="ts" setup generic="T">
+	export interface Option<T> {
+		value: T;
 		label: string;
+		[key: string]: unknown;
 	}
-	interface ISelectableOptionGroupProps {
-		options: Options[];
+
+	const props = defineProps<{
+		options: Option<T>[];
+		modelValue: T;
+		defaultOption?: Option<T>;
 		containerBorder?: boolean;
 		optionBorder?: boolean;
 		horizontal?: boolean;
-	}
-	const props = withDefaults(defineProps<ISelectableOptionGroupProps>(), {
-		containerBorder: true,
-		optionBorder: false,
-		horizontal: false,
+	}>();
+
+	const emit = defineEmits<{
+		(e: "update:modelValue", value: T): void;
+	}>();
+
+	const proxy = computed({
+		get() {
+			return props.modelValue;
+		},
+		set(value: T) {
+			emit("update:modelValue", value);
+		},
 	});
-	const model = defineModel<string | number | undefined>();
+
+	if (props.defaultOption) {
+		proxy.value = props.defaultOption.value;
+	}
 </script>
+
 <style lang="css" scoped>
 	:deep(.v-label) {
 		opacity: 1;

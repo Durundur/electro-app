@@ -2,12 +2,11 @@
 {
     public interface IUnitOfWork
     {
-        IGroupRepository Groups { get; }
-
+        IProductHierarchyRepository ProductHierarchy { get; }
         IProductRepository Products { get; }
-
         IOpinionRepository Opinions { get; }
         ICartRepository Carts { get; }
-        Task CompleteAsync();
+        IOrderRepository Orders { get; }
+        Task<int> CompleteAsync();
     }
 }

@@ -1,13 +1,8 @@
 import { defineStore } from "pinia";
-import type {
-	AuthHeader,
-	AuthStore,
-	AuthResponse,
-	LoginRequest,
-	RegisterRequest,
-} from "~/types/auth";
+import type { AuthHeader, AuthResponse, AuthStore, LoginRequest, RegisterRequest } from "~/types/Auth/Auth";
 
-export const useAuthStore = defineStore("authStore", () => {
+
+export const useAuthStore = defineStore("auth-store", () => {
 	const store = ref<AuthStore>({
 		jwtToken: "",
 		refreshToken: "",

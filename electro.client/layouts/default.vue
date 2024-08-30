@@ -37,8 +37,11 @@
 		min-height: 322.2px;
 	}
 
-	.card-title{
+	.card-title {
 		padding: unset 0;
 	}
 
+	.h-inherit {
+		height: inherit;
+	}
 </style>

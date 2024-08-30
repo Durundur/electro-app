@@ -6,7 +6,7 @@
 </template>
 <script lang="ts" setup>
 	export interface IOrderHeaderProps {
-		number: string;
+		number: number;
 	}
 	const props = defineProps<IOrderHeaderProps>();
 </script>

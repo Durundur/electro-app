@@ -104,7 +104,7 @@
 </template>
 
 <script setup>
-	const { $api } = useNuxtApp();
+	const { $api, $toast } = useNuxtApp();
 	const model = defineModel({
 		activeCategories: {
 			type: Object,

@@ -1,33 +1,47 @@
 <template>
 	<SubCardTitle>Płatność</SubCardTitle>
 	<SelectableOptionGroup
-		v-model="model"
-		:options="paymentMethods"></SelectableOptionGroup>
+		:container-border="true"
+		:options="paymentMethods"
+		:defaultOption="paymentMethods.at(0)"
+		@update:model-value="(v) => (paymentMethod = v)"
+		:model-value="paymentMethod"></SelectableOptionGroup>
 </template>
 <script lang="ts" setup>
-	import { EPaymentMethod } from "~/types/order";
+	import { PaymentMethod } from "~/types/Order/Order";
 
-	const model = defineModel<EPaymentMethod>();
+	const props = defineProps<{ modelValue: PaymentMethod }>();
+	const emit = defineEmits(["update:modelValue"]);
+
+	const paymentMethod = computed({
+		get() {
+			return props.modelValue;
+		},
+		set(value: PaymentMethod) {
+			emit("update:modelValue", value);
+		},
+	});
+
 	const paymentMethods = [
 		{
 			label: "Płatność online",
-			value: EPaymentMethod.OnlinePayment,
+			value: PaymentMethod.OnlinePayment,
 		},
 		{
 			label: "Przelew tradycyjny",
-			value: EPaymentMethod.BankTransfer,
+			value: PaymentMethod.BankTransfer,
 		},
 		{
 			label: "Blik",
-			value: EPaymentMethod.Blik,
+			value: PaymentMethod.Blik,
 		},
 		{
 			label: "Przy odbiorze",
-			value: EPaymentMethod.OnDelivery,
+			value: PaymentMethod.OnDelivery,
 		},
 		{
 			label: "Karta płatnicza online",
-			value: EPaymentMethod.OnlineByCard,
+			value: PaymentMethod.OnlineByCard,
 		},
 	];
 </script>

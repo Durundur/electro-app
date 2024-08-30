@@ -5,7 +5,6 @@
 			<span>
 				{{ $formatters.priceFormatter(totalAmount) }}
 			</span>
-			<span>zł</span>
 			<span class="text-grey-darken-1 text-body-2">
 				({{ productCount }} produktów)
 			</span>

@@ -1,7 +1,9 @@
 export default defineNuxtPlugin((nuxtApp) => {
 	const config = useRuntimeConfig();
 	const authStore = useAuthStore();
-	const loading = useLoadingIndicator();
+	const loading = useLoadingIndicator({
+		throttle: 50
+	});
 	nuxtApp.provide("api", {
 		get: request("GET"),
 		post: request("POST"),

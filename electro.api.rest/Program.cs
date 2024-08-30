@@ -1,5 +1,5 @@
+using electro.api.rest.Mapper;
 using electro.api.rest.Services;
-using electro.api.rest.Utils;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -15,7 +15,8 @@ builder.Services.AddDbService(builder.Configuration.GetConnectionString("DB"));
 
 builder.Services.AddJwtAuth(builder.Configuration);
 
-builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
+builder.Services.AddAutoMapper(typeof(OrderMapperProfile));
 builder.Services.AddServices();
 
 

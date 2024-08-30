@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Runtime.CompilerServices;
 using System.Data;
 using Microsoft.AspNetCore.Authentication;
+using electro.api.rest.Models.Auth;
 
 namespace electro.api.rest.Services
 {

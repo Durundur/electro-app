@@ -8,7 +8,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
-using electro.api.rest.Filters;
+using electro.api.rest.ActionFilters;
+using electro.api.rest.Models.Auth;
 
 namespace electro.api.rest.Services
 {
@@ -16,8 +17,11 @@ namespace electro.api.rest.Services
     {
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
+            services.AddScoped<ICartRepository, CartRepository>();
+            services.AddScoped<IOpinionRepository, OpinionRepository>();
+            services.AddScoped<IProductHierarchyRepository, ProductHierarchyRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
-            services.AddScoped<IGroupRepository, GroupRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IAuthService, AuthService>();
 

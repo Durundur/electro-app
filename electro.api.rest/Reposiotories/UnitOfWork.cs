@@ -1,37 +1,39 @@
 ﻿using electro.api.rest.Models;
 using electro.api.rest.Reposiotories.Interfaces;
-using electro.api.rest.Repositories;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore;
 
 namespace electro.api.rest.Reposiotories
 {
     public class UnitOfWork: IUnitOfWork, IDisposable
     {
-        private readonly ApplicationDbContext _context;
-        public IGroupRepository Groups { get; private set; }
+        private readonly ApplicationDbContext context;
+        public IProductHierarchyRepository ProductHierarchy { get; private set; }
         public IProductRepository Products { get; private set; }
         public IOpinionRepository Opinions { get; private set; }
         public ICartRepository Carts { get; private set; }
+        public IOrderRepository Orders { get; private set; }
 
-        public UnitOfWork(ApplicationDbContext context)
+        public UnitOfWork(ApplicationDbContext context, IProductHierarchyRepository productHierarchyRepository, 
+            IProductRepository productRepository, IOpinionRepository opinionRepository, ICartRepository cartRepository,
+            IOrderRepository orderRepository)
         {
-            _context = context;
-            Groups = new GroupRepository(_context);
-            Products = new ProductRepository(_context, this);
-            Opinions = new OpinionRepository(_context);
-            Carts = new CartRepository(_context);
+            this.context = context;
+            ProductHierarchy = productHierarchyRepository;
+            Products = productRepository;
+            Opinions = opinionRepository;
+            Carts = cartRepository;
+            Orders = orderRepository;
         }
 
-        public async Task CompleteAsync()
+        public async Task<int> CompleteAsync()
         {
             UpdateTimestamps();
-            await _context.SaveChangesAsync();
+            return await context.SaveChangesAsync();
         }
 
         private void UpdateTimestamps()
         {
-            var entries = _context.ChangeTracker.Entries<BaseModel>();
+            var entries = context.ChangeTracker.Entries<BaseModel>();
 
             foreach (var entry in entries)
             {
@@ -49,7 +51,7 @@ namespace electro.api.rest.Reposiotories
 
         public void Dispose()
         {
-            _context.Dispose();
+            context.Dispose();
         }
     }
 }

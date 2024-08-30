@@ -1,5 +1,6 @@
 ﻿using electro.api.rest.Exceptions;
 using electro.api.rest.Models;
+using electro.api.rest.Models.Product;
 using electro.api.rest.Reposiotories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,26 +8,26 @@ namespace electro.api.rest.Repositories
 {
     public class ProductRepository : IProductRepository
     {
-        private readonly ApplicationDbContext _dbContext;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly ApplicationDbContext dbContext;
+        private readonly IProductHierarchyRepository productHierarchyRepository;
 
-        public ProductRepository(ApplicationDbContext dbContext, IUnitOfWork unitOfWork)
+        public ProductRepository(ApplicationDbContext dbContext, IProductHierarchyRepository productHierarchyRepository)
         {
-            _dbContext = dbContext;
-            _unitOfWork = unitOfWork;
+            this.dbContext = dbContext;
+            this.productHierarchyRepository = productHierarchyRepository;
         }
 
 
         public IQueryable<ProductModel> GetProducts()
         {
-            var products = _dbContext.Products.AsQueryable();
+            var products = dbContext.Products.AsQueryable();
             return products;
         }
 
         
         public async Task<ProductModel> GetProductById(string id)
         {
-            var product = await _dbContext.Products
+            var product = await dbContext.Products
                 .Include(p => p.Group)
                 .Include(p => p.Category)
                 .Include(p => p.SubCategory)
@@ -42,11 +43,11 @@ namespace electro.api.rest.Repositories
             {
                 throw new NotFoundException("Product not found");
             }
-            await _dbContext.Entry(product).Reference(p => p.Specification).LoadAsync();
-            await _dbContext.Entry(product).Collection(p => p.Opinions).LoadAsync();
-            _dbContext.ProductsSpecification.Remove(product.Specification);
-            _dbContext.Products.Remove(product);
-            _dbContext.Opinions.RemoveRange(product.Opinions);
+            await dbContext.Entry(product).Reference(p => p.Specification).LoadAsync();
+            await dbContext.Entry(product).Collection(p => p.Opinions).LoadAsync();
+            dbContext.ProductsSpecification.Remove(product.Specification);
+            dbContext.Products.Remove(product);
+            dbContext.Opinions.RemoveRange(product.Opinions);
         }
 
 
@@ -54,7 +55,7 @@ namespace electro.api.rest.Repositories
         {
             if (product.Group != null)
             {
-                var group = await _unitOfWork.Groups.GetGroupById(product.Group.Id);
+                var group = await productHierarchyRepository.GetGroupById(product.Group.Id);
                 if (group.Id != product.Group.Id || group.Name != product.Group.Name)
                 {
                     throw new InvalidOperationException("");
@@ -63,7 +64,7 @@ namespace electro.api.rest.Repositories
             }
             if (product.Category != null)
             {
-                var category = await _unitOfWork.Groups.GetCategoryById(product.Category.Id);
+                var category = await productHierarchyRepository.GetCategoryById(product.Category.Id);
                 if (category.Id != product.Category.Id || category.Name != product.Category.Name)
                 {
                     throw new InvalidOperationException();
@@ -72,20 +73,20 @@ namespace electro.api.rest.Repositories
             }
             if (product.SubCategory != null)
             {
-                var subCategory = await _unitOfWork.Groups.GetSubCategoryById(product.SubCategory.Id);
+                var subCategory = await productHierarchyRepository.GetSubCategoryById(product.SubCategory.Id);
                 if (subCategory.Id != product.SubCategory.Id || subCategory.Name != product.SubCategory.Name)
                 {
                     throw new InvalidOperationException();
                 }
                 product.SubCategory = subCategory;
             }
-            _dbContext.Products.Add(product);
+            dbContext.Products.Add(product);
             return product;
         }
 
         public async Task<ProductModel> UpdateProduct(ProductModel product)
         {
-            var existingProduct = await _dbContext.Products.Include(p => p.Specification).FirstOrDefaultAsync(p => p.Id == product.Id);
+            var existingProduct = await dbContext.Products.Include(p => p.Specification).FirstOrDefaultAsync(p => p.Id == product.Id);
             if(existingProduct == null)
             {
                 throw new NotFoundException("Product not found.");

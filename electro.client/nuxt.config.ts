@@ -3,6 +3,9 @@ export default defineNuxtConfig({
 	devtools: { enabled: true },
 	ssr: false,
 	modules: ["vuetify-nuxt-module", "@pinia/nuxt"],
+	routeRules: {
+		'/checkout/**': { appMiddleware: ['checkout']}
+	},
 	runtimeConfig: {
 		public: {
 			API_URL: process.env.API_URL,

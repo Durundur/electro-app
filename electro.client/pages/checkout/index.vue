@@ -12,25 +12,36 @@
 							cols="12"
 							md="7"
 							lg="8">
-							<CustomerTypeSwitch v-model="customerType"></CustomerTypeSwitch>
-							<CustomerInfoForm :customerType="customerType"></CustomerInfoForm>
+							<CustomerInfoForm
+								v-model:recipient="orderStore.newOrder.recipient"
+								v-model:address="
+									orderStore.newOrder.deliveryAddress
+								"></CustomerInfoForm>
 							<DeliveryMethodSelector
-								v-model="deliveryMethod"></DeliveryMethodSelector>
+								v-model="
+									orderStore.newOrder.deliveryDetails
+								"></DeliveryMethodSelector>
 							<PaymentMethodSlector
-								v-model="paymentMethod"></PaymentMethodSlector>
+								v-model="
+									orderStore.newOrder.paymentMethod as PaymentMethod
+								"></PaymentMethodSlector>
 						</v-col>
 						<v-col
 							cols="12"
 							md="5"
 							lg="4">
-							<CheckoutProducts></CheckoutProducts>
-							<CheckoutSummary class="py-2"></CheckoutSummary>
+							<CheckoutProducts :cart="orderStore.cart"></CheckoutProducts>
+							<CheckoutSummary
+								:cart="orderStore.cart"
+								:delivery-cost="orderStore.newOrder.deliveryDetails.cost.value"
+								:discount-amount="orderStore.discountAmount"
+								class="py-2"></CheckoutSummary>
 							<v-btn
 								class="text-none"
 								block
 								color="success"
 								append-icon="mdi-chevron-right"
-								to="/checkout/confirm">
+								@click="orderStore.goToCheckoutConfirmation()">
 								Podsumowanie
 							</v-btn>
 						</v-col>
@@ -41,12 +52,7 @@
 	</Container>
 </template>
 <script lang="ts" setup>
-	import {
-		EOrderCustomerType,
-		EOrderDeliveryMethod,
-		EPaymentMethod,
-	} from "~/types/order";
-	const customerType = ref<EOrderCustomerType>(EOrderCustomerType.Invidual);
-	const deliveryMethod = ref<EOrderDeliveryMethod>();
-	const paymentMethod = ref<EPaymentMethod>();
+	import type { PaymentMethod } from "~/types/Order/Order";
+
+	const orderStore = useOrderStore();
 </script>

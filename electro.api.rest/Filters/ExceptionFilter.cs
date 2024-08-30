@@ -3,7 +3,7 @@ using electro.api.rest.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace electro.api.rest.Filters
+namespace electro.api.rest.ActionFilters
 {
     public class ExceptionFilter : IExceptionFilter
     {

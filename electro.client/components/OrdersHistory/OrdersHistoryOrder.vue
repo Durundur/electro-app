@@ -25,17 +25,16 @@
 		<OrderFooter
 			:orderId="order.id"
 			:productCount="productCount"
-			:totalAmount="order.totalPrice.GrossValue"></OrderFooter>
+			:totalAmount="order.totalPrice.value"></OrderFooter>
 	</v-card>
 </template>
 <script lang="ts" setup>
-	import utlis from "~/utlis";
-	import { type IOrder } from "~/types/order";
+	import type { IOrderOverview } from "~/types/Order/OrderOverview";
 	export interface IOrderProps {
-		order: IOrder;
+		order: IOrderOverview;
 	}
 	const props = defineProps<IOrderProps>();
 	const productCount = computed(() =>
-		utlis.countTotalOrderProductsQuantity(props.order.products),
+		props.order.products.reduce((acc, item) => (acc += item.quantity), 0),
 	);
 </script>

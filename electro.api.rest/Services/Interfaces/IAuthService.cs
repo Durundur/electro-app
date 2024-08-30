@@ -1,11 +1,11 @@
-﻿using electro.api.rest.Dtos;
+﻿using electro.api.rest.Dtos.Auth;
 
 namespace electro.api.rest.Services.Interfaces
 {
     public interface IAuthService
     {
-        Task<AuthResponseDto> Login(AuthRequestDto credentials);
-        Task<AuthResponseDto> RefreshToken(RefreshTokenRequest jwt);
-        Task<AuthResponseDto> Register(AuthRequestDto credentials);
+        Task<AuthDto> Login(LoginDto credentials);
+        Task<AuthDto> RefreshToken(RefreshTokenDto jwt);
+        Task<AuthDto> Register(RegisterDto credentials);
     }
 }

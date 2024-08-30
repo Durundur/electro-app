@@ -1,6 +1,7 @@
-﻿using electro.api.rest.Dtos;
+﻿using electro.api.rest.DTOs.Opinion;
 using electro.api.rest.Exceptions;
 using electro.api.rest.Models;
+using electro.api.rest.Models.Opinion;
 using electro.api.rest.Reposiotories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,16 +10,16 @@ namespace electro.api.rest.Repositories
 {
     public class OpinionRepository : IOpinionRepository
     {
-        private readonly ApplicationDbContext _dbContext;
+        private readonly ApplicationDbContext dbContext;
 
         public OpinionRepository(ApplicationDbContext dbContext)
         {
-            _dbContext = dbContext;
+            this.dbContext = dbContext;
         }
 
         public async Task<OpinionModel> CreateOpinionAsync(OpinionModel opinion)
         {
-            var product = await _dbContext.Products.FirstOrDefaultAsync(p => p.Id == opinion.ProductId);
+            var product = await dbContext.Products.FirstOrDefaultAsync(p => p.Id == opinion.ProductId);
             if (product == null)
             {
                 throw new NotFoundException("Product not found");
@@ -26,14 +27,14 @@ namespace electro.api.rest.Repositories
             product.OpinionsCount++;
             product.AvgOpinionsRating = ((product.AvgOpinionsRating * (product.OpinionsCount - 1)) + opinion.Rating) / product.OpinionsCount;
             opinion.Product = product;
-            _dbContext.Opinions.Add(opinion);
+            dbContext.Opinions.Add(opinion);
             return opinion;
         }
 
 
         public async Task<OpinionModel> RateOpinionAsync(Guid opinionId, Guid userId, OpinionActionType actionType)
         {
-            var opinion = await _dbContext.Opinions
+            var opinion = await dbContext.Opinions
                 .Include(o => o.OpinionsActions)
                 .FirstOrDefaultAsync(o => o.Id == opinionId) ?? throw new NotFoundException("Opinion not found");
 
@@ -55,7 +56,7 @@ namespace electro.api.rest.Repositories
                     opinion.Dislikes++;
                 }
 
-                _dbContext.OpinionsActions.Add(action);
+                dbContext.OpinionsActions.Add(action);
             }
             else
             {
@@ -70,20 +71,20 @@ namespace electro.api.rest.Repositories
                     opinion.Likes++;
                 }
                 action.ActionType = actionType;
-                _dbContext.OpinionsActions.Update(action);
+                dbContext.OpinionsActions.Update(action);
             }
             return opinion;
         }
 
         public IQueryable<OpinionModel> GetOpinions(Guid productId)
         {
-            var opinons = _dbContext.Opinions.Include(o => o.OpinionsActions).Where(o => o.ProductId == productId).AsQueryable();
+            var opinons = dbContext.Opinions.Include(o => o.OpinionsActions).Where(o => o.ProductId == productId).AsQueryable();
             return opinons;
         }
 
         public async Task<IEnumerable<OpinionsStats>> GetOpinionsStatsAsync(Guid productId)
         {
-            var opinions = await _dbContext.Opinions.Where(o => o.ProductId == productId).ToListAsync();
+            var opinions = await dbContext.Opinions.Where(o => o.ProductId == productId).ToListAsync();
             var stats = new List<OpinionsStats>()
             {
                 new OpinionsStats(1),

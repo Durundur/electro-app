@@ -11,7 +11,7 @@
 				class="pr-sm-4">
 				<v-carousel
 					hide-delimiters
-					:show-arrows="product.photos.length > 1">
+					:show-arrows="true">
 					<v-carousel-item
 						v-for="photo in product.photos"
 						:src="photo"></v-carousel-item>
@@ -74,7 +74,7 @@
 						class="order-2 order-sm-1 order-lg-last">
 						<v-card flat>
 							<v-card-title class="px-0">
-								{{ $formatters.priceFormatter(product.price.price) }} zł
+								{{ $formatters.priceFormatter(product.price.value) }}
 							</v-card-title>
 							<v-row
 								:no-gutters="true"
@@ -88,7 +88,7 @@
 										prepend-icon="mdi-cart-plus"
 										color="success"
 										class="text-none"
-										@click="onAddToCart">
+										@click="onAddProductToCart">
 										Dodaj do koszyka
 									</v-btn>
 								</v-col>
@@ -311,19 +311,17 @@
 		opinionsStats.value = stats;
 	}
 
-	function onAddToCart() {
+	function onAddProductToCart() {
 		const p = product.value;
+		const productPhotos = p.photos;
 		const productToAdd = {
-			count: productQuantity.value,
+			quantity: productQuantity.value,
 			productId: p.id,
-			price: {
-				price: p.price.price,
-				oldPrice: p.price.oldPrice,
-			},
-			photo: p.photos[0],
+			price: p.price,
+			photo: productPhotos.length > 0 ? productPhotos[0] : "",
 			name: p.name,
 		};
-		cartStore.addToCart(productToAdd);
+		cartStore.addProductToCart(productToAdd);
 	}
 </script>
 <style scoped>

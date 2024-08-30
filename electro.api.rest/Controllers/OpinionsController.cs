@@ -1,12 +1,15 @@
 ﻿using AutoMapper;
+using electro.api.rest.ActionFilters;
 using electro.api.rest.Dtos;
-using electro.api.rest.Filters;
-using electro.api.rest.Models;
+using electro.api.rest.DTOs.Opinion;
+using electro.api.rest.Extensions;
+using electro.api.rest.Models.Opinion;
+using electro.api.rest.QueryFilters;
 using electro.api.rest.Reposiotories.Interfaces;
+using electro.api.rest.Utils.PagedResult;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using static electro.api.rest.Dtos.Filters;
 
 namespace electro.api.rest.Controllers
 {
@@ -15,19 +18,19 @@ namespace electro.api.rest.Controllers
     [Route("api/[controller]")]
     public class OpinionsController : ControllerBase
     {
-        private readonly IMapper _mapper;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper mapper;
+        private readonly IUnitOfWork unitOfWork;
 
         public OpinionsController(IMapper mapper, IUnitOfWork unitOfWork)
         {
-            _mapper = mapper;
-            _unitOfWork = unitOfWork;
+            this.mapper = mapper;
+            this.unitOfWork = unitOfWork;
         }
 
         [HttpGet("product/{productId}/stats")]
         public async Task<IActionResult> GetOpinionsStats(Guid productId)
         {
-            var stats = await _unitOfWork.Opinions.GetOpinionsStatsAsync(productId);
+            var stats = await unitOfWork.Opinions.GetOpinionsStatsAsync(productId);
             return Ok(stats.Reverse());
         }
 
@@ -36,28 +39,35 @@ namespace electro.api.rest.Controllers
         [HttpGet("product/{productId}/rating/{rating?}")]
         public async Task<IActionResult> GetOpinionsToProduct(Guid productId, int? rating, [FromQuery] PaginationFilter paginationFilter)
         {
-            var validPaginationFilter = new PaginationFilter(paginationFilter.PageNumber, paginationFilter.PageSize);
-            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            IQueryable<OpinionModel> opinions = _unitOfWork.Opinions.GetOpinions(productId);
+            IQueryable<OpinionModel> opinions = unitOfWork.Opinions.GetOpinions(productId);
 
             if (rating.HasValue)
             {
                 opinions = opinions.Where(o => Math.Ceiling(o.Rating) == rating.Value);
             }
             opinions = opinions.OrderByDescending(o => o.CreatedAt);
-            var pagedOpinions = PagedDto<OpinionModel>.ToPagedDto(opinions, validPaginationFilter);
-            var opinionsDto = _mapper.Map<IEnumerable<OpinionDto>>(pagedOpinions.Data);
-            foreach (var opinion in opinionsDto)
+
+            var pagedOpinionsResponse = await PagedResultFactory.CreatePagedResultAsync<OpinionDto, OpinionModel>(
+                opinions,
+                paginationFilter,
+                (items) => mapper.Map<IEnumerable<OpinionDto>>(items));
+
+            if (User.Identity.IsAuthenticated)
             {
-                var userAction = opinions
-                    .FirstOrDefault(o => o.Id == opinion.Id)?
-                    .OpinionsActions
-                    .FirstOrDefault(oa => oa.UserId.ToString() == userIdString)?.ActionType;
-                opinion.UserAction = userAction?.ToString();
+                var userId = User.GetAuthenticatedUserId();
+                foreach (var opinion in pagedOpinionsResponse.Data)
+                {
+                    var userAction = opinions
+                        .FirstOrDefault(o => o.Id == opinion.Id)?
+                        .OpinionsActions
+                        .FirstOrDefault(oa => oa.UserId == userId)?.ActionType;
+                    opinion.UserAction = userAction?.ToString();
+                }
             }
-            var stats = await _unitOfWork.Opinions.GetOpinionsStatsAsync(productId);
-            var opinionsResponse = new PagedDto<OpinionDto>(opinionsDto, validPaginationFilter.PageNumber, validPaginationFilter.PageSize, pagedOpinions.TotalItems);
-            return Ok(new { stats = stats.Reverse(), opinions = opinionsResponse });
+            
+            var stats = await unitOfWork.Opinions.GetOpinionsStatsAsync(productId);
+            
+            return Ok(new { stats = stats.Reverse(), opinions = pagedOpinionsResponse });
         }
 
         [HttpPost("product/{productId}")]
@@ -74,11 +84,11 @@ namespace electro.api.rest.Controllers
             {
                 return BadRequest();
             }
-            var opinionModel = _mapper.Map<OpinionModel>(opinion);
+            var opinionModel = mapper.Map<OpinionModel>(opinion);
             opinionModel.UserId = userId;
-            var createdOpinion = await _unitOfWork.Opinions.CreateOpinionAsync(opinionModel);
-            await _unitOfWork.CompleteAsync();
-            return Created(createdOpinion.Id.ToString(), _mapper.Map<OpinionDto>(createdOpinion));
+            var createdOpinion = await unitOfWork.Opinions.CreateOpinionAsync(opinionModel);
+            await unitOfWork.CompleteAsync();
+            return Created(createdOpinion.Id.ToString(), mapper.Map<OpinionDto>(createdOpinion));
         }
 
         [HttpPost("{id}/{actionType}")]
@@ -90,9 +100,9 @@ namespace electro.api.rest.Controllers
             {
                 return BadRequest();
             }
-            var opinion = await _unitOfWork.Opinions.RateOpinionAsync(id, userId, actionType);
-            await _unitOfWork.CompleteAsync();
-            var opinionDto = _mapper.Map<OpinionDto>(opinion);
+            var opinion = await unitOfWork.Opinions.RateOpinionAsync(id, userId, actionType);
+            await unitOfWork.CompleteAsync();
+            var opinionDto = mapper.Map<OpinionDto>(opinion);
             opinionDto.UserAction = actionType.ToString();
             return Ok(opinionDto);
         }

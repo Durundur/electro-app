@@ -1,4 +1,4 @@
-import { useCartStore } from "~/stores/CartStore";
+import { useCartStore } from "~/stores/CCartStore";
 import { PaginationQuery, type IPagedResult } from "~/types/Api/PagedResult";
 import type {
 	ICreateOrder,

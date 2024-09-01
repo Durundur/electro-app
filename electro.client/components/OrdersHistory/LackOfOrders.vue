@@ -1,6 +1,7 @@
 <template>
 	<Container
-		class="text-center h-inherit d-flex flex-column justify-center align-center ga-2">
+		style="padding: 0 !important"
+		class="text-center d-flex flex-column justify-center align-center ga-2">
 		<v-icon
 			size="xx-large"
 			icon="mdi-package-variant-closed"></v-icon>

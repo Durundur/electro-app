@@ -1,6 +1,6 @@
 <template>
 	<Container v-if="cart.productsCount">
-		<v-container>
+		<v-container class="px-0">
 			<v-row>
 				<v-col
 					cols="12"

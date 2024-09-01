@@ -45,6 +45,14 @@ export enum OrderStatus {
 	Delivered = "Delivered",
 }
 
+export const orderStatusTranslations: Record<OrderStatus, string> = {
+	[OrderStatus.New]: "Nowe",
+	[OrderStatus.Paid]: "Opłacone",
+	[OrderStatus.InProgress]: "W trakcie realizacji",
+	[OrderStatus.Delivery]: "W dostawie",
+	[OrderStatus.Delivered]: "Dostarczone",
+};
+
 export enum PaymentMethod {
 	OnlinePayment = "OnlinePayment",
 	OnlineByCard = "OnlineByCard",

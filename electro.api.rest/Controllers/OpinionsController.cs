@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using electro.api.rest.ActionFilters;
-using electro.api.rest.Dtos;
 using electro.api.rest.DTOs.Opinion;
 using electro.api.rest.Extensions;
 using electro.api.rest.Models.Opinion;
@@ -37,7 +36,7 @@ namespace electro.api.rest.Controllers
 
         [HttpGet("product/{productId}")]
         [HttpGet("product/{productId}/rating/{rating?}")]
-        public async Task<IActionResult> GetOpinionsToProduct(Guid productId, int? rating, [FromQuery] PaginationFilter paginationFilter)
+        public async Task<IActionResult> GetOpinionsToProduct(Guid productId, int? rating, [FromQuery] PaginationParams paginationParams)
         {
             IQueryable<OpinionModel> opinions = unitOfWork.Opinions.GetOpinions(productId);
 
@@ -49,7 +48,7 @@ namespace electro.api.rest.Controllers
 
             var pagedOpinionsResponse = await PagedResultFactory.CreatePagedResultAsync<OpinionDto, OpinionModel>(
                 opinions,
-                paginationFilter,
+                paginationParams,
                 (items) => mapper.Map<IEnumerable<OpinionDto>>(items));
 
             if (User.Identity.IsAuthenticated)

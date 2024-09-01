@@ -1,0 +1,25 @@
+.size-x-small .v-field__input {
+	min-height: 20px !important;
+}
+
+.size-small .v-field__input {
+	min-height: 28px !important;
+}
+
+.size-medium .v-field__input {
+	min-height: 36px !important;
+}
+
+.size-large .v-field__input {
+	min-height: 44px !important;
+}
+
+.size-x-large .v-field__input {
+	min-height: 56px !important;
+}
+
+* .v-field__input {
+	padding-top: 0;
+	padding-bottom: 0;
+	height: 100%;
+}

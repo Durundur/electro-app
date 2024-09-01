@@ -33,7 +33,7 @@
 						</div>
 					</v-col>
 					<v-col
-						sm="6"
+						cols="12"
 						md="5"
 						lg="4">
 						<v-select
@@ -46,7 +46,10 @@
 								'Cena: od najdroższych',
 							]"
 							variant="outlined"
-							hide-details
+							hide-details="auto"
+							rounded="lg"
+							class="size-medium"
+							:list-props="{ slim: true, density: 'compact' }"
 							clearable></v-select>
 					</v-col>
 					<template v-if="products.length > 0">

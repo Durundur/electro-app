@@ -10,3 +10,15 @@ export interface IOrderOverview {
 	createdAt: string;
 	updatedAt: string;
 }
+
+export interface IOrderOverviewParams {
+	status?: OrderStatus;
+	order?: OrdersOverviewOrderOptions;
+}
+
+export enum OrdersOverviewOrderOptions {
+	DateDesc = "DateDesc",
+	DateAsc = "DateAsc",
+	TotalPriceDesc = "TotalPriceDesc",
+	TotalPriceAsc = "TotalPriceAsc",
+}

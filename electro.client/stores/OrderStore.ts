@@ -1,11 +1,18 @@
 import { useCartStore } from "~/stores/CartStore";
-import { PaginationQuery, type IPagedResult } from "~/types/Api/PagedResult";
+import {
+	type IPagedResult,
+	type IPaginationParams,
+} from "~/types/Api/PagedResult";
 import type {
 	ICreateOrder,
 	ICreateOrderResponse,
 } from "~/types/Order/OrderCreate";
 import type { IOrder } from "~/types/Order/Order";
-import type { IOrderOverview } from "~/types/Order/OrderOverview";
+import type {
+	IOrderOverview,
+	IOrderOverviewParams,
+} from "~/types/Order/OrderOverview";
+import utlis from "~/utlis";
 
 export const initialCreateOrder: ICreateOrder = {
 	paymentMethod: undefined,
@@ -71,14 +78,16 @@ export const useOrderStore = defineStore("order-store", () => {
 	};
 
 	const getUserOrdersOverview = async (
-		paginationQuery?: PaginationQuery,
+		paginationParams?: IPaginationParams,
+		orderOverviewParams?: IOrderOverviewParams,
 	): Promise<IPagedResult<IOrderOverview> | undefined> => {
-		if (!paginationQuery) {
-			paginationQuery = new PaginationQuery();
-		}
+		const params = new URLSearchParams();
 		try {
 			const { ok, data } = await $api.get(
-				`api/orders?${paginationQuery.toQueryParamsString()}`,
+				`api/orders?${utlis.paramsToString(
+					paginationParams,
+					orderOverviewParams,
+				)}`,
 			);
 			if (ok) {
 				return data as IPagedResult<IOrderOverview>;

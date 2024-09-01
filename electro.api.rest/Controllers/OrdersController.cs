@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using electro.api.rest.ActionFilters;
-using electro.api.rest.Dtos;
 using electro.api.rest.DTOs.Order.Order;
 using electro.api.rest.DTOs.Order.OrderCreate;
 using electro.api.rest.DTOs.Order.OrderOverview;
@@ -31,13 +30,38 @@ namespace electro.api.rest.Controllers
 
         [Authorize(Roles = "Admin, User")]
         [HttpGet]
-        public async Task<IActionResult> GetUserOrdersOverview([FromQuery] PaginationFilter paginationFilter)
+        public async Task<IActionResult> GetUserOrdersOverview([FromQuery] PaginationParams paginationParams, [FromQuery] UserOrdersOverviewParams userOrdersOverviewParams)
         {
             Guid userId = User.GetAuthenticatedUserId();
             var userOrdersQuery = unitOfWork.Orders.GetUserOrders(userId);
+            if(!String.IsNullOrEmpty(userOrdersOverviewParams.Order) && Enum.TryParse<UserOrdersOverviewSortOption>(userOrdersOverviewParams.Order, true, out var sortOptionEnum))
+            {
+                if(sortOptionEnum == UserOrdersOverviewSortOption.DateDesc)
+                {
+                    userOrdersQuery = userOrdersQuery.OrderByDescending(o => o.CreatedAt);
+                }
+                if (sortOptionEnum == UserOrdersOverviewSortOption.DateAsc)
+                {
+                    userOrdersQuery = userOrdersQuery.OrderBy(o => o.CreatedAt);
+                }
+                if (sortOptionEnum == UserOrdersOverviewSortOption.TotalPriceDesc)
+                {
+                    userOrdersQuery = userOrdersQuery
+                        .OrderByDescending(o => o.Products.Sum(p => p.Price.Value * p.Quantity));
+                }
+                if (sortOptionEnum == UserOrdersOverviewSortOption.TotalPriceAsc)
+                {
+                    userOrdersQuery = userOrdersQuery
+                        .OrderBy(o => o.Products.Sum(p => p.Price.Value * p.Quantity));
+                }
+            }
+            if (!String.IsNullOrEmpty(userOrdersOverviewParams.Status) && Enum.TryParse<OrderStatus>(userOrdersOverviewParams.Status, true, out var statusOptionEnum))
+            {
+               userOrdersQuery = userOrdersQuery.Where(o => o.Status == statusOptionEnum);
+            }
             var orders = await PagedResultFactory.CreatePagedResultAsync<OrderOverviewDto, OrderModel>(
-                userOrdersQuery, 
-                paginationFilter, 
+                userOrdersQuery,
+                paginationParams, 
                 (items) => mapper.Map<IEnumerable<OrderOverviewDto>>(items));
             return Ok(orders);
         }

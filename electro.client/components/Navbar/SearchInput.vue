@@ -1,8 +1,11 @@
 <template>
-	<DefaultInput
+	<v-text-field
+		class="size-medium"
+		variant="outlined"
+		rounded="lg"
+		:hide-details="true"
 		placeholder="Wyszukaj produkt"
 		v-model="query"
-		variant="outlined"
 		:clearable="true"
 		@keyup.enter="onSearchClick">
 		<template v-slot:prepend-inner>
@@ -12,9 +15,8 @@
 				variant="plain"
 				icon="mdi-magnify" />
 		</template>
-	</DefaultInput>
+	</v-text-field>
 </template>
-
 <script setup lang="ts">
 	const query = ref("");
 	const router = useRouter();

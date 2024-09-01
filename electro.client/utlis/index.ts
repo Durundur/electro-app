@@ -1,4 +1,4 @@
-import { type IOrderProuct } from "~/types/order";
+import type { IOrderProuct } from "~/types/Order/Order";
 
 function convertFileToBase64Async(file: File) {
 	return new Promise((resolve, reject) => {
@@ -27,11 +27,28 @@ async function convertFilesToBase64Async(files: (File | string)[]) {
 }
 
 function countTotalOrderProductsQuantity(products: IOrderProuct[]) {
-	return products.reduce((acc, item) => acc + item.count, 0);
+	return products.reduce((acc, item) => acc + item.quantity, 0);
+}
+
+function paramsToString(...args: Partial<object[]>): string {
+	const mergedParams = args.reduce((acc, obj) => ({ ...acc, ...obj }), {});
+
+	const filteredParams = Object.entries(mergedParams as object).reduce(
+		(acc, [key, value]) => {
+			if (value != null && value !== "") {
+				acc[key] = value;
+			}
+			return acc;
+		},
+		{} as Record<string, any>,
+	);
+	const paramsString = new URLSearchParams(filteredParams).toString();
+	return paramsString;
 }
 
 export default {
 	convertFileToBase64Async,
 	convertFilesToBase64Async,
 	countTotalOrderProductsQuantity,
+	paramsToString,
 };

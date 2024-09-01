@@ -1,6 +1,6 @@
 ﻿namespace electro.api.rest.QueryFilters
 {
-    public class ProductFilter
+    public class ProductParams
     {
         public int? Group { get; set; }
         public int? Category { get; set; }

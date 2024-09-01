@@ -8,14 +8,14 @@ namespace electro.api.rest.Utils.PagedResult
     {
         public static async Task<PagedResult<TResult>> CreatePagedResultAsync<TResult, TSource>(
             IQueryable<TSource> source,
-            PaginationFilter paginationFilter,
+            PaginationParams paginationParams,
             Func<IEnumerable<TSource>, IEnumerable<TResult>> mapFunction = null)
         {
             var totalItems = await source.CountAsync();
 
             var items = await source
-                .Skip((paginationFilter.PageNumber - 1) * paginationFilter.PageSize)
-                .Take(paginationFilter.PageSize)
+                .Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize)
+                .Take(paginationParams.PageSize)
                 .ToListAsync();
 
             IEnumerable<TResult> mappedItems;
@@ -37,31 +37,31 @@ namespace electro.api.rest.Utils.PagedResult
 
             return new PagedResult<TResult>(
                 mappedItems,
-                paginationFilter.PageNumber,
-                paginationFilter.PageSize,
+                paginationParams.PageNumber,
+                paginationParams.PageSize,
                 totalItems
             );
         }
 
         public static async Task<PagedResult<TSource>> CreatePagedResultAsync<TSource>(
             IQueryable<TSource> source,
-            PaginationFilter paginationFilter)
+            PaginationParams paginationParams)
         {
-            return await CreatePagedResultAsync<TSource, TSource>(source, paginationFilter);
+            return await CreatePagedResultAsync<TSource, TSource>(source, paginationParams);
         }
 
-        public static PagedResult<T> CreatePagedResult<T>(IQueryable<T> source, PaginationFilter paginationFilter)
+        public static PagedResult<T> CreatePagedResult<T>(IQueryable<T> source, PaginationParams paginationParams)
         {
             var totalItems = source.Count();
             var items = source
-                .Skip((paginationFilter.PageNumber - 1) * paginationFilter.PageSize)
-                .Take(paginationFilter.PageSize)
+                .Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize)
+                .Take(paginationParams.PageSize)
                 .ToList();
 
             return new PagedResult<T>(
                 items,
-                paginationFilter.PageNumber,
-                paginationFilter.PageSize,
+                paginationParams.PageNumber,
+                paginationParams.PageSize,
                 totalItems
             );
         }

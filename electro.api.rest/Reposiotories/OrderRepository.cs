@@ -21,6 +21,7 @@ namespace electro.api.rest.Reposiotories
                 .Include(o => o.Payment)
                 .Include(o => o.DeliveryDetails).ThenInclude(dd => dd.Address)
                 .Include(o => o.DeliveryDetails).ThenInclude(dd => dd.Recipient)
+                .OrderByDescending(o => o.CreatedAt)
                 .Where(o => o.UserId == userId);
             return query;
         }

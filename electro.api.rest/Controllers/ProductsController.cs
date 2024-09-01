@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using electro.api.rest.ActionFilters;
-using electro.api.rest.Dtos;
 using electro.api.rest.Dtos.Product;
 using electro.api.rest.Models.Product;
 using electro.api.rest.QueryFilters;
@@ -36,7 +35,7 @@ namespace electro.api.rest.Controllers
 
 
         [HttpPost("search")]
-        public async Task<IActionResult> SearchProducts([FromQuery] PaginationFilter paginationFilter, [FromBody] ProductFilter productFilter, [FromQuery] string? query = "")
+        public async Task<IActionResult> SearchProducts([FromQuery] PaginationParams paginationParams, [FromBody] ProductParams productParams, [FromQuery] string? query = "")
         {
             var productsQuery = unitOfWork.Products.GetProducts()
                 .Include(p => p.Group)
@@ -45,17 +44,17 @@ namespace electro.api.rest.Controllers
                 .Include(p => p.Specification)
                 .AsQueryable();
 
-            if (productFilter.Group.HasValue)
+            if (productParams.Group.HasValue)
             {
-                productsQuery = productsQuery.Where(p => p.GroupId == productFilter.Group.Value);
+                productsQuery = productsQuery.Where(p => p.GroupId == productParams.Group.Value);
             }
-            if (productFilter.Category.HasValue)
+            if (productParams.Category.HasValue)
             {
-                productsQuery = productsQuery.Where(p => p.CategoryId == productFilter.Category.Value);
+                productsQuery = productsQuery.Where(p => p.CategoryId == productParams.Category.Value);
             }
-            if (productFilter.Subcategory.HasValue)
+            if (productParams.Subcategory.HasValue)
             {
-                productsQuery = productsQuery.Where(p => p.SubCategoryId == productFilter.Subcategory.Value);
+                productsQuery = productsQuery.Where(p => p.SubCategoryId == productParams.Subcategory.Value);
             }
 
             if (!string.IsNullOrEmpty(query))
@@ -64,7 +63,7 @@ namespace electro.api.rest.Controllers
             }
             var pagedResponse = await PagedResultFactory.CreatePagedResultAsync<ProductDto, ProductModel>(
                 productsQuery,
-                paginationFilter,
+                paginationParams,
                 (items) => mapper.Map<IEnumerable<ProductDto>>(items));
             
             return Ok(pagedResponse);

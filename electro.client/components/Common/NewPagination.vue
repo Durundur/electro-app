@@ -10,15 +10,10 @@
 	</div>
 </template>
 <script setup lang="ts">
-	export interface IPaginationData {
-		pageNumber: number;
-		pageSize: number;
-		totalItems: number;
-		totalPages: number;
-	}
+	import type { IPaginationResult } from "~/types/Api/PagedResult";
 
-	export interface IPaginationProps {
-		paginationData: IPaginationData;
+	interface IPaginationProps {
+		paginationData: IPaginationResult;
 	}
 
 	const props = defineProps<IPaginationProps>();

@@ -1,6 +1,6 @@
 ﻿namespace electro.api.rest.QueryFilters
 {
-    public class PaginationFilter
+    public class PaginationParams
     {
         private int _pageNumber;
         private int _pageSize;
@@ -16,13 +16,13 @@
             set { _pageSize = Math.Clamp(value, 1, 100); }
         }
 
-        public PaginationFilter(int pageNumber, int pageSize)
+        public PaginationParams(int pageNumber, int pageSize)
         {
             PageNumber = pageNumber;
             PageSize = pageSize;
         }
 
-        public PaginationFilter()
+        public PaginationParams()
         {
             _pageNumber = 1;
             _pageSize = 10;

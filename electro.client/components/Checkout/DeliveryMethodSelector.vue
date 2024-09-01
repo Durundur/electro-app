@@ -22,9 +22,9 @@
 </template>
 
 <script lang="ts" setup>
-	import type { IPriceBase } from "~/types/Cart/Cart";
 	import type { ICreateOrderDeliveryDetails } from "~/types/Order/OrderCreate";
 	import { DeliveryMethod } from "~/types/Order/Order";
+	import type { IPriceBase } from "~/types/Common/Price";
 
 	const props = defineProps<{ modelValue: ICreateOrderDeliveryDetails }>();
 	const emit = defineEmits(["update:modelValue"]);

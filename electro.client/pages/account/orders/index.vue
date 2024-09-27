@@ -41,7 +41,9 @@
 		IPaginationResult,
 	} from "~/types/Api/PagedResult";
 	import type { IOrderOverviewParams } from "~/types/Order/OrderOverview";
-
+	definePageMeta({
+		allowAnonymous: false,
+	});
 	const orderStore = useOrderStore();
 	const { $toast } = useNuxtApp();
 
@@ -65,7 +67,6 @@
 			watch: [paginationParams, orderOverviewParams],
 		},
 	);
-
 	if (error.value) {
 		$toast.error("Błąd połączenia z serwerem");
 	}

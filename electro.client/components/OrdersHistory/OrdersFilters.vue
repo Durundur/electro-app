@@ -72,7 +72,7 @@
 		},
 		{
 			label: "Wysłane",
-			value: OrderStatus.Delivery,
+			value: OrderStatus.InDelivery,
 		},
 		{
 			label: "Zakończone",

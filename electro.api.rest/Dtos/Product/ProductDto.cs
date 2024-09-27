@@ -1,5 +1,4 @@
-﻿using electro.api.rest.DTOs.Opinion;
-using electro.api.rest.DTOs.ProductHierarchy;
+﻿using electro.api.rest.DTOs.ProductHierarchy;
 using electro.api.rest.Models.Price;
 using electro.api.rest.Models.Product;
 
@@ -20,8 +19,7 @@ namespace electro.api.rest.Dtos.Product
         public int StockQuantity { get; set; }
         public bool IsArchived { get; set; }
         public bool IsPublished { get; set; }
-        public IEnumerable<OpinionDto> Opinions { get; set; } = new List<OpinionDto>();
         public int OpinionsCount { get; set; } = 0;
-        public float AvgOpinionsRating { get; set; } = 0;
+        public float AverageOpinionsRating { get; set; } = 0;
     }
 }

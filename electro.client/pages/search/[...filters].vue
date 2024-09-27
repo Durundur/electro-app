@@ -1,6 +1,6 @@
 <template>
 	<Container>
-		<v-breadcrumbs
+		<!-- <v-breadcrumbs
 			class="px-0 py-2"
 			:items="breadcrumbs"></v-breadcrumbs>
 		<v-card flat>
@@ -8,7 +8,7 @@
 				{{ breadcrumbs[breadcrumbs.length - 1]?.title }}
 				<span class="text-body-3">(431)</span>
 			</v-card-title>
-		</v-card>
+		</v-card> -->
 
 		<v-row dense>
 			<v-col
@@ -52,7 +52,7 @@
 							:list-props="{ slim: true, density: 'compact' }"
 							clearable></v-select>
 					</v-col>
-					<template v-if="products.length > 0">
+					<template v-if="products && products.length > 0">
 						<v-col
 							cols="12"
 							v-for="(product, index) in products"
@@ -75,75 +75,78 @@
 		</v-row>
 	</Container>
 </template>
-
-<script setup>
-	const products = ref([]);
-	const pagination = ref({});
-	const filters = ref({});
+<script setup lang="ts">
+	import type { IPaginationParams, IPaginationResult } from '~/types/Api/PagedResult';
 	const activeCategories = ref({});
-	const route = useRoute();
-	const router = useRouter();
-	const { $api } = useNuxtApp();
-
-	parsePathParams();
-	await useAsyncData("products", getProducts);
-
-	watch(
-		() => route.fullPath,
-		async () => await getProducts(),
-		{ deep: true },
-	);
-
-	const breadcrumbs = computed(() => {
-		const breadcrumbs = [];
-		activeCategories.value["group"]
-			? breadcrumbs.push({
-					title: activeCategories.value["group"].name,
-					to: `/search/group/${activeCategories.value["group"].id}`,
-					disabled: false,
-			  })
-			: null;
-		activeCategories.value["category"]
-			? breadcrumbs.push({
-					title: activeCategories.value["category"].name,
-					to: `/search/group/${activeCategories.value["group"].id}/category/${activeCategories.value["category"].id}`,
-					disabled: false,
-			  })
-			: null;
-		activeCategories.value["subCategory"]
-			? breadcrumbs.push({
-					title: activeCategories.value["subCategory"].name,
-					to: `/search/group/${activeCategories.value["group"].id}/category/${activeCategories.value["category"].id}/subcategory/${activeCategories.value["subCategory"].id}`,
-					disabled: false,
-			  })
-			: null;
-		return breadcrumbs;
-	});
-
-	async function getProducts() {
-		let url = `api/products/search`;
-		const queryParamsString = new URLSearchParams(route.query).toString();
-		url += `?${queryParamsString}`;
-		const { ok, data } = await $api.post(url, filters.value);
-		if (ok) {
-			const { data: items, ...paginationStats } = data;
-			products.value = items;
-			pagination.value = paginationStats;
+	const productStore = useProductStore();
+	const paginationParams = ref<IPaginationParams>({
+		pageNumber: 1,
+		pageSize: 10,
+	})
+	const { data: getProductsResult } = await useAsyncData("getProducts", () => productStore.getProducts({}, paginationParams.value, ""));
+	const products = computed(() => getProductsResult.value?.data)
+	const pagination = computed(() => {
+		if(getProductsResult.value){
+			const { data, ...pagination } = getProductsResult.value;
+			return pagination;
 		}
-	}
+	})
 
-	function parsePathParams() {
-		const pathParams = route.params.filters;
-		const filtersObj = {};
-		for (let i = 0; i < pathParams.length; i += 2) {
-			const key = pathParams[i];
-			const value = pathParams[i + 1];
-			if (key && value) {
-				filtersObj[key] = parseInt(value);
-			}
-		}
-		filters.value = filtersObj;
-	}
+	// watch(
+	// 	() => route.fullPath,
+	// 	async () => await getProducts(),
+	// 	{ deep: true },
+	// );
+
+	// const breadcrumbs = computed(() => {
+	// 	const breadcrumbs = [];
+	// 	activeCategories.value["group"]
+	// 		? breadcrumbs.push({
+	// 				title: activeCategories.value["group"].name,
+	// 				to: `/search/group/${activeCategories.value["group"].id}`,
+	// 				disabled: false,
+	// 		  })
+	// 		: null;
+	// 	activeCategories.value["category"]
+	// 		? breadcrumbs.push({
+	// 				title: activeCategories.value["category"].name,
+	// 				to: `/search/group/${activeCategories.value["group"].id}/category/${activeCategories.value["category"].id}`,
+	// 				disabled: false,
+	// 		  })
+	// 		: null;
+	// 	activeCategories.value["subCategory"]
+	// 		? breadcrumbs.push({
+	// 				title: activeCategories.value["subCategory"].name,
+	// 				to: `/search/group/${activeCategories.value["group"].id}/category/${activeCategories.value["category"].id}/subcategory/${activeCategories.value["subCategory"].id}`,
+	// 				disabled: false,
+	// 		  })
+	// 		: null;
+	// 	return breadcrumbs;
+	// });
+
+	// async function getProducts() {
+	// 	let url = `api/products/search`;
+	// 	const queryParamsString = new URLSearchParams(route.query).toString();
+	// 	url += `?${queryParamsString}`;
+	// 	const { ok, data } = await $api.post(url, filters.value);
+	// 	if (ok) {
+	// 		const { data: items, ...paginationStats } = data;
+	// 		products.value = items;
+	// 		pagination.value = paginationStats;
+	// 	}
+	// }
+
+	// function parsePathParams() {
+	// 	const pathParams = route.params.filters;
+	// 	const filtersObj = {};
+	// 	for (let i = 0; i < pathParams.length; i += 2) {
+	// 		const key = pathParams[i];
+	// 		const value = pathParams[i + 1];
+	// 		if (key && value) {
+	// 			filtersObj[key] = parseInt(value);
+	// 		}
+	// 	}
+	// 	filters.value = filtersObj;
+	// }
 </script>
-
 <style scoped></style>

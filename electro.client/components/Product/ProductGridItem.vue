@@ -9,13 +9,13 @@
 			rounded="lg">
 			<v-card-text>
 				<v-img
-					aspect-ratio="1"
-					:src="product.photos[0]"></v-img>
+					:aspect-ratio="4/3"
+					:src="product.photo"></v-img>
 				<span class="product-name">{{ product.name }}</span>
 				<div class="d-flex align-end product-price">
 					<div>
 						<span
-							v-if="product.price.oldPrice"
+							v-if="product.price.oldPriceValue"
 							class="text-caption d-block text-decoration-line-through">
 							{{ $formatters.priceFormatter(product.price.oldPriceValue) }}
 						</span>
@@ -36,18 +36,12 @@
 		</v-card>
 	</v-hover>
 </template>
-<script>
-	export default {
-		props: {
-			product: {
-				type: Object,
-				required: true,
-				default() {
-					return { id: null, title: null, image: null, price: null };
-				},
-			},
-		},
-	};
+<script setup lang="ts">
+	import type { IProductOverview } from '~/types/Product/Product';
+	const { $formatters } = useNuxtApp();
+	const props = defineProps<{
+		product: IProductOverview;
+	}>();
 </script>
 <style scoped>
 	.product-name {

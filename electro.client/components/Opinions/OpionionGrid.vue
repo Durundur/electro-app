@@ -4,22 +4,23 @@
 		:gap="16">
 		<template #default="{ item, column, row, index }">
 			<Opinion
-				@update-opinion="onUpdateOpinion"
+				@update-opinion="(v) => onUpdateOpinion(v)"
 				:opinion="item" />
 		</template>
 	</MasonryWall>
 </template>
-<script setup>
-	const props = defineProps({
-		items: {
-			type: Array,
-		},
-	});
+<script setup lang="ts">
+	import type { IOpinionWithUserAction } from "~/types/Opinion/Opinion";
 
-	const emit = defineEmits("update-opinion");
+	const props = defineProps<{
+		items: IOpinionWithUserAction[];
+	}>();
 
-	function onUpdateOpinion(updatedOpinion) {
-		emit("update-opinion", updatedOpinion);
+	const emit = defineEmits<{
+		(e: "update-opinion", v: IOpinionWithUserAction): void;
+	}>();
+
+	function onUpdateOpinion(opinion: IOpinionWithUserAction) {
+		emit("update-opinion", opinion);
 	}
 </script>
-<style></style>

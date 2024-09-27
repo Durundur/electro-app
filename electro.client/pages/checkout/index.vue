@@ -52,7 +52,9 @@
 	</Container>
 </template>
 <script lang="ts" setup>
+	definePageMeta({
+		allowAnonymous: false
+	})
 	import type { PaymentMethod } from "~/types/Order/Order";
-
 	const orderStore = useOrderStore();
 </script>

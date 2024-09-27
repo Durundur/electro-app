@@ -5,7 +5,7 @@ import {
 } from "~/types/Api/PagedResult";
 import type {
 	ICreateOrder,
-	ICreateOrderResponse,
+	ICreateOrderResult,
 } from "~/types/Order/OrderCreate";
 import type { IOrder } from "~/types/Order/Order";
 import type {
@@ -39,7 +39,7 @@ export const initialCreateOrder: ICreateOrder = {
 	products: [],
 };
 
-export const initialNewOrderInfo: ICreateOrderResponse = {
+export const initialNewOrderInfo: ICreateOrderResult = {
 	orderId: "",
 	email: "",
 };
@@ -51,7 +51,7 @@ export const useOrderStore = defineStore("order-store", () => {
 	const cart = computed(() => cartStore.cart);
 	const discountAmount = computed(() => cartStore.discountAmount);
 	const orderCompleted = ref(false);
-	const newOrderInfo = ref<ICreateOrderResponse>(initialNewOrderInfo);
+	const newOrderInfo = ref<ICreateOrderResult>(initialNewOrderInfo);
 
 	const goToCheckoutConfirmation = async () => {
 		await cartStore.verifyCartAndUpdateStore(cartStore.cart);
@@ -64,14 +64,15 @@ export const useOrderStore = defineStore("order-store", () => {
 	const createOrder = async () => {
 		try {
 			newOrder.value.products = cart.value.products;
-			const { ok, data } = await $api.post("api/orders", newOrder.value);
-			if (ok) {
-				newOrderInfo.value = {
-					orderId: data.orderId,
-					email: data.email,
-				};
-				orderCompleted.value = true;
+			const result = await $api.post<ICreateOrderResult>("api/orders", newOrder.value);
+			if (!result) {
+				throw new ApiError(500, "Błąd");
 			}
+			newOrderInfo.value = {
+				orderId: result.orderId,
+				email: result.email,
+			};
+			orderCompleted.value = true;
 		} catch (error) {
 			throw error;
 		}
@@ -80,29 +81,30 @@ export const useOrderStore = defineStore("order-store", () => {
 	const getUserOrdersOverview = async (
 		paginationParams?: IPaginationParams,
 		orderOverviewParams?: IOrderOverviewParams,
-	): Promise<IPagedResult<IOrderOverview> | undefined> => {
-		const params = new URLSearchParams();
+	): Promise<IPagedResult<IOrderOverview>> => {
 		try {
-			const { ok, data } = await $api.get(
+			const result = await $api.get<IPagedResult<IOrderOverview>>(
 				`api/orders?${utlis.paramsToString(
 					paginationParams,
 					orderOverviewParams,
 				)}`,
 			);
-			if (ok) {
-				return data as IPagedResult<IOrderOverview>;
+			if (!result) {
+				throw new ApiError(500, "Błąd");
 			}
+			return result;
 		} catch (error) {
 			throw error;
 		}
 	};
 
-	const getOrder = async (orderId: string): Promise<IOrder | undefined> => {
+	const getOrder = async (orderId: string): Promise<IOrder> => {
 		try {
-			const { ok, data } = await $api.get(`api/orders/${orderId}`);
-			if (ok) {
-				return data as IOrder;
+			const result = await $api.get<IOrder>(`api/orders/${orderId}`);
+			if (!result) {
+				throw new ApiError(500, "Błąd");
 			}
+			return result;
 		} catch (error) {
 			throw error;
 		}

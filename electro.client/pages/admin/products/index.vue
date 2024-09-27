@@ -127,6 +127,7 @@
 	const { $api, $toast } = useNuxtApp();
 	definePageMeta({
 		layout: "admin",
+		allowAnonymous: false,
 	});
 	const headers = ref([
 		//{ title: "ID", key: "id", sortable: false },

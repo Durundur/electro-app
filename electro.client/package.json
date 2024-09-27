@@ -10,9 +10,11 @@
 		"postinstall": "nuxt prepare"
 	},
 	"dependencies": {
+		"@nuxtjs/i18n": "^8.5.4",
 		"@nuxtjs/toast": "^3.3.1",
 		"@vueup/vue-quill": "^1.2.0",
 		"@yeger/vue-masonry-wall": "^5.0.8",
+		"axios": "^1.7.7",
 		"nuxt": "^3.12.2",
 		"pinia": "^2.1.7",
 		"quill-blot-formatter": "^1.0.5",
@@ -24,7 +26,10 @@
 	},
 	"devDependencies": {
 		"@pinia/nuxt": "^0.5.1",
+		"less": "^4.2.0",
 		"sass": "^1.71.1",
+		"typescript": "^5.5.4",
+		"vue-tsc": "^2.1.4",
 		"vuetify-nuxt-module": "^0.14.1"
 	}
 }

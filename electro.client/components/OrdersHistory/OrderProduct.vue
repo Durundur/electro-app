@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts" setup>
-	import type { IOrderProuct } from "~/types/order";
+	import type { IOrderProuct } from "~/types/Order/Order";
 	interface IOrderProductProps {
 		product: IOrderProuct;
 	}

@@ -51,6 +51,7 @@
 	import { ref } from "vue";
 	definePageMeta({
 		layout: "admin",
+		allowAnonymous: false
 	});
 	const { $toast, $api } = useNuxtApp();
 

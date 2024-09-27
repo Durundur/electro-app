@@ -540,7 +540,7 @@ namespace electro.api.rest.Migrations
                     b.Property<int>("Availability")
                         .HasColumnType("integer");
 
-                    b.Property<float>("AvgOpinionsRating")
+                    b.Property<float>("AverageOpinionsRating")
                         .HasColumnType("real");
 
                     b.Property<int?>("CategoryId")

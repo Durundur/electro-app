@@ -8,7 +8,7 @@
 		</span>
 	</div>
 </template>
-<script setup>
+<script setup lang="ts">
 	const props = defineProps({
 		features: {
 			type: Array,

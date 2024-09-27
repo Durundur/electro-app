@@ -48,7 +48,7 @@
 								Napisz, co myślisz o tym produkcie:
 							</span>
 							<v-form
-								ref="opinionForm"
+								ref="form"
 								@submit.prevent="onSubmitOpinion">
 								<div>
 									<v-textarea
@@ -91,43 +91,54 @@
 		</div>
 	</v-sheet>
 </template>
-<script setup>
-	const props = defineProps({
-		product: {
-			type: Object,
-			required: true,
-		},
-	});
-	const { $api, $toast } = useNuxtApp();
-	const emit = defineEmits(["new-opinion"]);
+<script setup lang="ts">
+	import type {
+		ICreateOpinion,
+		IOpinionWithUserAction,
+	} from "~/types/Opinion/Opinion";
+	import type { IProduct } from "~/types/Product/Product";
+	import { VForm } from "vuetify/components";
+	const opinionStore = useOpinionStore();
+	const props = defineProps<{
+		product: IProduct;
+	}>();
+	const { $toast } = useNuxtApp();
+	const emit = defineEmits<{
+		(e: "new:opinion", value: IOpinionWithUserAction): void;
+	}>();
 	const isDialogOpen = ref(false);
-	const opinion = ref({
-		review: "",
+	const opinion = ref<ICreateOpinion>({
 		authorDisplayName: "",
-		rating: null,
-		productId: null,
+		productId: "",
+		rating: 0,
+		review: "",
 	});
-	const opinionForm = ref(null);
+	const form = ref<InstanceType<typeof VForm> | null>(null);
 
 	async function onSubmitOpinion() {
-		if (opinionForm.value.isValid) {
+		if (form.value && form.value.isValid) {
 			opinion.value.productId = props.product.id;
-			const response = await $api.post(
-				`api/opinions/product/${props.product.id}`,
-				opinion.value,
-			);
-			if (!response.ok) {
-				$toast.error("Błąd podczas dodawania opinii");
-				return;
+			try {
+				const result = await opinionStore.createProductOpinion(
+					opinion.value.productId,
+					opinion.value,
+				);
+				if (result) {
+					$toast.success("Pomyślnie dodano opinię");
+					isDialogOpen.value = false;
+					form.value.reset();
+					emit("new:opinion", result);
+					return;
+				}
+				throw new ApiError(500, "Nie udało się dodać opinii");
+			} catch (e) {
+				console.error(e);
+				$toast.error("Nie udało sie dodać opinii, spróbuj ponownie");
 			}
-			$toast.success("Pomyślnie dodano opinię");
-			isDialogOpen.value = false;
-			opinionForm.value.reset();
-			emit("new-opinion", response.data);
 		}
 	}
 </script>
-<style>
+<style scoped>
 	@media only screen and (min-width: 600px) {
 		.button-limit {
 			width: 50%;

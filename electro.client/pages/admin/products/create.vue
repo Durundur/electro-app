@@ -7,6 +7,7 @@
 	import utlis from "~/utlis";
 	definePageMeta({
 		layout: "admin",
+		allowAnonymous: false
 	});
 
 	const { $api, $toast } = useNuxtApp();

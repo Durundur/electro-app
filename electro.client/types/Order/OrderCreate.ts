@@ -11,7 +11,7 @@ export interface ICreateOrder {
 	products: IOrderProuct[];
 }
 
-export interface ICreateOrderResponse {
+export interface ICreateOrderResult {
 	orderId: string;
 	email: string;
 }

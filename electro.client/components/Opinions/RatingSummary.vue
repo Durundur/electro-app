@@ -11,7 +11,7 @@
 				align-self="center"
 				align="center">
 				<div>
-					<span class="text-h4">{{ avgOpinionsRating }}</span>
+					<span class="text-h4">{{ averageOpinionsRating }}</span>
 					<span
 						class="ml-1"
 						color="red--text">
@@ -19,7 +19,7 @@
 					</span>
 				</div>
 				<v-rating
-					:model-value="avgOpinionsRating"
+					:model-value="averageOpinionsRating"
 					half-increments
 					color="primary"
 					hover
@@ -75,40 +75,33 @@
 		</v-row>
 	</v-sheet>
 </template>
-<script setup>
-	const props = defineProps({
-		opinionsStats: {
-			type: Array,
-			required: true,
-		},
-		avgOpinionsRating: {
-			type: Number,
-			default: 0,
-		},
-		opinionsCount: {
-			type: Number,
-			default: 0,
-		},
-	});
-	const emit = defineEmits(["fetch-opinions"]);
+<script setup lang="ts">
+	import type { IOpinionsRatingCount } from "~/types/Opinion/Opinion";
 
-	const activeRatingFilter = ref(null);
+	interface IRatingSummaryProps {
+		opinionsStats: IOpinionsRatingCount[];
+		averageOpinionsRating: number;
+		opinionsCount: number;
+	}
+	const props = defineProps<IRatingSummaryProps>();
+	const emit = defineEmits<{
+		(e: "update:rating", value: number | undefined): void;
+	}>();
 
-	const toggleRatingFilter = (rating) => {
+	const activeRatingFilter = ref<number | undefined>(undefined);
+
+	const toggleRatingFilter = (rating: number) => {
 		if (isActiveRatingFilter(rating)) {
-			activeRatingFilter.value = null;
+			activeRatingFilter.value = undefined;
 		} else {
 			activeRatingFilter.value = rating;
 		}
+		emit("update:rating", activeRatingFilter.value);
 	};
 
-	const isActiveRatingFilter = (rating) => {
+	const isActiveRatingFilter = (rating: number) => {
 		return activeRatingFilter.value === rating;
 	};
-
-	watch(activeRatingFilter, () => {
-		emit("fetch-opinions", activeRatingFilter.value);
-	});
 </script>
 
 <style scoped>

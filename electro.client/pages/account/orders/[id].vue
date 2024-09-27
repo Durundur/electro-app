@@ -49,6 +49,9 @@
 	<Container v-else>nie znaleziono takiego zamówienia</Container>
 </template>
 <script setup lang="ts">
+	definePageMeta({
+		allowAnonymous: false
+	})
 	const orderStore = useOrderStore();
 	const route = useRoute();
 	const orderId = route.params.id as string;

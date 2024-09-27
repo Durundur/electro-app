@@ -1,0 +1,30 @@
+{
+    "Auth" : {
+        "InvalidEmailOrPassword": "Invalid email or password.",
+        "ANetworkErrorOccurred": "A network error occurred.",
+        "AnAccountWithThisEmailAddressAlreadyExists": "An account with this email address already exists.",
+        "SuccessfullyLoggedIn": "Successfully logged in.",
+        "RegistrationCompletedSuccessfully": "Registration completed successfully.",
+        "LoginTitle": "Login",
+        "Email": "Email",
+        "Password": "Password",
+        "ForgotPassword": "Forgot your password?",
+        "TestAccount": "Test account",
+        "RegisterTitle": "Don't have an account?",
+        "Register": "Create an account",
+        "FirstName": "First Name",
+        "LastName": "Last Name",
+        "RepeatPassword": "Repeat Password",
+        "AcceptTerms": "I accept the store terms and conditions",
+        "AlreadyHaveAccountTitle": "Already have an account?",
+        "RegisterSubmit": "Create an account",
+        "LoginSubmit": "Login",
+        "YourAccount": "Your Account",
+        "Orders": "Orders",
+        "AdminPanel": "Admin Panel",
+        "Settings": "Settings",
+        "Logout": "Log Out",
+        "SearchProduct": "Search product"
+    }    
+
+}

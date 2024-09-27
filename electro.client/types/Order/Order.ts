@@ -40,8 +40,8 @@ export enum PaymentStatus {
 export enum OrderStatus {
 	New = "New",
 	Paid = "Paid",
-	InProgress = "In progress",
-	Delivery = "Delivery",
+	InProgress = "InProgress",
+	InDelivery = "InDelivery",
 	Delivered = "Delivered",
 }
 
@@ -49,7 +49,7 @@ export const orderStatusTranslations: Record<OrderStatus, string> = {
 	[OrderStatus.New]: "Nowe",
 	[OrderStatus.Paid]: "Opłacone",
 	[OrderStatus.InProgress]: "W trakcie realizacji",
-	[OrderStatus.Delivery]: "W dostawie",
+	[OrderStatus.InDelivery]: "W dostawie",
 	[OrderStatus.Delivered]: "Dostarczone",
 };
 

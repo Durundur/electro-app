@@ -13,7 +13,8 @@
 	</v-card>
 </template>
 <script setup lang="ts">
-	import type { IRecipient, IAddressBase } from "~/types/order";
+	import type { IAddressBase } from "~/types/Common/Address";
+	import type { IRecipient } from "~/types/Common/Recipient";
 	const props = defineProps<{
 		recipient: IRecipient;
 		address: IAddressBase;

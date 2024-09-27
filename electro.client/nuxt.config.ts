@@ -2,32 +2,36 @@
 export default defineNuxtConfig({
 	devtools: { enabled: true },
 	ssr: false,
-	modules: ["vuetify-nuxt-module", "@pinia/nuxt"],
+	modules: ["vuetify-nuxt-module", "@pinia/nuxt", "@nuxtjs/i18n"],
 	routeRules: {
-		'/checkout/**': { appMiddleware: ['checkout']}
+		"/checkout/**": { appMiddleware: ["checkout"] },
 	},
 	runtimeConfig: {
 		public: {
-			API_URL: process.env.API_URL,
-		},
-	},
-	app: {
-		head: {
-			script: [
-				process.env.NODE_ENV === "production"
-					? {
-							src: "https://umami.durundur.online/getinfo",
-							defer: "true",
-							"data-website-id": "ce5b3686-ef1d-4b1b-a8b7-4c888436a587",
-					  }
-					: {},
-			],
+			API_BASE: process.env.API_BASE,
 		},
 	},
 	vuetify: {
 		moduleOptions: {
 			/* module specific options */
 		},
+	},
+	i18n: {
+		locales: [
+			{
+				code: "en",
+				name: "English",
+				file: "en.json",
+			},
+			{
+				code: "pl",
+				name: "Polski",
+				file: "pl.json",
+			},
+		],
+		defaultLocale: "pl",
+		langDir: "locales/",
+		lazy: true,
 	},
 	components: [
 		{

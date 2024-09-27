@@ -25,6 +25,6 @@ namespace electro.api.rest.Models.Product
         public bool IsPublished { get; set; }
         public IEnumerable<OpinionModel> Opinions { get; set; } = new List<OpinionModel>();
         public int OpinionsCount { get; set; } = 0;
-        public float AvgOpinionsRating { get; set; } = 0; 
+        public float AverageOpinionsRating { get; set; } = 0; 
     }
 }

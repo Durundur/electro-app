@@ -32,7 +32,7 @@ export const useCartStore = defineStore("cart-store", () => {
 	);
 
 	const fetchCart = async (): Promise<ICart | null> => {
-		const { ok, data } = await $api.get("api/carts");
+		const { ok, data } = await $api.get<ICart>("api/carts");
 		if (!ok) {
 			console.error("Failed to fetch cart from API");
 			return null;

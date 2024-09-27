@@ -17,6 +17,8 @@ builder.Services.AddJwtAuth(builder.Configuration);
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 builder.Services.AddAutoMapper(typeof(OrderMapperProfile));
+builder.Services.AddAutoMapper(typeof(ProductMapperProfile));
+builder.Services.AddAutoMapper(typeof(OpinionMapperProfile));
 builder.Services.AddServices();
 
 

@@ -80,6 +80,9 @@
 		:email="orderStore.newOrderInfo.email"></CompletedCheckoutInfo>
 </template>
 <script lang="ts" setup>
+	definePageMeta({
+		allowAnonymous: false
+	})
 	import { CustomerType } from "~/types/Common/Recipient";
 	const orderStore = useOrderStore();
 </script>

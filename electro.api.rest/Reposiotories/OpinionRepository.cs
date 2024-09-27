@@ -25,7 +25,7 @@ namespace electro.api.rest.Repositories
                 throw new NotFoundException("Product not found");
             }
             product.OpinionsCount++;
-            product.AvgOpinionsRating = ((product.AvgOpinionsRating * (product.OpinionsCount - 1)) + opinion.Rating) / product.OpinionsCount;
+            product.AverageOpinionsRating = (float)Math.Round(((product.AverageOpinionsRating * (product.OpinionsCount - 1)) + opinion.Rating) / product.OpinionsCount, 2);
             opinion.Product = product;
             dbContext.Opinions.Add(opinion);
             return opinion;

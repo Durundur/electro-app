@@ -21,7 +21,7 @@
 	</v-card>
 </template>
 <script lang="ts" setup>
-	import type { IOrderProuct } from "~/types/order";
+	import type { IOrderProuct } from "~/types/Order/Order";
 	export interface IOrderProductsContainerProps {
 		products: IOrderProuct[];
 		maxHeight: string;

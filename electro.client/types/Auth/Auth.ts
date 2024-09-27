@@ -1,4 +1,4 @@
-export interface AuthStore {
+export interface IAuthData {
 	userId: string;
 	jwtToken: string;
 	refreshToken: string;
@@ -6,16 +6,16 @@ export interface AuthStore {
 	tokenExpiry: string;
 }
 
-export interface AuthHeader {
+export interface IAuthHeader {
 	Authorization: string;
 }
 
-export interface LoginRequest {
+export interface ILoginRequest {
 	email: string;
 	password: string;
 }
 
-export interface RegisterRequest {
+export interface IRegisterRequest {
 	firstName: string;
 	lastName: string;
 	email: string;
@@ -24,13 +24,15 @@ export interface RegisterRequest {
 	rulesConfirmation: false;
 }
 
-export interface AuthResponseData extends AuthStore {
+export interface IRefreshTokenRequest {
+	jwtToken: string;
+	refreshToken: string;
+}
+
+export interface IAuthResult extends IAuthData {
 	message: string;
 	success: boolean;
 }
 
-export interface AuthResponse {
-	_data: AuthResponseData;
-	ok: boolean;
-	status: number;
-}
+
+

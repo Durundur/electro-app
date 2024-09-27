@@ -20,8 +20,8 @@
 	</div>
 </template>
 <script lang="ts" setup>
+	import type { ICart } from "~/types/Cart/Cart";
 	const { $formatters } = useNuxtApp();
-	import type { ICart } from "~/types/cart";
 	const props = defineProps<{
 		cart: ICart;
 		deliveryCost: number;

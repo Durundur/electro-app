@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using electro.api.rest.ActionFilters;
 using electro.api.rest.Dtos.Product;
+using electro.api.rest.DTOs.Product;
 using electro.api.rest.Models.Product;
 using electro.api.rest.QueryFilters;
 using electro.api.rest.Reposiotories.Interfaces;
@@ -33,6 +34,30 @@ namespace electro.api.rest.Controllers
             return Ok(productsDto);
         }
 
+        [HttpGet("bestsellers")]
+        public async Task<IActionResult> GetBestsellers([FromQuery] PaginationParams paginationParams)
+        {
+            var productsQuery = unitOfWork.Products.GetProducts().Include(p => p.Group).Include(p => p.Category).Include(p => p.SubCategory);
+            var result = await PagedResultFactory.CreatePagedResultAsync<ProductOverviewDto, ProductModel>(productsQuery, paginationParams, (items) => mapper.Map<IEnumerable<ProductOverviewDto>>(items));
+            return Ok(result);
+        }
+
+        [HttpGet("recommended")]
+        public async Task<IActionResult> GetRecommended([FromQuery] PaginationParams paginationParams)
+        {
+            var productsQuery = unitOfWork.Products.GetProducts().Include(p => p.Group).Include(p => p.Category).Include(p => p.SubCategory);
+            var result = await PagedResultFactory.CreatePagedResultAsync<ProductOverviewDto, ProductModel>(productsQuery, paginationParams, (items) => mapper.Map<IEnumerable<ProductOverviewDto>>(items));
+            return Ok(result);
+        }
+
+        [HttpGet("hits")]
+        public async Task<IActionResult> GetHits([FromQuery] PaginationParams paginationParams)
+        {
+            var productsQuery = unitOfWork.Products.GetProducts().Include(p => p.Group).Include(p => p.Category).Include(p => p.SubCategory);
+            var result = await PagedResultFactory.CreatePagedResultAsync<ProductOverviewDto, ProductModel>(productsQuery, paginationParams, (items) => mapper.Map<IEnumerable<ProductOverviewDto>>(items));
+            return Ok(result);
+        }
+
 
         [HttpPost("search")]
         public async Task<IActionResult> SearchProducts([FromQuery] PaginationParams paginationParams, [FromBody] ProductParams productParams, [FromQuery] string? query = "")
@@ -61,10 +86,10 @@ namespace electro.api.rest.Controllers
             {
                 productsQuery = productsQuery.Where(p => p.Name.ToLower().Contains(query.ToLower()));
             }
-            var pagedResponse = await PagedResultFactory.CreatePagedResultAsync<ProductDto, ProductModel>(
+            var pagedResponse = await PagedResultFactory.CreatePagedResultAsync<ProductOverviewDto, ProductModel>(
                 productsQuery,
                 paginationParams,
-                (items) => mapper.Map<IEnumerable<ProductDto>>(items));
+                (items) => mapper.Map<IEnumerable<ProductOverviewDto>>(items));
             
             return Ok(pagedResponse);
         }

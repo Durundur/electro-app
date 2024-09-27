@@ -16,19 +16,8 @@
 				<SearchInput />
 				<v-spacer></v-spacer>
 				<div class="d-flex ga-2 align-center">
-					<v-btn
-						size="small"
-						variant="text"
-						icon="mdi-cart-outline"
-						to="/cart">
-						<v-badge
-							:model-value="cartStore.cart.productsCount > 0"
-							color="primary"
-							:content="cartStore.cart.productsCount">
-							<v-icon size="large"></v-icon>
-						</v-badge>
-					</v-btn>
-					<AccountIconAndMenu v-if="authStore.isLoggedIn" />
+					<CartButton />
+					<AccountButton v-if="authStore.isLoggedIn" />
 					<template v-else>
 						<v-btn
 							flat
@@ -37,7 +26,7 @@
 							variant="elevated"
 							color="primary"
 							class="ml-4 text-none text-body-2">
-							Zaloguj się
+							{{ $i18n.t('Auth.LoginTitle') }}
 						</v-btn>
 						<v-btn
 							size="small"
@@ -45,18 +34,18 @@
 							variant="outlined"
 							color="primary"
 							class="text-none text-body-2">
-							Załóż konto
+							{{ $i18n.t('Auth.RegisterSubmit') }}
 						</v-btn>
 					</template>
 				</div>
 			</v-row>
 			<v-row no-gutters>
-				<Categories />
+				<ProductHierarchy />
 			</v-row>
 		</Container>
 	</v-app-bar>
 </template>
-<script setup>
+<script setup lang="ts">
+	const {$i18n} = useNuxtApp();
 	const authStore = useAuthStore();
-	const cartStore = useCartStore();
 </script>

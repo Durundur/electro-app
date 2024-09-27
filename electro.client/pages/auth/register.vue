@@ -6,79 +6,78 @@
 					<v-card
 						rounded="lg"
 						:elevation="4">
-						<v-card-title>Załóż konto</v-card-title>
+						<v-card-title>{{ $i18n.t("Auth.Register") }}</v-card-title>
 						<v-card-text>
 							<v-form
-								ref="registerForm"
-								@submit.prevent="register">
+								ref="form"
+								@submit.prevent="registerSubmit()">
 								<v-text-field
 									v-model="registerCredentials.firstName"
 									:rules="$v.required"
 									density="compact"
 									variant="outlined"
-									label="Imię"
+									:label="$i18n.t('Auth.FirstName')"
 									prepend-inner-icon="mdi-account"
 									hide-details="auto"
-									class="mb-4"></v-text-field>
+									class="mb-4" />
 								<v-text-field
 									v-model="registerCredentials.lastName"
 									:rules="$v.required"
 									density="compact"
 									variant="outlined"
-									label="Nazwisko"
+									:label="$i18n.t('Auth.LastName')"
 									prepend-inner-icon="mdi-account"
 									hide-details="auto"
-									class="mb-4"></v-text-field>
+									class="mb-4" />
 								<v-text-field
 									v-model="registerCredentials.email"
 									:rules="$v.required"
 									density="compact"
 									variant="outlined"
-									label="Email"
+									:label="$i18n.t('Auth.Email')"
 									autocomplete="username"
 									prepend-inner-icon="mdi-email-outline"
 									hide-details="auto"
-									class="mb-4"></v-text-field>
+									class="mb-4" />
 								<v-text-field
 									v-model="registerCredentials.password"
 									:rules="$v.required"
 									density="compact"
 									variant="outlined"
-									label="Hasło"
+									:label="$i18n.t('Auth.Password')"
 									prepend-inner-icon="mdi-lock-outline"
 									:type="showPass ? 'text' : 'password'"
 									:append-inner-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
 									@click:append-inner="showPass = !showPass"
 									hide-details="auto"
 									autocomplete="new-password"
-									class="mb-4"></v-text-field>
+									class="mb-4" />
 								<v-text-field
 									v-model="registerCredentials.repeatPassword"
 									:rules="$v.required"
 									density="compact"
 									variant="outlined"
-									label="Powrzórz hasło"
+									:label="$i18n.t('Auth.RepeatPassword')"
 									type="password"
 									prepend-inner-icon="mdi-lock-outline"
 									hide-details="auto"
 									autocomplete="new-password"
-									class="mb-4"></v-text-field>
+									class="mb-4" />
 								<v-checkbox
 									v-model="registerCredentials.rulesConfirmation"
 									:rules="$v.checkBoxRequired"
 									required
 									density="compact"
 									color="primary"
-									label="Akceptuję regulamin sklepu"
+									:label="$i18n.t('Auth.AcceptTerms')"
 									hide-details="auto"
-									class="mb-4"></v-checkbox>
+									class="mb-4" />
 								<v-btn
 									type="submit"
 									class="text-none"
 									block
-									:loading="loading"
 									color="primary">
-									Załóż konto
+									{{ $i18n.t("Auth.RegisterSubmit") }}
 								</v-btn>
 							</v-form>
 						</v-card-text>
@@ -86,7 +85,9 @@
 				</v-col>
 				<v-col>
 					<v-card flat>
-						<v-card-title>Masz już konto?</v-card-title>
+						<v-card-title>
+							{{ $i18n.t("Auth.AlreadyHaveAccountTitle") }}
+						</v-card-title>
 						<v-card-text>
 							<v-btn
 								to="/auth/login"
@@ -94,7 +95,7 @@
 								color="primary"
 								variant="tonal"
 								class="text-none">
-								Zaloguj się
+								{{ $i18n.t("Auth.LoginSubmit") }}
 							</v-btn>
 						</v-card-text>
 					</v-card>
@@ -104,9 +105,17 @@
 		</v-container>
 	</Container>
 </template>
-<script setup>
+
+<script setup lang="ts">
+	import { VForm } from "vuetify/components";
+	import type { IRegisterRequest } from "~/types/Auth/Auth";
+	const { $i18n } = useNuxtApp();
+	definePageMeta({
+		allowAnonymous: true,
+		denyLoggedIn: true,
+	});
 	const showPass = ref(false);
-	const registerCredentials = ref({
+	const registerCredentials = ref<IRegisterRequest>({
 		firstName: "",
 		lastName: "",
 		email: "",
@@ -116,23 +125,25 @@
 	});
 	const authStore = useAuthStore();
 	const { $toast } = useNuxtApp();
-	const registerForm = ref(null);
+	const form = ref<InstanceType<typeof VForm> | null>(null);
 
-	async function register() {
-		if (registerForm.value.isValid) {
-			const { ok, _data: data } = await authStore.register(
-				registerCredentials.value,
-			);
-			if (ok) {
-				$toast.success("Błąd podczas rejestracji");
-			} else {
-				$toast.error("Pomyślnie zarejestrowano");
-			}
+	async function registerSubmit() {
+		if (form.value && form.value.isValid) {
+			await authStore.register(registerCredentials.value);
 		}
 	}
+
+	watch(
+		() => authStore.store.error,
+		() => {
+			$toast.error(authStore.store.error?.errorMessage as string);
+		},
+	);
+
+	watch(
+		() => authStore.store.successMessage,
+		() => {
+			$toast.success(authStore.store.successMessage as string);
+		},
+	);
 </script>
-<style scoped>
-	:deep(.v-input__details) {
-		padding-left: 16px;
-	}
-</style>

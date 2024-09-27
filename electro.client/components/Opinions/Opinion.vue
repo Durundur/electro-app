@@ -17,7 +17,7 @@
 				<span>{{ $formatters.dateFormatter(opinion.createdAt) }}</span>
 			</div>
 		</v-card-subtitle>
-		<v-card-title>{{ opinion.title }}</v-card-title>
+		<!-- <v-card-title>{{ opinion.title }}</v-card-title> -->
 		<v-card-text>
 			{{ opinion.review }}
 		</v-card-text>
@@ -27,7 +27,7 @@
 				<div>
 					<span class="text-body-1">{{ opinion.authorDisplayName }}</span>
 					<div
-						v-if="opinion.isVerifiedPurchase"
+						v-if="true"
 						class="text-caption d-flex ga-2 align-center">
 						<span>Potwierdzony zakup</span>
 						<v-icon color="success">mdi-check-circle</v-icon>
@@ -41,9 +41,9 @@
 				density="comfortable"
 				color="success"
 				variant="text"
-				:active="opinion?.userAction === 'Like'"
+				:active="opinion.userAction === UserOpinionAction.Like.toString()"
 				prepend-icon="mdi-thumb-up-outline"
-				@click="onRateOpinion('like')">
+				@click="onRateOpinion(UserOpinionAction.Like)">
 				{{ opinion.likes }}
 			</v-btn>
 			<v-btn
@@ -52,37 +52,43 @@
 				class="ml-4"
 				color="error"
 				variant="text"
-				:active="opinion?.userAction === 'Dislike'"
+				:active="opinion.userAction === UserOpinionAction.Dislike.toString()"
 				prepend-icon="mdi-thumb-down-outline"
-				@click="onRateOpinion('dislike')">
+				@click="onRateOpinion(UserOpinionAction.Dislike)">
 				{{ opinion.dislikes }}
 			</v-btn>
 		</v-card-text>
 	</v-card>
 </template>
-<script setup>
-	const props = defineProps({
-		opinion: {
-			type: Object,
-			required: true,
-		},
-	});
-	const emit = defineEmits("update-opinion");
-	const { $api, $toast } = useNuxtApp();
+<script setup lang="ts">
+	import {
+		type IOpinionWithUserAction,
+		UserOpinionAction,
+	} from "~/types/Opinion/Opinion";
+	const opinionStore = useOpinionStore();
+	const props = defineProps<{
+		opinion: IOpinionWithUserAction;
+	}>();
+	const emit = defineEmits<{
+		(e: "update-opinion", v: IOpinionWithUserAction): void;
+	}>();
+	const { $toast } = useNuxtApp();
 
-	async function onRateOpinion(action) {
-		if (action === "like" || action === "dislike") {
-			const response = await $api.post(
-				`api/opinions/${props.opinion.id}/${action}`,
+	async function onRateOpinion(action: UserOpinionAction) {
+		try {
+			const result = await opinionStore.rateProductOpinion(
+				props.opinion.id,
+				action,
 			);
-			if (!response.ok) {
-				$toast.error("Błąd podczas oceny opinii");
+			if (result) {
+				$toast.success("Opinia oceniona pomyślnie");
+				emit("update-opinion", result);
 				return;
 			}
-			$toast.success("Opinia oceniona pomyślnie");
-			emit("update-opinion", response.data);
-			return;
+			throw new ApiError(500, "");
+		} catch (e) {
+			console.log(e);
+			$toast.error("Błąd podczas oceny opinii, spróbuj ponownie");
 		}
-		$toast.error("Błąd podczas oceny opinii");
 	}
 </script>

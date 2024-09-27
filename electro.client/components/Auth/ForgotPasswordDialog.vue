@@ -15,7 +15,7 @@
 				</p>
 				<v-form
 					ref="resetPassForm"
-					@submit.prevent="resetPassword">
+					@submit.prevent="">
 					<v-text-field
 						v-model="resetPassEmail"
 						class="mb-4"
@@ -37,7 +37,6 @@
 						class="text-none"
 						@click="
 							resetPassDialog = false;
-							$refs.resetPassForm.reset();
 						">
 						Anuluj
 					</v-btn>
@@ -47,8 +46,6 @@
 	</v-dialog>
 </template>
 <script lang="ts" setup>
-	const props = defineProps({});
-
 	const resetPassDialog = ref(false);
 	const resetPassEmail = ref("");
 	const resetPassForm = ref(null);

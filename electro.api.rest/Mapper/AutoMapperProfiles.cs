@@ -43,21 +43,8 @@ namespace electro.api.rest.Mapper
             CreateMap<CategoryModel, ProductHierarchyDto>();
             CreateMap<SubCategoryModel, ProductHierarchyDto>();
 
-            CreateMap<OpinionModel, OpinionDto>();
-            CreateMap<OpinionDto, OpinionModel>();
 
 
-            CreateMap<ProductModel, ProductDto>()
-                .ForMember(dest => dest.Specification, opt => opt.MapFrom(src => src.Specification.Specification))
-                .ForMember(dest => dest.Group, opt => opt.MapFrom((src, dest, destMember, context) => context.Mapper.Map<ProductHierarchyDto>(src.Group)))
-                .ForMember(dest => dest.Category, opt => opt.MapFrom((src, dest, destMember, context) => context.Mapper.Map<ProductHierarchyDto>(src.Category)))
-                .ForMember(dest => dest.SubCategory, opt => opt.MapFrom((src, dest, destMember, context) => context.Mapper.Map<ProductHierarchyDto>(src.SubCategory)));
-
-            CreateMap<ProductDto, ProductModel>()
-                .ForMember(dest => dest.Specification, opt => opt.MapFrom(src => new ProductSpecificationModel() { Specification = src.Specification }))
-                .ForMember(dest => dest.Group, opt => opt.MapFrom((src, dest, destMember, context) => context.Mapper.Map<GroupModel>(src.Group)))
-                .ForMember(dest => dest.Category, opt => opt.MapFrom((src, dest, destMember, context) => context.Mapper.Map<CategoryModel>(src.Category)))
-                .ForMember(dest => dest.SubCategory, opt => opt.MapFrom((src, dest, destMember, context) => context.Mapper.Map<SubCategoryModel>(src.SubCategory)));
 
             CreateMap<CartDto, CartModel>();
             CreateMap<CartModel, CartDto>();

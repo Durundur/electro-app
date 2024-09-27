@@ -13,6 +13,6 @@
 	</OrderProductsContainer>
 </template>
 <script lang="ts" setup>
-	import type { ICart } from "~/types/cart";
+	import type { ICart } from "~/types/Cart/Cart";
 	const props = defineProps<{ cart: ICart }>();
 </script>

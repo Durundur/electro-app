@@ -33,10 +33,8 @@ namespace electro.api.rest.Controllers
             return Ok(stats.Reverse());
         }
 
-
         [HttpGet("product/{productId}")]
-        [HttpGet("product/{productId}/rating/{rating?}")]
-        public async Task<IActionResult> GetOpinionsToProduct(Guid productId, int? rating, [FromQuery] PaginationParams paginationParams)
+        public async Task<IActionResult> GetOpinionsToProduct([FromRoute] Guid productId, [FromQuery] int? rating, [FromQuery] PaginationParams paginationParams)
         {
             IQueryable<OpinionModel> opinions = unitOfWork.Opinions.GetOpinions(productId);
 
@@ -71,15 +69,14 @@ namespace electro.api.rest.Controllers
 
         [HttpPost("product/{productId}")]
         [Authorize(Roles = "Admin, User")]
-        public async Task<IActionResult> CreateOpinion(OpinionDto opinion, string productId)
+        public async Task<IActionResult> CreateOpinion([FromBody]CreateOpinionDto opinion, [FromRoute]string productId)
         {
             if (opinion.ProductId.ToString() != productId)
             {
                 return BadRequest();
             }
-            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            Guid userId;
-            if (!Guid.TryParse(userIdString, out userId))
+            var userId = User.GetAuthenticatedUserId();
+            if (!User.Identity.IsAuthenticated)
             {
                 return BadRequest();
             }
@@ -92,10 +89,10 @@ namespace electro.api.rest.Controllers
 
         [HttpPost("{id}/{actionType}")]
         [Authorize(Roles = "Admin, User")]
-        public async Task<IActionResult> RateOpinion(Guid id, OpinionActionType actionType)
+        public async Task<IActionResult> RateOpinion([FromRoute]Guid id, [FromRoute]OpinionActionType actionType)
         {
-            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (!Guid.TryParse(userIdString, out Guid userId))
+            var userId = User.GetAuthenticatedUserId();
+            if (!User.Identity.IsAuthenticated)
             {
                 return BadRequest();
             }

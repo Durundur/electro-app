@@ -1,13 +1,14 @@
 <template>
 	<v-container
 		fluid
-		class="pa-0">
+		class="pa-0"
+		v-if="productHierarchy">
 		<v-row
 			no-gutters
 			align="center">
 			<v-col
-				:cols="groups.length / 12"
-				v-for="group in groups"
+				:cols="productHierarchy.length / 12"
+				v-for="group in productHierarchy"
 				:key="group.id">
 				<v-menu
 					open-on-hover
@@ -51,8 +52,8 @@
 										<v-list-item
 											v-for="(category, index) in group.categories"
 											:active="
-												hoverCategory.id == category.id &&
-												hoverCategory.name === category.name
+												hoverCategory?.id === category.id &&
+												hoverCategory?.name === category.name
 											"
 											:to="`/search/group/${group.id}/category/${category.id}`"
 											slim
@@ -72,10 +73,10 @@
 									cols="6"
 									class="pa-0 pl-2">
 									<v-img
-										v-if="!hoverCategory.id && !hoverCategory.name"
+										v-if="!hoverCategory?.id && !hoverCategory?.name"
 										:src="group.photo"></v-img>
 									<v-list
-										v-if="hoverCategory.subCategories"
+										v-if="hoverCategory?.subCategories"
 										density="compact">
 										<v-list-item
 											slim
@@ -105,7 +106,7 @@
 										</v-list-item>
 									</v-list>
 									<v-btn
-										v-if="hoverCategory.subCategories?.length === 0"
+										v-if="hoverCategory?.subCategories?.length === 0"
 										class="text-none"
 										variant="outlined"
 										density="compact"
@@ -123,30 +124,24 @@
 		</v-row>
 	</v-container>
 </template>
+<script setup lang="ts">
+	import type {
+		IProductHierarchyCategory,
+		IProductHierarchyGroup,
+	} from "~/types/ProductHierarchy/ProductHierarchy";
+	const config = useRuntimeConfig();
+	const hoverCategory = ref<IProductHierarchyCategory>();
 
-<script setup>
-	import { ref } from "vue";
+	const { data: productHierarchy, error, status} = await useAsyncData(() => $fetch<IProductHierarchyGroup[]>(`${config.public.API_BASE}/api/groups/allGroups`));
 
-	const { $api } = useNuxtApp();
-	const groups = ref([]);
-	const hoverCategory = ref({});
-
-	const { data: groupsRes } = await useAsyncData(() =>
-		$api.get("api/groups/allGroups"),
-	);
-	if (groupsRes.value.ok) {
-		groups.value = groupsRes.value.data;
-	}
-
-	const setHoverCategory = (category) => {
+	const setHoverCategory = (category: IProductHierarchyCategory) => {
 		hoverCategory.value = category;
 	};
 
 	const clearHoverCategory = () => {
-		hoverCategory.value = {};
+		hoverCategory.value = {} as IProductHierarchyCategory;
 	};
 </script>
-
 <style scoped>
 	:deep(.v-list-item--density-compact.v-list-item--one-line) {
 		min-height: unset;

@@ -1,5 +1,5 @@
 <template>
-	<Container>
+	<Container v-if="product">
 		<v-breadcrumbs
 			class="pa-0 pt-4"
 			:items="breadcrumbs"></v-breadcrumbs>
@@ -30,7 +30,7 @@
 							</v-card-title>
 							<NuxtLink class="d-flex align-center">
 								<v-rating
-									v-model="product.avgOpinionsRating"
+									v-model="product.averageOpinionsRating"
 									half-increments
 									color="primary"
 									hover
@@ -88,7 +88,7 @@
 										prepend-icon="mdi-cart-plus"
 										color="success"
 										class="text-none"
-										@click="onAddProductToCart">
+										@click="">
 										Dodaj do koszyka
 									</v-btn>
 								</v-col>
@@ -174,35 +174,20 @@
 						<v-card-text class="px-0">
 							<div class="my-4">
 								<RatingSummary
-									:opinionsStats="opinionsStats"
-									:avgOpinionsRating="product.avgOpinionsRating"
-									:opinionsCount="product.opinionsCount"
-									@fetch-opinions="fetchOpinions" />
+									v-if="opinionsStats"
+									:opinions-stats="opinionsStats"
+									:average-opinions-rating="product.averageOpinionsRating"
+									:opinions-count="product.opinionsCount"
+									@update:rating="(rating) => (opinionsRatingParam = rating)" />
 								<OpinionCreate
 									:product="product"
-									@new-opinion="onNewOpinion" />
+									@new:opinion="(v) => onNewOpinion(v)" />
 							</div>
 							<OpionionGrid
-								:items="product.opinions"
-								@update-opinion="onUpdateOpinion"></OpionionGrid>
-							<div class="mx-auto my-4 button-limit">
-								<v-btn
-									v-if="
-										opinionsPagination.pageNumber <
-										opinionsPagination.totalPages
-									"
-									@click="
-										fetchOpinions(
-											ratingFilter,
-											opinionsPagination.pageNumber + 1,
-										)
-									"
-									class="text-none"
-									color="primary"
-									block>
-									Pokaż więcej
-								</v-btn>
-							</div>
+								v-if="opinions"
+								:items="opinions"
+								@update-opinion="(v) => onUpdateOpinion(v)"></OpionionGrid>
+							<NewPagination v-if="product.opinionsCount > 0" :pagination-data="opinionsPagination" @on-new-page-number="(v) => opinionsPaginationParams.pageNumber = v"></NewPagination>
 						</v-card-text>
 					</v-card>
 					<Divider></Divider>
@@ -217,112 +202,106 @@
 		</v-row>
 	</Container>
 </template>
-<script setup>
-	const cartStore = useCartStore();
-	const { $api } = useNuxtApp();
+<script setup lang="ts">
+	import NewPagination from "~/components/Common/NewPagination.vue";
+	import type {
+		IPaginationParams,
+		IPaginationResult,
+	} from "~/types/Api/PagedResult";
+	import type { IOpinionWithUserAction } from "~/types/Opinion/Opinion";
+	const productStore = useProductStore();
+	const opinionStore = useOpinionStore();
 	const route = useRoute();
-	const product = ref({});
-	const opinionsStats = ref([]);
-	const opinionsPagination = ref({});
-	const ratingFilter = ref(null);
-	const productQuantity = ref(1);
+	const opinionsPaginationParams = reactive<IPaginationParams>({
+		pageNumber: 1,
+		pageSize: 6,
+	});
+	const opinionsRatingParam = ref<number | undefined>(undefined);
 
-	const { data: productRes } = await useAsyncData(() =>
-		$api.get(`api/products/${route.params.id}`),
+	const { data: product } = await useAsyncData("getProduct", () =>
+		productStore.getProduct(route.params.id as string),
 	);
-	if (productRes.value.ok) {
-		product.value = productRes.value.data;
-	}
-
-	const { data: opinionsRes } = await useAsyncData(() =>
-		$api.get(`api/opinions/product/${product.value.id}`),
+	const { data: productOpinions } = await useAsyncData(
+		"getProductOpinions",
+		() =>
+			opinionStore.getProductOpinions(
+				product.value?.id as string,
+				opinionsPaginationParams,
+				opinionsRatingParam.value,
+			),
+		{
+			watch: [opinionsPaginationParams, opinionsRatingParam],
+		},
 	);
-	if (opinionsRes.value.ok) {
-		const { stats, opinions } = opinionsRes.value.data;
-		const { data, ...pagination } = opinions;
-		product.value.opinions = data;
-		opinionsPagination.value = pagination;
-		opinionsStats.value = stats;
-	}
+	
+	const opinions = computed(() => productOpinions.value?.opinions.data);
+	const opinionsPagination = computed(() => {
+		if (productOpinions.value) {
+			const { data, ...pagination } = productOpinions.value?.opinions;
+			return pagination as IPaginationResult;
+		}
+		return {} as IPaginationResult
+	});
+	const opinionsStats = computed(() => productOpinions.value?.stats);
 
 	const breadcrumbs = computed(() => {
 		const breadcrumbs = [];
-		const { group, category, subCategory } = product.value;
-		group?.name
-			? breadcrumbs.push({
-					title: group.name,
-					to: `/search/group/${group.id}`,
-					disabled: false,
-			  })
-			: null;
-		category?.name
-			? breadcrumbs.push({
-					title: category.name,
-					to: `/search/group/${group.id}/category/${category.id}`,
-					disabled: false,
-			  })
-			: null;
-		subCategory?.name
-			? breadcrumbs.push({
-					title: subCategory.name,
-					to: `/search/group/${group.id}/category/${category.id}/subcategory/${subCategory.id}`,
-					disabled: false,
-			  })
-			: null;
+		if (product.value) {
+			const { group, category, subCategory } = product.value;
+			group?.name
+				? breadcrumbs.push({
+						title: group.name,
+						to: `/search/group/${group.id}`,
+						disabled: false,
+				  })
+				: null;
+			category?.name
+				? breadcrumbs.push({
+						title: category.name,
+						to: `/search/group/${group.id}/category/${category.id}`,
+						disabled: false,
+				  })
+				: null;
+			subCategory?.name
+				? breadcrumbs.push({
+						title: subCategory.name,
+						to: `/search/group/${group.id}/category/${category.id}/subcategory/${subCategory.id}`,
+						disabled: false,
+				  })
+				: null;
+		}
 		return breadcrumbs;
 	});
 
-	function onNewOpinion(newOpinion) {
-		product.value.opinions = [newOpinion, ...product.value.opinions];
-	}
-
-	function onUpdateOpinion(updatedOpinion) {
-		const opinions = [...product.value.opinions];
-		const index = opinions.findIndex((o) => o.id === updatedOpinion.id);
-		if (index !== -1) {
-			opinions.splice(index, 1, updatedOpinion);
-			product.value.opinions = opinions;
+	function onNewOpinion(newOpinion: IOpinionWithUserAction) {
+		if (opinions.value) {
+			opinions.value.unshift(newOpinion);
 		}
 	}
 
-	async function fetchOpinions(rating, page = 1) {
-		ratingFilter.value = rating;
-		let url = `api/opinions/product/${product.value.id}`;
-		if (rating !== null) {
-			url += `/rating/${rating}`;
+	function onUpdateOpinion(updatedOpinion: IOpinionWithUserAction) {
+		if (opinions.value) {
+			const index = opinions.value.findIndex(
+				(opinion) => opinion.id === updatedOpinion.id,
+			);
+			if (index !== -1) {
+				opinions.value.splice(index, 1, updatedOpinion);
+			}
 		}
-		if (page) {
-			const params = new URLSearchParams();
-			params.append("PageNumber", page);
-			url += `?${params.toString()}`;
-		}
-		const response = await $api.get(url);
-		const { ok, data } = response;
-		if (!ok) {
-			$toast.error("Błąd podczas pobierania opinii");
-			return;
-		}
-		const { stats, opinions } = data;
-		const { data: opinionsItems, ...pagination } = opinions;
-		if (page !== 1)
-			product.value.opinions = [...product.value.opinions, ...opinionsItems];
-		else product.value.opinions = [...opinionsItems];
-		opinionsPagination.value = pagination;
-		opinionsStats.value = stats;
 	}
 
-	function onAddProductToCart() {
-		const p = product.value;
-		const productPhotos = p.photos;
-		const productToAdd = {
-			quantity: productQuantity.value,
-			productId: p.id,
-			price: p.price,
-			photo: productPhotos.length > 0 ? productPhotos[0] : "",
-			name: p.name,
-		};
-		cartStore.addProductToCart(productToAdd);
-	}
+	// function onAddProductToCart() {
+	// 	const p = product.value;
+	// 	const productPhotos = p.photos;
+	// 	const productToAdd = {
+	// 		quantity: productQuantity.value,
+	// 		productId: p.id,
+	// 		price: p.price,
+	// 		photo: productPhotos.length > 0 ? productPhotos[0] : "",
+	// 		name: p.name,
+	// 	};
+	// 	cartStore.addProductToCart(productToAdd);
+	// }
 </script>
 <style scoped>
 	.border {

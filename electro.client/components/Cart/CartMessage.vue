@@ -9,7 +9,7 @@
 		density="compact"></v-alert>
 </template>
 <script lang="ts" setup>
-	export interface ICartMessageProps {
+	interface ICartMessageProps {
 		text: string;
 		messageIndex: number;
 	}

@@ -4,8 +4,8 @@
 		variant="outlined"
 		rounded="lg"
 		:hide-details="true"
-		placeholder="Wyszukaj produkt"
-		v-model="query"
+		:placeholder="$i18n.t('Auth.SearchProduct')"
+		v-model="search"
 		:clearable="true"
 		@keyup.enter="onSearchClick">
 		<template v-slot:prepend-inner>
@@ -18,13 +18,14 @@
 	</v-text-field>
 </template>
 <script setup lang="ts">
-	const query = ref("");
+	const {$i18n} = useNuxtApp();
+	const search = ref("");
 	const router = useRouter();
 
 	function onSearchClick() {
 		const queryParams = {};
-		if (query.value) {
-			Object.assign(queryParams, { query: query.value });
+		if (search.value) {
+			Object.assign(queryParams, { query: search.value });
 		}
 		router.push({ path: "/search", query: { ...queryParams } });
 	}

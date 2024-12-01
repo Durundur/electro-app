@@ -18,10 +18,7 @@ export class FileService {
 	}
 
 	async processFile(file: Express.Multer.File): Promise<Buffer> {
-		const processedBuffer = await sharp(file.buffer)
-			.resize(1000, 1000, { fit: "inside", withoutEnlargement: true })
-			.webp({ quality: 75 })
-			.toBuffer();
+		const processedBuffer = await sharp(file.buffer).resize(1000, 1000, { fit: "inside", withoutEnlargement: true }).webp({ quality: 75 }).toBuffer();
 		return processedBuffer;
 	}
 
@@ -31,26 +28,23 @@ export class FileService {
 			readableStream.push(fileBuffer);
 			readableStream.push(null);
 
-			const uploadStream = this.bucket.openUploadStream(
-				`${fileName}.webp`,
-				{
-					contentType: "image/webp",
-				}
-			);
+			const uploadStream = this.bucket.openUploadStream(`${fileName}.webp`, {
+				contentType: "image/webp",
+			});
 
 			readableStream.pipe(uploadStream);
 
 			uploadStream.on("finish", () => {
-				resolve(uploadStream.id.toString());
+				const fileId = uploadStream.id.toString();
+				const fileUrl = `${process.env.APP_BASE_URL}/file/${fileId}`;
+				resolve(fileUrl);
 			});
 
 			uploadStream.on("error", reject);
 		});
 	}
 
-	async getFile(
-		id: string
-	): Promise<{ stream: NodeJS.ReadableStream; contentType: string }> {
+	async getFile(id: string): Promise<{ stream: NodeJS.ReadableStream; contentType: string }> {
 		const file = await this.bucket.find({ _id: new ObjectId(id) }).next();
 		if (!file) {
 			throw new Error("File not found");

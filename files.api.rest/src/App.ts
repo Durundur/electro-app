@@ -19,15 +19,8 @@ export class App {
 	private setupRoutes(): void {
 		const upload = multer({ storage: multer.memoryStorage() });
 
-		this.app.post(
-			"/upload",
-			upload.array("files", 10),
-			this.fileController.uploadFiles.bind(this.fileController)
-		);
-		this.app.get(
-			"/file/:id",
-			this.fileController.getFile.bind(this.fileController)
-		);
+		this.app.post("/upload", upload.array("files", 10), this.fileController.uploadFiles.bind(this.fileController));
+		this.app.get("/file/:id", this.fileController.getFile.bind(this.fileController));
 	}
 
 	async start(port: number, mongoUrl: string): Promise<void> {

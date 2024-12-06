@@ -1,42 +1,88 @@
-﻿using AutoMapper;
-using electro.api.rest.ActionFilters;
-using electro.api.rest.Dtos.Product;
-using electro.api.rest.DTOs.Product;
-using electro.api.rest.Models.Product;
-using electro.api.rest.QueryFilters;
-using electro.api.rest.Reposiotories.Interfaces;
-using electro.api.rest.Utils.PagedResult;
-using Microsoft.AspNetCore.Authorization;
+﻿using Application.Features.ProductCatalog.GetProduct;
+using Application.Features.ProductCatalog.GetProductCatalog;
+using Application.Features.ProductCatalog.CreateProduct;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Application.Features.ProductCatalog.GetSearchProducts;
 
-namespace electro.api.rest.Controllers
+namespace WebAPI.Controllers
 {
-    [ServiceFilter(typeof(ExceptionFilter))]
     [ApiController]
     [Route("api/[controller]")]
     public class ProductsController : ControllerBase
     {
-        private readonly IMapper mapper;
-        private readonly IUnitOfWork unitOfWork;
-
-        public ProductsController(IMapper mapper, IUnitOfWork unitOfWork)
+        private readonly IMediator _mediator;
+        public ProductsController(IMediator mediator)
         {
-            this.mapper = mapper;
-            this.unitOfWork = unitOfWork;
+            _mediator = mediator;
         }
 
-        [HttpGet("bestsellers")]
-        [ProducesResponseType<PagedResult<ProductOverviewDto>>(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetBestsellers([FromQuery] PaginationParams paginationParams)
+        [HttpGet("{id}")]
+        [ProducesResponseType<GetProductResult>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<GetProductResult>> GetProductById([FromRoute] string id)
+        {
+            if(!Guid.TryParse(id, out var productId))
+            {
+                return BadRequest();
+            }
+            var query = new GetProductQuery(productId);
+            var response = await _mediator.Send(query);
+
+            if (response == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(response);
+        }
+
+
+        [HttpGet("productCatalog")]
+        [ProducesResponseType<GetProductCatalogResult>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<GetProductCatalogResult>> GetProductCatalog([FromQuery] GetProductCatalogQuery query)
+        {
+            var response = await _mediator.Send(query);
+            return Ok(response);
+        }
+
+        [HttpPost]
+        [ProducesResponseType<CreateOrUpdateProductResult>(StatusCodes.Status200OK)]
+        public async Task<ActionResult<CreateOrUpdateProductResult>> CreateOrUpdateProduct([FromBody] CreateOrUpdateProductCommand command)
+        {
+            var response = await _mediator.Send(command);
+            return Ok(response);
+        }
+
+        [HttpGet("search")]
+        [ProducesResponseType<GetSearchProductsResult>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<GetSearchProductsResult>> GetSearchProducts([FromQuery] GetSearchProductsQuery query)
+        {
+            var response = await _mediator.Send(query);
+            return Ok(response);
+        }
+
+        /*[HttpPost("productCatalog")]
+        [ProducesResponseType<GetProductCatalogResult>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<GetProductResult>> CreateProduct([FromBody])
+        {
+            var response = await _mediator.Send(query);
+            return Ok(response);
+        }*/
+
+        /*[HttpGet("bestsellers")]
+        public async Task<ActionResult<GetProduc>> GetBestsellers([FromQuery] PaginationParams paginationParams)
         {
             var productsQuery = unitOfWork.Products.GetProducts().Include(p => p.Group).Include(p => p.Category).Include(p => p.SubCategory);
             var result = await PagedResultFactory.CreatePagedResultAsync<ProductOverviewDto, ProductModel>(productsQuery, paginationParams, (items) => mapper.Map<IEnumerable<ProductOverviewDto>>(items));
             return Ok(result);
-        }
+        }*/
 
-        [HttpGet("recommended")]
-        [ProducesResponseType<PagedResult<ProductOverviewDto>>(StatusCodes.Status200OK)]
+        /*[HttpGet("recommended")]
         public async Task<IActionResult> GetRecommended([FromQuery] PaginationParams paginationParams)
         {
             var productsQuery = unitOfWork.Products.GetProducts().Include(p => p.Group).Include(p => p.Category).Include(p => p.SubCategory);
@@ -45,7 +91,6 @@ namespace electro.api.rest.Controllers
         }
 
         [HttpGet("hits")]
-        [ProducesResponseType<PagedResult<ProductOverviewDto>>(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetHits([FromQuery] PaginationParams paginationParams)
         {
             var productsQuery = unitOfWork.Products.GetProducts().Include(p => p.Group).Include(p => p.Category).Include(p => p.SubCategory);
@@ -55,7 +100,6 @@ namespace electro.api.rest.Controllers
 
 
         [HttpGet("search")]
-        [ProducesResponseType<PagedResult<ProductOverviewDto>>(StatusCodes.Status200OK)]
         public async Task<IActionResult> SearchProducts([FromQuery] PaginationParams paginationParams, [FromBody] ProductParams productParams, [FromQuery] string? query = "")
         {
             var productsQuery = unitOfWork.Products.GetProducts()
@@ -90,18 +134,6 @@ namespace electro.api.rest.Controllers
             return Ok(pagedResponse);
         }
 
-
-        [HttpGet("{id}")]
-        [ProducesResponseType<ProductDto>(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetProductById(string id)
-        {
-            var product = await unitOfWork.Products.GetProductById(id);
-            var productDto = mapper.Map<ProductDto>(product);
-            if (productDto == null) return NotFound();
-            return Ok(productDto);
-        }
-
-
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ProducesResponseType<ProductDto>(StatusCodes.Status201Created)]
@@ -126,6 +158,6 @@ namespace electro.api.rest.Controllers
             var updatedProduct = await unitOfWork.Products.UpdateProduct(productModel);
             await unitOfWork.CompleteAsync();
             return Ok(mapper.Map<ProductDto>(updatedProduct));
-        }
+        }*/
     }
 }

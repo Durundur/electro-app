@@ -27,6 +27,7 @@ namespace electro.api.rest.Controllers
         }
 
         [HttpPost("Register")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult> Register(RegisterDto credentials) 
         {
             var reqisterResult = await authService.Register(credentials);

@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "electro.api.rest": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:4516;http://localhost:4517"
+    }
+  }
+}

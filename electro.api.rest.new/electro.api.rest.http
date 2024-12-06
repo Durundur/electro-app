@@ -1,0 +1,6 @@
+@electro.api.rest_HostAddress = http://localhost:5189
+
+GET {{electro.api.rest_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

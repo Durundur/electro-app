@@ -4,8 +4,8 @@ import { FormikProps } from "formik";
 import { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "@/libs/Store";
 import { CreateOrUpdateProductCommand } from "@/libs/api-contract/api-contract";
-import { fetchProductHierarchy } from "@/libs/Layout/thunks";
 import { clearProductHierarchyState } from "@/libs/Admin/AdminProductCatalog/AdminProductCatalogNewEdit/slice";
+import { fetchProductHierarchy } from "@/libs/Admin/AdminProductCatalog/AdminProductCatalogNewEdit/thunk";
 
 interface GeneralInfoPanelProps {
 	formik: FormikProps<CreateOrUpdateProductCommand>;
@@ -14,8 +14,10 @@ interface GeneralInfoPanelProps {
 const GeneralInfoPanel: FC<GeneralInfoPanelProps> = ({ formik }) => {
 	const dispatch = useDispatch();
 	const productHierarchySelector = useSelector((store) => store.AdminProductCatalogNewEdit.productHierarchy);
+
 	const selectedGroupId = formik.values.groupId || 0;
 	const selectedCategoryId = formik.values.categoryId || 0;
+
 	const groups = productHierarchySelector.data?.groups;
 	const categories = groups?.find((g) => g.id === selectedGroupId)?.categories;
 	const subCategories = categories?.find((c) => c.id === selectedCategoryId)?.subCategories;

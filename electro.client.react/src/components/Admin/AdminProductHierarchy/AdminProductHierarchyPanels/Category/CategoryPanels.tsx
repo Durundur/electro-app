@@ -17,8 +17,6 @@ const CategoryPanels: FC = () => {
 	const attributes = categorySelector.data?.attributes ?? [];
 	const selectedItemSelector = useSelector((state) => state.AdminProductHierarchy.selectedItem);
 
-	console.log(selectedItemSelector);
-
 	useEffect(() => {
 		if (selectedItemSelector.id) {
 			dispatch(fetchCategory(selectedItemSelector.id));

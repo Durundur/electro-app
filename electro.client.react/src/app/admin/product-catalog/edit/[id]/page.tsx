@@ -10,8 +10,7 @@ import GeneralInfoPanel from "@/components/Admin/AdminProductCatalog/AdminProduc
 import PhotosPanel from "@/components/Admin/AdminProductCatalog/AdminProductCatalogNewEdit/Panels/PhotosPanel";
 import DescriptionPanel from "@/components/Admin/AdminProductCatalog/AdminProductCatalogNewEdit/Panels/DescriptionPanel";
 import AttributesPanel from "@/components/Admin/AdminProductCatalog/AdminProductCatalogNewEdit/Panels/AttributesPanel";
-import { createOrUpdateProduct } from "@/libs/Admin/AdminProductCatalog/AdminProductCatalogNewEdit/thunk";
-import { fetchProduct } from "@/libs/ProductPage/thunk";
+import { createOrUpdateProduct, fetchProduct } from "@/libs/Admin/AdminProductCatalog/AdminProductCatalogNewEdit/thunk";
 import { initialValues as defaultInitialValues } from "@/libs/Admin/AdminProductCatalog/AdminProductCatalogNewEdit/initialValues";
 
 interface ProductCatalogEditPageProps {

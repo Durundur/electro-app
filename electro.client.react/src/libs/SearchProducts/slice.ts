@@ -1,5 +1,5 @@
 import { IError } from "@/libs/api-contract/Error";
-import { GetMenuResult, GetSearchProductsResult } from "@/libs/api-contract/api-contract";
+import { GetMenuResult, GetSearchFiltersResult, GetSearchProductsResult } from "@/libs/api-contract/api-contract";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { ISearchProductsStateUrlParamsFilters, ISearchProductsStateUrlParamsHierarchy, ISearchProductsStateUrlParamsPagination } from "./interfaces";
 
@@ -24,7 +24,7 @@ interface ISearchProductsStateProductHierarchy {
 
 interface ISearchProductsStateFilters {
 	error?: IError;
-	data?: any;
+	data?: GetSearchFiltersResult;
 	isLoading: boolean;
 }
 
@@ -99,9 +99,9 @@ const SearchProductsSlice = createSlice({
 			state.filters.isLoading = true;
 			state.filters.error = undefined;
 		},
-		fetchFiltersSuccess(state, action: PayloadAction<any>) {
+		fetchFiltersSuccess(state, action: PayloadAction<GetSearchFiltersResult>) {
 			state.filters.isLoading = true;
-			state.filters.error = undefined;
+			state.filters.data = action.payload;
 		},
 		fetchFiltersError(state, action: PayloadAction<IError>) {
 			state.filters.isLoading = false;

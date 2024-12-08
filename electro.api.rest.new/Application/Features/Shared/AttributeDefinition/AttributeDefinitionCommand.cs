@@ -9,5 +9,6 @@ namespace Application.Features.Shared.AttributeDefinition
         public AttributeType Type { get; set; }
         public bool IsRequired { get; set; }
         public string Description { get; set; }
+        public bool IsFilterable { get; set; }
     }
 }

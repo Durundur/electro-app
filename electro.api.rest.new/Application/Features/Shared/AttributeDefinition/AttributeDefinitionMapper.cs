@@ -11,6 +11,7 @@
                 Description = attribute.Description,
                 IsRequired = attribute.IsRequired,
                 Type = attribute.Type,
+                IsFilterable = attribute.IsFilterable,
             };
         }
 
@@ -23,6 +24,7 @@
                 Description = attribute.Description,
                 IsRequired = attribute.IsRequired,
                 Type = attribute.Type,
+                IsFilterable = attribute.IsFilterable
             };
         }
     }

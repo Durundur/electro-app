@@ -14,6 +14,7 @@ interface AttributeDefinitionRow {
 	type: string | undefined;
 	isRequired: string;
 	description: string | undefined;
+	isFilterable: string;
 }
 
 interface AttributeDefinitionPanelProps {
@@ -33,6 +34,7 @@ const AttributeDefinitionPanel: FC<AttributeDefinitionPanelProps> = ({ attribute
 		{ field: "description", headerName: "Opis", width: 150, disableColumnMenu: true },
 		{ field: "type", headerName: "Typ", disableColumnMenu: true },
 		{ field: "isRequired", headerName: "Czy obowiązkowy", width: 150, disableColumnMenu: true },
+		{ field: "isFilterable", headerName: "Dostępny w filtrach", width: 150, disableColumnMenu: true },
 	];
 
 	const getAttributeDefinitionRow = (attribute: AttributeDefinitionResult, index: number): AttributeDefinitionRow => {
@@ -43,6 +45,7 @@ const AttributeDefinitionPanel: FC<AttributeDefinitionPanelProps> = ({ attribute
 			type: attribute.type?.toString(),
 			isRequired: attribute.isRequired ? "Tak" : "Nie",
 			description: attribute.description,
+			isFilterable: attribute.isFilterable ? "Tak" : "Nie",
 		};
 	};
 

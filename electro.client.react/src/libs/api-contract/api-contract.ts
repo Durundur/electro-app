@@ -16,6 +16,7 @@ export interface AttributeDefinitionCommand {
     type?: AttributeType;
     isRequired?: boolean;
     description?: string | undefined;
+    isFilterable?: boolean;
 }
 
 export interface AttributeDefinitionResult {
@@ -24,13 +25,13 @@ export interface AttributeDefinitionResult {
     type?: AttributeType;
     isRequired?: boolean;
     description?: string | undefined;
+    isFilterable?: boolean;
 }
 
 export enum AttributeType {
-    _0 = 0,
-    _1 = 1,
-    _2 = 2,
-    _3 = 3,
+    Text = "Text",
+    List = "List",
+    Boolean = "Boolean",
 }
 
 export interface CreateOrUpdateCategoryCommand {
@@ -244,6 +245,16 @@ export interface GetProductResult {
     attributes?: ProductAttributeResult[] | undefined;
 }
 
+export interface GetSearchFiltersResult {
+    filters?: GetSearchFiltersResultElement[] | undefined;
+}
+
+export interface GetSearchFiltersResultElement {
+    attributeDefinitionId?: string;
+    name?: string | undefined;
+    values?: string[] | undefined;
+}
+
 export interface GetSearchProductsResult {
     products?: GetSearchProductsResultProduct[] | undefined;
     pageCount?: number;
@@ -299,7 +310,7 @@ export interface ProductAttributeResult {
 }
 
 export enum ProductStatus {
-    _0 = 0,
-    _1 = 1,
-    _2 = 2,
+    Active = "Active",
+    Inavtive = "Inavtive",
+    Removed = "Removed",
 }

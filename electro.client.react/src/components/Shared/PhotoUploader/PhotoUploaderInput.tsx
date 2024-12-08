@@ -8,6 +8,7 @@ interface PhotoUploaderInputProps {
 }
 
 const PhotoUploaderInput: React.FC<PhotoUploaderInputProps> = ({ onNewFile }) => {
+
 	const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		if (event.target.files) {
 			const filesArray = Array.from(event.target.files);
@@ -15,6 +16,25 @@ const PhotoUploaderInput: React.FC<PhotoUploaderInputProps> = ({ onNewFile }) =>
 			event.target.value = "";
 		}
 	};
+
+	const handlePaste = (event: React.ClipboardEvent<HTMLDivElement>) => {
+		const items = event.clipboardData.items;
+		const files: File[] = [];
+		for (let i = 0; i < items.length; i++) {
+			const item = items[i];
+			// Sprawdzenie, czy jest to plik obrazu
+			if (item.type.startsWith("image/")) {
+				const file = item.getAsFile();
+				if (file) {
+					files.push(file);
+				}
+			}
+		}
+		if (files.length > 0) {
+			onNewFile(files);
+		}
+	};
+
 	return (
 		<Card
 			sx={(theme) => ({
@@ -32,6 +52,7 @@ const PhotoUploaderInput: React.FC<PhotoUploaderInputProps> = ({ onNewFile }) =>
 					backgroundColor: theme.palette.action.hover,
 				},
 			})}
+			onPaste={handlePaste}
 		>
 			<Stack
 				width={"100%"}

@@ -1,5 +1,5 @@
 import { AttributeDefinitionCommand, AttributeDefinitionResult, AttributeType } from "@/libs/api-contract/api-contract";
-import { Box, Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, InputLabel, MenuItem, Select, Stack, TextField } from "@mui/material";
+import { Box, Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, FormHelperText, InputLabel, MenuItem, Select, Stack, TextField } from "@mui/material";
 import { Formik } from "formik";
 import { FC } from "react";
 import * as yup from "yup";
@@ -19,6 +19,7 @@ const AttributeDefinitionDialog: FC<AttributeDialogProps> = ({ open, onClose, on
 			description: "",
 			isRequired: false,
 			type: undefined,
+			isFilterable: false,
 		};
 		if (attribute) {
 			initialValues = {
@@ -27,6 +28,7 @@ const AttributeDefinitionDialog: FC<AttributeDialogProps> = ({ open, onClose, on
 				description: attribute.description,
 				isRequired: attribute.isRequired,
 				type: attribute.type,
+				isFilterable: attribute.isFilterable,
 			};
 		}
 		return initialValues;
@@ -36,7 +38,8 @@ const AttributeDefinitionDialog: FC<AttributeDialogProps> = ({ open, onClose, on
 		name: yup.string().required("Nazwa jest wymagana"),
 		description: yup.string(),
 		isRequired: yup.bool(),
-		type: yup.string(),
+		type: yup.string().required("Typ jest wymagany"),
+		isFilterable: yup.bool(),
 	});
 
 	return (
@@ -87,27 +90,32 @@ const AttributeDefinitionDialog: FC<AttributeDialogProps> = ({ open, onClose, on
 									fullWidth
 								/>
 
-								<FormControl size="small">
+								<FormControl size="small" error={formik.touched["type"] && Boolean(formik.errors["type"])}>
 									<InputLabel id="type-select-label">Typ</InputLabel>
 									<Select
 										labelId="type-select-label"
-										id="type-select"
-										label="Age"
+										id="type"
+										label="Typ"
 										value={formik.values.type || ""}
 										onChange={(event) => formik.setFieldValue("type", event.target.value)}
 										error={formik.touched.type && Boolean(formik.errors.type)}
+										onBlur={formik.handleBlur}
 										fullWidth
 									>
-										<MenuItem value="">
-											<em>Wybierz typ</em>
-										</MenuItem>
-										<MenuItem value={""}>String</MenuItem>
-										<MenuItem value={""}>Number</MenuItem>
-										<MenuItem value={""}>Boolean</MenuItem>
+										<MenuItem value="">Wybierz typ</MenuItem>
+										<MenuItem value={AttributeType.Text}>Text</MenuItem>
+										<MenuItem value={AttributeType.List}>List</MenuItem>
+										<MenuItem value={AttributeType.Boolean}>Boolean</MenuItem>
 									</Select>
+									{formik.touched["type"] && formik.errors["type"] && <FormHelperText>{formik.errors["type"] as string}</FormHelperText>}
 								</FormControl>
 
 								<FormControlLabel control={<Checkbox size="small" id="isRequired" checked={formik.values["isRequired"]} onChange={formik.handleChange} />} label="Czy obowiązkowy" />
+
+								<FormControlLabel
+									control={<Checkbox size="small" id="isFilterable" checked={formik.values["isFilterable"]} onChange={formik.handleChange} />}
+									label="Czy dostępny w filtrach"
+								/>
 							</Stack>
 						</DialogContent>
 						<DialogActions>

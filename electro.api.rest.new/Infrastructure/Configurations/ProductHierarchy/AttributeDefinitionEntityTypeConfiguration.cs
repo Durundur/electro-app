@@ -17,7 +17,7 @@ namespace Infrastructure.Configurations.ProductHierarchy
                 .HasMaxLength(100);
 
             builder.Property(ad => ad.Type)
-                .IsRequired();
+                .HasConversion<string>();
         }
     }
 }

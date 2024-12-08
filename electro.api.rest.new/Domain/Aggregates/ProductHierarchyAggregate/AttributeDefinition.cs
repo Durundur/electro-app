@@ -6,30 +6,32 @@
         public string Name { get; private set; }
         public AttributeType Type { get; private set; }
         public bool IsRequired { get; private set; }
+        public bool IsFilterable { get; private set; }
         public string Description { get; private set; }
 
-        public AttributeDefinition(string name, AttributeType type, bool isRequired, string description)
+        public AttributeDefinition(string name, AttributeType type, bool isRequired, string description, bool isFilterable)
         {
             Name = name;
             Type = type;
             IsRequired = isRequired;
             Description = description;
+            IsFilterable = isFilterable;
         }
 
-        public void Update(string name, AttributeType type, bool isRequired, string description)
+        public void Update(string name, AttributeType type, bool isRequired, string description, bool isFilterable)
         {
             Name = name;
             Type = type;
             IsRequired = isRequired;
             Description = description;
+            IsFilterable = isFilterable;
         }
     }
 
     public enum AttributeType
     {
-        String,
-        Integer,
-        Decimal,
+        Text,
+        List,
         Boolean
     }
 }

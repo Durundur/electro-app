@@ -52,7 +52,7 @@ const SearchProductsSidebarCategories: FC = () => {
 		let group: number | undefined;
 		let category: number | undefined;
 		let subCategory: number | undefined;
-		
+
 		if (type === "group") {
 			group = id;
 		} else if (type === "category") {
@@ -77,9 +77,8 @@ const SearchProductsSidebarCategories: FC = () => {
 				});
 			});
 		}
-		router.push(`/search?${buildQueryString({ group, category, subCategory })}`);
+		router.push(`/search?${buildQueryString({ group, category, subCategory })}`, {scroll: true});
 	};
-
 	return (
 		<Box>
 			<Typography variant="body1" fontWeight={500} paddingY={0.5} paddingX={1.5}>

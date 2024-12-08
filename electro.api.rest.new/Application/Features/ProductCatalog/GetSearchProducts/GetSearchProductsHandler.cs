@@ -35,12 +35,23 @@ namespace Application.Features.ProductCatalog.GetSearchProducts
                 productsQuery = productsQuery.Where(p => p.SubCategoryId == request.SubCategoryId.Value);
             }
 
-            var totalProducts = await productsQuery.CountAsync();
+            if (request.Filters != null && request.Filters.Any())
+            {
+                foreach (var filter in request.Filters)
+                {
+                    if(!Guid.TryParse(filter.Key, out Guid attributeDefId)) continue;
+                    var attributeValues = filter.Value;
+
+                    productsQuery = productsQuery.Where(p => p.Attributes.Any(a => a.AttributeDefinitionId == attributeDefId && attributeValues.Contains(a.Value)));
+                }
+            }
+
+            var totalProducts = await productsQuery.CountAsync(cancellationToken);
 
             var products = await productsQuery
                 .Skip((request.Page - 1) * request.PageSize)
                 .Take(request.PageSize)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             var primaryAttributeDefinitionIds = products
                 .SelectMany(p => p.Attributes)

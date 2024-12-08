@@ -5,32 +5,32 @@ import { IError } from "@/libs/api-contract/Error";
 import { IUploadPhotoResult } from "./interface";
 
 export const uploadPhotos = () => async (dispatch: AppDispatch, getState: () => RootState): Promise<string[]> => {
-		const state = getState();
-		const newFiles = state.PhotoUploader.items.filter((item) => item.photo instanceof File).map((item) => item.photo as File);
+	const state = getState();
+	const { items } = state.PhotoUploader;
 
-		if (newFiles.length === 0) return [];
-		dispatch(photoUplaoderStart());
-		try {
-			const formData = new FormData();
-			newFiles.forEach((file) => formData.append("files", file));
-			const response = await axios.post<IUploadPhotoResult>(`https://files.durundur.online/upload`, formData, {
-				headers: {
-					"Content-Type": "multipart/form-data",
-				},
-			});
-			const updatedFiles = state.PhotoUploader.items.map((item, index) => {
-				if (item.photo instanceof File) {
-					return response.data.files[index];
-				}
-				return item.photo;
-			});
-			dispatch(photoUplaoderSuccess({ files: updatedFiles }));
-			return updatedFiles;
-		} catch (error: any) {
-			dispatch(photoUplaoderEror(error as IError));
-			throw error;
-		}
-	};
+	const filesToUpload = items.filter((item) => item.photo instanceof File).map((item) => item.photo as File);
+	const existingUrls = items.filter((item) => !(item.photo instanceof File)).map((item) => item.photo as string);
+
+	if (filesToUpload.length === 0) return existingUrls;
+
+	dispatch(photoUplaoderStart());
+	try {
+		const formData = new FormData();
+		filesToUpload.forEach((file) => formData.append("files", file));
+		const response = await axios.post<IUploadPhotoResult>(`https://files.durundur.online/upload`, formData, {
+			headers: { "Content-Type": "multipart/form-data" },
+		});
+
+		const uploadedUrls = response.data.files;
+		const allUrls = items.map((item, index) => (item.photo instanceof File ? uploadedUrls.shift()! : item.photo));
+		
+		dispatch(photoUplaoderSuccess({ files: allUrls }));
+		return allUrls;
+	} catch (error: any) {
+		dispatch(photoUplaoderEror(error as IError));
+		throw error;
+	}
+};
 
 export const deletePhoto = (id: string) => async (dispatch: AppDispatch) => {
 	// try {

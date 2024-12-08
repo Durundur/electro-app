@@ -9,4 +9,6 @@ export interface ISearchProductsStateUrlParamsPagination {
 	pageSize?: number;
 }
 
-export interface ISearchProductsStateUrlParamsFilters {}
+export interface ISearchProductsStateUrlParamsFilters {
+	[name: string]: string[];
+}

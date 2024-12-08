@@ -38,7 +38,7 @@ const validatePaginationParams = (searchParams: URLSearchParams): ISearchProduct
 	const pageSize = searchParams.get("pageSize");
 
 	const DEFAULT_PAGE = 1;
-	const DEFAULT_PAGE_SIZE = 10;
+	const DEFAULT_PAGE_SIZE = 5;
 	const MAX_PAGE_SIZE = 100;
 
 	const isPageValid = isParamValueValid(page);
@@ -53,7 +53,18 @@ const validatePaginationParams = (searchParams: URLSearchParams): ISearchProduct
 };
 
 const validateFiltersParams = (searchParams: URLSearchParams): ISearchProductsStateUrlParamsFilters => {
-	return {};
+	const excludedKeys = ["group", "category", "subCategory", "page", "pageSize"];
+
+	const filters: ISearchProductsStateUrlParamsFilters = {};
+
+	searchParams.forEach((value, key) => {
+		if (!excludedKeys.includes(key)) {
+			const values = decodeURIComponent(value).split(",");
+			filters[key] = values.map((v) => v.trim());
+		}
+	});
+
+	return filters;
 };
 
 const SearchProductPage: React.FC = () => {
@@ -65,11 +76,13 @@ const SearchProductPage: React.FC = () => {
 		const hierarchy = validateProductHierarchyParams(searchParams);
 		const pagination = validatePaginationParams(searchParams);
 		const filters = validateFiltersParams(searchParams);
+		const newParams = buildQueryString({ ...hierarchy, ...pagination, ...filters });
 
-		// if (searchParams.toString() !== newParams.toString()) {
-		// 	router.push(`?${buildQueryString({ ...hierarchy, ...pagination, ...filters })}`);
-		// }
+		console.log(searchParams.toString(), newParams);
 
+		if (searchParams.toString() !== newParams) {
+			router.replace(`?${newParams}`, { scroll: true });
+		}
 		const urlParams: ISearchProductsStateUrlParams = { hierarchy, pagination, filters };
 		dispatch(setUrlParams(urlParams));
 	}, [searchParams.toString()]);

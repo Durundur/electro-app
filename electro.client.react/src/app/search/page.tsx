@@ -59,7 +59,7 @@ const validateFiltersParams = (searchParams: URLSearchParams): ISearchProductsSt
 
 	searchParams.forEach((value, key) => {
 		if (!excludedKeys.includes(key)) {
-			const values = decodeURIComponent(value).split(",");
+			const values = value.split(";");
 			filters[key] = values.map((v) => v.trim());
 		}
 	});
@@ -77,11 +77,8 @@ const SearchProductPage: React.FC = () => {
 		const pagination = validatePaginationParams(searchParams);
 		const filters = validateFiltersParams(searchParams);
 		const newParams = buildQueryString({ ...hierarchy, ...pagination, ...filters });
-
-		console.log(searchParams.toString(), newParams);
-
 		if (searchParams.toString() !== newParams) {
-			router.replace(`?${newParams}`, { scroll: true });
+			router.push(`?${newParams}`, { scroll: true });
 		}
 		const urlParams: ISearchProductsStateUrlParams = { hierarchy, pagination, filters };
 		dispatch(setUrlParams(urlParams));

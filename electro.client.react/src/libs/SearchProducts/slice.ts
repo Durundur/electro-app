@@ -100,7 +100,7 @@ const SearchProductsSlice = createSlice({
 			state.filters.error = undefined;
 		},
 		fetchFiltersSuccess(state, action: PayloadAction<GetSearchFiltersResult>) {
-			state.filters.isLoading = true;
+			state.filters.isLoading = false;
 			state.filters.data = action.payload;
 		},
 		fetchFiltersError(state, action: PayloadAction<IError>) {

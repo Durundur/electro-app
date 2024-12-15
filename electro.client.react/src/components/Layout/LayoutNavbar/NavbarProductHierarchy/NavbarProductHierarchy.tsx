@@ -41,7 +41,7 @@ const NavbarProductHierarchy: FC = () => {
 						}}
 						variant="text"
 						color="inherit"
-						sx={{ fontWeight: 400, paddingX: 1.5, paddingY: 1.25, lineHeight: 1 }}
+						sx={{ fontWeight: 400, paddingX: 1.5, paddingY: 1.25, lineHeight: 1, textAlign: 'center' }}
 						LinkComponent={Link}
 						href={`/search?group=${group.id}`}
 					>

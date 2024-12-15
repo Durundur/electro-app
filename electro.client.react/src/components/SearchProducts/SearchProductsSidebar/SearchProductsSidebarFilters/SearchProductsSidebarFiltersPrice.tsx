@@ -4,7 +4,7 @@ import { FC } from "react";
 const SearchProductsSidebarFiltersPrice: FC = () => {
 	return (
 		<Stack paddingX={1.5}>
-			<Typography variant="body1" fontWeight={500}>
+			<Typography variant="body1">
 				Cena
 			</Typography>
 			<Stack direction={"row"} alignItems={"center"} spacing={2}>

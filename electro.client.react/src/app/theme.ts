@@ -1,4 +1,25 @@
 import { createTheme } from "@mui/material/styles";
+import { TypographyOptions } from "@mui/material/styles/createTypography";
+
+declare module "@mui/material/Typography" {
+	interface TypographyPropsVariantOverrides {
+		smalltitle: true;
+	}
+}
+
+interface ExtendedTypographyOptions extends TypographyOptions {
+	smalltitle: React.CSSProperties;
+}
+
+declare module "@mui/material/styles/createPalette" {
+	interface CommonColors {
+		gold: string;
+	}
+}
+
+interface ExtendedTypographyOptions extends TypographyOptions {
+	smalltitle: React.CSSProperties;
+}
 
 const theme = createTheme({
 	palette: {
@@ -115,7 +136,11 @@ const theme = createTheme({
 		fontWeightRegular: 400,
 		fontWeightMedium: 500,
 		fontWeightBold: 700,
-	},
+		smalltitle: {
+			fontSize: 18,
+			fontWeight: 500,
+		},
+	} as ExtendedTypographyOptions,
 	shadows: [
 		"none",
 		"0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12)",
@@ -203,9 +228,10 @@ const theme = createTheme({
 		},
 		MuiSelect: {
 			defaultProps: {
-				MenuProps: { disableScrollLock: true }
+				MenuProps: { disableScrollLock: true },
 			},
 		},
+		MuiTypography: {},
 	},
 });
 

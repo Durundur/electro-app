@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "@/libs/Store";
-import { Box, Stack } from "@mui/material";
-import { FC, useEffect } from "react";
+import { Stack } from "@mui/material";
+import { FC, useEffect, useMemo } from "react";
 import SearchProductsListItem from "./SearchProductsListItem";
 import { fetchProducts } from "@/libs/SearchProducts/thunk";
 import { clearProducts } from "@/libs/SearchProducts/slice";
@@ -22,26 +22,13 @@ const SearchProductsList: FC = () => {
 	const { products, ...pagination } = productsSelector.data ?? {};
 	const pageCount = pagination.pageCount;
 
-	useEffect(() => {
-		if (paginationParamsSelector.page === undefined) return;
-		const hierarchyParams = { groupId: hierarchyParamsSelector.group, categoryId: hierarchyParamsSelector.category, subCategoryId: hierarchyParamsSelector.subCategory };
-		const paginationParams = { page: paginationParamsSelector.page, pageSize: paginationParamsSelector.pageSize };
-		const filtersParams = getFiltersSearchParams(filtersParamsSelector, filters);
-		const queryParams = { ...hierarchyParams, ...paginationParams, ...filtersParams };
-		dispatch(fetchProducts(queryParams));
-
-		return () => {
-			dispatch(clearProducts());
-		};
-	}, [hierarchyParamsSelector, paginationParamsSelector, filtersParamsSelector]);
-
 	const getFiltersSearchParams = (activeFilters: ISearchProductsStateUrlParamsFilters, filters: GetSearchFiltersResultElement[]) => {
 		const queryFilters: Record<string, string[]> = {};
 
 		for (const [filterKey, filterValues] of Object.entries(activeFilters)) {
 			if (!filterValues) continue;
 			const fullFilterId = filters.find((f) => getFilterUrlKey(f) === filterKey)?.attributeDefinitionId;
-			if(!fullFilterId) continue;
+			if (!fullFilterId) continue;
 			queryFilters[fullFilterId] = filterValues;
 		}
 		return queryFilters;
@@ -52,6 +39,35 @@ const SearchProductsList: FC = () => {
 		const formattedKey = key!.toLowerCase();
 		return formattedKey;
 	};
+
+	const hierarchyParams = useMemo(
+		() => ({
+			groupId: hierarchyParamsSelector.group,
+			categoryId: hierarchyParamsSelector.category,
+			subCategoryId: hierarchyParamsSelector.subCategory,
+		}),
+		[hierarchyParamsSelector.group, hierarchyParamsSelector.category, hierarchyParamsSelector.subCategory]
+	);
+
+	const paginationParams = useMemo(
+		() => ({
+			page: paginationParamsSelector.page,
+			pageSize: paginationParamsSelector.pageSize,
+		}),
+		[paginationParamsSelector.page, paginationParamsSelector.pageSize]
+	);
+
+	const filtersParams = useMemo(() => getFiltersSearchParams(filtersParamsSelector, filters), [filtersParamsSelector, filters]);
+
+	useEffect(() => {
+		if (paginationParams.page === undefined || filtersSelector.data === undefined) return;
+		const queryParams = { ...hierarchyParams, ...paginationParams, ...filtersParams };
+		dispatch(fetchProducts(queryParams));
+
+		return () => {
+			dispatch(clearProducts());
+		};
+	}, [JSON.stringify(hierarchyParams), JSON.stringify(paginationParams), JSON.stringify(filtersParams)]);
 
 	return (
 		<Stack>

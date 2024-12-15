@@ -5,8 +5,12 @@ import { Box, Button, Stack, Typography } from "@mui/material";
 import { FC, useEffect } from "react";
 import SearchProductsSidebarFiltersPrice from "./SearchProductsSidebarFiltersPrice";
 import SearchProductsSidebarFiltersSelect from "./SearchProductsSidebarFiltersSelect";
+import { useSearchParams, useRouter } from "next/navigation";
+import { buildQueryString } from "@/libs/Helpers/QueryHelper";
 
 const SearchProductsSidebarFilters: FC = () => {
+	const searchParams = useSearchParams();
+	const router = useRouter();
 	const dispatch = useDispatch();
 	const hierarchyParamsSelector = useSelector((store) => store.SearchProducts.urlParams.hierarchy);
 	const filtersSelector = useSelector((store) => store.SearchProducts.filters);
@@ -24,13 +28,22 @@ const SearchProductsSidebarFilters: FC = () => {
 		};
 	}, [hierarchyParamsSelector.category, hierarchyParamsSelector.group, hierarchyParamsSelector.subCategory]);
 
+	const handleClearSelectedFilters = () => {
+		const group = searchParams.get("group");
+		const category = searchParams.get("category");
+		const subCategory = searchParams.get("subCategory");
+		const pageSize = searchParams.get("pageSize");
+
+		router.push(`?${buildQueryString({ group, category, subCategory, page: 1, pageSize })}`, { scroll: true });
+	};
+
 	return (
-		<Box>
+		<Box paddingBottom={0.5}>
 			<Stack direction={"row"} justifyContent={"space-between"} paddingX={1.5}>
 				<Typography variant="body1" fontWeight={500} paddingY={0.5}>
 					Filtry
 				</Typography>
-				<Button color="inherit" size="small" variant="text">
+				<Button onClick={handleClearSelectedFilters} color="inherit" size="small" variant="text">
 					wyczyść
 				</Button>
 			</Stack>

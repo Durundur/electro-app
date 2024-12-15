@@ -5,6 +5,7 @@ import { AddOutlined, RemoveOutlined } from "@mui/icons-material";
 import { useSelector } from "@/libs/Store";
 import { ISearchProductsStateUrlParamsFilters } from "@/libs/SearchProducts/interfaces";
 import { useRouter, useSearchParams } from "next/navigation";
+import { buildQueryString } from "@/libs/Helpers/QueryHelper";
 
 interface SearchProductsSidebarFiltersSelectProps {
 	filter: GetSearchFiltersResultElement;
@@ -12,55 +13,54 @@ interface SearchProductsSidebarFiltersSelectProps {
 
 const MAX_VISIBLE_ITEMS = 4;
 
+const getSelectedFilterValues = (params: ISearchProductsStateUrlParamsFilters, filter: GetSearchFiltersResultElement) => {
+	const filterKey = getFilterUrlKey(filter);
+	const values = params[filterKey] ?? [];
+	return values;
+};
+
+const getFilterUrlKey = (filter: GetSearchFiltersResultElement): string => {
+	const key = filter.attributeDefinitionId?.split("-")[4];
+	return key!.toLowerCase();
+};
+
+const sortSelectedOptions = (options: string[], selectedValues: string[] = []): string[] => {
+	const selected = options.filter((option) => selectedValues.includes(option));
+	const unselected = options.filter((option) => !selectedValues.includes(option));
+	return [...selected, ...unselected];
+};
+
 const SearchProductsSidebarFiltersSelect: FC<SearchProductsSidebarFiltersSelectProps> = ({ filter }) => {
 	const searchParams = useSearchParams();
 	const router = useRouter();
 	const filterOptions = filter.values ?? [];
 	const [isExpanded, setIsExpanded] = useState(false);
-	const toggleExpand = () => setIsExpanded((prev) => !prev);
+
 	const filterParamsSelector = useSelector((store) => store.SearchProducts.urlParams.filters);
+	const filterValues = getSelectedFilterValues(filterParamsSelector, filter);
+	const sortedOptions = sortSelectedOptions(filterOptions, filterValues);
 
-	const getSelectedFilterValues = (params: ISearchProductsStateUrlParamsFilters, filter: GetSearchFiltersResultElement) => {
-		const filterKey = getFilterUrlKey(filter);
-        const encodedValues = params[filterKey] ?? [];
-        return encodedValues.map((value) => decodeURIComponent(value));
-	};
-
-	const getFilterUrlKey = (filter: GetSearchFiltersResultElement): string => {
-		const key = filter.attributeDefinitionId?.split("-")[4];
-		const formattedKey = key!.toLowerCase();
-		return formattedKey;
-	};
-
-    const sortSelectedOptions = (options: string[], selectedValues: string[] = []) => {
-        const selected = options.filter((option) => selectedValues.includes(option));
-        const unselected = options.filter((option) => !selectedValues.includes(option));
-        return [...selected, ...unselected];
-      };
+	const toggleExpand = () => setIsExpanded((prev) => !prev);
 
 	const handleSelectOption = (value: string) => {
 		const filterKey = getFilterUrlKey(filter);
 		const currentValues = getSelectedFilterValues(filterParamsSelector, filter) ?? [];
-
 		const newValues = currentValues.includes(value) ? currentValues.filter((item) => item !== value) : [...currentValues, value];
-
-		const updatedParams = new URLSearchParams(searchParams.toString());
+		const newParams = Object.fromEntries(searchParams);
 
 		if (newValues.length > 0) {
-			updatedParams.set(filterKey, newValues.map((v) => encodeURIComponent(v)).join(","));
+			newParams[filterKey] = newValues.join(";");
 		} else {
-			updatedParams.delete(filterKey);
+			newParams[filterKey] = "";
 		}
-		router.replace(`?${updatedParams.toString()}`, { scroll: false });
+		newParams["page"] = "1";
+		router.push(`?${buildQueryString(newParams)}`, { scroll: false });
 	};
-
-	const filterValues = getSelectedFilterValues(filterParamsSelector, filter);
-    const sortedOptions = sortSelectedOptions(filterOptions, filterValues);
 
 	return (
 		<Stack>
 			<Stack direction={"row"} justifyContent={"space-between"} alignItems={"center"} paddingX={1.5}>
-				<Typography variant="body1" fontWeight={500} paddingY={0.5}>
+				<Typography variant="body1" paddingY={0.5}>
 					{filter.name}
 				</Typography>
 				{filterOptions.length > MAX_VISIBLE_ITEMS && (

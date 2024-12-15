@@ -77,8 +77,9 @@ const SearchProductsSidebarCategories: FC = () => {
 				});
 			});
 		}
-		router.push(`/search?${buildQueryString({ group, category, subCategory })}`, {scroll: true});
+		router.push(`?${buildQueryString({ group, category, subCategory, page: 1, pageSize: 5 })}`, { scroll: true });
 	};
+
 	return (
 		<Box>
 			<Typography variant="body1" fontWeight={500} paddingY={0.5} paddingX={1.5}>

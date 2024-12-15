@@ -3,7 +3,11 @@ export const buildQueryString = (query: object): string => {
 
 	for (const [key, value] of Object.entries(query)) {
 		if (value !== undefined && value !== null && value !== "") {
-			params.append(key, value.toString());
+			if (Array.isArray(value)) {
+				params.append(key, value.filter((v) => !!v).join(";"));
+			} else {
+				params.append(key, value.toString());
+			}
 		}
 	}
 
@@ -15,7 +19,7 @@ export const buildQueryStringWithDuplicatedKey = (query: object): string => {
 
 	for (const [key, value] of Object.entries(query)) {
 		if (Array.isArray(value)) {
-			value.forEach(item => {
+			value.forEach((item) => {
 				if (item !== undefined && item !== null && item !== "") {
 					params.append(key, item.toString());
 				}

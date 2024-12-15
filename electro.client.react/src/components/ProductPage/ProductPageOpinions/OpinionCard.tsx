@@ -3,7 +3,7 @@ import { Box, Card, CardHeader, Rating, Typography, CardContent, IconButton, Car
 import { FC } from "react";
 
 interface OpinionCardProps {
-	opinion: {};
+	opinion: any;
 }
 
 const OpinionCard: FC<OpinionCardProps> = ({ opinion }) => {

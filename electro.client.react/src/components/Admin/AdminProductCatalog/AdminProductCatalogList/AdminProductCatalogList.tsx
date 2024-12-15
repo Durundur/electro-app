@@ -13,7 +13,7 @@ interface AdminProductCatalogListProps {
 
 const AdminProductCatalogList: FC<AdminProductCatalogListProps> = ({ productCatalogData, onPaginationChange }) => {
 	const { products, page, pageSize, pageCount } = productCatalogData;
-	const rowCount = pageSize! * pageCount! ?? 0;
+	const rowCount = (pageSize ?? 0) * (pageCount ?? 0);
 	const router = useRouter();
 
 	const columns: GridColDef[] = [

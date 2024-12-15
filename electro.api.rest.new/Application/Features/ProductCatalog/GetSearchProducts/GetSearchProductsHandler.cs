@@ -39,7 +39,20 @@ namespace Application.Features.ProductCatalog.GetSearchProducts
             {
                 foreach (var filter in request.Filters)
                 {
-                    if(!Guid.TryParse(filter.Key, out Guid attributeDefId)) continue;
+
+                    if (filter.Key == "from" && decimal.TryParse(filter.Value.FirstOrDefault(), out var priceFrom))
+                    {
+                        productsQuery = productsQuery.Where(p => p.Price.Amount >= priceFrom);
+                        continue;
+                    }
+
+                    if (filter.Key == "to" && decimal.TryParse(filter.Value.FirstOrDefault(), out var priceTo))
+                    {
+                        productsQuery = productsQuery.Where(p => p.Price.Amount <= priceTo);
+                        continue;
+                    }
+
+                    if (!Guid.TryParse(filter.Key, out Guid attributeDefId)) continue;
                     var attributeValues = filter.Value;
 
                     productsQuery = productsQuery.Where(p => p.Attributes.Any(a => a.AttributeDefinitionId == attributeDefId && attributeValues.Contains(a.Value)));

@@ -27,8 +27,10 @@ const SearchProductsList: FC = () => {
 
 		for (const [filterKey, filterValues] of Object.entries(activeFilters)) {
 			if (!filterValues) continue;
-			const fullFilterId = filters.find((f) => getFilterUrlKey(f) === filterKey)?.attributeDefinitionId;
-			if (!fullFilterId) continue;
+			let fullFilterId = filters.find((f) => getFilterUrlKey(f) === filterKey)?.attributeDefinitionId;
+			if (!fullFilterId) {
+				fullFilterId = filterKey;
+			}
 			queryFilters[fullFilterId] = filterValues;
 		}
 		return queryFilters;
@@ -67,7 +69,7 @@ const SearchProductsList: FC = () => {
 		return () => {
 			dispatch(clearProducts());
 		};
-	}, [JSON.stringify(hierarchyParams), JSON.stringify(paginationParams), JSON.stringify(filtersParams)]);
+	}, [JSON.stringify(hierarchyParams), JSON.stringify(paginationParams), JSON.stringify(filtersParams), JSON.stringify(filters)]);
 
 	return (
 		<Stack>

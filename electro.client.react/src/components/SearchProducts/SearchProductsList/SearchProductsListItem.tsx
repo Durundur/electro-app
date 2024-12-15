@@ -1,3 +1,4 @@
+import { formatAmount } from "@/libs/Helpers/Formatters";
 import { GetSearchProductsResultProduct } from "@/libs/api-contract/api-contract";
 import { Box, Card, CardContent, CardMedia, Grid2, IconButton, Rating, Stack, Typography } from "@mui/material";
 import Link from "next/link";
@@ -48,7 +49,7 @@ const SearchProductsListItem: FC<SearchProductsListItemProps> = ({ product }) =>
 					<Grid2 size={{ xs: 2 }}>
 						<CardContent>
 							<Typography variant="h6" align="right" sx={{ whiteSpace: "nowrap" }}>
-								{`${product.amount} ${product.currency}`}
+								{formatAmount(product.amount!, product.currency!)}
 							</Typography>
 						</CardContent>
 					</Grid2>

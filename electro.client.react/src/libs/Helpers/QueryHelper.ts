@@ -4,7 +4,11 @@ export const buildQueryString = (query: object): string => {
 	for (const [key, value] of Object.entries(query)) {
 		if (value !== undefined && value !== null && value !== "") {
 			if (Array.isArray(value)) {
-				params.append(key, value.filter((v) => !!v).join(";"));
+				const correctValue = value.filter((v) => !!v);
+				if (correctValue.length === 0) {
+					continue;
+				}
+				params.append(key, correctValue.join(";"));
 			} else {
 				params.append(key, value.toString());
 			}

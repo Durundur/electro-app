@@ -5,18 +5,19 @@ import { Box, Button, Stack, Typography } from "@mui/material";
 import { FC, useEffect } from "react";
 import SearchProductsSidebarFiltersPrice from "./SearchProductsSidebarFiltersPrice";
 import SearchProductsSidebarFiltersSelect from "./SearchProductsSidebarFiltersSelect";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { buildQueryString } from "@/libs/Helpers/QueryHelper";
 
 const SearchProductsSidebarFilters: FC = () => {
-	const searchParams = useSearchParams();
 	const router = useRouter();
 	const dispatch = useDispatch();
 	const hierarchyParamsSelector = useSelector((store) => store.SearchProducts.urlParams.hierarchy);
+	const paginationParamsSelector = useSelector((store) => store.SearchProducts.urlParams.pagination);
 	const filtersSelector = useSelector((store) => store.SearchProducts.filters);
 	const filters = filtersSelector.data?.filters ?? [];
 
 	useEffect(() => {
+		if (!hierarchyParamsSelector.group && !hierarchyParamsSelector.category && !hierarchyParamsSelector.subCategory) return;
 		const params = {
 			groupId: hierarchyParamsSelector.group,
 			categoryId: hierarchyParamsSelector.category,
@@ -29,12 +30,14 @@ const SearchProductsSidebarFilters: FC = () => {
 	}, [hierarchyParamsSelector.category, hierarchyParamsSelector.group, hierarchyParamsSelector.subCategory]);
 
 	const handleClearSelectedFilters = () => {
-		const group = searchParams.get("group");
-		const category = searchParams.get("category");
-		const subCategory = searchParams.get("subCategory");
-		const pageSize = searchParams.get("pageSize");
-
-		router.push(`?${buildQueryString({ group, category, subCategory, page: 1, pageSize })}`, { scroll: true });
+		const params = {
+			group: hierarchyParamsSelector.group,
+			category: hierarchyParamsSelector.category,
+			subCategory: hierarchyParamsSelector.subCategory,
+			page: 1,
+			pageSize: paginationParamsSelector.pageSize,
+		};
+		router.push(`?${buildQueryString(params)}`, { scroll: true });
 	};
 
 	return (

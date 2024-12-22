@@ -9,7 +9,7 @@ import { buildQueryString } from "@/libs/Helpers/QueryHelper";
 export const fetchProductCatalogList = (query: GetProductCatalogQuery) => async (dispatch: AppDispatch) => {
 	try {
 		dispatch(fetchProductCatalogListStart());
-		const response = await axios.get<GetProductCatalogResult>(`http://localhost:5146/api/products/productCatalog?${buildQueryString(query)}`);
+		const response = await axios.get<GetProductCatalogResult>(`${process.env.NEXT_PUBLIC_API_URL}/api/products/productCatalog?${buildQueryString(query)}`);
 		dispatch(fetchProductCatalogListSuccess(response.data));
 	} catch (error: any) {
 		dispatch(fetchProductCatalogListError(error as IError));

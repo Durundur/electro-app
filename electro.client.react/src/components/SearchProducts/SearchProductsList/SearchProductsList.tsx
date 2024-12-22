@@ -62,7 +62,7 @@ const SearchProductsList: FC = () => {
 	const filtersParams = useMemo(() => getFiltersSearchParams(filtersParamsSelector, filters), [filtersParamsSelector, filters]);
 
 	useEffect(() => {
-		if (paginationParams.page === undefined || filtersSelector.data === undefined) return;
+		if (!paginationParams.page) return;
 		const queryParams = { ...hierarchyParams, ...paginationParams, ...filtersParams };
 		dispatch(fetchProducts(queryParams));
 

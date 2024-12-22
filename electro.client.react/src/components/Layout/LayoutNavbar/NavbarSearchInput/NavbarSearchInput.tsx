@@ -1,15 +1,24 @@
 import SearchOutlined from "@mui/icons-material/SearchOutlined";
 import { IconButton, InputAdornment, TextField } from "@mui/material";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import "./search-input.scss";
 import { useRouter } from "next/navigation";
+import { buildQueryString } from "@/libs/Helpers/QueryHelper";
+import { useSelector } from "@/libs/Store";
 
 const NavbarSearchInput: FC = () => {
-	const [search, setSearch] = useState("");
 	const router = useRouter();
+	const filtersSelector = useSelector((store) => store.SearchProducts.urlParams.filters);
+	const search = filtersSelector["search"]?.[0];
+	const [searchInput, setSearchInput] = useState<string>(search ?? "");
+
+	useEffect(() => {
+		setSearchInput(search ?? "");
+	}, [search]);
 
 	const handleSearchClick = () => {
-		router.push(`/search`);
+		const params = { search: searchInput };
+		router.push(`/search?${buildQueryString(params)}`);
 	};
 
 	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -24,8 +33,8 @@ const NavbarSearchInput: FC = () => {
 				placeholder="Wyszukaj"
 				variant="outlined"
 				size="small"
-				value={search}
-				onChange={(e) => setSearch(e.target.value)}
+				value={searchInput}
+				onChange={(e) => setSearchInput(e.target.value)}
 				onKeyDown={handleKeyDown}
 				slotProps={{
 					input: {

@@ -6,7 +6,7 @@ import axios from "axios";
 export const fetchProductHierarchy = () => async (dispatch: AppDispatch) => {
 	try {
 		dispatch(fetchProductHierarchyStart());
-		const response = await axios.get<GetMenuResult>("http://localhost:5146/api/ProductHierarchy/menu");
+		const response = await axios.get<GetMenuResult>(`${process.env.NEXT_PUBLIC_API_URL}/api/ProductHierarchy/menu`);
 		dispatch(fetchProductHierarchySuccess(response.data));
 	} catch (error: any) {
 		dispatch(fetchProductHierarchyError(error as Error));

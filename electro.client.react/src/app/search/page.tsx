@@ -38,7 +38,7 @@ const validatePaginationParams = (searchParams: URLSearchParams): ISearchProduct
 	const pageSize = searchParams.get("pageSize");
 
 	const DEFAULT_PAGE = 1;
-	const DEFAULT_PAGE_SIZE = 5;
+	const DEFAULT_PAGE_SIZE = 10;
 	const MAX_PAGE_SIZE = 100;
 
 	const isPageValid = isParamValueValid(page);

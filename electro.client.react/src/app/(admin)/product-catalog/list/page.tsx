@@ -26,7 +26,7 @@ const ProductCatalogPage: FC = () => {
 	}, [pagination.page, pagination.pageSize]);
 
 	const handleCreateProduct = () => {
-		router.push("/admin/product-catalog/new");
+		router.push("/product-catalog/new");
 	};
 
 	if (productCatalogSelector.isLoading) return <CircularProgress />;

@@ -3,7 +3,6 @@ import { Stack } from "@mui/material";
 import { FC, useEffect, useMemo } from "react";
 import SearchProductsListItem from "./SearchProductsListItem";
 import { fetchProducts } from "@/libs/SearchProducts/thunk";
-import { clearProducts } from "@/libs/SearchProducts/slice";
 import SearchProductsListFilters from "./SearchProductsListFilters";
 import SearchProductsListPagination from "./SearchProductsListPagination";
 import SearchProductsListNoRecords from "./SearchProductsListNoRecords/SearchProductsListNoRecords";
@@ -65,25 +64,21 @@ const SearchProductsList: FC = () => {
 		if (!paginationParams.page) return;
 		const queryParams = { ...hierarchyParams, ...paginationParams, ...filtersParams };
 		dispatch(fetchProducts(queryParams));
-
-		return () => {
-			dispatch(clearProducts());
-		};
 	}, [JSON.stringify(hierarchyParams), JSON.stringify(paginationParams), JSON.stringify(filtersParams), JSON.stringify(filters)]);
 
 	return (
-		<Stack>
+		<Stack spacing={2}>
 			<SearchProductsListFilters />
-			{products?.length ? (
-				<Stack spacing={2}>
-					{products?.map((p, i) => (
-						<SearchProductsListItem key={`product-${i}`} product={p} />
-					))}
-					<SearchProductsListPagination page={paginationParamsSelector.page ?? 1} pageCount={pageCount ?? 1} />
-				</Stack>
-			) : (
-				<SearchProductsListNoRecords />
-			)}
+			<div>
+				{products?.length ? (
+					<Stack spacing={2}>
+						{products?.map((p, i) => <SearchProductsListItem key={`product-${i}`} product={p} />)}
+						<SearchProductsListPagination page={paginationParamsSelector.page ?? 1} pageCount={pageCount ?? 1} />
+					</Stack>
+				) : (
+					<SearchProductsListNoRecords />
+				)}
+			</div>
 		</Stack>
 	);
 };

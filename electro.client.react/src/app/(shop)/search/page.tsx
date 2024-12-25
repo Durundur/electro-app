@@ -1,11 +1,12 @@
 "use client";
+import FullScreenLoader from "@/components/Layout/FullScreenLoader/FullScreenLoader";
 import SearchProductHeader from "@/components/SearchProducts/SearchProductsHeader/SearchProductsHeader";
 import SearchProductsList from "@/components/SearchProducts/SearchProductsList/SearchProductsList";
 import SearchProductsSidebar from "@/components/SearchProducts/SearchProductsSidebar/SearchProductsSidebar";
 import { buildQueryString } from "@/libs/Helpers/QueryHelper";
 import { ISearchProductsStateUrlParamsFilters, ISearchProductsStateUrlParamsHierarchy, ISearchProductsStateUrlParamsPagination } from "@/libs/SearchProducts/interfaces";
-import { ISearchProductsStateUrlParams, setUrlParams } from "@/libs/SearchProducts/slice";
-import { useDispatch } from "@/libs/Store";
+import { ISearchProductsStateUrlParams, clearFilters, clearProductHierarchy, clearProducts, clearUrlParams, setUrlParams } from "@/libs/SearchProducts/slice";
+import store, { useDispatch, useSelector } from "@/libs/Store";
 import { Grid2, Stack } from "@mui/material";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
@@ -71,6 +72,10 @@ const SearchProductPage: React.FC = () => {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const dispatch = useDispatch();
+	const fetchProductsIsLoadingSelector = useSelector((store) => store.SearchProducts.products.isLoading);
+	const fetchFiltersIsLoadingSelector = useSelector((store) => store.SearchProducts.filters.isLoading);
+	const fetchHierarchyIsLoadingSelector = useSelector((store) => store.SearchProducts.productHierarchy.isLoading);
+	const isLoading = fetchProductsIsLoadingSelector || fetchFiltersIsLoadingSelector || fetchHierarchyIsLoadingSelector;
 
 	useEffect(() => {
 		const hierarchy = validateProductHierarchyParams(searchParams);
@@ -84,8 +89,18 @@ const SearchProductPage: React.FC = () => {
 		dispatch(setUrlParams(urlParams));
 	}, [searchParams.toString()]);
 
+	useEffect(() => {
+		return () => {
+			dispatch(clearProducts());
+			dispatch(clearFilters());
+			dispatch(clearProductHierarchy());
+			dispatch(clearUrlParams());
+		};
+	}, []);
+
 	return (
 		<Stack spacing={1}>
+			<FullScreenLoader isVisible={isLoading} />
 			<SearchProductHeader />
 			<Grid2 container columnSpacing={2}>
 				<Grid2 size={{ xs: 3 }}>

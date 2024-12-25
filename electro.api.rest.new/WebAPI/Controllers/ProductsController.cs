@@ -64,8 +64,9 @@ namespace WebAPI.Controllers
         {
             if (Filters.Count > 0)
             {
+                var filtersToSkip = new[] { "GroupId", "CategoryId", "SubCategoryId", "PageSize", "Page" };
                 query.Filters = Filters
-                    .Where(p => !new[] { "GroupId", "CategoryId", "SubCategoryId", "PageSize", "Page" }.Contains(p.Key))
+                    .Where(p => !filtersToSkip.Contains(p.Key))
                     .ToDictionary(p => p.Key, p => p.Value);
             }
             var response = await _mediator.Send(query);

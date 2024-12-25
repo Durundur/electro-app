@@ -52,6 +52,36 @@ namespace Application.Features.ProductCatalog.GetSearchProducts
                         continue;
                     }
 
+                    if (filter.Key == "search" && !string.IsNullOrEmpty(filter.Value.FirstOrDefault()))
+                    {
+                        var query = filter.Value.FirstOrDefault().ToLower();
+
+                        productsQuery = productsQuery.Where(p =>
+                            p.Name.ToLower().Contains(query) ||
+                            (p.Description != null && p.Description.ToLower().Contains(query)) ||
+                            p.Attributes.Any(a => a.Value.ToLower().Contains(query))
+                        );
+                        continue;
+                    }
+
+                    if (filter.Key == "sort")
+                    {
+                        switch (filter.Value.FirstOrDefault())
+                        {
+                            case "accuracy":
+                                break;
+                            case "price-asc":
+                                productsQuery = productsQuery.OrderBy(p => p.Price.Amount);
+                                break;
+                            case "price-desc":
+                                productsQuery = productsQuery.OrderByDescending(p => p.Price.Amount);
+                                break;
+                            default:
+                                break;
+                        }
+                        continue;
+                    }
+
                     if (!Guid.TryParse(filter.Key, out Guid attributeDefId)) continue;
                     var attributeValues = filter.Value;
 

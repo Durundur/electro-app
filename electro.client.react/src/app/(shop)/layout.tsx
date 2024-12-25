@@ -1,12 +1,12 @@
 "use client";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
-import "./globals.css";
+import "../globals.css";
 import { Container, ThemeProvider } from "@mui/material";
-import theme from "./theme";
+import theme from "../theme";
 import ReduxProvider from "@/libs/ReduxProvider";
 import Navbar from "@/components/Layout/LayoutNavbar/Navbar";
 
-const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
+const ShopLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
 	return (
 		<html lang="en">
 			<body>
@@ -25,4 +25,4 @@ const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
 	);
 };
 
-export default RootLayout;
+export default ShopLayout;

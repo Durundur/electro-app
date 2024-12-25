@@ -66,7 +66,7 @@ const SearchProductsSlice = createSlice({
 			state.products.error = undefined;
 		},
 		fetchProductsSuccess(state, action: PayloadAction<GetSearchProductsResult>) {
-			state.products.isLoading = true;
+			state.products.isLoading = false;
 			state.products.data = action.payload;
 		},
 		fetchProductsError(state, action: PayloadAction<IError>) {
@@ -115,6 +115,13 @@ const SearchProductsSlice = createSlice({
 		setUrlParams(state, action: PayloadAction<ISearchProductsStateUrlParams>) {
 			state.urlParams = action.payload;
 		},
+		clearUrlParams(state) {
+			state.urlParams = {
+				pagination: {},
+				filters: {},
+				hierarchy: {},
+			};
+		},
 	},
 });
 
@@ -132,6 +139,7 @@ export const {
 	fetchProductsStart,
 	fetchProductsSuccess,
 	setUrlParams,
+	clearUrlParams,
 } = SearchProductsSlice.actions;
 
 export default SearchProductsSlice.reducer;

@@ -1,4 +1,3 @@
-import { clearProductHierarchy } from "@/libs/SearchProducts/slice";
 import { fetchProductHierarchy } from "@/libs/SearchProducts/thunk";
 import { useDispatch, useSelector } from "@/libs/Store";
 import { buildQueryString } from "@/libs/Helpers/QueryHelper";
@@ -31,9 +30,6 @@ const SearchProductsSidebarCategories: FC = () => {
 
 	useEffect(() => {
 		dispatch(fetchProductHierarchy());
-		return () => {
-			dispatch(clearProductHierarchy());
-		};
 	}, []);
 
 	const handleExpandedItemsChange = (event: React.SyntheticEvent, itemIds: string[]) => {
@@ -96,9 +92,7 @@ const SearchProductsSidebarCategories: FC = () => {
 					<TreeItem itemId={`group-${group.id}`} label={group.name} key={`group-${group.id}`}>
 						{group?.categories?.map((category) => (
 							<TreeItem itemId={`category-${category.id}`} label={category.name} key={`category-${category.id}`}>
-								{category?.subCategories?.map((subCategory) => (
-									<TreeItem itemId={`subCategory-${subCategory.id}`} label={subCategory.name} key={`subCategory-${subCategory.id}`} />
-								))}
+								{category?.subCategories?.map((subCategory) => <TreeItem itemId={`subCategory-${subCategory.id}`} label={subCategory.name} key={`subCategory-${subCategory.id}`} />)}
 							</TreeItem>
 						))}
 					</TreeItem>

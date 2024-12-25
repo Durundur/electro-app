@@ -1,4 +1,3 @@
-import { clearFilters } from "@/libs/SearchProducts/slice";
 import { fetchFilters } from "@/libs/SearchProducts/thunk";
 import { useDispatch, useSelector } from "@/libs/Store";
 import { Box, Button, Stack, Typography } from "@mui/material";
@@ -24,9 +23,6 @@ const SearchProductsSidebarFilters: FC = () => {
 			subCategoryId: hierarchyParamsSelector.subCategory,
 		};
 		dispatch(fetchFilters(params));
-		return () => {
-			dispatch(clearFilters());
-		};
 	}, [hierarchyParamsSelector.category, hierarchyParamsSelector.group, hierarchyParamsSelector.subCategory]);
 
 	const handleClearSelectedFilters = () => {

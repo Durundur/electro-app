@@ -19,7 +19,7 @@ const Navbar: FC = () => {
 						justifyContent: "space-between",
 					}}
 				>
-					<Logo />
+					<Logo href="/" />
 					<SearchInput></SearchInput>
 					{isLoggedIn ? <ProfileIcons></ProfileIcons> : <AuthButtons></AuthButtons>}
 				</Toolbar>

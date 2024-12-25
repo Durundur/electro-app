@@ -44,7 +44,7 @@ const AdminProductCatalogList: FC<AdminProductCatalogListProps> = ({ productCata
 	];
 
 	const handleEditProduct = (productId: string) => {
-		router.push(`/admin/product-catalog/edit/${productId}`);
+		router.push(`/product-catalog/edit/${productId}`);
 	};
 
 	const handleDeleteProduct = (productId: string) => {};

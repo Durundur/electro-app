@@ -21,7 +21,7 @@ import { buildQueryString } from "@/libs/Helpers/QueryHelper";
 export const fetchProduct = (productId: string) => async (dispatch: AppDispatch) => {
 	try {
 		dispatch(fetchProductStart());
-		const response = await axios.get<GetProductResult>(`http://localhost:5146/api/products/${productId}`);
+		const response = await axios.get<GetProductResult>(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${productId}`);
 		dispatch(fetchProductSuccess(response.data));
 	} catch (error: any) {
 		dispatch(fetchProductError(error as IError));

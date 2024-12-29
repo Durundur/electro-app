@@ -23,7 +23,7 @@ const CartProductListItem: FC<CartProductListItemProps> = ({ product }) => {
 			products: cartSelector?.products?.map((product) => ({ ...product })),
 		};
 
-		let cartProduct = cart?.products?.find((cp) => cp.productId === id);
+		const cartProduct = cart?.products?.find((cp) => cp.productId === id);
 		if (!cartProduct || !cart) return;
 
 		cartProduct.quantity = quantity;

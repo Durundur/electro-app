@@ -10,7 +10,7 @@ import AdminProductCatalogList from "@/components/Admin/AdminProductCatalog/Admi
 const ProductCatalogPage: FC = () => {
 	const router = useRouter();
 	const dispatch = useDispatch();
-	const productCatalogSelector = useSelector((state) => state.AdminProductCatalogList);
+	const productCatalogSelector = useSelector((state) => state.AdminProductCatalogListPageStore);
 	const productCatalogData = productCatalogSelector.data!;
 	const [pagination, setPagination] = useState({
 		page: 1,

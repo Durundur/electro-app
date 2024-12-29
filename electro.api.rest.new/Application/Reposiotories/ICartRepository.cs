@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Domain.Aggregates.CartAggregate;
 
 namespace Application.Reposiotories
 {
     public interface ICartRepository
     {
+        Task<Cart> GetCartByUserIdAsync(Guid userId);
+        Task SaveChangesAsync();
+        void AddCart(Cart cart);
     }
 }

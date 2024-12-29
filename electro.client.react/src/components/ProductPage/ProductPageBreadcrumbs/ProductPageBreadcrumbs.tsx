@@ -10,7 +10,7 @@ interface ProductPageBreadcrumbs {
 }
 
 const ProductPageBreadcrumbs: FC<ProductPageBreadcrumbs> = ({ product }) => {
-	const productHierarchySelector = useSelector((store) => store.Layout.data);
+	const productHierarchySelector = useSelector((store) => store.LayoutStore.data);
 	const group = productHierarchySelector.groups?.find((g) => g.id === product.groupId);
 	const category = group?.categories?.find((c) => c.id === product.categoryId);
 	const subCategory = category?.subCategories?.find((sc) => sc.id === product.subCategoryId);

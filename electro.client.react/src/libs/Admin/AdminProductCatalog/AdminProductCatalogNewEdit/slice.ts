@@ -54,8 +54,8 @@ const initialState: IProductCatalogNewEditState = {
 	},
 };
 
-const AdminProductCatalogNewEditSlice = createSlice({
-	name: "AdminProductCatalogNewEditSlice",
+const AdminProductCatalogNewEditPageStore = createSlice({
+	name: "AdminProductCatalogNewEditPageSlice",
 	initialState,
 	reducers: {
 		fetchProductStart(state) {
@@ -140,6 +140,6 @@ export const {
 	saveActionError,
 	saveActionStart,
 	saveActionSuccess,
-} = AdminProductCatalogNewEditSlice.actions;
+} = AdminProductCatalogNewEditPageStore.actions;
 
-export default AdminProductCatalogNewEditSlice.reducer;
+export default AdminProductCatalogNewEditPageStore.reducer;

@@ -13,42 +13,47 @@ namespace Domain.Aggregates.CartAggregate
 
         public Cart(Guid userProfileId)
         {
-            Id = Guid.NewGuid();
             UserProfileId = userProfileId;
             _products = new List<CartProduct>();
             CreatedAt = DateTime.UtcNow;
             UpdatedAt = DateTime.UtcNow;
         }
 
-        public void AddItem(Guid productId, int quantity, Money price)
+        public void AddOrUpdateItem(CartProduct cartProduct)
         {
-            if (quantity <= 0)
-                throw new ArgumentException("Quantity must be positive", nameof(quantity));
+            var existingItem = _products.FirstOrDefault(i => i.ProductId == cartProduct.Id);
 
-            var existingItem = _products.FirstOrDefault(i => i.ProductId == productId);
             if (existingItem != null)
             {
-                existingItem.UpdateQuantity(quantity);
+                existingItem.UpdateQuantity(cartProduct.Quantity);
             }
             else
             {
-                _products.Add(new CartProduct(productId, quantity, price));
+                _products.Add(cartProduct);
             }
 
             UpdatedAt = DateTime.UtcNow;
         }
 
-        public void UpdateItemQuantity(Guid productId, int newQuantity)
+        public void RemoveItem(Guid productId)
         {
-            if (newQuantity <= 0)
-                throw new ArgumentException("Quantity must be positive", nameof(newQuantity));
-
             var item = _products.FirstOrDefault(i => i.ProductId == productId);
             if (item != null)
             {
-                item.UpdateQuantity(newQuantity);
+                _products.Remove(item);
                 UpdatedAt = DateTime.UtcNow;
             }
+        }
+
+        public int GetTotalQuantity()
+        {
+            return _products.Sum(p => p.Quantity);
+        }
+
+        public Money GetTotalPrice()
+        {
+            var totalAmount = _products.Sum(p => p.GetTotalPrice().Amount);
+            return new Money(totalAmount, _products.FirstOrDefault()?.Price.Currency ?? "PLN");
         }
     }
 }

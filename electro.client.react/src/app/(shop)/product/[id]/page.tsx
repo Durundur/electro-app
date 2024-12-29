@@ -1,5 +1,5 @@
 "use client";
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import { Box, Button, Card, CircularProgress, Grid2 as Grid, Paper, Rating, Stack, Typography } from "@mui/material";
 import { ShoppingCartOutlined, StarBorderRounded, CheckCircleOutlineRounded, AccessTimeRounded, LocalShippingOutlined, KeyboardDoubleArrowDownRounded } from "@mui/icons-material";
 import { useDispatch, useSelector } from "@/libs/Store";
@@ -10,14 +10,18 @@ import ProductPageSlider from "@/components/ProductPage/ProductPageSlider/Produc
 import ProductPageSpecificationTable from "@/components/ProductPage/ProductPageSpecification/ProductPageSpecificationTable";
 import OpinionsSection from "@/components/ProductPage/ProductPageOpinions/OpinionsSection";
 import ProductPageSpecificationPrimary from "@/components/ProductPage/ProductPageSpecification/ProductPageSpecificationPrimary";
+import { formatAmount } from "@/libs/Helpers/Formatters";
+import QuantityInput from "@/components/Shared/QuantityInput/QuantityInput";
+import { addProductToCart } from "@/libs/Cart/thunks";
 
 interface ProductPageParams {
 	params: { id: string };
 }
 
 const ProductPage: FC<ProductPageParams> = ({ params }) => {
+	const [quantity, setQuantity] = useState(1);
 	const dispatch = useDispatch();
-	const productSelector = useSelector((state) => state.ProductPage.product);
+	const productSelector = useSelector((state) => state.ProductPageStore.product);
 	const product = productSelector.data;
 
 	useEffect(() => {
@@ -28,9 +32,12 @@ const ProductPage: FC<ProductPageParams> = ({ params }) => {
 		};
 	}, []);
 
+	const handleAddToCart = () => {
+		dispatch(addProductToCart(product?.id!, quantity, product?.amount!, product?.currency!));
+	};
+
 	if (productSelector.isLoading) return <CircularProgress />;
 	if (productSelector.error) return <p>error</p>;
-
 	return (
 		product && (
 			<Box>
@@ -58,9 +65,12 @@ const ProductPage: FC<ProductPageParams> = ({ params }) => {
 										<Card sx={{ padding: 2 }}>
 											<Stack spacing={1}>
 												<Typography variant="h5" textAlign={"end"}>
-													{product.amount} zł
+													{formatAmount(product.amount!, product.currency!)}
 												</Typography>
-												<Button variant="contained" color="success" startIcon={<ShoppingCartOutlined />}>
+												<Stack alignItems={"center"}>
+													<QuantityInput value={quantity} id={product.id!} onChange={(q) => setQuantity(q)}></QuantityInput>
+												</Stack>
+												<Button onClick={handleAddToCart} variant="contained" color="success" startIcon={<ShoppingCartOutlined />}>
 													Dodaj do koszyka
 												</Button>
 												<Stack direction={"row"} sx={{ padding: 1 }} spacing={2} alignItems={"center"}>

@@ -25,7 +25,7 @@ interface AttributeDefinitionRow {
 
 const AttributesPanel: FC<AttributesPanelProps> = ({ formik }) => {
 	const dispatch = useDispatch();
-	const attributesDefinitionsSelector = useSelector((store) => store.AdminProductCatalogNewEdit.attributesDefinitions);
+	const attributesDefinitionsSelector = useSelector((store) => store.AdminProductCatalogNewEditPageStore.attributesDefinitions);
 	const attributes = attributesDefinitionsSelector.data?.attributesDefinitions ?? [];
 	const selectedGroupId = formik.values.groupId;
 	const selectedCategoryId = formik.values.categoryId;

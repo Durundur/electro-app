@@ -6,9 +6,9 @@ import { FC, useEffect, useRef, useState } from "react";
 
 const SearchProductsSidebarFiltersPrice: FC = () => {
 	const router = useRouter();
-	const filtersSelector = useSelector((store) => store.SearchProducts.urlParams.filters);
-	const paginationSelector = useSelector((store) => store.SearchProducts.urlParams.pagination);
-	const hierarchySelector = useSelector((store) => store.SearchProducts.urlParams.hierarchy);
+	const filtersSelector = useSelector((store) => store.SearchProductsPageStore.urlParams.filters);
+	const paginationSelector = useSelector((store) => store.SearchProductsPageStore.urlParams.pagination);
+	const hierarchySelector = useSelector((store) => store.SearchProductsPageStore.urlParams.hierarchy);
 	const from = filtersSelector["from"]?.[0] ?? "";
 	const to = filtersSelector["to"]?.[0] ?? "";
 	const [priceRangeInput, setPriceRangeInput] = useState({

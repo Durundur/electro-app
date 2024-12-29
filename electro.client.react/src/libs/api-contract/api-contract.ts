@@ -165,6 +165,21 @@ export interface GetAttributesDefinitionsResult {
     attributesDefinitions?: AttributeDefinitionResult[] | undefined;
 }
 
+export interface GetCartResult {
+    id?: string;
+    totalQuantity?: number;
+    totalPrice?: Money;
+    products?: GetCartResultProduct[] | undefined;
+}
+
+export interface GetCartResultProduct {
+    productId?: string;
+    quantity?: number;
+    price?: Money;
+    name?: string | undefined;
+    photo?: string | undefined;
+}
+
 export interface GetCategoryResult {
     id?: number;
     name?: string | undefined;
@@ -251,6 +266,7 @@ export interface GetSearchFiltersResult {
 
 export interface GetSearchFiltersResultElement {
     attributeDefinitionId?: string;
+    type?: AttributeType;
     name?: string | undefined;
     values?: string[] | undefined;
 }
@@ -313,4 +329,31 @@ export enum ProductStatus {
     Active = "Active",
     Inavtive = "Inavtive",
     Removed = "Removed",
+}
+
+export interface ValidateAndSaveCartCommandProduct {
+    productId?: string;
+    quantity?: number;
+    price?: Money;
+}
+
+export interface ValidateCartCommand {
+    userId?: string | undefined;
+    products?: ValidateAndSaveCartCommandProduct[] | undefined;
+}
+
+export interface ValidateCartResult {
+    id?: string | undefined;
+    totalQuantity?: number;
+    totalPrice?: Money;
+    products?: ValidateCartResultProduct[] | undefined;
+    errors?: string[] | undefined;
+}
+
+export interface ValidateCartResultProduct {
+    productId?: string;
+    quantity?: number;
+    price?: Money;
+    name?: string | undefined;
+    photo?: string | undefined;
 }

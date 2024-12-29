@@ -14,8 +14,8 @@ const initialState: IProductCatalogListState = {
 	isLoading: false,
 };
 
-const AdminProductCatalogListSlice = createSlice({
-	name: "AdminProductCatalogListSlice",
+const AdminProductCatalogListPageStore = createSlice({
+	name: "AdminProductCatalogListPageSlice",
 	initialState,
 	reducers: {
 		fetchProductCatalogListStart(state) {
@@ -38,6 +38,6 @@ const AdminProductCatalogListSlice = createSlice({
 	},
 });
 
-export const { clearProductCatalogListState, fetchProductCatalogListError, fetchProductCatalogListStart, fetchProductCatalogListSuccess } = AdminProductCatalogListSlice.actions;
+export const { clearProductCatalogListState, fetchProductCatalogListError, fetchProductCatalogListStart, fetchProductCatalogListSuccess } = AdminProductCatalogListPageStore.actions;
 
-export default AdminProductCatalogListSlice.reducer;
+export default AdminProductCatalogListPageStore.reducer;

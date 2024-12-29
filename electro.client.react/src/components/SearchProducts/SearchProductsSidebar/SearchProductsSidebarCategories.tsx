@@ -11,8 +11,8 @@ import { ISearchProductsStateUrlParamsHierarchy } from "@/libs/SearchProducts/in
 const SearchProductsSidebarCategories: FC = () => {
 	const dispatch = useDispatch();
 	const router = useRouter();
-	const hierarchyParamsSelector = useSelector((store) => store.SearchProducts.urlParams.hierarchy);
-	const productHierarchySelector = useSelector((store) => store.SearchProducts.productHierarchy);
+	const hierarchyParamsSelector = useSelector((store) => store.SearchProductsPageStore.urlParams.hierarchy);
+	const productHierarchySelector = useSelector((store) => store.SearchProductsPageStore.productHierarchy);
 	const [expandedItems, setExpandedItems] = useState<string[]>([]);
 	const groups = productHierarchySelector.data?.groups ?? [];
 

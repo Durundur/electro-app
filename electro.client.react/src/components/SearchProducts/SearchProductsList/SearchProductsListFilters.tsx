@@ -6,9 +6,9 @@ import { FC, useEffect, useState } from "react";
 
 const SearchProductsListFilters: FC = () => {
 	const router = useRouter();
-	const paginationSelector = useSelector((store) => store.SearchProducts.urlParams.pagination);
-	const hierarchySelector = useSelector((store) => store.SearchProducts.urlParams.hierarchy);
-	const filtersSelector = useSelector((store) => store.SearchProducts.urlParams.filters);
+	const paginationSelector = useSelector((store) => store.SearchProductsPageStore.urlParams.pagination);
+	const hierarchySelector = useSelector((store) => store.SearchProductsPageStore.urlParams.hierarchy);
+	const filtersSelector = useSelector((store) => store.SearchProductsPageStore.urlParams.filters);
 	const sortValue = filtersSelector["sort"]?.[0];
 	const [sorting, setSorting] = useState(sortValue ?? "");
 

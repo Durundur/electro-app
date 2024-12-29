@@ -15,7 +15,7 @@ const initialState: ProductHierarchyState = {
 	isLoading: false,
 };
 
-const LayoutSlice = createSlice({
+const LayoutStore = createSlice({
 	name: "LayoutSlice",
 	initialState,
 	reducers: {
@@ -34,6 +34,6 @@ const LayoutSlice = createSlice({
 	},
 });
 
-export const { fetchProductHierarchyStart, fetchProductHierarchyError, fetchProductHierarchySuccess } = LayoutSlice.actions;
+export const { fetchProductHierarchyStart, fetchProductHierarchyError, fetchProductHierarchySuccess } = LayoutStore.actions;
 
-export default LayoutSlice.reducer;
+export default LayoutStore.reducer;

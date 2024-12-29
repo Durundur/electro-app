@@ -10,9 +10,9 @@ import { buildQueryString } from "@/libs/Helpers/QueryHelper";
 const SearchProductsSidebarFilters: FC = () => {
 	const router = useRouter();
 	const dispatch = useDispatch();
-	const hierarchyParamsSelector = useSelector((store) => store.SearchProducts.urlParams.hierarchy);
-	const paginationParamsSelector = useSelector((store) => store.SearchProducts.urlParams.pagination);
-	const filtersSelector = useSelector((store) => store.SearchProducts.filters);
+	const hierarchyParamsSelector = useSelector((store) => store.SearchProductsPageStore.urlParams.hierarchy);
+	const paginationParamsSelector = useSelector((store) => store.SearchProductsPageStore.urlParams.pagination);
+	const filtersSelector = useSelector((store) => store.SearchProductsPageStore.filters);
 	const filters = filtersSelector.data?.filters ?? [];
 
 	useEffect(() => {

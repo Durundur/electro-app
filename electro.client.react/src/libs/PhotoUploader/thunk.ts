@@ -6,7 +6,7 @@ import { IUploadPhotoResult } from "./interface";
 
 export const uploadPhotos = () => async (dispatch: AppDispatch, getState: () => RootState): Promise<string[]> => {
 	const state = getState();
-	const { items } = state.PhotoUploader;
+	const { items } = state.PhotoUploaderStore;
 
 	const filesToUpload = items.filter((item) => item.photo instanceof File).map((item) => item.photo as File);
 	const existingUrls = items.filter((item) => !(item.photo instanceof File)).map((item) => item.photo as string);

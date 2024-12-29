@@ -1,5 +1,4 @@
-﻿using Application.Features.Shared.ProductAttribute;
-using Application.Reposiotories;
+﻿using Application.Reposiotories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

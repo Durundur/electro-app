@@ -1,7 +1,9 @@
-﻿using Domain.Aggregates.ProductCatalogAggregate;
+﻿using Domain.Aggregates.CartAggregate;
+using Domain.Aggregates.ProductCatalogAggregate;
 using Domain.Aggregates.ProductHierarchyAggregate;
 using Domain.Aggregates.UserProfileAggregate;
 using Infrastructure.Configurations;
+using Infrastructure.Configurations.Cart;
 using Infrastructure.Configurations.ProductCatalog;
 using Infrastructure.Configurations.ProductHierarchy;
 using Microsoft.AspNetCore.Identity;
@@ -18,6 +20,7 @@ namespace Infrastructure.Context
         public DbSet<Category> Categories { get; set; }
         public DbSet<SubCategory> SubCategories { get; set; }
         public DbSet<AttributeDefinition> AttributesDefinitions { get; set; }
+        public DbSet<Cart> Carts { get; set; }
 
         public ApplicationDbContext()
         {
@@ -42,8 +45,9 @@ namespace Infrastructure.Context
             builder.ApplyConfiguration(new SubCategoryEntityTypeConfiguration());
             builder.ApplyConfiguration(new AttributeDefinitionEntityTypeConfiguration());
 
+            builder.ApplyConfiguration(new CartEntityTypeConfiguration());
+            builder.ApplyConfiguration(new CartProductEntityTypeConfiguration());
 
-            
             base.OnModelCreating(builder);
         }
 

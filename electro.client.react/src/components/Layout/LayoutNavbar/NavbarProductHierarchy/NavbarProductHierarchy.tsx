@@ -7,7 +7,7 @@ import Link from "next/link";
 
 const NavbarProductHierarchy: FC = () => {
 	const dispatch = useDispatch();
-	const layoutState = useSelector((state) => state.Layout);
+	const layoutState = useSelector((state) => state.LayoutStore);
 	const productHierarchy = layoutState.data.groups || [];
 
 	const [activeGroupElement, setActiveGroupElement] = useState<HTMLElement | undefined>(undefined);

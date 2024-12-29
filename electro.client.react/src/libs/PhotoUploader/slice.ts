@@ -16,8 +16,8 @@ const initialState: IPhotoUploaderState = {
 	items: [],
 };
 
-const PhotoUplaoderSlice = createSlice({
-	name: "PhotoUplaoderSlice",
+const PhotoUploaderStore = createSlice({
+	name: "PhotoUploaderSlice",
 	initialState,
 	reducers: {
 		photoUplaoderStart(state) {
@@ -45,6 +45,6 @@ const PhotoUplaoderSlice = createSlice({
 	},
 });
 
-export const { photoUplaoderEror, photoUplaoderStart, photoUplaoderSuccess, photoUplaoderClear, photoUplaoderSetItems } = PhotoUplaoderSlice.actions;
+export const { photoUplaoderEror, photoUplaoderStart, photoUplaoderSuccess, photoUplaoderClear, photoUplaoderSetItems } = PhotoUploaderStore.actions;
 
-export default PhotoUplaoderSlice.reducer;
+export default PhotoUploaderStore.reducer;

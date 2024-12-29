@@ -20,7 +20,7 @@ const initialState: IProductPageState = {
 	},
 };
 
-const ProductPageSlice = createSlice({
+const ProductPageStore = createSlice({
 	name: "ProductPageSlice",
 	initialState,
 	reducers: {
@@ -44,6 +44,6 @@ const ProductPageSlice = createSlice({
 	},
 });
 
-export const { clearProductState, fetchProductError, fetchProductStart, fetchProductSuccess } = ProductPageSlice.actions;
+export const { clearProductState, fetchProductError, fetchProductStart, fetchProductSuccess } = ProductPageStore.actions;
 
-export default ProductPageSlice.reducer;
+export default ProductPageStore.reducer;

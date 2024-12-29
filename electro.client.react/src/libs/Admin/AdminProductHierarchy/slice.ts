@@ -77,8 +77,8 @@ const initialState: IProductHierarchyState = {
 	},
 };
 
-const AdminProductHierarchySlice = createSlice({
-	name: "AdminProductHierarchySlice",
+const AdminProductHierarchyPageStore = createSlice({
+	name: "AdminProductHierarchyPageSlice",
 	initialState,
 	reducers: {
 		fetchHierarchyStart(state) {
@@ -363,6 +363,6 @@ export const {
 	deleteSubCategoryError,
 	deleteSubCategoryStart,
 	deleteSubCategorySuccess,
-} = AdminProductHierarchySlice.actions;
+} = AdminProductHierarchyPageStore.actions;
 
-export default AdminProductHierarchySlice.reducer;
+export default AdminProductHierarchyPageStore.reducer;

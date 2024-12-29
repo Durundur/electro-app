@@ -13,7 +13,7 @@ interface GeneralInfoPanelProps {
 
 const GeneralInfoPanel: FC<GeneralInfoPanelProps> = ({ formik }) => {
 	const dispatch = useDispatch();
-	const productHierarchySelector = useSelector((store) => store.AdminProductCatalogNewEdit.productHierarchy);
+	const productHierarchySelector = useSelector((store) => store.AdminProductCatalogNewEditPageStore.productHierarchy);
 
 	const selectedGroupId = formik.values.groupId || 0;
 	const selectedCategoryId = formik.values.categoryId || 0;

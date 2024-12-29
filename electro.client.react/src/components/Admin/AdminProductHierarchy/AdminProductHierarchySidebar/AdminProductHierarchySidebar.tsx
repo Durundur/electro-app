@@ -8,7 +8,7 @@ import { FC, useEffect } from "react";
 
 const AdminProductHierarchySidebar: FC = () => {
 	const dispatch = useDispatch();
-	const productHierarchySelector = useSelector((store) => store.AdminProductHierarchy.hierarchy);
+	const productHierarchySelector = useSelector((store) => store.AdminProductHierarchyPageStore.hierarchy);
 	const groups = productHierarchySelector.data?.groups ?? [];
 
 	useEffect(() => {

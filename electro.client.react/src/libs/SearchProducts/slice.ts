@@ -57,8 +57,8 @@ const initialState: ISearchProductsState = {
 	},
 };
 
-const SearchProductsSlice = createSlice({
-	name: "SearchProductsSlice",
+const SearchProductsPageStore = createSlice({
+	name: "SearchProductsPageSlice",
 	initialState,
 	reducers: {
 		fetchProductsStart(state) {
@@ -140,6 +140,6 @@ export const {
 	fetchProductsSuccess,
 	setUrlParams,
 	clearUrlParams,
-} = SearchProductsSlice.actions;
+} = SearchProductsPageStore.actions;
 
-export default SearchProductsSlice.reducer;
+export default SearchProductsPageStore.reducer;

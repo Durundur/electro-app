@@ -5,8 +5,8 @@ import { NavigateNextOutlined } from "@mui/icons-material";
 import Link from "next/link";
 
 const SearchProductsHeader: FC = () => {
-	const productHierarchySelector = useSelector((store) => store.SearchProducts.productHierarchy);
-	const hierarchyParamsSelector = useSelector((store) => store.SearchProducts.urlParams.hierarchy);
+	const productHierarchySelector = useSelector((store) => store.SearchProductsPageStore.productHierarchy);
+	const hierarchyParamsSelector = useSelector((store) => store.SearchProductsPageStore.urlParams.hierarchy);
 	const productHierarchy = productHierarchySelector.data;
 	const { group: groupId, category: categoryId, subCategory: subCategoryId } = hierarchyParamsSelector ?? {};
 	const group = productHierarchy?.groups?.find((g) => g.id === groupId);

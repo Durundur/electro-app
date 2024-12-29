@@ -26,6 +26,12 @@ namespace Infrastructure.Reposiotories
             return product;
         }
 
+        public async Task<IList<Product>> GetProductsByIds(IEnumerable<Guid> productsIds)
+        {
+            var products = await _context.Products.Where(p => productsIds.Contains(p.Id)).ToListAsync();
+            return products;
+        }
+
         public IQueryable<Product> GetProductsQuery()
         {
             return _context.Products.AsQueryable();

@@ -14,7 +14,7 @@ interface PhotoUploaderProps {
 }
 
 const PhotoUploader: React.FC<PhotoUploaderProps> = ({ initialPhotos }) => {
-	const { isLoading, result, error, items } = useSelector((store) => store.PhotoUploader);
+	const { isLoading, result, error, items } = useSelector((store) => store.PhotoUploaderStore);
 	const dispatch = useDispatch();
 
 	useEffect(() => {

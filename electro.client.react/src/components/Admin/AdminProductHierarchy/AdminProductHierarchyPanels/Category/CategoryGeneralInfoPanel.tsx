@@ -10,7 +10,7 @@ interface CategoryGeneralInfoPanelProps {
 }
 
 const CategoryGeneralInfoPanel: FC<CategoryGeneralInfoPanelProps> = ({ formik }) => {
-	const category = useSelector((store) => store.AdminProductHierarchy.category.data);
+	const category = useSelector((store) => store.AdminProductHierarchyPageStore.category.data);
 
 	return (
 		<Accordion defaultExpanded>

@@ -19,7 +19,7 @@ interface ProductCatalogEditPageProps {
 
 const ProductCatalogEditPage: FC<ProductCatalogEditPageProps> = ({ params }) => {
 	const dispatch = useDispatch();
-	const productSelector = useSelector((store) => store.AdminProductCatalogNewEdit.product.data)!;
+	const productSelector = useSelector((store) => store.AdminProductCatalogNewEditPageStore.product.data)!;
 
 	useEffect(() => {
 		if (!params.id) return;

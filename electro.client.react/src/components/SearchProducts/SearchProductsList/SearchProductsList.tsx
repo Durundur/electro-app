@@ -11,11 +11,11 @@ import { GetSearchFiltersResultElement } from "@/libs/api-contract/api-contract"
 
 const SearchProductsList: FC = () => {
 	const dispatch = useDispatch();
-	const productsSelector = useSelector((store) => store.SearchProducts.products);
-	const hierarchyParamsSelector = useSelector((store) => store.SearchProducts.urlParams.hierarchy);
-	const paginationParamsSelector = useSelector((store) => store.SearchProducts.urlParams.pagination);
-	const filtersParamsSelector = useSelector((store) => store.SearchProducts.urlParams.filters);
-	const filtersSelector = useSelector((store) => store.SearchProducts.filters);
+	const productsSelector = useSelector((store) => store.SearchProductsPageStore.products);
+	const hierarchyParamsSelector = useSelector((store) => store.SearchProductsPageStore.urlParams.hierarchy);
+	const paginationParamsSelector = useSelector((store) => store.SearchProductsPageStore.urlParams.pagination);
+	const filtersParamsSelector = useSelector((store) => store.SearchProductsPageStore.urlParams.filters);
+	const filtersSelector = useSelector((store) => store.SearchProductsPageStore.filters);
 	const filters = filtersSelector.data?.filters ?? [];
 
 	const { products, ...pagination } = productsSelector.data ?? {};

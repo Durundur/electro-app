@@ -72,9 +72,9 @@ const SearchProductPage: React.FC = () => {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const dispatch = useDispatch();
-	const fetchProductsIsLoadingSelector = useSelector((store) => store.SearchProducts.products.isLoading);
-	const fetchFiltersIsLoadingSelector = useSelector((store) => store.SearchProducts.filters.isLoading);
-	const fetchHierarchyIsLoadingSelector = useSelector((store) => store.SearchProducts.productHierarchy.isLoading);
+	const fetchProductsIsLoadingSelector = useSelector((store) => store.SearchProductsPageStore.products.isLoading);
+	const fetchFiltersIsLoadingSelector = useSelector((store) => store.SearchProductsPageStore.filters.isLoading);
+	const fetchHierarchyIsLoadingSelector = useSelector((store) => store.SearchProductsPageStore.productHierarchy.isLoading);
 	const isLoading = fetchProductsIsLoadingSelector || fetchFiltersIsLoadingSelector || fetchHierarchyIsLoadingSelector;
 
 	useEffect(() => {

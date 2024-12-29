@@ -8,7 +8,7 @@ import { useSelector } from "@/libs/Store";
 
 const NavbarSearchInput: FC = () => {
 	const router = useRouter();
-	const filtersSelector = useSelector((store) => store.SearchProducts.urlParams.filters);
+	const filtersSelector = useSelector((store) => store.SearchProductsPageStore.urlParams.filters);
 	const search = filtersSelector["search"]?.[0];
 	const [searchInput, setSearchInput] = useState<string>(search ?? "");
 

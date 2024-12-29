@@ -1,22 +1,24 @@
 import { configureStore } from "@reduxjs/toolkit";
-import LayoutReducer from "@/libs/Layout/slice";
-import AdminProductHierarchyReducer from "@/libs/Admin/AdminProductHierarchy/slice";
-import AdminProductCatalogListReducer from "@/libs/Admin/AdminProductCatalog/AdminProductCatalogList/slice";
-import AdminProductCatalogNewEditReducer from "@/libs/Admin/AdminProductCatalog/AdminProductCatalogNewEdit/slice";
-import ProductPageReducer from "@/libs/ProductPage/slice";
-import PhotoUploaderReducer from "@/libs/PhotoUploader/slice";
-import SearchProductsReducer from "@/libs/SearchProducts/slice";
+import LayoutStoreReducer from "@/libs/Layout/slice";
+import AdminProductHierarchyPageStoreReducer from "@/libs/Admin/AdminProductHierarchy/slice";
+import AdminProductCatalogListPageStoreReducer from "@/libs/Admin/AdminProductCatalog/AdminProductCatalogList/slice";
+import AdminProductCatalogNewEditPageStoreReducer from "@/libs/Admin/AdminProductCatalog/AdminProductCatalogNewEdit/slice";
+import ProductPageStoreReducer from "@/libs/ProductPage/slice";
+import PhotoUploaderStoreReducer from "@/libs/PhotoUploader/slice";
+import SearchProductsPageStoreReducer from "@/libs/SearchProducts/slice";
+import CartStoreReducer from "@/libs/Cart/slice";
 import { TypedUseSelectorHook, useDispatch as useReduxDispatch, useSelector as useReduxSelector } from "react-redux";
 
 const store = configureStore({
 	reducer: {
-		Layout: LayoutReducer,
-		AdminProductHierarchy: AdminProductHierarchyReducer,
-		AdminProductCatalogList: AdminProductCatalogListReducer,
-		AdminProductCatalogNewEdit: AdminProductCatalogNewEditReducer,
-		ProductPage: ProductPageReducer,
-		PhotoUploader: PhotoUploaderReducer,
-		SearchProducts: SearchProductsReducer,
+		LayoutStore: LayoutStoreReducer,
+		CartStore: CartStoreReducer,
+		AdminProductHierarchyPageStore: AdminProductHierarchyPageStoreReducer,
+		AdminProductCatalogListPageStore: AdminProductCatalogListPageStoreReducer,
+		AdminProductCatalogNewEditPageStore: AdminProductCatalogNewEditPageStoreReducer,
+		ProductPageStore: ProductPageStoreReducer,
+		PhotoUploaderStore: PhotoUploaderStoreReducer,
+		SearchProductsPageStore: SearchProductsPageStoreReducer,
 	},
 });
 

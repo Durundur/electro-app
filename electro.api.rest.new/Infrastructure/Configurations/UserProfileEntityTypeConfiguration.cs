@@ -1,4 +1,5 @@
-﻿using Domain.Aggregates.UserProfileAggregate;
+﻿using Domain.Aggregates.CartAggregate;
+using Domain.Aggregates.UserProfileAggregate;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

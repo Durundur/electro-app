@@ -30,6 +30,7 @@ namespace Application
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductHierarchyRepository, ProductHierarchyRepository>();
             services.AddScoped<IAttributeDefinitionRepository,  AttributeDefinitionRepository>();
+            services.AddScoped<ICartRepository, CartRepository>();
         }
     }
 }

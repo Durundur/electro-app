@@ -36,7 +36,7 @@ const SearchProductsSidebarFiltersSelect: FC<SearchProductsSidebarFiltersSelectP
 	const filterOptions = filter.values ?? [];
 	const [isExpanded, setIsExpanded] = useState(false);
 
-	const filterParamsSelector = useSelector((store) => store.SearchProducts.urlParams.filters);
+	const filterParamsSelector = useSelector((store) => store.SearchProductsPageStore.urlParams.filters);
 	const filterValues = getSelectedFilterValues(filterParamsSelector, filter);
 	const sortedOptions = sortSelectedOptions(filterOptions, filterValues);
 

@@ -13,9 +13,9 @@ import { addSubCategoryAttribute, clearSubCategory, deleteSubCategoryAttribute, 
 
 const SubCategoryPanels: FC = () => {
 	const dispatch = useDispatch();
-	const subCategorySelector = useSelector((state) => state.AdminProductHierarchy.subCategory);
+	const subCategorySelector = useSelector((state) => state.AdminProductHierarchyPageStore.subCategory);
 	const attributes = subCategorySelector.data?.attributes ?? [];
-	const selectedItemSelector = useSelector((state) => state.AdminProductHierarchy.selectedItem);
+	const selectedItemSelector = useSelector((state) => state.AdminProductHierarchyPageStore.selectedItem);
 
 	useEffect(() => {
 		if (selectedItemSelector.id) {

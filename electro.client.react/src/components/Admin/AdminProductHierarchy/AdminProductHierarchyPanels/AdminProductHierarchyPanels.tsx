@@ -8,7 +8,7 @@ import { Button, Stack, Typography } from "@mui/material";
 import { setSelectedItem } from "@/libs/Admin/AdminProductHierarchy/slice";
 
 const AdminProductHierarchyPanels: FC = () => {
-	const selectedItem = useSelector((state) => state.AdminProductHierarchy.selectedItem);
+	const selectedItem = useSelector((state) => state.AdminProductHierarchyPageStore.selectedItem);
 
 	const getPanel = () => {
 		if (!selectedItem.id && !selectedItem.type) return <SelectElementInfo />;

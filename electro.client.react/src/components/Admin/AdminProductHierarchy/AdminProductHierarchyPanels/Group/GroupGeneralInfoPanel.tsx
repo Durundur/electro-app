@@ -10,7 +10,7 @@ interface GroupGeneralInfoPanelProps {
 }
 
 const GroupGeneralInfoPanel: FC<GroupGeneralInfoPanelProps> = ({ formik }) => {
-	const groupSelector = useSelector((state) => state.AdminProductHierarchy.group);
+	const groupSelector = useSelector((state) => state.AdminProductHierarchyPageStore.group);
 	const group = groupSelector.data;
 
 	return (

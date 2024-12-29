@@ -13,9 +13,9 @@ import { addCategoryAttribute, clearCategory, deleteCategoryAttribute, setSelect
 
 const CategoryPanels: FC = () => {
 	const dispatch = useDispatch();
-	const categorySelector = useSelector((state) => state.AdminProductHierarchy.category);
+	const categorySelector = useSelector((state) => state.AdminProductHierarchyPageStore.category);
 	const attributes = categorySelector.data?.attributes ?? [];
-	const selectedItemSelector = useSelector((state) => state.AdminProductHierarchy.selectedItem);
+	const selectedItemSelector = useSelector((state) => state.AdminProductHierarchyPageStore.selectedItem);
 
 	useEffect(() => {
 		if (selectedItemSelector.id) {

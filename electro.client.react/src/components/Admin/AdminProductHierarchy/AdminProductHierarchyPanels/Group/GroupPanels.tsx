@@ -13,9 +13,9 @@ import { addGroupAttribute, clearGroup, deleteGroupAttribute, setSelectedItem, u
 
 const GroupPanels: FC = () => {
 	const dispatch = useDispatch();
-	const groupSelector = useSelector((state) => state.AdminProductHierarchy.group);
+	const groupSelector = useSelector((state) => state.AdminProductHierarchyPageStore.group);
 	const groupAttributes = groupSelector.data?.attributes ?? [];
-	const selectedItemSelector = useSelector((state) => state.AdminProductHierarchy.selectedItem);
+	const selectedItemSelector = useSelector((state) => state.AdminProductHierarchyPageStore.selectedItem);
 
 	useEffect(() => {
 		if (selectedItemSelector.id) {

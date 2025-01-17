@@ -3,6 +3,7 @@ import LayoutStoreReducer from "@/libs/Layout/slice";
 import AdminProductHierarchyPageStoreReducer from "@/libs/Admin/AdminProductHierarchy/slice";
 import AdminProductCatalogListPageStoreReducer from "@/libs/Admin/AdminProductCatalog/AdminProductCatalogList/slice";
 import AdminProductCatalogNewEditPageStoreReducer from "@/libs/Admin/AdminProductCatalog/AdminProductCatalogNewEdit/slice";
+import AdminOrdersStoreReducer from "@/libs/Admin/AdminOrders/slice";
 import ProductPageStoreReducer from "@/libs/ProductPage/slice";
 import PhotoUploaderStoreReducer from "@/libs/PhotoUploader/slice";
 import SearchProductsPageStoreReducer from "@/libs/SearchProducts/slice";
@@ -16,6 +17,7 @@ const store = configureStore({
 		AdminProductHierarchyPageStore: AdminProductHierarchyPageStoreReducer,
 		AdminProductCatalogListPageStore: AdminProductCatalogListPageStoreReducer,
 		AdminProductCatalogNewEditPageStore: AdminProductCatalogNewEditPageStoreReducer,
+		AdminOrdersStore: AdminOrdersStoreReducer,
 		ProductPageStore: ProductPageStoreReducer,
 		PhotoUploaderStore: PhotoUploaderStoreReducer,
 		SearchProductsPageStore: SearchProductsPageStoreReducer,

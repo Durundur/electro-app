@@ -9,13 +9,10 @@ namespace Infrastructure.Configurations.ProductHierarchy
         public void Configure(EntityTypeBuilder<SubCategory> builder)
         {
             builder.ToTable("SubCategories");
-
             builder.HasKey(x => x.Id);
-
             builder.Property(x => x.Name)
                 .IsRequired()
                 .HasMaxLength(100);
-
             builder.HasMany(g => g.Attributes)
                 .WithOne()
                 .HasForeignKey("SubCategoryId")

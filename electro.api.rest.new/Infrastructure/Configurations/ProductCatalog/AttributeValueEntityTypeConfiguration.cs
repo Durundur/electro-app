@@ -10,13 +10,10 @@ namespace Infrastructure.Configurations.ProductCatalog
         public void Configure(EntityTypeBuilder<AttributeValue> builder)
         {
             builder.ToTable("ProductAttributes");
-
             builder.Property(pa => pa.Value)
                 .IsRequired()
                 .HasMaxLength(255);
-
             builder.HasKey(["AttributeDefinitionId", "ProductId"]);
-
             builder.HasOne<AttributeDefinition>()
                 .WithMany()
                 .HasForeignKey(pa => pa.AttributeDefinitionId)

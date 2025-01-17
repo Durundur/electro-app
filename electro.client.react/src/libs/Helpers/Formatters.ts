@@ -1,7 +1,7 @@
-export const formatAmount = (amount: number, currency: string): string => {
+export const formatAmount = (amount: number, currency: string, minimumFractionDigits = 2): string => {
 	return new Intl.NumberFormat("pl-PL", {
 		style: "currency",
 		currency: currency,
-		minimumFractionDigits: 2,
+		minimumFractionDigits,
 	}).format(amount);
 };

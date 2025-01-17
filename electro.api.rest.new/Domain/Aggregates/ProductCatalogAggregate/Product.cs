@@ -64,6 +64,12 @@ namespace Domain.Aggregates.ProductCatalogAggregate
             Price = newPrice;
         }
 
+        public void UpdateStockQuantity(int newStockQuantity)
+        {
+            if(newStockQuantity < 0) throw new InvalidOperationException("Stock Quantity cannot be lower than 0.");
+            StockQuantity = newStockQuantity;
+        }
+
         public void AssignToGroup(int groupId)
         {
             if(groupId == 0)

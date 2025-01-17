@@ -25,9 +25,14 @@ namespace Infrastructure.Reposiotories
             return await _context.Carts.Include(c => c.Products).FirstOrDefaultAsync(c => c.UserProfileId == userId);
         }
 
-        public async Task SaveChangesAsync()
+        public async Task DeleteUserCartAsync(Guid userId)
         {
-            await _context.SaveChangesAsync();
+            var userCart = await _context.Carts.Include(c => c.Products).FirstOrDefaultAsync(c => c.UserProfileId == userId);
+
+            if (userCart != null)
+            {
+                _context.Carts.Remove(userCart);
+            }
         }
     }
 }

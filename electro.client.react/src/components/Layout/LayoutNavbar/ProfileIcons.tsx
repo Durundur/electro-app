@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useSelector } from "@/libs/Store";
 
 const ProfileIcons: FC = () => {
-	const cartTotalItemsSelector = useSelector((store) => store.CartStore.data?.totalQuantity);
+	const cartTotalItemsSelector = useSelector((store) => store.CartStore.cart.data?.totalQuantity);
 	const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
 
 	const handleOpenProfileMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -46,7 +46,7 @@ const ProfileIcons: FC = () => {
 						</ListItemIcon>
 						<ListItemText>Wyloguj</ListItemText>
 					</MenuItem>
-					<Link href="/admin">
+					<Link href="/product-catalog/list">
 						<MenuItem LinkComponent={Link} href="/admin">
 							<ListItemIcon>
 								<AdminPanelSettings></AdminPanelSettings>

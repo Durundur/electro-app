@@ -34,6 +34,7 @@ const QuantityInput: FC<QuantityInputProps> = ({ value, onChange, id }) => {
 				<RemoveRounded fontSize="small" />
 			</IconButton>
 			<TextField
+				disabled={true}
 				slotProps={{
 					htmlInput: {
 						pattern: "^[0-9]*$",
@@ -42,6 +43,8 @@ const QuantityInput: FC<QuantityInputProps> = ({ value, onChange, id }) => {
 				sx={{
 					".MuiInputBase-input": {
 						width: "30px",
+						padding: "6px 8px",
+						textAlign: "center",
 					},
 				}}
 				value={value}

@@ -6,25 +6,25 @@ namespace Application.Features.Cart.GetCart
 {
     public class GetCartHandler : IRequestHandler<GetCartQuery, GetCartResult>
     {
-        private readonly IProductRepository _productRepository;
-        private readonly ICartRepository _cartRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public GetCartHandler(IProductRepository productRepository, ICartRepository cartRepository)
+        public GetCartHandler(IUnitOfWork unitOfWork)
         {
-            _productRepository = productRepository;
-            _cartRepository = cartRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<GetCartResult> Handle(GetCartQuery request, CancellationToken cancellationToken)
         {
-            D.Cart userCart = await _cartRepository.GetCartByUserIdAsync(request.UserId);
+            D.Cart userCart = await _unitOfWork.CartRepository.GetCartByUserIdAsync(request.UserId);
             if (userCart == null)
             {
-                return null;
+                userCart = new D.Cart(request.UserId);
+                _unitOfWork.CartRepository.AddCart(userCart);
+                await _unitOfWork.SaveChangesAsync(cancellationToken);
             }
 
             var productIds = userCart.Products.Select(p => p.ProductId).ToList();
-            var products = await _productRepository.GetProductsByIds(productIds);
+            var products = await _unitOfWork.ProductRepository.GetProductsByIdsAsync(productIds);
 
             return GetCartMapper.MapToGetCartResult(userCart, products);
         }

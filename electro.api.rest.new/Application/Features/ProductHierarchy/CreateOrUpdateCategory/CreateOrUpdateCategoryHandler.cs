@@ -6,11 +6,11 @@ namespace Application.Features.ProductHierarchy.CreateOrUpdateCategory
 {
     public class CreateOrUpdateCategoryHandler : IRequestHandler<CreateOrUpdateCategoryCommand, CreateOrUpdateCategoryResult>
     {
-        private readonly IProductHierarchyRepository _repository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CreateOrUpdateCategoryHandler(IProductHierarchyRepository repository)
+        public CreateOrUpdateCategoryHandler(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<CreateOrUpdateCategoryResult> Handle(CreateOrUpdateCategoryCommand command, CancellationToken cancellationToken)
@@ -19,7 +19,7 @@ namespace Application.Features.ProductHierarchy.CreateOrUpdateCategory
 
             if (command.Id.HasValue)
             {
-                category = await _repository.GetCategoryByIdAsync(command.Id.Value)
+                category = await _unitOfWork.ProductHierarchyRepository.GetCategoryByIdAsync(command.Id.Value)
                     ?? throw new Exception($"Category with ID {command.Id} not found");
 
                 category.Update(command.Name, command.Description, command.Active, command.DisplayOrder);
@@ -28,7 +28,7 @@ namespace Application.Features.ProductHierarchy.CreateOrUpdateCategory
             {
                 category = new Category(command.Name, command.Description, command.Active, command.DisplayOrder);
                 category.AssignToGroup(command.GroupId);
-                _repository.AddCategory(category);
+                _unitOfWork.ProductHierarchyRepository.AddCategory(category);
             }
 
             var attributesToRemove = category.Attributes
@@ -55,7 +55,7 @@ namespace Application.Features.ProductHierarchy.CreateOrUpdateCategory
                 }
             }
 
-            await _repository.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return category.MapToCreateOrUpdateCategoryResult();
         }

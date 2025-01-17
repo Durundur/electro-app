@@ -2,12 +2,13 @@
 {
     public interface IUnitOfWork : IDisposable
     {
-        IProductHierarchyRepository ProductHierarchy { get; }
-        IProductRepository Products { get; }
-        IOpinionRepository Opinions { get; }
-        ICartRepository Carts { get; }
-        IOrderRepository Orders { get; }
-
-        Task<int> CompleteAsync();
+        IAttributeDefinitionRepository AttributeDefinitionRepository { get; }
+        ICartRepository CartRepository { get; }
+        IOpinionRepository OpinionRepository { get; }
+        IOrderRepository OrderRepository { get; }
+        IProductHierarchyRepository ProductHierarchyRepository { get; }
+        IProductRepository ProductRepository { get; }
+        IRecipientRepository RecipientRepository { get; }
+        Task SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

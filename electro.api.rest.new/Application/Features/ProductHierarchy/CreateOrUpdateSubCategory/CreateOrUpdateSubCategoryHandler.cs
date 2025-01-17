@@ -6,11 +6,11 @@ namespace Application.Features.ProductHierarchy.CreateOrUpdateSubCategory
 {
     public class CreateOrUpdateSubCategoryHandler : IRequestHandler<CreateOrUpdateSubCategoryCommand, CreateOrUpdateSubCategoryResult>
     {
-        private readonly IProductHierarchyRepository _repository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CreateOrUpdateSubCategoryHandler(IProductHierarchyRepository repository)
+        public CreateOrUpdateSubCategoryHandler(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<CreateOrUpdateSubCategoryResult> Handle(CreateOrUpdateSubCategoryCommand command, CancellationToken cancellationToken)
@@ -19,7 +19,7 @@ namespace Application.Features.ProductHierarchy.CreateOrUpdateSubCategory
 
             if (command.Id.HasValue)
             {
-                subCategory = await _repository.GetSubCategoryByIdAsync(command.Id.Value)
+                subCategory = await _unitOfWork.ProductHierarchyRepository.GetSubCategoryByIdAsync(command.Id.Value)
                     ?? throw new Exception($"Category with ID {command.Id} not found");
 
                 subCategory.Update(command.Name, command.Description, command.Active, command.DisplayOrder);
@@ -28,7 +28,7 @@ namespace Application.Features.ProductHierarchy.CreateOrUpdateSubCategory
             {
                 subCategory = new SubCategory(command.Name, command.Description, command.Active, command.DisplayOrder);
                 subCategory.AssignToCategory(command.CategoryId);
-                _repository.AddSubCategory(subCategory);
+                _unitOfWork.ProductHierarchyRepository.AddSubCategory(subCategory);
             }
 
             var attributesToRemove = subCategory.Attributes
@@ -55,7 +55,7 @@ namespace Application.Features.ProductHierarchy.CreateOrUpdateSubCategory
                 }
             }
 
-            await _repository.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return subCategory.MapToCreateOrUpdateSubCategoryResult();
         }

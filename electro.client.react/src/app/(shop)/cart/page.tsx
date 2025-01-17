@@ -1,19 +1,19 @@
 "use client";
-import EmptyCartInfo from "@/components/Cart/EmptyCartInfo/EmptyCartInfo";
 import { Alert, Grid2, Stack } from "@mui/material";
 import { FC, useEffect } from "react";
-import CartSummary from "@/components/Cart/CartSummary/CartSummary";
-import CartProductList from "@/components/Cart/CartProduct/CartProductList/CartProductList";
 import { useDispatch, useSelector } from "@/libs/Store";
 import { fetchCart } from "@/libs/Cart/thunks";
 import FullScreenLoader from "@/components/Layout/FullScreenLoader/FullScreenLoader";
+import EmptyCartInfo from "@/components/Cart/Cart/EmptyCartInfo/EmptyCartInfo";
+import CartProductList from "@/components/Cart/Cart/CartProduct/CartProductList/CartProductList";
+import CartSummary from "@/components/Cart/Cart/CartSummary/CartSummary";
 
 const CartPage: FC = () => {
 	const dispatch = useDispatch();
-	const cartDataSelector = useSelector((store) => store.CartStore.data);
-	const cartIsLoadingSelector = useSelector((store) => store.CartStore.isLoading);
-	const cartErrorSelector = useSelector((store) => store.CartStore.error);
-	const cartValidationErrorsSelector = useSelector((store) => store.CartStore.validationErrors);
+	const cartDataSelector = useSelector((store) => store.CartStore.cart.data);
+	const cartIsLoadingSelector = useSelector((store) => store.CartStore.cart.isLoading);
+	const cartErrorSelector = useSelector((store) => store.CartStore.cart.error);
+	const cartValidationErrorsSelector = useSelector((store) => store.CartStore.cart.validationErrors);
 
 	const alerts = cartValidationErrorsSelector.map((message, index) => (
 		<Alert key={`cart-validation-msg-${index}`} variant="outlined" severity="warning">
@@ -25,28 +25,29 @@ const CartPage: FC = () => {
 		dispatch(fetchCart());
 	}, []);
 
-	if (cartIsLoadingSelector) {
-		return <FullScreenLoader isVisible />;
-	}
 	if (cartErrorSelector) {
 		return <p>Error: {cartErrorSelector.message}</p>;
 	}
-	if (!cartDataSelector || cartDataSelector.products?.length === 0) {
+	if (cartDataSelector && cartDataSelector.products?.length === 0) {
 		return <EmptyCartInfo />;
 	}
-	return (
-		<Grid2 container spacing={2}>
-			<Grid2 size={{ xs: 12, md: 8 }}>
-				<Stack spacing={2}>
-					{alerts}
-					<CartProductList />
-				</Stack>
+	if (cartDataSelector) {
+		return (
+			<Grid2 container spacing={2}>
+				<Grid2 size={{ xs: 12, md: 8 }}>
+					<Stack spacing={2}>
+						{alerts}
+						<CartProductList />
+					</Stack>
+				</Grid2>
+				<Grid2 size={{ xs: 12, md: 4 }}>
+					<CartSummary />
+				</Grid2>
+				<FullScreenLoader isVisible={cartIsLoadingSelector} />
 			</Grid2>
-			<Grid2 size={{ xs: 12, md: 4 }}>
-				<CartSummary />
-			</Grid2>
-		</Grid2>
-	);
+		);
+	}
+	return <FullScreenLoader isVisible />;
 };
 
 export default CartPage;

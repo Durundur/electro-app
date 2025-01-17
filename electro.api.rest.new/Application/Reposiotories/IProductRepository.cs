@@ -5,9 +5,8 @@ namespace Application.Reposiotories
     public interface IProductRepository
     {
         Task<Product> GetByIdAsync(Guid id);
-        Task<IList<Product>> GetProductsByIds(IEnumerable<Guid> productsIds);
+        Task<IList<Product>> GetProductsByIdsAsync(IEnumerable<Guid> productsIds);
         IQueryable<Product> GetProductsQuery();
-        Task SaveChangesAsync();
         void AddProduct(Product product);
     }
 }

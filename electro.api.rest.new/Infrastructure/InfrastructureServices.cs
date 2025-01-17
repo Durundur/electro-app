@@ -31,6 +31,9 @@ namespace Application
             services.AddScoped<IProductHierarchyRepository, ProductHierarchyRepository>();
             services.AddScoped<IAttributeDefinitionRepository,  AttributeDefinitionRepository>();
             services.AddScoped<ICartRepository, CartRepository>();
+            services.AddScoped<IRecipientRepository, RecipientRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
     }
 }

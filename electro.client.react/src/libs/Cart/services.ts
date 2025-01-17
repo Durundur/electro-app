@@ -1,4 +1,4 @@
-import { GetCartResult, ValidateCartCommand, ValidateCartResult } from "../api-contract/api-contract";
+import { CreateOrderCommand, DeliveryMethod, GetCartResult, GetCartResultProduct, GetRecipientsResult, GetRecipientsResultItem, PaymentMethod, ValidateCartCommand, ValidateCartResult } from "../api-contract/api-contract";
 
 export const getValidateCartCommand = (cart: GetCartResult): ValidateCartCommand => {
 	return {
@@ -24,5 +24,29 @@ export const getGetCartResult = (validationResult: ValidateCartResult): GetCartR
 				name: product.name,
 				photo: product.photo,
 			})) || [],
+	};
+};
+
+export const getCreateOrderCommand = (products: GetCartResultProduct[], paymentMethod: PaymentMethod, deliveryMethod: DeliveryMethod, recipient: GetRecipientsResultItem): CreateOrderCommand => {
+	return {
+		products: products.map((product) => ({
+			productId: product.productId,
+			quantity: product.quantity,
+			price: product.price,
+		})),
+		paymentMethod: paymentMethod,
+		deliveryMethod: deliveryMethod,
+		recipient: {
+			firstName: recipient.firstName,
+			surname: recipient.surname,
+			companyName: recipient.companyName,
+			taxIdentificationNumber: recipient.taxIdentificationNumber,
+			type: recipient.type,
+			phoneNumber: recipient.phoneNumber,
+			street: recipient.street,
+			houseNumber: recipient.houseNumber,
+			postalCode: recipient.postalCode,
+			city: recipient.city,
+		},
 	};
 };

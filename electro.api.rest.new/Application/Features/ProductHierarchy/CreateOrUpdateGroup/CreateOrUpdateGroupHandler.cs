@@ -6,11 +6,11 @@ namespace Application.Features.ProductHierarchy.CreateOrUpdateGroup
 {
     public class CreateOrUpdateGroupHandler : IRequestHandler<CreateOrUpdateGroupCommand, CreateOrUpdateGroupResult>
     {
-        private readonly IProductHierarchyRepository _repository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CreateOrUpdateGroupHandler(IProductHierarchyRepository repository)
+        public CreateOrUpdateGroupHandler(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<CreateOrUpdateGroupResult> Handle(CreateOrUpdateGroupCommand command, CancellationToken cancellationToken)
@@ -19,7 +19,7 @@ namespace Application.Features.ProductHierarchy.CreateOrUpdateGroup
 
             if (command.Id.HasValue)
             {
-                group = await _repository.GetGroupByIdAsync(command.Id.Value)
+                group = await _unitOfWork.ProductHierarchyRepository.GetGroupByIdAsync(command.Id.Value)
                     ?? throw new Exception($"Group with ID {command.Id} not found");
 
                 group.Update(command.Name, command.Photo, command.Icon, command.Description, command.Active, command.DisplayOrder);
@@ -27,7 +27,7 @@ namespace Application.Features.ProductHierarchy.CreateOrUpdateGroup
             else
             {
                 group = new Group(command.Name, command.Photo, command.Icon, command.Description, command.Active, command.DisplayOrder);
-                _repository.AddGroup(group);
+                _unitOfWork.ProductHierarchyRepository.AddGroup(group);
             }
 
             var attributesToRemove = group.Attributes
@@ -53,7 +53,7 @@ namespace Application.Features.ProductHierarchy.CreateOrUpdateGroup
                 }
             }
 
-            await _repository.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return group.MapToCreateOrUpdateGroupResult();
         }

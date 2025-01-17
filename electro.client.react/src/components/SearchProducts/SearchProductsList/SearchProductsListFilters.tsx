@@ -35,8 +35,8 @@ const SearchProductsListFilters: FC = () => {
 							Od najpopularniejszych
 						</MenuItem>
 						<MenuItem value={"accuracy"}>Od najtrafniejszych</MenuItem>
-						<MenuItem value={"price-asc"}>Cena: od najdroższych</MenuItem>
-						<MenuItem value={"price-desc"}>Cena: od najtańszych</MenuItem>
+						<MenuItem value={"price-desc"}>Cena: od najdroższych</MenuItem>
+						<MenuItem value={"price-asc"}>Cena: od najtańszych</MenuItem>
 					</Select>
 				</FormControl>
 			</Grid2>

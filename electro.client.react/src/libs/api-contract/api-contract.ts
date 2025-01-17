@@ -116,6 +116,34 @@ export interface CreateOrUpdateProductResult {
     attributes?: ProductAttributeResult[] | undefined;
 }
 
+export interface CreateOrUpdateRecipientCommand {
+    id?: string | undefined;
+    firstName?: string | undefined;
+    surname?: string | undefined;
+    companyName?: string | undefined;
+    taxIdentificationNumber?: string | undefined;
+    type?: RecipientType;
+    phoneNumber?: string | undefined;
+    street?: string | undefined;
+    houseNumber?: string | undefined;
+    postalCode?: string | undefined;
+    city?: string | undefined;
+}
+
+export interface CreateOrUpdateRecipientResult {
+    id?: string;
+    firstName?: string | undefined;
+    surname?: string | undefined;
+    companyName?: string | undefined;
+    taxIdentificationNumber?: string | undefined;
+    type?: RecipientType;
+    phoneNumber?: string | undefined;
+    street?: string | undefined;
+    houseNumber?: string | undefined;
+    postalCode?: string | undefined;
+    city?: string | undefined;
+}
+
 export interface CreateOrUpdateSubCategoryCommand {
     id?: number | undefined;
     name?: string | undefined;
@@ -136,6 +164,51 @@ export interface CreateOrUpdateSubCategoryResult {
     createdAt?: Date;
     modifiedAt?: Date;
     attributes?: AttributeDefinitionResult[] | undefined;
+}
+
+export interface CreateOrderCommand {
+    products?: CreateOrderCommandOrderProduct[] | undefined;
+    paymentMethod?: PaymentMethod;
+    deliveryMethod?: DeliveryMethod;
+    recipient?: CreateOrderCommandRecipient;
+}
+
+export interface CreateOrderCommandOrderProduct {
+    productId?: string;
+    quantity?: number;
+    price?: Money;
+}
+
+export interface CreateOrderCommandRecipient {
+    firstName?: string | undefined;
+    surname?: string | undefined;
+    companyName?: string | undefined;
+    taxIdentificationNumber?: string | undefined;
+    type?: RecipientType;
+    phoneNumber?: string | undefined;
+    street?: string | undefined;
+    houseNumber?: string | undefined;
+    postalCode?: string | undefined;
+    city?: string | undefined;
+}
+
+export interface CreateOrderResult {
+    orderId?: string;
+    status?: OrderStatus;
+}
+
+export interface Delivery {
+    method?: DeliveryMethod;
+    cost?: Money;
+    readonly trackingNumber?: string | undefined;
+}
+
+export enum DeliveryMethod {
+    CourierExpress = "CourierExpress",
+    CourierStandard = "CourierStandard",
+    CourierCashOnDelivery = "CourierCashOnDelivery",
+    Locker = "Locker",
+    PickupZabka = "PickupZabka",
 }
 
 export interface GetAllProductHierarchyCategory {
@@ -228,6 +301,42 @@ export interface GetMenuSubCategory {
     name?: string | undefined;
 }
 
+export interface GetOrderDetailsResult {
+    id?: string;
+    status?: OrderStatus;
+    products?: GetOrderDetailsResultProduct[] | undefined;
+    payment?: Payment;
+    delivery?: Delivery;
+    recipient?: Recipient;
+    totalPrice?: Money;
+    createdAt?: Date;
+    updatedAt?: Date;
+}
+
+export interface GetOrderDetailsResultProduct {
+    id?: string;
+    productId?: string;
+    name?: string | undefined;
+    photo?: string | undefined;
+    quantity?: number;
+    price?: Money;
+    totalPrice?: Money;
+}
+
+export interface GetOrdersResult {
+    orders?: GetOrdersResultOrder[] | undefined;
+    pageCount?: number;
+    pageSize?: number;
+    page?: number;
+}
+
+export interface GetOrdersResultOrder {
+    id?: string;
+    totalPrice?: Money;
+    status?: OrderStatus;
+    createdAt?: Date;
+}
+
 export interface GetProductCatalogResult {
     products?: GetProductCatalogResultProduct[] | undefined;
     pageCount?: number;
@@ -258,6 +367,24 @@ export interface GetProductResult {
     active?: boolean;
     stockQuantity?: number;
     attributes?: ProductAttributeResult[] | undefined;
+}
+
+export interface GetRecipientsResult {
+    recipients?: GetRecipientsResultItem[] | undefined;
+}
+
+export interface GetRecipientsResultItem {
+    id?: string;
+    firstName?: string | undefined;
+    surname?: string | undefined;
+    companyName?: string | undefined;
+    taxIdentificationNumber?: string | undefined;
+    type?: RecipientType;
+    phoneNumber?: string | undefined;
+    street?: string | undefined;
+    houseNumber?: string | undefined;
+    postalCode?: string | undefined;
+    city?: string | undefined;
 }
 
 export interface GetSearchFiltersResult {
@@ -307,6 +434,37 @@ export interface Money {
     currency?: string | undefined;
 }
 
+export enum OrderStatus {
+    Created = "Created",
+    PaymentPending = "PaymentPending",
+    Paid = "Paid",
+    Shipped = "Shipped",
+    Delivered = "Delivered",
+    Cancelled = "Cancelled",
+}
+
+export interface Payment {
+    method?: PaymentMethod;
+    cost?: Money;
+    status?: PaymentStatus;
+    readonly paidAt?: Date | undefined;
+}
+
+export enum PaymentMethod {
+    CreditCard = "CreditCard",
+    InstantTransfer = "InstantTransfer",
+    BankTransfer = "BankTransfer",
+    GooglePay = "GooglePay",
+    Blik = "Blik",
+}
+
+export enum PaymentStatus {
+    Pending = "Pending",
+    Paid = "Paid",
+    Failed = "Failed",
+    Refunded = "Refunded",
+}
+
 export interface ProblemDetails {
     type?: string | undefined;
     title?: string | undefined;
@@ -329,6 +487,24 @@ export enum ProductStatus {
     Active = "Active",
     Inavtive = "Inavtive",
     Removed = "Removed",
+}
+
+export interface Recipient {
+    readonly firstName?: string | undefined;
+    readonly surname?: string | undefined;
+    readonly companyName?: string | undefined;
+    readonly taxIdentificationNumber?: string | undefined;
+    type?: RecipientType;
+    readonly phoneNumber?: string | undefined;
+    readonly street?: string | undefined;
+    readonly houseNumber?: string | undefined;
+    readonly postalCode?: string | undefined;
+    readonly city?: string | undefined;
+}
+
+export enum RecipientType {
+    Personal = "Personal",
+    Company = "Company",
 }
 
 export interface ValidateAndSaveCartCommandProduct {

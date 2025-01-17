@@ -15,6 +15,10 @@ declare module "@mui/material/styles/createPalette" {
 	interface CommonColors {
 		gold: string;
 	}
+	interface TypeAction {
+		active2: string;
+		selected2: string;
+	}
 }
 
 interface ExtendedTypographyOptions extends TypographyOptions {
@@ -36,6 +40,8 @@ const theme = createTheme({
 			focus: "rgba(0, 0, 0, 0.12)",
 			focusOpacity: 0.12,
 			activatedOpacity: 0.12,
+			active2: "hsla(210, 100%, 45%, 0.08)",
+			selected2: "hsla(210, 100%, 45%, 0.14)",
 		},
 		primary: {
 			50: "hsl(210, 100%, 96%)",

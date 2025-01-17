@@ -1,20 +1,17 @@
-﻿using Domain.Aggregates.ProductCatalogAggregate;
-using Domain.Aggregates.UserProfileAggregate;
+﻿using D = Domain.Aggregates;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Configurations.ProductCatalog
 {
-    public class OpinionActionEntityTypeConfiguration : IEntityTypeConfiguration<OpinionAction>
+    public class OpinionActionEntityTypeConfiguration : IEntityTypeConfiguration<D.ProductCatalogAggregate.OpinionAction>
     {
-        public void Configure(EntityTypeBuilder<OpinionAction> builder)
+        public void Configure(EntityTypeBuilder<D.ProductCatalogAggregate.OpinionAction> builder)
         {
             builder.ToTable("OpinionActions");
-
             builder.Property<Guid>("Id");
             builder.HasKey("Id");
-
-            builder.HasOne<UserProfile>().WithMany().HasForeignKey(o => o.UserProfileId);
+            builder.HasOne<D.UserProfileAggregate.UserProfile>().WithMany().HasForeignKey(o => o.UserProfileId);
         }
     }
 }

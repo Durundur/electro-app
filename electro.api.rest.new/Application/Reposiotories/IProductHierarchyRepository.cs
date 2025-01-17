@@ -15,6 +15,5 @@ namespace Application.Reposiotories
         void DeleteSubCategory(SubCategory subCategory);
         void AddSubCategory(SubCategory subCategory);
         Task<IList<Group>> GetMenuAsync();
-        Task SaveChangesAsync();
     }
 }

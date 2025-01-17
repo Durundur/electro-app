@@ -5,24 +5,24 @@ namespace Application.Features.ProductHierarchy.DeleteGroup
 {
     public class DeleteGroupHandler : IRequestHandler<DeleteGroupCommand, bool>
     {
-        private readonly IProductHierarchyRepository _repository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public DeleteGroupHandler(IProductHierarchyRepository repository)
+        public DeleteGroupHandler(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<bool> Handle(DeleteGroupCommand request, CancellationToken cancellationToken)
         {
-            var group = await _repository.GetGroupByIdAsync(request.Id);
+            var group = await _unitOfWork.ProductHierarchyRepository.GetGroupByIdAsync(request.Id);
 
             if (group == null)
             {
                 throw new Exception($"Group with ID {request.Id} not found");
             }
 
-            _repository.DeleteGroup(group);
-            await _repository.SaveChangesAsync();
+            _unitOfWork.ProductHierarchyRepository.DeleteGroup(group);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return true;
         }

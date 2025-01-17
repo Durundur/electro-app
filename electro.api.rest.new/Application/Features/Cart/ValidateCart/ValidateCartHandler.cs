@@ -7,13 +7,11 @@ namespace Application.Features.Cart.ValidateAndSaveCart
 {
     public class ValidateCartHandler : IRequestHandler<ValidateCartCommand, ValidateCartResult>
     {
-        private readonly IProductRepository _productRepository;
-        private readonly ICartRepository _cartRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public ValidateCartHandler(IProductRepository productRepository, ICartRepository cartRepository)
+        public ValidateCartHandler(IUnitOfWork unitOfWork)
         {
-            _productRepository = productRepository;
-            _cartRepository = cartRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ValidateCartResult> Handle(ValidateCartCommand command, CancellationToken cancellationToken)
@@ -37,7 +35,7 @@ namespace Application.Features.Cart.ValidateAndSaveCart
 
             foreach (var productCommand in command.Products)
             {
-                var product = await _productRepository.GetByIdAsync(productCommand.ProductId);
+                var product = await _unitOfWork.ProductRepository.GetByIdAsync(productCommand.ProductId);
 
                 if (product == null)
                 {
@@ -85,12 +83,12 @@ namespace Application.Features.Cart.ValidateAndSaveCart
 
         private async Task SaveCartAsync(Guid userId, ValidateCartResult validationResult, CancellationToken cancellationToken)
         {
-            var existingCart = await _cartRepository.GetCartByUserIdAsync(userId);
+            var existingCart = await _unitOfWork.CartRepository.GetCartByUserIdAsync(userId);
 
             if (existingCart == null)
             {
                 existingCart = new Domain.Aggregates.CartAggregate.Cart(userId);
-                _cartRepository.AddCart(existingCart);
+                _unitOfWork.CartRepository.AddCart(existingCart);
             }
 
             var existingProductIds = existingCart.Products.Select(p => p.ProductId).ToList();
@@ -125,7 +123,7 @@ namespace Application.Features.Cart.ValidateAndSaveCart
                 }
             }
 
-            await _cartRepository.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
             validationResult.Id = existingCart.Id;
         }
     }

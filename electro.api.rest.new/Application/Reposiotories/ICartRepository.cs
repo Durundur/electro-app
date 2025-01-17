@@ -5,7 +5,7 @@ namespace Application.Reposiotories
     public interface ICartRepository
     {
         Task<Cart> GetCartByUserIdAsync(Guid userId);
-        Task SaveChangesAsync();
+        Task DeleteUserCartAsync(Guid userId);
         void AddCart(Cart cart);
     }
 }

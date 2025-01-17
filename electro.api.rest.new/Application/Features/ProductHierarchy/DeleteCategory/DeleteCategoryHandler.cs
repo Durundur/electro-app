@@ -5,24 +5,24 @@ namespace Application.Features.ProductHierarchy.DeleteCategory
 {
     public class DeleteCategoryHandler : IRequestHandler<DeleteCategoryCommand, bool>
     {
-        private readonly IProductHierarchyRepository _repository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public DeleteCategoryHandler(IProductHierarchyRepository repository)
+        public DeleteCategoryHandler(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<bool> Handle(DeleteCategoryCommand request, CancellationToken cancellationToken)
         {
-            var category = await _repository.GetCategoryByIdAsync(request.Id);
+            var category = await _unitOfWork.ProductHierarchyRepository.GetCategoryByIdAsync(request.Id);
 
             if (category == null)
             {
                 throw new Exception($"Category with ID {request.Id} not found");
             }
 
-            _repository.DeleteCategory(category);
-            await _repository.SaveChangesAsync();
+            _unitOfWork.ProductHierarchyRepository.DeleteCategory(category);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return true;
         }

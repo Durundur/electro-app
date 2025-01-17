@@ -7,13 +7,11 @@ namespace Application.Features.ProductCatalog.CreateProduct
 {
     public class CreateOrUpdateProductHandler : IRequestHandler<CreateOrUpdateProductCommand, CreateOrUpdateProductResult>
     {
-        private readonly IProductRepository _productRepository;
-        private readonly IAttributeDefinitionRepository _attributeDefinitionRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CreateOrUpdateProductHandler(IProductRepository productRepository, IAttributeDefinitionRepository attributeDefinitionRepository)
+        public CreateOrUpdateProductHandler(IUnitOfWork unitOfWork)
         {
-            _productRepository = productRepository;
-            _attributeDefinitionRepository = attributeDefinitionRepository;
+            _unitOfWork = unitOfWork;
         }
         public async Task<CreateOrUpdateProductResult> Handle(CreateOrUpdateProductCommand command, CancellationToken cancellationToken)
         {
@@ -21,14 +19,14 @@ namespace Application.Features.ProductCatalog.CreateProduct
 
             if (command.Id.HasValue)
             {
-                product = await _productRepository.GetByIdAsync(command.Id.Value)
+                product = await _unitOfWork.ProductRepository.GetByIdAsync(command.Id.Value)
                     ?? throw new Exception($"Product with ID {command.Id.Value} not found");
                 product.Update(command.Name, command.Description, new Domain.ValueObjects.Money(command.Amount, command.Currency), ProductStatus.Active, command.Active, command.StockQuantity);
             }
             else
             {
                 product = new Product(command.Name, command.Description, new Domain.ValueObjects.Money(command.Amount, command.Currency), ProductStatus.Active, command.Active, command.StockQuantity);
-                _productRepository.AddProduct(product);
+                _unitOfWork.ProductRepository.AddProduct(product);
             }
 
             product.ReplacePhotos(command.Photos);
@@ -49,11 +47,11 @@ namespace Application.Features.ProductCatalog.CreateProduct
                 product.ReplaceAttributes(attributeValues);
             }
 
-            await _productRepository.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            var savedProduct = await _productRepository.GetByIdAsync(product.Id);
+            var savedProduct = await _unitOfWork.ProductRepository.GetByIdAsync(product.Id);
 
-            var attributeDefinitions = await _attributeDefinitionRepository.GetAttributesDefinitionsQuery()
+            var attributeDefinitions = await _unitOfWork.AttributeDefinitionRepository.GetAttributesDefinitionsQuery()
                 .Where(ad => savedProduct.Attributes.Select(a => a.AttributeDefinitionId).Contains(ad.Id)).ToListAsync(cancellationToken: cancellationToken);
 
             return CreateOrUpdateProductMapper.MapToCreateOrUpdateProductResult(savedProduct, attributeDefinitions);

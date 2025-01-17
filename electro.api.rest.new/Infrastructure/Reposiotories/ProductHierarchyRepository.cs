@@ -53,11 +53,6 @@ namespace Infrastructure.Reposiotories
             return await _context.Categories.Include(g => g.Attributes).FirstOrDefaultAsync(c => c.Id == id);
         }
 
-        public async Task SaveChangesAsync()
-        {
-            await _context.SaveChangesAsync();
-        }
-
         public void AddGroup(Group group)
         {
             _context.Groups.Add(group);

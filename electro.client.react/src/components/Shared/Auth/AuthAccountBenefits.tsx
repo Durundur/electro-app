@@ -5,7 +5,7 @@ import Image from "next/image";
 const AuthAccountBenefits: FC = () => {
 	return (
 		<Box>
-			<CardHeader title="Why is it worth having an account?"></CardHeader>
+			<CardHeader title="Dlaczego warto mieć konto?"></CardHeader>
 			<CardContent>
 				<List disablePadding>
 					<ListItem disableGutters>

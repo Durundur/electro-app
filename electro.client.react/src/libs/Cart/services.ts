@@ -1,7 +1,8 @@
-import { CreateOrderCommand, DeliveryMethod, GetCartResult, GetCartResultProduct, GetRecipientsResult, GetRecipientsResultItem, PaymentMethod, ValidateCartCommand, ValidateCartResult } from "../api-contract/api-contract";
+import { CreateOrderCommand, DeliveryMethod, GetCartResult, GetCartResultProduct, GetRecipientsResultItem, PaymentMethod, ValidateCartCommand, ValidateCartResult } from "../api-contract/api-contract";
 
-export const getValidateCartCommand = (cart: GetCartResult): ValidateCartCommand => {
+export const getValidateCartCommand = (cart: GetCartResult, userProfileId?: string): ValidateCartCommand => {
 	return {
+		userId: userProfileId,
 		products:
 			cart?.products?.map((product) => ({
 				productId: product.productId,

@@ -1,7 +1,7 @@
 import { AppDispatch, RootState } from "@/libs/Store";
 import axios from "axios";
 import { photoUplaoderEror, photoUplaoderStart, photoUplaoderSuccess } from "./slice";
-import { IError } from "@/libs/api-contract/Error";
+import { IError, createError } from "@/libs/api-contract/Error";
 import { IUploadPhotoResult } from "./interface";
 
 export const uploadPhotos = () => async (dispatch: AppDispatch, getState: () => RootState): Promise<string[]> => {
@@ -27,7 +27,7 @@ export const uploadPhotos = () => async (dispatch: AppDispatch, getState: () => 
 		dispatch(photoUplaoderSuccess({ files: allUrls }));
 		return allUrls;
 	} catch (error: any) {
-		dispatch(photoUplaoderEror(error as IError));
+		dispatch(photoUplaoderEror(createError(error)));
 		throw error;
 	}
 };

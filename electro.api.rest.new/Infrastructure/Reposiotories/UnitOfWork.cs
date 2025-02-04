@@ -1,5 +1,6 @@
 ﻿using Application.Reposiotories;
 using Infrastructure.Context;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Infrastructure.Reposiotories
 {
@@ -14,6 +15,7 @@ namespace Infrastructure.Reposiotories
         private IProductHierarchyRepository _productHierarchyRepository;
         private IProductRepository _productRepository;
         private IRecipientRepository _recipientRepository;
+        private IUserProfileRepository _userProfileRepository;
 
         public UnitOfWork(ApplicationDbContext context)
         {
@@ -41,9 +43,17 @@ namespace Infrastructure.Reposiotories
         public IRecipientRepository RecipientRepository =>
             _recipientRepository ??= new RecipientRepository(_context);
 
-        public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
+        public IUserProfileRepository UserProfileRepository => 
+            _userProfileRepository ??= new UserProfileRepository(_context);
+
+        public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            await _context.SaveChangesAsync(cancellationToken);
+            return await _context.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)
+        {
+            return await _context.Database.BeginTransactionAsync(cancellationToken);
         }
 
         public void Dispose()

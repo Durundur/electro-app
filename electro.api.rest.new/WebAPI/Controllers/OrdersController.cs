@@ -22,7 +22,6 @@ namespace WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<CreateOrderResult>> CreateOrder([FromBody] CreateOrderCommand command)
         {
-            command.UserProfileId = new Guid("06E85F9E-084A-4F7A-A41C-BAA9A6A35189");
             var response = await _mediator.Send(command);
             return Ok(response);
         }

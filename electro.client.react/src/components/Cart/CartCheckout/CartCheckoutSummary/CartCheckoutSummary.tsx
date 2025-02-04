@@ -43,7 +43,7 @@ const CartCheckoutSummary: FC = () => {
 		});
 
 		if (allValid) {
-			router.prefetch("/cart/checkout/confirm");
+			router.replace("/cart/checkout/confirm");
 		}
 	};
 

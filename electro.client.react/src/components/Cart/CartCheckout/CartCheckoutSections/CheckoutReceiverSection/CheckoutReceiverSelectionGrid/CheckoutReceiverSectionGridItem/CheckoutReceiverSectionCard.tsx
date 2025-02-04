@@ -14,10 +14,11 @@ const CheckoutReceiverSectionGridItem: FC<CheckoutReceiverSectionGridItemProps> 
 	const dispatch = useDispatch();
 	const isCompany = recipient.type === RecipientType.Company;
 	const isSelected = useSelector((store) => store.CartStore.checkout.recipientOption?.id === recipient.id);
+	const userProfileId = useSelector((store) => store.AuthStore.userProfile.id);
 
 	const handleDeleteClick = () => {
-		if (!recipient.id) return;
-		dispatch(deleteRecipient(recipient.id));
+		if (!recipient.id || !userProfileId) return;
+		dispatch(deleteRecipient(recipient.id, userProfileId));
 	};
 
 	const handleSelectRecipient = () => {

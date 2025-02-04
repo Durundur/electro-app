@@ -1,9 +1,17 @@
 ﻿using Application.Reposiotories;
+using Application.Services.IdentityService;
+using Application.Services.TokenService;
 using Infrastructure.Context;
+using Infrastructure.Identity;
 using Infrastructure.Reposiotories;
+using Infrastructure.Services.IdentityServices;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Application
 {
@@ -12,8 +20,47 @@ namespace Application
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbService(configuration);
+            services.AddAuthentication(configuration);
             services.AddRepositories();
+            services.AddServices();
             return services;
+        }
+
+        private static void AddAuthentication(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddIdentity<UserIdentity, IdentityRole<Guid>>(options =>
+            {
+                options.Password.RequiredLength = 3;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireDigit = false;
+            }).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
+
+            services.AddAuthentication(options =>
+            {   
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidateIssuer = true,
+                        ValidIssuer = configuration.GetSection("Jwt:Issuer").Value,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetSection("Jwt:Key").Value)),
+                        RequireExpirationTime = true,
+                        ValidateActor = false,
+                        ValidateAudience = false,
+                    };
+                });
+        }
+
+        private static void AddServices(this IServiceCollection services)
+        {
+            services.AddScoped<IIdentityService, IdentityService>();
+            services.AddScoped<ITokenService, TokenService>();
         }
 
         private static void AddDbService(this IServiceCollection services, IConfiguration configuration)
@@ -29,7 +76,7 @@ namespace Application
         {
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductHierarchyRepository, ProductHierarchyRepository>();
-            services.AddScoped<IAttributeDefinitionRepository,  AttributeDefinitionRepository>();
+            services.AddScoped<IAttributeDefinitionRepository, AttributeDefinitionRepository>();
             services.AddScoped<ICartRepository, CartRepository>();
             services.AddScoped<IRecipientRepository, RecipientRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();

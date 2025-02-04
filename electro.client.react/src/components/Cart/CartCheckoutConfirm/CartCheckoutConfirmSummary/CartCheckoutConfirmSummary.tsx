@@ -4,7 +4,7 @@ import { formatAmount } from "@/libs/Helpers/Formatters";
 import { useDispatch, useSelector } from "@/libs/Store";
 import { Button, Card, CardContent, Stack, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 
 const CartCheckoutConfirmSummary: FC = () => {
 	const router = useRouter();
@@ -14,6 +14,11 @@ const CartCheckoutConfirmSummary: FC = () => {
 	const deliveryOptionSelector = useSelector((store) => store.CartStore.checkout.deliveryOption);
 	const cartProductsSelector = useSelector((store) => store.CartStore.cart.data?.products);
 	const recipientSelector = useSelector((store) => store.CartStore.checkout.recipientOption);
+	const userProfileId = useSelector((store) => store.AuthStore.userProfile.id);
+
+	const createOrderResultSelector = useSelector((store) => store.CartStore.createOrder.result);
+	const createOrderErrorSelector = useSelector((store) => store.CartStore.createOrder.error);
+	const createOrderIsLoadingSelector = useSelector((store) => store.CartStore.createOrder.isLoading);
 
 	const paymentAmount = paymentOptionSelector?.amount ?? 0;
 	const paymentCurrency = paymentOptionSelector?.currency ?? "PLN";
@@ -29,13 +34,17 @@ const CartCheckoutConfirmSummary: FC = () => {
 	const totalAmountCurrency = "PLN";
 
 	const handleCreateOrder = async () => {
-		console.log("handleCreateOrder");
-		if (!cartProductsSelector || !paymentOptionSelector?.value || !deliveryOptionSelector?.value || !recipientSelector) return;
+		if (!cartProductsSelector || !paymentOptionSelector?.value || !deliveryOptionSelector?.value || !recipientSelector || !userProfileId) return;
 		const createOrderCommand = getCreateOrderCommand(cartProductsSelector, paymentOptionSelector?.value, deliveryOptionSelector?.value, recipientSelector);
-		await dispatch(createOrder(createOrderCommand));
-		router.prefetch("/cart/checkout/success");
-		dispatch(fetchCart());
+		dispatch(createOrder(createOrderCommand));
+		dispatch(fetchCart(userProfileId));
 	};
+
+	useEffect(() => {
+		if (createOrderIsLoadingSelector) return;
+		if (createOrderErrorSelector && !createOrderResultSelector) return;
+		router.replace("/cart/checkout/success");
+	}, [createOrderErrorSelector, createOrderIsLoadingSelector, createOrderResultSelector]);
 
 	return (
 		<Card>

@@ -1,5 +1,6 @@
 ﻿using Application.Features.Cart.CreateOrUpdateRecipient;
 using Application.Features.Cart.DeleteRecipient;
+using Application.Features.Cart.GetCart;
 using Application.Features.Cart.GetRecipients;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -50,6 +51,20 @@ namespace WebAPI.Controllers
                 UserProfileId = userId,
             };
             var response = await _mediator.Send(command);
+            return Ok(response);
+        }
+
+        [HttpGet("{userId}/cart")]
+        [ProducesResponseType<GetCartResult>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<GetCartResult>> GetUserCart(Guid UserId)
+        {
+            var query = new GetCartQuery
+            {
+                UserId = UserId
+            };
+            var response = await _mediator.Send(query);
             return Ok(response);
         }
     }

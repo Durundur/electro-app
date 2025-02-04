@@ -17,6 +17,7 @@ interface CartProductListItemProps {
 const CartProductListItem: FC<CartProductListItemProps> = ({ product }) => {
 	const dispatch = useDispatch();
 	const cartSelector = useSelector((store) => store.CartStore.cart.data);
+	const userProfileId = useSelector((store) => store.AuthStore.userProfile.id);
 
 	const handleQuantityChange = (quantity: number, id: string) => {
 		const cart = {
@@ -28,7 +29,7 @@ const CartProductListItem: FC<CartProductListItemProps> = ({ product }) => {
 		if (!cartProduct || !cart) return;
 
 		cartProduct.quantity = quantity;
-		dispatch(validateCart(getValidateCartCommand(cart)));
+		dispatch(validateCart(getValidateCartCommand(cart, userProfileId)));
 	};
 
 	const handleItemDelete = () => {
@@ -36,7 +37,7 @@ const CartProductListItem: FC<CartProductListItemProps> = ({ product }) => {
 			...cartSelector,
 		};
 		cart.products = cartSelector?.products?.filter((p) => p.productId !== product.productId);
-		dispatch(validateCart(getValidateCartCommand(cart)));
+		dispatch(validateCart(getValidateCartCommand(cart, userProfileId)));
 	};
 
 	return (

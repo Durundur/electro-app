@@ -1,11 +1,9 @@
 "use client";
 import * as React from "react";
 import { DashboardLayout } from "@toolpad/core/DashboardLayout";
-import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
 import "../globals.css";
 import { Box, ThemeProvider } from "@mui/material";
 import theme from "../theme";
-import ReduxProvider from "@/libs/ReduxProvider";
 import { AccountTreeOutlined, FormatListNumberedOutlined, PlaylistAddOutlined, ShoppingCart } from "@mui/icons-material";
 import { AppProvider } from "@toolpad/core/nextjs";
 import Logo from "@/components/Layout/LayoutNavbar/Logo";
@@ -49,33 +47,25 @@ const AdminLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
 	};
 
 	return (
-		<html lang="en">
-			<body>
-				<AppRouterCacheProvider>
-					<ThemeProvider theme={theme}>
-						<ReduxProvider>
-							<AppProvider branding={branding} navigation={navigation}>
-								<DashboardLayout
-									sx={{
-										".MuiToolbar-root a": {
-											display: "block",
-										},
-										".MuiToolbar-root > .MuiStack-root > .MuiStack-root": {
-											alignItems: "center",
-										},
-										".MuiToolbar-root a div": {
-											height: "auto",
-										},
-									}}
-								>
-									<Box padding={2}>{children}</Box>
-								</DashboardLayout>
-							</AppProvider>
-						</ReduxProvider>
-					</ThemeProvider>
-				</AppRouterCacheProvider>
-			</body>
-		</html>
+		<ThemeProvider theme={theme}>
+			<AppProvider branding={branding} navigation={navigation}>
+				<DashboardLayout
+					sx={{
+						".MuiToolbar-root a": {
+							display: "block",
+						},
+						".MuiToolbar-root > .MuiStack-root > .MuiStack-root": {
+							alignItems: "center",
+						},
+						".MuiToolbar-root a div": {
+							height: "auto",
+						},
+					}}
+				>
+					<Box padding={2}>{children}</Box>
+				</DashboardLayout>
+			</AppProvider>
+		</ThemeProvider>
 	);
 };
 

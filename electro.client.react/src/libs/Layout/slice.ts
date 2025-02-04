@@ -1,9 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { GetMenuResult } from "../api-contract/api-contract";
+import { IError } from "../api-contract/Error";
 
 export interface ProductHierarchyState {
 	data: GetMenuResult;
-	error?: Error;
+	error?: IError;
 	isLoading: boolean;
 }
 
@@ -27,7 +28,7 @@ const LayoutStore = createSlice({
 			state.isLoading = false;
 			state.data.groups = action.payload.groups;
 		},
-		fetchProductHierarchyError(state, action: PayloadAction<Error>) {
+		fetchProductHierarchyError(state, action: PayloadAction<IError>) {
 			state.isLoading = false;
 			state.error = action.payload;
 		},

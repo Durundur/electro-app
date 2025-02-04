@@ -1,4 +1,6 @@
 import { AppDispatch, RootState } from "../Store";
+import ApiClient from "../api-contract/ApiClient";
+import { createError } from "../api-contract/Error";
 import {
 	CreateOrUpdateRecipientCommand,
 	CreateOrUpdateRecipientResult,
@@ -31,34 +33,33 @@ import {
 	validateCartStart,
 	validateCartSuccess,
 } from "./slice";
-import axios from "axios";
 
-export const fetchCart = () => async (dispatch: AppDispatch) => {
+export const fetchCart = (userProfileId: string) => async (dispatch: AppDispatch) => {
 	try {
 		dispatch(fetchCartStart());
-		const response = await axios.get<GetCartResult>(`${process.env.NEXT_PUBLIC_API_URL}/api/carts/06E85F9E-084A-4F7A-A41C-BAA9A6A35189`);
+		const response = await ApiClient.get<GetCartResult>(`/api/users/${userProfileId}/cart`);
 		dispatch(fetchCartSuccess(response.data));
 	} catch (error: any) {
-		dispatch(fetchCartError(error as Error));
+		dispatch(fetchCartError(createError(error)));
 	}
 };
 
 export const validateCart = (cartToValidate: ValidateCartCommand) => async (dispatch: AppDispatch) => {
 	try {
 		dispatch(validateCartStart());
-		const response = await axios.post<ValidateCartResult>(`${process.env.NEXT_PUBLIC_API_URL}/api/carts/validate`, cartToValidate);
+		const response = await ApiClient.post<ValidateCartResult>(`/api/carts/validate`, cartToValidate);
 		const cartResult = getGetCartResult(response.data);
 		dispatch(validateCartSuccess(cartResult));
 		dispatch(setValidationErrors(response.data.errors ?? []));
 		return response.data.errors ?? [];
 	} catch (error: any) {
-		dispatch(validateCartError(error as Error));
+		dispatch(validateCartError(createError(error)));
 	}
 };
 
-export const addProductToCart = (productId: string, quantity: number, amount: number, currency: string) => async (dispatch: AppDispatch, getState: () => RootState) => {
+export const addProductToCart = (productId: string, quantity: number, amount: number, currency: string, userProfileId?: string) => async (dispatch: AppDispatch, getState: () => RootState) => {
 	const currentCart = getState().CartStore.cart.data;
-	const currentCartValidationCommand = getValidateCartCommand(currentCart!);
+	const currentCartValidationCommand = getValidateCartCommand(currentCart!, userProfileId);
 
 	const updatedProducts = [...(currentCartValidationCommand?.products || [])];
 	const existingProductIndex = updatedProducts.findIndex((p) => p.productId === productId);
@@ -85,42 +86,42 @@ export const addProductToCart = (productId: string, quantity: number, amount: nu
 	dispatch(validateCart(updatedCartValidationCommand));
 };
 
-export const fetchRecipients = () => async (dispatch: AppDispatch) => {
+export const fetchRecipients = (userProfileId: string) => async (dispatch: AppDispatch) => {
 	try {
 		dispatch(fetchRecipientsStart());
-		const response = await axios.get<GetRecipientsResult>(`${process.env.NEXT_PUBLIC_API_URL}/api/users/06E85F9E-084A-4F7A-A41C-BAA9A6A35189/recipients`);
+		const response = await ApiClient.get<GetRecipientsResult>(`/api/users/${userProfileId}/recipients`);
 		dispatch(fetchRecipientsSuccess(response.data));
 	} catch (error: any) {
-		dispatch(fetchRecipientsError(error as Error));
+		dispatch(fetchRecipientsError(createError(error)));
 	}
 };
 
-export const createOrUpdateRecipient = (command: CreateOrUpdateRecipientCommand) => async (dispatch: AppDispatch) => {
+export const createOrUpdateRecipient = (command: CreateOrUpdateRecipientCommand, userProfileId: string) => async (dispatch: AppDispatch) => {
 	try {
 		dispatch(createOrUpdateRecipientStart());
-		const response = await axios.post<CreateOrUpdateRecipientResult>(`${process.env.NEXT_PUBLIC_API_URL}/api/users/06E85F9E-084A-4F7A-A41C-BAA9A6A35189/recipients`, command);
+		const response = await ApiClient.post<CreateOrUpdateRecipientResult>(`/api/users/${userProfileId}/recipients`, command);
 		dispatch(createOrUpdateRecipientSuccess(response.data));
 	} catch (error: any) {
-		dispatch(createOrUpdateRecipientError(error as Error));
+		dispatch(createOrUpdateRecipientError(createError(error)));
 	}
 };
 
-export const deleteRecipient = (recipientId: string) => async (dispatch: AppDispatch) => {
+export const deleteRecipient = (recipientId: string, userProfileId: string) => async (dispatch: AppDispatch) => {
 	try {
 		dispatch(deleteRecipientStart());
-		const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/api/users/06E85F9E-084A-4F7A-A41C-BAA9A6A35189/recipients/${recipientId}`);
+		const response = await ApiClient.delete(`/api/users/${userProfileId}/recipients/${recipientId}`);
 		dispatch(deleteRecipientSuccess(recipientId));
 	} catch (error: any) {
-		dispatch(deleteRecipientError(error as Error));
+		dispatch(deleteRecipientError(createError(error)));
 	}
 };
 
 export const createOrder = (command: CreateOrderCommand) => async (dispatch: AppDispatch) => {
 	try {
 		dispatch(createOrderStart());
-		const response = await axios.post<CreateOrderResult>(`${process.env.NEXT_PUBLIC_API_URL}/api/orders`, command);
+		const response = await ApiClient.post<CreateOrderResult>(`/api/orders`, command);
 		dispatch(createOrderSuccess(response.data));
 	} catch (error: any) {
-		dispatch(createOrderError(error as Error));
+		dispatch(createOrderError(createError(error)));
 	}
 };

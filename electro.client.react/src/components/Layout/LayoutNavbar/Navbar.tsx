@@ -1,14 +1,17 @@
 "use client";
-import { AppBar, Container, Stack, Toolbar, useTheme } from "@mui/material";
+import { AppBar, Container, Stack, Toolbar } from "@mui/material";
 import React, { FC } from "react";
-import ProfileIcons from "./ProfileIcons";
+import ProfileIcons from "./ProfileIcon";
 import SearchInput from "./NavbarSearchInput/NavbarSearchInput";
 import Logo from "./Logo";
 import AuthButtons from "./AuthButtons";
 import ProductHierarchy from "./NavbarProductHierarchy/NavbarProductHierarchy";
+import { useSelector } from "@/libs/Store";
+import CartIcon from "./CartIcon";
 
 const Navbar: FC = () => {
-	const isLoggedIn = true;
+	const isLoggedInSelector = useSelector((store) => store.AuthStore.auth.isAuthenticated);
+
 	return (
 		<AppBar color="transparent" position="relative">
 			<Container disableGutters>
@@ -21,7 +24,10 @@ const Navbar: FC = () => {
 				>
 					<Logo href="/" />
 					<SearchInput></SearchInput>
-					{isLoggedIn ? <ProfileIcons></ProfileIcons> : <AuthButtons></AuthButtons>}
+					<Stack direction={"row"} spacing={2}>
+						{isLoggedInSelector ? <ProfileIcons></ProfileIcons> : <AuthButtons></AuthButtons>}
+						<CartIcon />
+					</Stack>
 				</Toolbar>
 				<ProductHierarchy></ProductHierarchy>
 			</Container>

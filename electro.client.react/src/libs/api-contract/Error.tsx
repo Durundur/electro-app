@@ -3,9 +3,9 @@ export interface IError {
 	statusCode: number;
 }
 
-const createErorr = (response: any): IError => {
+export const createError = (response: any): IError => {
 	return {
-		message: response?.data?.error?.message ?? response?.error?.message ?? "",
-		statusCode: response?.data?.error?.status ?? response?.error?.status ?? 500,
+		message: response?.response?.data?.message ?? response?.response?.data?.error?.message ?? response?.response?.statusText ?? response?.message ?? "Error",
+		statusCode: response?.status ?? response?.data?.error?.status ?? response?.error?.status ?? 500,
 	};
 };

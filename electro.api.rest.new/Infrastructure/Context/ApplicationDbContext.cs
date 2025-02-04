@@ -8,13 +8,14 @@ using Infrastructure.Configurations.Order;
 using Infrastructure.Configurations.ProductCatalog;
 using Infrastructure.Configurations.ProductHierarchy;
 using Infrastructure.Configurations.UserProfile;
+using Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Context
 {
-    public class ApplicationDbContext : IdentityDbContext<IdentityUser<Guid>, IdentityRole<Guid>, Guid>
+    public class ApplicationDbContext : IdentityDbContext<UserIdentity, IdentityRole<Guid>, Guid>
     {
         public DbSet<UserProfile> UserProfiles { get; set; }
         public DbSet<Product> Products { get; set; }

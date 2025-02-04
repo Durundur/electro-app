@@ -1,4 +1,6 @@
-﻿namespace Application.Reposiotories
+﻿using Microsoft.EntityFrameworkCore.Storage;
+
+namespace Application.Reposiotories
 {
     public interface IUnitOfWork : IDisposable
     {
@@ -9,6 +11,8 @@
         IProductHierarchyRepository ProductHierarchyRepository { get; }
         IProductRepository ProductRepository { get; }
         IRecipientRepository RecipientRepository { get; }
-        Task SaveChangesAsync(CancellationToken cancellationToken);
+        IUserProfileRepository UserProfileRepository { get; }
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+        Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default);
     }
 }

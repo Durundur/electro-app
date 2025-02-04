@@ -1,12 +1,13 @@
-import { Badge, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Tooltip } from "@mui/material";
+import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Tooltip } from "@mui/material";
 import { FC, useState } from "react";
-import { PersonOutlineRounded, Settings, AdminPanelSettings, StickyNote2, Logout, ShoppingCartOutlined } from "@mui/icons-material";
+import { PersonOutlineRounded, Settings, AdminPanelSettings, StickyNote2, Logout } from "@mui/icons-material";
 import Link from "next/link";
-import { useSelector } from "@/libs/Store";
+import { useDispatch } from "@/libs/Store";
+import { logout } from "@/libs/Auth/slice";
 
-const ProfileIcons: FC = () => {
-	const cartTotalItemsSelector = useSelector((store) => store.CartStore.cart.data?.totalQuantity);
+const ProfileIcon: FC = () => {
 	const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
+	const dispatch = useDispatch();
 
 	const handleOpenProfileMenu = (event: React.MouseEvent<HTMLElement>) => {
 		setAnchorElNav(event.currentTarget);
@@ -16,15 +17,12 @@ const ProfileIcons: FC = () => {
 		setAnchorElNav(null);
 	};
 
+	const handleLogout = () => {
+		dispatch(logout());
+	};
+
 	return (
 		<div>
-			<Tooltip title="Koszyk">
-				<IconButton LinkComponent={Link} href="/cart">
-					<Badge badgeContent={cartTotalItemsSelector ?? null} color="primary">
-						<ShoppingCartOutlined></ShoppingCartOutlined>
-					</Badge>
-				</IconButton>
-			</Tooltip>
 			<Tooltip title="Moje konto">
 				<IconButton onClick={handleOpenProfileMenu}>
 					<PersonOutlineRounded />
@@ -40,7 +38,7 @@ const ProfileIcons: FC = () => {
 							<ListItemText>Ustawienia</ListItemText>
 						</MenuItem>
 					</Link>
-					<MenuItem>
+					<MenuItem onClick={handleLogout}>
 						<ListItemIcon>
 							<Logout></Logout>
 						</ListItemIcon>
@@ -68,4 +66,4 @@ const ProfileIcons: FC = () => {
 	);
 };
 
-export default ProfileIcons;
+export default ProfileIcon;

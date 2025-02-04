@@ -3,7 +3,7 @@ import { Formik, FormikProps } from "formik";
 import * as Yup from "yup";
 import { FC, useState } from "react";
 import { CreateOrUpdateRecipientCommand, GetRecipientsResultItem, RecipientType } from "@/libs/api-contract/api-contract";
-import { useDispatch } from "@/libs/Store";
+import { useDispatch, useSelector } from "@/libs/Store";
 import { createOrUpdateRecipient } from "@/libs/Cart/thunks";
 
 interface CheckoutReceiverFormProps {
@@ -15,6 +15,7 @@ const CheckoutReceiverForm: FC<CheckoutReceiverFormProps> = ({ recipient, onCanc
 	const dispatch = useDispatch();
 	const initialReceiverType = recipient?.type ?? RecipientType.Personal;
 	const [receiverType, setReceiverType] = useState<RecipientType>(initialReceiverType);
+	const userProfileId = useSelector((store) => store.AuthStore.userProfile.id);
 
 	const validationSchema = Yup.object<CreateOrUpdateRecipientCommand>().shape({
 		type: Yup.mixed<RecipientType>().oneOf(Object.values(RecipientType)).required(),
@@ -63,7 +64,10 @@ const CheckoutReceiverForm: FC<CheckoutReceiverFormProps> = ({ recipient, onCanc
 	};
 
 	const handleSubmit = (values: CreateOrUpdateRecipientCommand) => {
-		dispatch(createOrUpdateRecipient(values));
+		if (!userProfileId) return;
+		dispatch(createOrUpdateRecipient(values, userProfileId)).then(() => {
+			onCancel();
+		});
 	};
 
 	return (

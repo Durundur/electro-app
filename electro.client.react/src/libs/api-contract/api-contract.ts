@@ -429,6 +429,21 @@ export interface GetSubCategoryResult {
     attributes?: AttributeDefinitionResult[] | undefined;
 }
 
+export interface LoginUserCommand {
+    email?: string | undefined;
+    password?: string | undefined;
+}
+
+export interface LoginUserResult {
+    userProfileId?: string;
+    roles?: string[] | undefined;
+    token?: string | undefined;
+    refreshToken?: string | undefined;
+    refreshTokenExpiry?: Date;
+    success?: boolean;
+    message?: string | undefined;
+}
+
 export interface Money {
     amount?: number;
     currency?: string | undefined;
@@ -505,6 +520,36 @@ export interface Recipient {
 export enum RecipientType {
     Personal = "Personal",
     Company = "Company",
+}
+
+export interface RefreshTokenCommand {
+    refreshToken?: string | undefined;
+    token?: string | undefined;
+}
+
+export interface RefreshTokenResult {
+    userProfileId?: string;
+    roles?: string[] | undefined;
+    token?: string | undefined;
+    refreshToken?: string | undefined;
+    refreshTokenExpiry?: Date;
+    success?: boolean;
+    message?: string | undefined;
+}
+
+export interface RegisterUserCommand {
+    email?: string | undefined;
+    password?: string | undefined;
+}
+
+export interface RegisterUserResult {
+    userProfileId?: string;
+    roles?: string[] | undefined;
+    token?: string | undefined;
+    refreshToken?: string | undefined;
+    refreshTokenExpiry?: Date;
+    success?: boolean;
+    message?: string | undefined;
 }
 
 export interface ValidateAndSaveCartCommandProduct {

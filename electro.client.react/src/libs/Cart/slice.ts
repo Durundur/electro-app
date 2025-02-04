@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CreateOrderResult, CreateOrUpdateRecipientResult, GetCartResult, GetRecipientsResult, GetRecipientsResultItem } from "../api-contract/api-contract";
 import { DeliveryOption, PaymentOption } from "./interfaces";
+import { IError } from "../api-contract/Error";
 
 interface CartStore {
 	cart: CartState;
@@ -12,13 +13,13 @@ interface CartStore {
 interface CartState {
 	data?: GetCartResult;
 	validationErrors: string[];
-	error?: Error;
+	error?: IError;
 	isLoading: boolean;
 }
 
 interface CheckoutRecipientsState {
 	data?: GetRecipientsResult;
-	error?: Error;
+	error?: IError;
 	isLoading: boolean;
 }
 
@@ -33,9 +34,11 @@ interface CheckoutState {
 
 interface CreateOrderState {
 	result?: CreateOrderResult;
-	error?: Error;
+	error?: IError;
 	isLoading: boolean;
 }
+
+export type StoredCartState = GetCartResult;
 
 const initialState: CartStore = {
 	cart: {
@@ -76,7 +79,7 @@ const CartStore = createSlice({
 			state.cart.isLoading = false;
 			state.cart.data = action.payload;
 		},
-		fetchCartError(state, action: PayloadAction<Error>) {
+		fetchCartError(state, action: PayloadAction<IError>) {
 			state.cart.isLoading = false;
 			state.cart.error = action.payload;
 		},
@@ -96,7 +99,7 @@ const CartStore = createSlice({
 		setValidationErrors(state, action: PayloadAction<string[]>) {
 			state.cart.validationErrors = action.payload;
 		},
-		validateCartError(state, action: PayloadAction<Error>) {
+		validateCartError(state, action: PayloadAction<IError>) {
 			state.cart.isLoading = false;
 			state.cart.error = action.payload;
 		},
@@ -108,7 +111,7 @@ const CartStore = createSlice({
 			state.checkoutRecipients.isLoading = false;
 			state.checkoutRecipients.data = action.payload;
 		},
-		fetchRecipientsError(state, action: PayloadAction<Error>) {
+		fetchRecipientsError(state, action: PayloadAction<IError>) {
 			state.checkoutRecipients.isLoading = false;
 			state.checkoutRecipients.error = action.payload;
 		},
@@ -116,7 +119,7 @@ const CartStore = createSlice({
 			state.checkoutRecipients.isLoading = true;
 			state.checkoutRecipients.error = undefined;
 		},
-		createOrUpdateRecipientError(state, action: PayloadAction<Error>) {
+		createOrUpdateRecipientError(state, action: PayloadAction<IError>) {
 			state.checkoutRecipients.isLoading = false;
 			state.checkoutRecipients.error = action.payload;
 		},
@@ -137,7 +140,7 @@ const CartStore = createSlice({
 			state.checkoutRecipients.isLoading = true;
 			state.checkoutRecipients.error = undefined;
 		},
-		deleteRecipientError(state, action: PayloadAction<Error>) {
+		deleteRecipientError(state, action: PayloadAction<IError>) {
 			state.checkoutRecipients.isLoading = false;
 			state.checkoutRecipients.error = action.payload;
 		},
@@ -174,9 +177,12 @@ const CartStore = createSlice({
 			state.createOrder.isLoading = false;
 			state.createOrder.result = action.payload;
 		},
-		createOrderError(state, action: PayloadAction<Error>) {
+		createOrderError(state, action: PayloadAction<IError>) {
 			state.createOrder.isLoading = false;
 			state.createOrder.error = action.payload;
+		},
+		restoreCart(state, action: PayloadAction<StoredCartState>) {
+			state.cart.data = action.payload;
 		},
 	},
 });
@@ -208,6 +214,7 @@ export const {
 	createOrderError,
 	createOrderStart,
 	createOrderSuccess,
+	restoreCart,
 } = CartStore.actions;
 
 export default CartStore.reducer;

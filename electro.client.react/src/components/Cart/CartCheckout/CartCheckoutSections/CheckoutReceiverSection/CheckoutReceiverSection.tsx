@@ -10,11 +10,13 @@ const CheckoutReceiverSection: FC = () => {
 	const dispatch = useDispatch();
 	const recipientsSelector = useSelector((store) => store.CartStore.checkoutRecipients.data);
 	const hasSavedRecipients = recipientsSelector && recipientsSelector.recipients && recipientsSelector.recipients.length > 0;
-	const [viewMode, setViewMode] = useState<"list" | "form">("list");
+	const [viewMode, setViewMode] = useState<"list" | "form">(hasSavedRecipients ? "list" : "form");
 	const [editingRecipient, setEditingRecipient] = useState<GetRecipientsResultItem | null>(null);
+	const userProfileId = useSelector((store) => store.AuthStore.userProfile.id);
 
 	useEffect(() => {
-		dispatch(fetchRecipients());
+		if(!userProfileId) return;
+		dispatch(fetchRecipients(userProfileId));
 	}, []);
 
 	const handleAddNewClick = () => {

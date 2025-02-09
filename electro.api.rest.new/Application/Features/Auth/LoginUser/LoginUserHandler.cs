@@ -1,6 +1,6 @@
-﻿using Application.Reposiotories;
-using Application.Services.IdentityService;
+﻿using Application.Services.IdentityService;
 using Application.Services.TokenService;
+using Microsoft.Extensions.Logging;
 using MediatR;
 
 namespace Application.Features.Auth.LoginUser
@@ -9,33 +9,56 @@ namespace Application.Features.Auth.LoginUser
     {
         private readonly IIdentityService _identityService;
         private readonly ITokenService _tokenService;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<LoginUserHandler> _logger;
 
-        public LoginUserHandler(IIdentityService identityService, ITokenService tokenService, IUnitOfWork unitOfWork)
+        public LoginUserHandler(IIdentityService identityService, ITokenService tokenService, ILogger<LoginUserHandler> logger)
         {
             _identityService = identityService;
             _tokenService = tokenService;
-            _unitOfWork = unitOfWork;
+            _logger = logger;
         }
 
         public async Task<LoginUserResult> Handle(LoginUserCommand request, CancellationToken cancellationToken)
         {
-            var user = await _identityService.FindUserByEmailAsync(request.Email);
-            
-            if (user == null || !await _identityService.CheckPasswordAsync(user.Id, request.Password))
+            if (string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Password))
             {
-                return new LoginUserErrorResult("Invalid email or password");
+                return new LoginUserErrorResult("Email and password are required");
             }
 
-            var roles = await _identityService.GetRolesAsync(user.Id);
-            var token = _tokenService.GenerateToken(user, roles);
-            var refreshToken = _tokenService.GenerateRefreshToken();
-            var refreshTokenExpiry = _tokenService.GetRefreshTokenExpiry();
+            try
+            {
+                var user = await _identityService.FindUserByEmailAsync(request.Email);
+                if (user == null)
+                {
+                    return new LoginUserErrorResult("Invalid email or password");
+                }
 
-            await _identityService.UpdateRefreshTokenAsync(user.Id, refreshToken, refreshTokenExpiry);
-            var userProfile = await _unitOfWork.UserProfileRepository.GetUserProfileByUserIdentityIdAsync(user.Id);
+                if (!await _identityService.CheckPasswordAsync(user.Id, request.Password))
+                {
+                    return new LoginUserErrorResult("Invalid email or password");
+                }
 
-            return new LoginUserSuccessResult(userProfile.Id, token, refreshToken, refreshTokenExpiry, roles.ToList(), "Login successful");
+                var roles = await _identityService.GetRolesAsync(user.Id);
+
+                var token = _tokenService.GenerateToken(user, roles);
+                var refreshToken = _tokenService.GenerateRefreshToken();
+                var refreshTokenExpiry = _tokenService.GetRefreshTokenExpiry();
+
+                await _identityService.UpdateRefreshTokenAsync(user.Id, refreshToken, refreshTokenExpiry);
+
+                return new LoginUserSuccessResult(
+                    user.Id,
+                    token,
+                    refreshToken,
+                    refreshTokenExpiry,
+                    roles,
+                    "Login successful");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred during login");
+                return new LoginUserErrorResult("An error occurred during login. Please try again");
+            }
         }
     }
 }

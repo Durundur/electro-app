@@ -14,7 +14,7 @@ const CartPage: FC = () => {
 	const cartIsLoadingSelector = useSelector((store) => store.CartStore.cart.isLoading);
 	const cartErrorSelector = useSelector((store) => store.CartStore.cart.error);
 	const cartValidationErrorsSelector = useSelector((store) => store.CartStore.cart.validationErrors);
-	const userProfileId = useSelector((store) => store.AuthStore.userProfile.id);
+	const userId = useSelector((store) => store.AuthStore.user.id);
 
 	const alerts = cartValidationErrorsSelector.map((message, index) => (
 		<Alert key={`cart-validation-msg-${index}`} variant="outlined" severity="warning">
@@ -23,8 +23,8 @@ const CartPage: FC = () => {
 	));
 
 	useEffect(() => {
-		if (!userProfileId) return;
-		dispatch(fetchCart(userProfileId));
+		if (!userId) return;
+		dispatch(fetchCart(userId));
 	}, []);
 
 	if (cartErrorSelector) {

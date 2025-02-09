@@ -1,7 +1,8 @@
+import { translateOrderStatus } from "@/libs/Helpers/Translations/OrdersTranslations";
 import { formatAmount } from "@/libs/Helpers/Formatters";
 import { GetOrdersResult } from "@/libs/api-contract/api-contract";
-import { InfoOutlined, OpenInNewRounded } from "@mui/icons-material";
-import { Button, IconButton } from "@mui/material";
+import { OpenInNewRounded } from "@mui/icons-material";
+import { IconButton } from "@mui/material";
 import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid";
 import { useRouter } from "next/navigation";
 import { FC } from "react";
@@ -15,10 +16,11 @@ const AdminOrdersList: FC<AdminOrdersListProps> = ({ onPaginationChange, ordersL
 	const router = useRouter();
 	const { orders, page, pageSize, pageCount } = ordersListData;
 	const rowCount = (pageSize ?? 0) * (pageCount ?? 0);
+
 	const columns: GridColDef[] = [
 		{ field: "id", headerName: "ID", flex: 1, disableColumnMenu: true },
 		{ field: "totalPrice", headerName: "Wartość", flex: 1, disableColumnMenu: true, renderCell: (v) => <>{formatAmount(v.value.amount, v.value.currency)}</> },
-		{ field: "status", headerName: "Status", flex: 2, disableColumnMenu: true },
+		{ field: "status", headerName: "Status", flex: 2, disableColumnMenu: true, valueFormatter: (v) => translateOrderStatus(v) },
 		{ field: "createdAt", headerName: "Utworzono", flex: 2, disableColumnMenu: true, valueFormatter: (v) => new Date(v).toLocaleString() },
 		{
 			field: " ",
@@ -26,7 +28,7 @@ const AdminOrdersList: FC<AdminOrdersListProps> = ({ onPaginationChange, ordersL
 			sortable: false,
 			filterable: false,
 			disableColumnMenu: true,
-			align: 'center',
+			align: "center",
 			renderCell: (params) => (
 				<IconButton size="small" onClick={() => router.push(`/orders/${params.row.id}`)}>
 					<OpenInNewRounded fontSize="small" />

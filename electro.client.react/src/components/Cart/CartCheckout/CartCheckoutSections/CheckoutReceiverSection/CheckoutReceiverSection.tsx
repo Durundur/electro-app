@@ -9,15 +9,25 @@ import { GetRecipientsResultItem } from "@/libs/api-contract/api-contract";
 const CheckoutReceiverSection: FC = () => {
 	const dispatch = useDispatch();
 	const recipientsSelector = useSelector((store) => store.CartStore.checkoutRecipients.data);
-	const hasSavedRecipients = recipientsSelector && recipientsSelector.recipients && recipientsSelector.recipients.length > 0;
+	const recipientsErrorSelector = useSelector((store) => store.CartStore.checkoutRecipients.error);
+	const hasSavedRecipients = recipientsSelector && !recipientsErrorSelector && recipientsSelector.recipients && recipientsSelector.recipients.length > 0;
+
 	const [viewMode, setViewMode] = useState<"list" | "form">(hasSavedRecipients ? "list" : "form");
 	const [editingRecipient, setEditingRecipient] = useState<GetRecipientsResultItem | null>(null);
-	const userProfileId = useSelector((store) => store.AuthStore.userProfile.id);
+	const userId = useSelector((store) => store.AuthStore.user.id);
 
 	useEffect(() => {
-		if(!userProfileId) return;
-		dispatch(fetchRecipients(userProfileId));
-	}, []);
+		if (!userId) return;
+		dispatch(fetchRecipients(userId));
+	}, [userId]);
+
+	useEffect(() => {
+		if (hasSavedRecipients) {
+			setViewMode("list");
+		} else {
+			setViewMode("form");
+		}
+	}, [hasSavedRecipients]);
 
 	const handleAddNewClick = () => {
 		setEditingRecipient(null);

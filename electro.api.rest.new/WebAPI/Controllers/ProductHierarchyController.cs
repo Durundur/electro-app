@@ -5,13 +5,15 @@ using Application.Features.ProductHierarchy.CreateOrUpdateCategory;
 using Application.Features.ProductHierarchy.DeleteCategory;
 using Application.Features.ProductHierarchy.CreateOrUpdateSubCategory;
 using Application.Features.ProductHierarchy.DeleteSubCategory;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Application.Features.ProductHierarchy.GetMenu;
 using Application.Features.ProductHierarchy.GetGroup;
 using Application.Features.ProductHierarchy.GetCategory;
 using Application.Features.ProductHierarchy.GetSubCategory;
 using Application.Features.ProductHierarchy.GetAttributesDefinitions;
+using Microsoft.AspNetCore.Mvc;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace WebAPI.Controllers
 {
@@ -20,6 +22,7 @@ namespace WebAPI.Controllers
     public class ProductHierarchyController: ControllerBase
     {
         private readonly IMediator _mediator;
+
         public ProductHierarchyController(IMediator mediator)
         {
             _mediator = mediator;
@@ -45,6 +48,7 @@ namespace WebAPI.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("groups")]
         [ProducesResponseType<CreateOrUpdateGroupResult>(StatusCodes.Status200OK)]
         public async Task<ActionResult<CreateOrUpdateGroupResult>> CreateOrUpdateGroup([FromBody] CreateOrUpdateGroupCommand command)
@@ -54,21 +58,21 @@ namespace WebAPI.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("groups/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<GetGroupResult>> GetGroup(int id)
+        public async Task<ActionResult<GetGroupResult>> GetGroup([FromRoute] GetGroupQuery query)
         {
-            var command = new GetGroupQuery() { Id = id };
-            var result = await _mediator.Send(command);
+            var result = await _mediator.Send(query);
             return result;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("groups/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeleteGroup(int id)
+        public async Task<IActionResult> DeleteGroup([FromRoute] DeleteGroupCommand command)
         {
-            var command = new DeleteGroupCommand() { Id = id };
             var result = await _mediator.Send(command);
             if (result)
             {
@@ -77,6 +81,7 @@ namespace WebAPI.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("categories")]
         [ProducesResponseType<CreateOrUpdateCategoryResult>(StatusCodes.Status200OK)]
         public async Task<ActionResult<CreateOrUpdateCategoryResult>> CreateOrUpdateCategory([FromBody] CreateOrUpdateCategoryCommand command)
@@ -86,12 +91,12 @@ namespace WebAPI.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("categories/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeleteCategory(int id)
+        public async Task<IActionResult> DeleteCategory([FromRoute] DeleteCategoryCommand command)
         {
-            var command = new DeleteCategoryCommand() { Id = id };
             var result = await _mediator.Send(command);
             if (result)
             {
@@ -100,15 +105,16 @@ namespace WebAPI.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("categories/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<GetCategoryResult>> GetCategory(int id)
+        public async Task<ActionResult<GetCategoryResult>> GetCategory([FromRoute] GetCategoryQuery query)
         {
-            var command = new GetCategoryQuery() { Id = id };
-            var result = await _mediator.Send(command);
+            var result = await _mediator.Send(query);
             return result;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("subCategories")]
         [ProducesResponseType<CreateOrUpdateSubCategoryResult>(StatusCodes.Status200OK)]
         public async Task<ActionResult<CreateOrUpdateSubCategoryResult>> CreateOrUpdateSubCategory([FromBody] CreateOrUpdateSubCategoryCommand command)
@@ -118,12 +124,12 @@ namespace WebAPI.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("subCategories/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeleteSubCategory(int id)
+        public async Task<IActionResult> DeleteSubCategory([FromRoute] DeleteSubCategoryCommand command)
         {
-            var command = new DeleteSubCategoryCommand() { Id = id };
             var result = await _mediator.Send(command);
             if (result)
             {
@@ -132,15 +138,16 @@ namespace WebAPI.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("subCategories/{id}")]
         [ProducesResponseType<GetSubCategoryResult>(StatusCodes.Status200OK)]
-        public async Task<ActionResult<GetSubCategoryResult>> GetSubCategory(int id)
+        public async Task<ActionResult<GetSubCategoryResult>> GetSubCategory([FromRoute] GetSubCategoryQuery query)
         {
-            var command = new GetSubCategoryQuery() { Id = id };
-            var result = await _mediator.Send(command);
+            var result = await _mediator.Send(query);
             return result;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("attributes-definitions")]
         [ProducesResponseType<GetAttributesDefinitionsResult>(StatusCodes.Status200OK)]
         public async Task<ActionResult<GetAttributesDefinitionsResult>> GetAttributesDefinitions([FromQuery] GetAttributesDefinitionsQuery query)

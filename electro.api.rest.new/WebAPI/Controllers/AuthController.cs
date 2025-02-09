@@ -1,8 +1,8 @@
 ﻿using Application.Features.Auth.LoginUser;
 using Application.Features.Auth.RefreshToken;
 using Application.Features.Auth.RegisterUser;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using MediatR;
 
 namespace WebAPI.Controllers
 {
@@ -18,8 +18,8 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("register")]
-        [ProducesResponseType<RegisterUserResult>(StatusCodes.Status200OK)]
-        [ProducesResponseType<RegisterUserResult>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<RegisterUserSuccessResult>(StatusCodes.Status200OK)]
+        [ProducesResponseType<RegisterUserErrorResult>(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<RegisterUserResult>> Register([FromBody] RegisterUserCommand command)
         {
             var response = await _mediator.Send(command);
@@ -31,8 +31,8 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("login")]
-        [ProducesResponseType<LoginUserResult>(StatusCodes.Status200OK)]
-        [ProducesResponseType<LoginUserResult>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<LoginUserSuccessResult>(StatusCodes.Status200OK)]
+        [ProducesResponseType<LoginUserErrorResult>(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<LoginUserResult>> Login([FromBody] LoginUserCommand command)
         {
             var response = await _mediator.Send(command);

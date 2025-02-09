@@ -1,4 +1,4 @@
-﻿using Application.Reposiotories;
+﻿using Domain.Reposiotories;
 using Domain.Aggregates.CartAggregate;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
@@ -22,12 +22,12 @@ namespace Infrastructure.Reposiotories
 
         public async Task<Cart> GetCartByUserIdAsync(Guid userId)
         {
-            return await _context.Carts.Include(c => c.Products).FirstOrDefaultAsync(c => c.UserProfileId == userId);
+            return await _context.Carts.Include(c => c.Products).FirstOrDefaultAsync(c => c.UserId == userId);
         }
 
         public async Task DeleteUserCartAsync(Guid userId)
         {
-            var userCart = await _context.Carts.Include(c => c.Products).FirstOrDefaultAsync(c => c.UserProfileId == userId);
+            var userCart = await _context.Carts.Include(c => c.Products).FirstOrDefaultAsync(c => c.UserId == userId);
 
             if (userCart != null)
             {

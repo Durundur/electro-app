@@ -1,26 +1,35 @@
-﻿using Application.Reposiotories;
+﻿using Domain.Reposiotories;
 using Domain.Aggregates.CartAggregate;
 using Domain.ValueObjects;
+using Application.Services.UserContext;
 using MediatR;
+
 
 namespace Application.Features.Cart.ValidateAndSaveCart
 {
     public class ValidateCartHandler : IRequestHandler<ValidateCartCommand, ValidateCartResult>
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IUserContext _userContext;
 
-        public ValidateCartHandler(IUnitOfWork unitOfWork)
+        public ValidateCartHandler(IUnitOfWork unitOfWork, IUserContext userContext)
         {
             _unitOfWork = unitOfWork;
+            _userContext = userContext;
         }
 
         public async Task<ValidateCartResult> Handle(ValidateCartCommand command, CancellationToken cancellationToken)
         {
             var validationResult = await ValidateCartAsync(command, cancellationToken);
 
-            if (command.UserId.HasValue)
+            try
             {
-                await SaveCartAsync(command.UserId.Value, validationResult, cancellationToken);
+                var userId = _userContext.UserId;
+                await SaveCartAsync(userId, validationResult, cancellationToken);
+            }
+            catch (Exception ex) 
+            {
+
             }
 
             return validationResult;

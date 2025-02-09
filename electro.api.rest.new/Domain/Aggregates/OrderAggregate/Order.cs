@@ -5,7 +5,7 @@ namespace Domain.Aggregates.OrderAggregate
     public class Order
     {
         public Guid Id { get; private set; }
-        public Guid UserProfileId { get; private set; }
+        public Guid UserId { get; private set; }
         public OrderStatus Status { get; private set; }
         private readonly List<OrderProduct> _products;
         public IReadOnlyCollection<OrderProduct> Products => _products.AsReadOnly();
@@ -26,9 +26,9 @@ namespace Domain.Aggregates.OrderAggregate
 
         private Order() { }
 
-        public Order(Guid userProfileId, IList<OrderProduct> products, Payment payment, Delivery delivery, Recipient recipient)
+        public Order(Guid userId, IList<OrderProduct> products, Payment payment, Delivery delivery, Recipient recipient)
         {
-            UserProfileId = userProfileId;
+            UserId = userId;
             _products = products.ToList();
             Payment = payment;
             Delivery = delivery;

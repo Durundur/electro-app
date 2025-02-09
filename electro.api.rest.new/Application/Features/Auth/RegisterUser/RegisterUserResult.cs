@@ -3,7 +3,7 @@
     public abstract record RegisterUserResult(bool Success, string Message);
 
     public record RegisterUserSuccessResult(
-        Guid UserProfileId,
+        Guid UserId,
         string Token,
         string RefreshToken,
         DateTime RefreshTokenExpiry,

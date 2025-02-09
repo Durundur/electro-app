@@ -10,8 +10,8 @@ import { RegisterUserCommand } from "@/libs/api-contract/api-contract";
 import { registerUser } from "@/libs/Auth/thunks";
 import * as Yup from "yup";
 import { useRouter } from "next/navigation";
-import { translateErrorMessage } from "@/libs/Auth/errorMessages";
 import FullScreenLoader from "@/components/Layout/FullScreenLoader/FullScreenLoader";
+import { translateErrorMessage } from "@/libs/api-contract/Error";
 
 interface RegisterUserForm extends RegisterUserCommand {
 	firstName: string;

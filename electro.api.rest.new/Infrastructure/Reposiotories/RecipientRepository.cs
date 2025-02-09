@@ -1,5 +1,5 @@
-﻿using Application.Reposiotories;
-using Domain.Aggregates.UserProfileAggregate;
+﻿using Domain.Reposiotories;
+using Domain.Aggregates.UserAggregate;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,10 +14,10 @@ namespace Infrastructure.Reposiotories
             _context = context;
         }
 
-        public async Task<IList<Recipient>> GetUserRecipientsAsync(Guid userProfileId, CancellationToken cancellationToken)
+        public async Task<IList<Recipient>> GetUserRecipientsAsync(Guid userId, CancellationToken cancellationToken)
         {
             return await _context.Recipients
-                .Where(r => r.UserProfileId == userProfileId)
+                .Where(r => r.UserId == userId)
                 .ToListAsync(cancellationToken);
         }
 

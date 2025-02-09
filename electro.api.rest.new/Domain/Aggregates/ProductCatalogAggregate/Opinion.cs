@@ -3,7 +3,7 @@
     public class Opinion
     {
         public Guid Id { get; private set; }
-        public Guid UserProfileId { get; private set; }
+        public Guid UserId { get; private set; }
         public string Content { get; private set; }
         public float Rating { get; private set; }
         public DateTime CreatedAt { get; private set; }
@@ -13,19 +13,19 @@
 
         public Opinion() { }
 
-        public Opinion(Guid userProfileId, string content, float rating)
+        public Opinion(Guid userId, string content, float rating)
         {
             Id = Guid.NewGuid();
-            UserProfileId = userProfileId;
+            UserId = userId;
             Content = content;
             Rating = rating;
             CreatedAt = DateTime.UtcNow;
             _actions = new List<OpinionAction>();
         }
 
-        public void AddAction(Guid userProfileId, OpinionActionType actionType)
+        public void AddAction(Guid userId, OpinionActionType actionType)
         {
-            var existingAction = _actions.FirstOrDefault(a => a.UserProfileId == userProfileId);
+            var existingAction = _actions.FirstOrDefault(a => a.UserId == userId);
             if (existingAction != null)
             {
                 if (existingAction.ActionType == actionType)
@@ -34,7 +34,7 @@
                 _actions.Remove(existingAction);
             }
 
-            var newAction = new OpinionAction(userProfileId, actionType);
+            var newAction = new OpinionAction(userId, actionType);
             _actions.Add(newAction);
         }
 

@@ -1,10 +1,12 @@
-﻿using Application.Reposiotories;
+﻿using Domain.Reposiotories;
 using Application.Services.IdentityService;
 using Application.Services.TokenService;
+using Application.Services.UserContext;
 using Infrastructure.Context;
 using Infrastructure.Identity;
 using Infrastructure.Reposiotories;
 using Infrastructure.Services.IdentityServices;
+using Infrastructure.Services.UserContext;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -61,6 +63,8 @@ namespace Application
         {
             services.AddScoped<IIdentityService, IdentityService>();
             services.AddScoped<ITokenService, TokenService>();
+            services.AddHttpContextAccessor();
+            services.AddScoped<IUserContext, UserContext>();
         }
 
         private static void AddDbService(this IServiceCollection services, IConfiguration configuration)
@@ -70,6 +74,13 @@ namespace Application
             {
                 options.UseNpgsql(connectionString);
             });
+        }
+
+        public static void ApplyMigrations(this IServiceProvider serviceProvider)
+        {
+            using var scope = serviceProvider.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            dbContext.Database.Migrate();
         }
 
         private static void AddRepositories(this IServiceCollection services)

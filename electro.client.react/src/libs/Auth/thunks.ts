@@ -1,13 +1,13 @@
 import { AppDispatch } from "../Store";
 import ApiClient from "../api-contract/ApiClient";
 import { IError, createError } from "../api-contract/Error";
-import { LoginUserCommand, LoginUserResult, RefreshTokenCommand, RefreshTokenResult, RegisterUserCommand, RegisterUserResult } from "../api-contract/api-contract";
+import { LoginUserCommand, LoginUserSuccessResult, RefreshTokenCommand, RefreshTokenResult, RegisterUserCommand, RegisterUserSuccessResult } from "../api-contract/api-contract";
 import { authErrorSet, authLoadingStart, loginUserSuccess, refreshTokenSuccess, registerUserSuccess } from "./slice";
 
 export const registerUser = (command: RegisterUserCommand) => async (dispatch: AppDispatch) => {
     try {
         dispatch(authLoadingStart());
-        const response = await ApiClient.post<RegisterUserResult>("/api/auth/register", command);
+        const response = await ApiClient.post<RegisterUserSuccessResult>("/api/auth/register", command);
         dispatch(registerUserSuccess(response.data));
     } catch (error) {
         dispatch(authErrorSet(createError(error as IError)));
@@ -18,7 +18,7 @@ export const registerUser = (command: RegisterUserCommand) => async (dispatch: A
 export const loginUser = (command: LoginUserCommand) => async (dispatch: AppDispatch) => {
     try {
         dispatch(authLoadingStart());
-        const response = await ApiClient.post<LoginUserResult>("/api/auth/login", command);
+        const response = await ApiClient.post<LoginUserSuccessResult>("/api/auth/login", command);
         dispatch(loginUserSuccess(response.data));
     } catch (error) {
         dispatch(authErrorSet(createError(error as IError)));

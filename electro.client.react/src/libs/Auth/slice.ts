@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IError } from "../api-contract/Error";
-import { LoginUserResult, RefreshTokenResult, RegisterUserResult } from "../api-contract/api-contract";
+import { LoginUserSuccessResult, RefreshTokenResult, RegisterUserSuccessResult } from "../api-contract/api-contract";
 
 interface AuthStore {
 	auth: AuthState;
-	userProfile: UserProfileState;
+	user: UserState;
 	isLoading: boolean;
 	error?: IError;
 }
@@ -16,12 +16,12 @@ interface AuthState {
 	isAuthenticated: boolean;
 }
 
-interface UserProfileState {
+interface UserState {
 	id?: string;
 	roles?: string[];
 }
 
-export type StoredAuthState = Pick<AuthStore, "auth" | "userProfile">;
+export type StoredAuthState = Pick<AuthStore, "auth" | "user">;
 
 const initialState: AuthStore = {
 	auth: {
@@ -30,7 +30,7 @@ const initialState: AuthStore = {
 		refreshTokenExpiry: undefined,
 		isAuthenticated: false,
 	},
-	userProfile: {
+	user: {
 		id: undefined,
 		roles: undefined,
 	},
@@ -42,24 +42,24 @@ const AuthStore = createSlice({
 	name: "AuthStore",
 	initialState,
 	reducers: {
-		registerUserSuccess(state, action: PayloadAction<RegisterUserResult>) {
+		registerUserSuccess(state, action: PayloadAction<RegisterUserSuccessResult>) {
 			state.auth.token = action.payload.token;
 			state.auth.refreshToken = action.payload.refreshToken;
 			state.auth.refreshTokenExpiry = new Date(action.payload.refreshTokenExpiry!).toISOString();
 			state.auth.isAuthenticated = true;
-			state.userProfile = {
-				id: action.payload.userProfileId,
+			state.user = {
+				id: action.payload.userId,
 				roles: action.payload.roles,
 			};
 			state.isLoading = false;
 		},
-		loginUserSuccess(state, action: PayloadAction<LoginUserResult>) {
+		loginUserSuccess(state, action: PayloadAction<LoginUserSuccessResult>) {
 			state.auth.token = action.payload.token;
 			state.auth.refreshToken = action.payload.refreshToken;
 			state.auth.refreshTokenExpiry = new Date(action.payload.refreshTokenExpiry!).toISOString();
 			state.auth.isAuthenticated = true;
-			state.userProfile = {
-				id: action.payload.userProfileId,
+			state.user = {
+				id: action.payload.userId,
 				roles: action.payload.roles,
 			};
 			state.isLoading = false;
@@ -85,12 +85,12 @@ const AuthStore = createSlice({
 			state.auth.refreshTokenExpiry = undefined;
 			state.auth.isAuthenticated = false;
 			state.error = undefined;
-			state.userProfile.id = undefined;
-			state.userProfile.roles = undefined;
+			state.user.id = undefined;
+			state.user.roles = undefined;
 		},
 		restoreAuth(state, action: PayloadAction<StoredAuthState>) {
 			state.auth = action.payload.auth;
-			state.userProfile = action.payload.userProfile;
+			state.user = action.payload.user;
 		},
 	},
 });

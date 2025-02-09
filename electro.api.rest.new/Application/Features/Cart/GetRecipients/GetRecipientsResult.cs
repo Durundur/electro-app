@@ -1,4 +1,4 @@
-﻿using Domain.Aggregates.UserProfileAggregate;
+﻿using Domain.Aggregates.UserAggregate;
 
 namespace Application.Features.Cart.GetRecipients
 {

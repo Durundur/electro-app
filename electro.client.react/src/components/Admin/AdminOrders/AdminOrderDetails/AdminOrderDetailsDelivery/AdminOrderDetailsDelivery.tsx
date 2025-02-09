@@ -1,3 +1,4 @@
+import { translateDeliveryMethod } from "@/libs/Helpers/Translations/OrdersTranslations";
 import { Delivery } from "@/libs/api-contract/api-contract";
 import { OpenInNewRounded } from "@mui/icons-material";
 import { Button, Stack, Typography } from "@mui/material";
@@ -13,7 +14,7 @@ const AdminOrderDetailsDelivery: FC<AdminOrderDetailsDeliveryProps> = ({ deliver
 			<Typography fontWeight={500} variant="subtitle1">
 				Dostawa
 			</Typography>
-			<Typography variant="body2">Sposób dostawy: {delivery.method}</Typography>
+			<Typography variant="body2">Sposób dostawy: {translateDeliveryMethod(delivery.method!)}</Typography>
 			<Stack direction={"row"} alignItems={"center"} spacing={2}>
 				<Typography variant="body2">Numer przesyłki: </Typography>
 				<Button sx={{ paddingY: 0 }} size="small" variant="outlined" color="inherit" endIcon={<OpenInNewRounded fontSize="small" />}>

@@ -1,6 +1,7 @@
 ﻿using D = Domain.Aggregates;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Infrastructure.Identity;
 
 namespace Infrastructure.Configurations.ProductCatalog
 {
@@ -11,7 +12,7 @@ namespace Infrastructure.Configurations.ProductCatalog
             builder.ToTable("OpinionActions");
             builder.Property<Guid>("Id");
             builder.HasKey("Id");
-            builder.HasOne<D.UserProfileAggregate.UserProfile>().WithMany().HasForeignKey(o => o.UserProfileId);
+            builder.HasOne<UserIdentity>().WithMany().HasForeignKey(o => o.UserId);
         }
     }
 }

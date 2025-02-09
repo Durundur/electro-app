@@ -23,7 +23,6 @@ const ProductPage: FC<ProductPageParams> = ({ params }) => {
 	const dispatch = useDispatch();
 	const productSelector = useSelector((state) => state.ProductPageStore.product);
 	const product = productSelector.data;
-	const userProfileId = useSelector((store) => store.AuthStore.userProfile.id);
 
 	useEffect(() => {
 		dispatch(fetchProduct(params.id));
@@ -34,7 +33,7 @@ const ProductPage: FC<ProductPageParams> = ({ params }) => {
 	}, []);
 
 	const handleAddToCart = () => {
-		dispatch(addProductToCart(product?.id!, quantity, product?.amount!, product?.currency!, userProfileId));
+		dispatch(addProductToCart(product?.id!, quantity, product?.amount!, product?.currency!));
 	};
 
 	if (productSelector.isLoading) return <CircularProgress />;

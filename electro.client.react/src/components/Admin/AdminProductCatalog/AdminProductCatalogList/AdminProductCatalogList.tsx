@@ -5,6 +5,7 @@ import { FC } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useRouter } from "next/navigation";
+import { translateProductStatus } from "@/libs/Helpers/Translations/ProductsTranslations";
 
 interface AdminProductCatalogListProps {
 	productCatalogData: GetProductCatalogResult;
@@ -19,7 +20,7 @@ const AdminProductCatalogList: FC<AdminProductCatalogListProps> = ({ productCata
 	const columns: GridColDef[] = [
 		{ field: "id", headerName: "ID", flex: 1, disableColumnMenu: true },
 		{ field: "name", headerName: "Nazwa", flex: 4, disableColumnMenu: true },
-		{ field: "status", headerName: "Status", flex: 2, disableColumnMenu: true },
+		{ field: "status", headerName: "Status", flex: 2, disableColumnMenu: true, valueFormatter: (v) => translateProductStatus(v) },
 		{ field: "stockQuantity", headerName: "Stan magazynowy", flex: 2, disableColumnMenu: true },
 		{
 			field: "actions",

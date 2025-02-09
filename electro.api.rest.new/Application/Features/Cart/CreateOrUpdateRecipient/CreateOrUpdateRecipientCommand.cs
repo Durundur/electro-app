@@ -1,6 +1,6 @@
-﻿using Domain.Aggregates.UserProfileAggregate;
-using MediatR;
+﻿using Domain.Aggregates.UserAggregate;
 using System.Text.Json.Serialization;
+using MediatR;
 
 namespace Application.Features.Cart.CreateOrUpdateRecipient
 {
@@ -8,7 +8,7 @@ namespace Application.Features.Cart.CreateOrUpdateRecipient
     {
         public Guid? Id { get; set; }
         [JsonIgnore]
-        public Guid UserProfileId { get; set; }
+        public Guid UserId { get; set; }
         public string? FirstName { get; set; }
         public string? Surname { get; set; }
         public string? CompanyName { get; set; }

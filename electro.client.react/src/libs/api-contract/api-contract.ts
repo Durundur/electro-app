@@ -429,19 +429,69 @@ export interface GetSubCategoryResult {
     attributes?: AttributeDefinitionResult[] | undefined;
 }
 
+export interface GetUserOrderDetailsResult {
+    id?: string;
+    status?: OrderStatus;
+    products?: GetUserOrderDetailsResultProduct[] | undefined;
+    payment?: Payment;
+    delivery?: Delivery;
+    recipient?: Recipient;
+    totalPrice?: Money;
+    createdAt?: Date;
+    updatedAt?: Date;
+}
+
+export interface GetUserOrderDetailsResultProduct {
+    id?: string;
+    productId?: string;
+    name?: string | undefined;
+    photo?: string | undefined;
+    quantity?: number;
+    price?: Money;
+    totalPrice?: Money;
+}
+
+export interface GetUserOrdersResult {
+    orders?: GetUserOrdersResultOrder[] | undefined;
+    pageCount?: number;
+    pageSize?: number;
+    page?: number;
+}
+
+export interface GetUserOrdersResultOrder {
+    id?: string;
+    totalPrice?: Money;
+    status?: OrderStatus;
+    products?: GetUserOrdersResultOrderProduct[] | undefined;
+    createdAt?: Date;
+}
+
+export interface GetUserOrdersResultOrderProduct {
+    id?: string;
+    quantity?: number;
+    price?: Money;
+    name?: string | undefined;
+    photo?: string | undefined;
+}
+
 export interface LoginUserCommand {
     email?: string | undefined;
     password?: string | undefined;
 }
 
-export interface LoginUserResult {
-    userProfileId?: string;
-    roles?: string[] | undefined;
+export interface LoginUserErrorResult {
+    success?: boolean;
+    message?: string | undefined;
+}
+
+export interface LoginUserSuccessResult {
+    success?: boolean;
+    message?: string | undefined;
+    userId?: string;
     token?: string | undefined;
     refreshToken?: string | undefined;
     refreshTokenExpiry?: Date;
-    success?: boolean;
-    message?: string | undefined;
+    roles?: string[] | undefined;
 }
 
 export interface Money {
@@ -528,7 +578,7 @@ export interface RefreshTokenCommand {
 }
 
 export interface RefreshTokenResult {
-    userProfileId?: string;
+    userId?: string;
     roles?: string[] | undefined;
     token?: string | undefined;
     refreshToken?: string | undefined;
@@ -542,25 +592,29 @@ export interface RegisterUserCommand {
     password?: string | undefined;
 }
 
-export interface RegisterUserResult {
-    userProfileId?: string;
-    roles?: string[] | undefined;
-    token?: string | undefined;
-    refreshToken?: string | undefined;
-    refreshTokenExpiry?: Date;
+export interface RegisterUserErrorResult {
     success?: boolean;
     message?: string | undefined;
 }
 
-export interface ValidateAndSaveCartCommandProduct {
-    productId?: string;
-    quantity?: number;
-    price?: Money;
+export interface RegisterUserSuccessResult {
+    success?: boolean;
+    message?: string | undefined;
+    userId?: string;
+    token?: string | undefined;
+    refreshToken?: string | undefined;
+    refreshTokenExpiry?: Date;
+    roles?: string[] | undefined;
 }
 
 export interface ValidateCartCommand {
-    userId?: string | undefined;
-    products?: ValidateAndSaveCartCommandProduct[] | undefined;
+    products?: ValidateCartCommandProduct[] | undefined;
+}
+
+export interface ValidateCartCommandProduct {
+    productId?: string;
+    quantity?: number;
+    price?: Money;
 }
 
 export interface ValidateCartResult {

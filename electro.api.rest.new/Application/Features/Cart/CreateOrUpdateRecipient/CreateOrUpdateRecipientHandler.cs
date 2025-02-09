@@ -1,5 +1,6 @@
-﻿using Application.Reposiotories;
-using Domain.Aggregates.UserProfileAggregate;
+﻿using Application.Services.UserContext;
+using Domain.Aggregates.UserAggregate;
+using Domain.Reposiotories;
 using MediatR;
 
 namespace Application.Features.Cart.CreateOrUpdateRecipient
@@ -13,44 +14,44 @@ namespace Application.Features.Cart.CreateOrUpdateRecipient
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<CreateOrUpdateRecipientResult> Handle(CreateOrUpdateRecipientCommand request, CancellationToken cancellationToken)
+        public async Task<CreateOrUpdateRecipientResult> Handle(CreateOrUpdateRecipientCommand command, CancellationToken cancellationToken)
         {
-            Recipient recipient;
-            if (request.Id.HasValue)
+            Recipient recipient = null;
+            if (command.Id.HasValue)
             {
-                recipient = await _unitOfWork.RecipientRepository.GetByIdAsync(request.Id.Value, cancellationToken);
+                recipient = await _unitOfWork.RecipientRepository.GetByIdAsync(command.Id.Value, cancellationToken);
                 if (recipient == null)
                 {
-                    throw new InvalidOperationException($"Recipient with ID {request.Id.Value} not found.");
+                    throw new InvalidOperationException($"Recipient with ID {command.Id.Value} not found.");
                 }
 
                 recipient.Update(
-                    request.Type,
-                    request.FirstName,
-                    request.Surname,
-                    request.CompanyName,
-                    request.TaxIdentificationNumber,
-                    request.PhoneNumber,
-                    request.Street,
-                    request.HouseNumber,
-                    request.PostalCode,
-                    request.City
+                    command.Type,
+                    command.FirstName,
+                    command.Surname,
+                    command.CompanyName,
+                    command.TaxIdentificationNumber,
+                    command.PhoneNumber,
+                    command.Street,
+                    command.HouseNumber,
+                    command.PostalCode,
+                    command.City
                 );
             }
             else
             {
                 recipient = Recipient.Create(
-                    request.UserProfileId,
-                    request.Type,
-                    request.FirstName,
-                    request.Surname,
-                    request.CompanyName,
-                    request.TaxIdentificationNumber,
-                    request.PhoneNumber,
-                    request.Street,
-                    request.HouseNumber,
-                    request.PostalCode,
-                    request.City
+                    command.UserId,
+                    command.Type,
+                    command.FirstName,
+                    command.Surname,
+                    command.CompanyName,
+                    command.TaxIdentificationNumber,
+                    command.PhoneNumber,
+                    command.Street,
+                    command.HouseNumber,
+                    command.PostalCode,
+                    command.City
                 );
 
                 await _unitOfWork.RecipientRepository.AddRecipientAsync(recipient, cancellationToken);

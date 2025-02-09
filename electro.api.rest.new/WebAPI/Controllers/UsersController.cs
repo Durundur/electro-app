@@ -2,8 +2,11 @@
 using Application.Features.Cart.DeleteRecipient;
 using Application.Features.Cart.GetCart;
 using Application.Features.Cart.GetRecipients;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using MediatR;
+using WebAPI.Attributes;
+using Application.Features.Order.GetUserOrders;
+using Application.Features.Order.GetUserOrderDetails;
 
 namespace WebAPI.Controllers
 {
@@ -17,53 +20,69 @@ namespace WebAPI.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet("{userId}/recipients")]
+        [AuthorizeOnlyForOwnerOrAdmin]
+        [HttpGet("{UserId}/recipients")]
         [ProducesResponseType<GetRecipientsResult>(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<GetRecipientsResult>> GetUserRecipients(Guid userId)
+        public async Task<ActionResult<GetRecipientsResult>> GetUserRecipients([FromRoute] GetRecipientsQuery query)
         {
-            var query = new GetRecipientsQuery { UserId = userId };
             var response = await _mediator.Send(query);
             return Ok(response);
         }
 
-        [HttpPost("{userId}/recipients")]
+        [AuthorizeOnlyForOwnerOrAdmin]
+        [HttpPost("{UserId}/recipients")]
         [ProducesResponseType<CreateOrUpdateRecipientResult>(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<CreateOrUpdateRecipientResult>> CreateOrUpdateUserRecipient([FromBody] CreateOrUpdateRecipientCommand command, Guid userId)
+        public async Task<ActionResult<CreateOrUpdateRecipientResult>> CreateOrUpdateUserRecipient([FromBody] CreateOrUpdateRecipientCommand command, [FromRoute] Guid UserId)
         {
-            command.UserProfileId = userId;
+            command.UserId = UserId;
             var response = await _mediator.Send(command);
             return Ok(response);
         }
 
-
-        [HttpDelete("{userId}/recipients/{recipientId}")]
+        [AuthorizeOnlyForOwnerOrAdmin]
+        [HttpDelete("{UserId}/recipients/{Id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> DeleteRecipient(Guid recipientId, Guid userId)
+        public async Task<IActionResult> DeleteRecipient([FromRoute] DeleteRecipientCommand command)
         {
-            var command = new DeleteRecipientCommand
-            {
-                Id = recipientId,
-                UserProfileId = userId,
-            };
             var response = await _mediator.Send(command);
             return Ok(response);
         }
 
-        [HttpGet("{userId}/cart")]
+        [AuthorizeOnlyForOwnerOrAdmin]
+        [HttpGet("{UserId}/cart")]
         [ProducesResponseType<GetCartResult>(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<GetCartResult>> GetUserCart(Guid UserId)
+        public async Task<ActionResult<GetCartResult>> GetUserCart([FromRoute] GetCartQuery query)
         {
-            var query = new GetCartQuery
+            var response = await _mediator.Send(query);
+            return Ok(response);
+        }
+
+        [AuthorizeOnlyForOwnerOrAdmin]
+        [HttpGet("{UserId}/orders")]
+        [ProducesResponseType<GetUserOrdersResult>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<GetUserOrdersResult>> GetUserOrders([FromRoute] Guid UserId, [FromQuery] int Page = 1, [FromQuery] int PageSize = 10)
+        {
+            var query = new GetUserOrdersQuery()
             {
-                UserId = UserId
+                UserId = UserId,
+                Page = Page,
+                PageSize = PageSize,
             };
+            var response = await _mediator.Send(query);
+            return Ok(response);
+        }
+
+        [AuthorizeOnlyForOwnerOrAdmin]
+        [HttpGet("{UserId}/orders/{OrderId}")]
+        [ProducesResponseType<GetUserOrderDetailsResult>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<GetUserOrderDetailsResult>> GetUserOrderDetails([FromRoute] GetUserOrderDetailsQuery query)
+        {
             var response = await _mediator.Send(query);
             return Ok(response);
         }

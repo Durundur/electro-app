@@ -1,5 +1,5 @@
 ﻿using Infrastructure.Context;
-using Application.Reposiotories;
+using Domain.Reposiotories;
 using Domain.Aggregates.ProductHierarchyAggregate;
 
 namespace Infrastructure.Reposiotories

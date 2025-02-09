@@ -2,7 +2,7 @@
 import CartCheckoutConfirmSections from "@/components/Cart/CartCheckoutConfirm/CartCheckoutConfirmSections/CartCheckoutConfirmSections";
 import CartCheckoutConfirmSummary from "@/components/Cart/CartCheckoutConfirm/CartCheckoutConfirmSummary/CartCheckoutConfirmSummary";
 import FullScreenLoader from "@/components/Layout/FullScreenLoader/FullScreenLoader";
-import { Grid2, Stack } from "@mui/material";
+import { Grid2 } from "@mui/material";
 import { FC } from "react";
 
 const CartCheckoutConfirmPage: FC = () => {

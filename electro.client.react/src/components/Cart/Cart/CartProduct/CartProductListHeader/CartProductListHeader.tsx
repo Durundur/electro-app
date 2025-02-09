@@ -11,14 +11,13 @@ const CartProductListHeader: FC<CartProductListHeaderProps> = () => {
 	const dispatch = useDispatch();
 	const cartTotalQuantitySelector = useSelector((store) => store.CartStore.cart.data?.totalQuantity);
 	const cartSelector = useSelector((store) => store.CartStore.cart.data);
-	const userProfileId = useSelector((store) => store.AuthStore.userProfile.id);
 
 	const handleClearCart = () => {
 		const cart = {
 			...cartSelector,
 		};
 		cart.products = [];
-		dispatch(validateCart(getValidateCartCommand(cart, userProfileId)));
+		dispatch(validateCart(getValidateCartCommand(cart)));
 	};
 
 	return (

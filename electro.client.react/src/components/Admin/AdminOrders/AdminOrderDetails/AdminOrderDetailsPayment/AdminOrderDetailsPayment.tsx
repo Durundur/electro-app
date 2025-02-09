@@ -1,3 +1,4 @@
+import { translatePaymentMethod } from "@/libs/Helpers/Translations/OrdersTranslations";
 import { Payment } from "@/libs/api-contract/api-contract";
 import { Stack, Typography } from "@mui/material";
 import { FC } from "react";
@@ -12,7 +13,7 @@ const AdminOrderDetailsPayment: FC<AdminOrderDetailsPaymentProps> = ({ payment }
 			<Typography fontWeight={500} variant="subtitle1">
 				Płatność
 			</Typography>
-			<Typography variant="body2">Sposób płatności: {payment.method}</Typography>
+			<Typography variant="body2">Sposób płatności: {translatePaymentMethod(payment.method!)}</Typography>
 		</Stack>
 	);
 };

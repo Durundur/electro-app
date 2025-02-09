@@ -1,4 +1,4 @@
-﻿using Application.Reposiotories;
+﻿using Domain.Reposiotories;
 using Domain.Aggregates.ProductCatalogAggregate;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

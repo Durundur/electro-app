@@ -1,5 +1,5 @@
 import { AttributeDefinitionCommand, AttributeDefinitionResult, AttributeType } from "@/libs/api-contract/api-contract";
-import { Box, Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, FormHelperText, InputLabel, MenuItem, Select, Stack, TextField } from "@mui/material";
+import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, FormHelperText, InputLabel, MenuItem, Select, Stack, TextField } from "@mui/material";
 import { Formik } from "formik";
 import { FC } from "react";
 import * as yup from "yup";

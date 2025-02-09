@@ -7,6 +7,7 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { AttributeDefinitionResult, CreateOrUpdateProductCommand } from "@/libs/api-contract/api-contract";
 import { fetchAttributesDefinitions } from "@/libs/Admin/AdminProductCatalog/AdminProductCatalogNewEdit/thunk";
 import { clearAttributesDefinitionsState } from "@/libs/Admin/AdminProductCatalog/AdminProductCatalogNewEdit/slice";
+import { translateAttributeType } from "@/libs/Helpers/Translations/AttributesTranslations";
 
 interface AttributesPanelProps {
 	formik: FormikProps<CreateOrUpdateProductCommand>;
@@ -47,7 +48,7 @@ const AttributesPanel: FC<AttributesPanelProps> = ({ formik }) => {
 			id: attribute.id,
 			rowId: `attribute-definition-row-${index}`,
 			name: attribute.name,
-			type: attribute.type?.toString(),
+			type: translateAttributeType(attribute.type!),
 			isRequired: attribute.isRequired ? "Tak" : "Nie",
 			description: attribute.description,
 			value: attributeInFormik?.value!,
@@ -90,7 +91,7 @@ const AttributesPanel: FC<AttributesPanelProps> = ({ formik }) => {
 	const processRowUpdate = (row: AttributeDefinitionRow) => {
 		const updatedAttributes = formik.values.attributes || [];
 		const attributeIndex = updatedAttributes.findIndex((attr) => attr.id === row.id);
-	
+
 		if (attributeIndex !== -1) {
 			updatedAttributes[attributeIndex] = {
 				...updatedAttributes[attributeIndex],
@@ -104,7 +105,7 @@ const AttributesPanel: FC<AttributesPanelProps> = ({ formik }) => {
 				isPrimary: row.isPrimary ?? false,
 			});
 		}
-	
+
 		formik.setFieldValue("attributes", updatedAttributes);
 		return row;
 	};

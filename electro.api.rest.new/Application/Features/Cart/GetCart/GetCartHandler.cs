@@ -1,5 +1,5 @@
-﻿using Application.Reposiotories;
-using D = Domain.Aggregates.CartAggregate;
+﻿using Application.Services.UserContext;
+using Domain.Reposiotories;
 using MediatR;
 
 namespace Application.Features.Cart.GetCart
@@ -13,12 +13,12 @@ namespace Application.Features.Cart.GetCart
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<GetCartResult> Handle(GetCartQuery request, CancellationToken cancellationToken)
+        public async Task<GetCartResult> Handle(GetCartQuery query, CancellationToken cancellationToken)
         {
-            D.Cart userCart = await _unitOfWork.CartRepository.GetCartByUserIdAsync(request.UserId);
+            var userCart = await _unitOfWork.CartRepository.GetCartByUserIdAsync(query.UserId);
             if (userCart == null)
             {
-                userCart = new D.Cart(request.UserId);
+                userCart = new Domain.Aggregates.CartAggregate.Cart(query.UserId);
                 _unitOfWork.CartRepository.AddCart(userCart);
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
             }

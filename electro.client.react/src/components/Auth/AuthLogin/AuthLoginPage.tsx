@@ -11,7 +11,8 @@ import FullScreenLoader from "@/components/Layout/FullScreenLoader/FullScreenLoa
 import { Formik, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import { useRouter } from "next/navigation";
-import { translateErrorMessage } from "@/libs/Auth/errorMessages";
+import { translateErrorMessage } from "@/libs/api-contract/Error";
+
 
 const AuthLoginPage = () => {
 	const dispatch = useDispatch();

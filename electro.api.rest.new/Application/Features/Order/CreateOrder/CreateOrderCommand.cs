@@ -1,15 +1,12 @@
 ﻿using Domain.Aggregates.OrderAggregate;
-using Domain.Aggregates.UserProfileAggregate;
+using Domain.Aggregates.UserAggregate;
 using Domain.ValueObjects;
 using MediatR;
-using System.Text.Json.Serialization;
 
 namespace Application.Features.Order.CreateOrder
 {
     public class CreateOrderCommand : IRequest<CreateOrderResult>
     {
-        [JsonIgnore]
-        public Guid UserProfileId { get; set; }
         public IList<CreateOrderCommandOrderProduct> Products { get; set; }
         public PaymentMethod PaymentMethod { get; set; }
         public DeliveryMethod DeliveryMethod { get; set; }

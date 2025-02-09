@@ -2,15 +2,15 @@
 {
     public class OpinionAction
     {
-        public Guid UserProfileId { get; private set; }
+        public Guid UserId { get; private set; }
         public OpinionActionType ActionType { get; private set; }
         public DateTime CreatedAt { get; private set; }
 
         public OpinionAction() { }
 
-        public OpinionAction(Guid userProfileId, OpinionActionType actionType)
+        public OpinionAction(Guid userId, OpinionActionType actionType)
         {
-            UserProfileId = userProfileId;
+            UserId = userId;
             ActionType = actionType;
             CreatedAt = DateTime.UtcNow;
         }

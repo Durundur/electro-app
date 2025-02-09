@@ -9,6 +9,7 @@ import PhotoUploaderStoreReducer from "@/libs/PhotoUploader/slice";
 import SearchProductsPageStoreReducer from "@/libs/SearchProducts/slice";
 import AuthReducer from "@/libs/Auth/slice";
 import CartStoreReducer from "@/libs/Cart/slice";
+import AccountReducer from "@/libs/Account/slice";
 import { TypedUseSelectorHook, useDispatch as useReduxDispatch, useSelector as useReduxSelector } from "react-redux";
 
 const store = configureStore({
@@ -23,6 +24,7 @@ const store = configureStore({
 		PhotoUploaderStore: PhotoUploaderStoreReducer,
 		SearchProductsPageStore: SearchProductsPageStoreReducer,
 		AuthStore: AuthReducer,
+		AccountStore: AccountReducer,
 	},
 });
 

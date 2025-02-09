@@ -1,5 +1,4 @@
-﻿using Domain.Aggregates.ProductHierarchyAggregate;
-using Domain.ValueObjects;
+﻿using Domain.ValueObjects;
 
 namespace Domain.Aggregates.ProductCatalogAggregate
 {

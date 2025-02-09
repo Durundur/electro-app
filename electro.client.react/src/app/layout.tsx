@@ -11,7 +11,9 @@ const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
 				<AppRouterCacheProvider>
 					<ReduxProvider>
 						<AuthProvider>
-							<CartProvider>{children}</CartProvider>
+							<CartProvider>
+								{children}	
+							</CartProvider>
 						</AuthProvider>
 					</ReduxProvider>
 				</AppRouterCacheProvider>

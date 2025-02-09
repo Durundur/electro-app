@@ -1,4 +1,4 @@
-﻿using Application.Reposiotories;
+﻿using Domain.Reposiotories;
 using MediatR;
 
 namespace Application.Features.ProductHierarchy.DeleteGroup

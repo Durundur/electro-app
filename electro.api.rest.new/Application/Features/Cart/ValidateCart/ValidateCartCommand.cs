@@ -5,11 +5,10 @@ namespace Application.Features.Cart.ValidateAndSaveCart
 {
     public class ValidateCartCommand: IRequest<ValidateCartResult>
     {
-        public Guid? UserId { get; set; }
-        public IList<ValidateAndSaveCartCommandProduct> Products { get; set; }
+        public IList<ValidateCartCommandProduct> Products { get; set; }
     }
 
-    public class ValidateAndSaveCartCommandProduct
+    public class ValidateCartCommandProduct
     {
         public Guid ProductId { get; set; }
         public int Quantity { get; set; }

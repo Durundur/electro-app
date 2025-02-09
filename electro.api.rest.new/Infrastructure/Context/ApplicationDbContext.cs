@@ -2,7 +2,7 @@
 using Domain.Aggregates.OrderAggregate;
 using Domain.Aggregates.ProductCatalogAggregate;
 using Domain.Aggregates.ProductHierarchyAggregate;
-using Domain.Aggregates.UserProfileAggregate;
+using Domain.Aggregates.UserAggregate;
 using Infrastructure.Configurations.Cart;
 using Infrastructure.Configurations.Order;
 using Infrastructure.Configurations.ProductCatalog;
@@ -17,14 +17,13 @@ namespace Infrastructure.Context
 {
     public class ApplicationDbContext : IdentityDbContext<UserIdentity, IdentityRole<Guid>, Guid>
     {
-        public DbSet<UserProfile> UserProfiles { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<SubCategory> SubCategories { get; set; }
         public DbSet<AttributeDefinition> AttributesDefinitions { get; set; }
         public DbSet<Cart> Carts { get; set; }
-        public DbSet<Domain.Aggregates.UserProfileAggregate.Recipient> Recipients { get; set; }
+        public DbSet<Domain.Aggregates.UserAggregate.Recipient> Recipients { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderProduct> OrderProducts { get; set; }
         public DbSet<Domain.Aggregates.OrderAggregate.Recipient> OrderRecipients { get; set; }
@@ -43,7 +42,7 @@ namespace Infrastructure.Context
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.ApplyConfiguration(new UserProfileEntityTypeConfiguration());
+            builder.ApplyConfiguration(new UserIdentityEntityTypeConfiguration());
             builder.ApplyConfiguration(new Configurations.UserProfile.RecipientEntityTypeConfiguration());
 
             builder.ApplyConfiguration(new ProductEntityTypeConfiguration());
@@ -67,6 +66,5 @@ namespace Infrastructure.Context
 
             base.OnModelCreating(builder);
         }
-
     }
 }

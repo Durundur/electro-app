@@ -1,6 +1,6 @@
 ﻿using Application.Features.Cart.ValidateAndSaveCart;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using MediatR;
 
 namespace WebAPI.Controllers
 {
@@ -16,7 +16,6 @@ namespace WebAPI.Controllers
 
         [HttpPost("validate")]
         [ProducesResponseType<ValidateCartResult>(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<ValidateCartResult>> ValidateCart([FromBody] ValidateCartCommand command)
         {

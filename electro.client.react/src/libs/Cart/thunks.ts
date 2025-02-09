@@ -34,10 +34,10 @@ import {
 	validateCartSuccess,
 } from "./slice";
 
-export const fetchCart = (userProfileId: string) => async (dispatch: AppDispatch) => {
+export const fetchCart = (userId: string) => async (dispatch: AppDispatch) => {
 	try {
 		dispatch(fetchCartStart());
-		const response = await ApiClient.get<GetCartResult>(`/api/users/${userProfileId}/cart`);
+		const response = await ApiClient.get<GetCartResult>(`/api/users/${userId}/cart`);
 		dispatch(fetchCartSuccess(response.data));
 	} catch (error: any) {
 		dispatch(fetchCartError(createError(error)));
@@ -57,9 +57,9 @@ export const validateCart = (cartToValidate: ValidateCartCommand) => async (disp
 	}
 };
 
-export const addProductToCart = (productId: string, quantity: number, amount: number, currency: string, userProfileId?: string) => async (dispatch: AppDispatch, getState: () => RootState) => {
+export const addProductToCart = (productId: string, quantity: number, amount: number, currency: string) => async (dispatch: AppDispatch, getState: () => RootState) => {
 	const currentCart = getState().CartStore.cart.data;
-	const currentCartValidationCommand = getValidateCartCommand(currentCart!, userProfileId);
+	const currentCartValidationCommand = getValidateCartCommand(currentCart!);
 
 	const updatedProducts = [...(currentCartValidationCommand?.products || [])];
 	const existingProductIndex = updatedProducts.findIndex((p) => p.productId === productId);
@@ -86,30 +86,30 @@ export const addProductToCart = (productId: string, quantity: number, amount: nu
 	dispatch(validateCart(updatedCartValidationCommand));
 };
 
-export const fetchRecipients = (userProfileId: string) => async (dispatch: AppDispatch) => {
+export const fetchRecipients = (userId: string) => async (dispatch: AppDispatch) => {
 	try {
 		dispatch(fetchRecipientsStart());
-		const response = await ApiClient.get<GetRecipientsResult>(`/api/users/${userProfileId}/recipients`);
+		const response = await ApiClient.get<GetRecipientsResult>(`/api/users/${userId}/recipients`);
 		dispatch(fetchRecipientsSuccess(response.data));
 	} catch (error: any) {
 		dispatch(fetchRecipientsError(createError(error)));
 	}
 };
 
-export const createOrUpdateRecipient = (command: CreateOrUpdateRecipientCommand, userProfileId: string) => async (dispatch: AppDispatch) => {
+export const createOrUpdateRecipient = (command: CreateOrUpdateRecipientCommand, userId: string) => async (dispatch: AppDispatch) => {
 	try {
 		dispatch(createOrUpdateRecipientStart());
-		const response = await ApiClient.post<CreateOrUpdateRecipientResult>(`/api/users/${userProfileId}/recipients`, command);
+		const response = await ApiClient.post<CreateOrUpdateRecipientResult>(`/api/users/${userId}/recipients`, command);
 		dispatch(createOrUpdateRecipientSuccess(response.data));
 	} catch (error: any) {
 		dispatch(createOrUpdateRecipientError(createError(error)));
 	}
 };
 
-export const deleteRecipient = (recipientId: string, userProfileId: string) => async (dispatch: AppDispatch) => {
+export const deleteRecipient = (recipientId: string, userId: string) => async (dispatch: AppDispatch) => {
 	try {
 		dispatch(deleteRecipientStart());
-		const response = await ApiClient.delete(`/api/users/${userProfileId}/recipients/${recipientId}`);
+		const response = await ApiClient.delete(`/api/users/${userId}/recipients/${recipientId}`);
 		dispatch(deleteRecipientSuccess(recipientId));
 	} catch (error: any) {
 		dispatch(deleteRecipientError(createError(error)));

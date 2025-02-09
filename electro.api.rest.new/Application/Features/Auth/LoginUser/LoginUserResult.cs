@@ -3,7 +3,7 @@
     public abstract record LoginUserResult(bool Success, string Message);
 
     public record LoginUserSuccessResult(
-        Guid UserProfileId,
+        Guid UserId,
         string Token,
         string RefreshToken,
         DateTime RefreshTokenExpiry,

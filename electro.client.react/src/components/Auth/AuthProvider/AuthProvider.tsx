@@ -10,7 +10,7 @@ interface AuthProviderProps {
 const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 	const dispatch = useDispatch();
 	const authState = useSelector((store) => store.AuthStore.auth);
-	const userProfileState = useSelector((store) => store.AuthStore.userProfile);
+	const userState = useSelector((store) => store.AuthStore.user);
 	const [isHydrated, setIsHydrated] = useState(false);
 	const [refreshTimeout, setRefreshTimeout] = useState<NodeJS.Timeout | null>(null);
 	const localStorageKey = "electro-auth";
@@ -34,11 +34,11 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 		if (typeof window !== "undefined" && isHydrated) {
 			const authStateToStore: StoredAuthState = {
 				auth: authState,
-				userProfile: userProfileState,
+				user: userState,
 			};
 			localStorage.setItem(localStorageKey, JSON.stringify(authStateToStore));
 		}
-	}, [authState, userProfileState, isHydrated]);
+	}, [authState, userState, isHydrated]);
 
 	const scheduleTokenRefresh = () => {
 		if (!authState.isAuthenticated || !authState.refreshTokenExpiry) return;

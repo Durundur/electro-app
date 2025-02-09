@@ -5,15 +5,15 @@ namespace Domain.Aggregates.CartAggregate
     public class Cart
     {
         public Guid Id { get; private set; }
-        public Guid UserProfileId { get; private set; }
+        public Guid UserId { get; private set; }
         private readonly List<CartProduct> _products;
         public IReadOnlyCollection<CartProduct> Products => _products.AsReadOnly();
         public DateTime CreatedAt { get; private set; }
         public DateTime UpdatedAt { get; private set; }
 
-        public Cart(Guid userProfileId)
+        public Cart(Guid userId)
         {
-            UserProfileId = userProfileId;
+            UserId = userId;
             _products = new List<CartProduct>();
             CreatedAt = DateTime.UtcNow;
             UpdatedAt = DateTime.UtcNow;

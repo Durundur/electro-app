@@ -34,12 +34,12 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("UserProfileId")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserProfileId")
+                    b.HasIndex("UserId")
                         .IsUnique();
 
                     b.ToTable("Carts", (string)null);
@@ -110,7 +110,7 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("UserProfileId")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
@@ -121,7 +121,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("RecipientId");
 
-                    b.HasIndex("UserProfileId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Orders", (string)null);
                 });
@@ -266,14 +266,14 @@ namespace Infrastructure.Migrations
                     b.Property<float>("Rating")
                         .HasColumnType("real");
 
-                    b.Property<Guid>("UserProfileId")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
 
-                    b.HasIndex("UserProfileId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("ProductOpinions", (string)null);
                 });
@@ -293,14 +293,14 @@ namespace Infrastructure.Migrations
                     b.Property<Guid?>("OpinionId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("UserProfileId")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
                     b.HasIndex("OpinionId");
 
-                    b.HasIndex("UserProfileId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("OpinionActions", (string)null);
                 });
@@ -519,7 +519,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("SubCategories", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Aggregates.UserProfileAggregate.Recipient", b =>
+            modelBuilder.Entity("Domain.Aggregates.UserAggregate.Recipient", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -560,31 +560,14 @@ namespace Infrastructure.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("integer");
 
-                    b.Property<Guid>("UserProfileId")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserProfileId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Recipients", (string)null);
-                });
-
-            modelBuilder.Entity("Domain.Aggregates.UserProfileAggregate.UserProfile", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("UserIdentityId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserIdentityId")
-                        .IsUnique();
-
-                    b.ToTable("UserProfiles");
                 });
 
             modelBuilder.Entity("Infrastructure.Identity.UserIdentity", b =>
@@ -790,9 +773,9 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Aggregates.CartAggregate.Cart", b =>
                 {
-                    b.HasOne("Domain.Aggregates.UserProfileAggregate.UserProfile", null)
+                    b.HasOne("Infrastructure.Identity.UserIdentity", null)
                         .WithOne()
-                        .HasForeignKey("Domain.Aggregates.CartAggregate.Cart", "UserProfileId")
+                        .HasForeignKey("Domain.Aggregates.CartAggregate.Cart", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -887,9 +870,9 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Aggregates.UserProfileAggregate.UserProfile", null)
+                    b.HasOne("Infrastructure.Identity.UserIdentity", null)
                         .WithMany()
-                        .HasForeignKey("UserProfileId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -991,9 +974,9 @@ namespace Infrastructure.Migrations
                         .WithMany("Opinions")
                         .HasForeignKey("ProductId");
 
-                    b.HasOne("Domain.Aggregates.UserProfileAggregate.UserProfile", null)
+                    b.HasOne("Infrastructure.Identity.UserIdentity", null)
                         .WithMany()
-                        .HasForeignKey("UserProfileId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -1004,9 +987,9 @@ namespace Infrastructure.Migrations
                         .WithMany("Actions")
                         .HasForeignKey("OpinionId");
 
-                    b.HasOne("Domain.Aggregates.UserProfileAggregate.UserProfile", null)
+                    b.HasOne("Infrastructure.Identity.UserIdentity", null)
                         .WithMany()
-                        .HasForeignKey("UserProfileId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -1084,20 +1067,11 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("CategoryId");
                 });
 
-            modelBuilder.Entity("Domain.Aggregates.UserProfileAggregate.Recipient", b =>
-                {
-                    b.HasOne("Domain.Aggregates.UserProfileAggregate.UserProfile", null)
-                        .WithMany()
-                        .HasForeignKey("UserProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Domain.Aggregates.UserProfileAggregate.UserProfile", b =>
+            modelBuilder.Entity("Domain.Aggregates.UserAggregate.Recipient", b =>
                 {
                     b.HasOne("Infrastructure.Identity.UserIdentity", null)
-                        .WithOne()
-                        .HasForeignKey("Domain.Aggregates.UserProfileAggregate.UserProfile", "UserIdentityId")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

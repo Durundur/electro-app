@@ -11,12 +11,12 @@ const CartProvider: FC<CartProviderProps> = ({ children }) => {
 	const dispatch = useDispatch();
 	const cartStateSelector = useSelector((store) => store.CartStore.cart.data);
 	const isAuthenticatedSelector = useSelector((store) => store.AuthStore.auth.isAuthenticated);
-	const userProfileIdSelector = useSelector((store) => store.AuthStore.userProfile.id);
+	const userId = useSelector((store) => store.AuthStore.user.id);
 	const localStorageKey = "electro-cart";
 
 	useEffect(() => {
-		if (isAuthenticatedSelector && userProfileIdSelector) {
-			dispatch(fetchCart(userProfileIdSelector));
+		if (isAuthenticatedSelector && userId) {
+			dispatch(fetchCart(userId));
 		} else {
 			if (typeof window === "undefined") return;
 			const storedCart = localStorage.getItem(localStorageKey);
@@ -26,7 +26,7 @@ const CartProvider: FC<CartProviderProps> = ({ children }) => {
 				dispatch(restoreCart(parsedStoredCart));
 			} catch (e) {}
 		}
-	}, [isAuthenticatedSelector, userProfileIdSelector]);
+	}, [isAuthenticatedSelector, userId]);
 
 	useEffect(() => {
 		if (typeof window === "undefined" || isAuthenticatedSelector) return;

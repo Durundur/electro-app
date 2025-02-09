@@ -1,4 +1,4 @@
-﻿using Application.Reposiotories;
+﻿using Domain.Reposiotories;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore.Storage;
 
@@ -7,6 +7,7 @@ namespace Infrastructure.Reposiotories
     public class UnitOfWork : IUnitOfWork
     {
         private readonly ApplicationDbContext _context;
+        private IDbContextTransaction _transaction;
 
         private IAttributeDefinitionRepository _attributeDefinitionRepository;
         private ICartRepository _cartRepository;
@@ -15,7 +16,6 @@ namespace Infrastructure.Reposiotories
         private IProductHierarchyRepository _productHierarchyRepository;
         private IProductRepository _productRepository;
         private IRecipientRepository _recipientRepository;
-        private IUserProfileRepository _userProfileRepository;
 
         public UnitOfWork(ApplicationDbContext context)
         {
@@ -29,7 +29,7 @@ namespace Infrastructure.Reposiotories
             _cartRepository ??= new CartRepository(_context);
 
         public IOpinionRepository OpinionRepository =>
-            _opinionRepository;
+            _opinionRepository ??= new OpinionRepository(_context);
 
         public IOrderRepository OrderRepository =>
             _orderRepository ??= new OrderRepository(_context);
@@ -43,17 +43,38 @@ namespace Infrastructure.Reposiotories
         public IRecipientRepository RecipientRepository =>
             _recipientRepository ??= new RecipientRepository(_context);
 
-        public IUserProfileRepository UserProfileRepository => 
-            _userProfileRepository ??= new UserProfileRepository(_context);
-
         public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             return await _context.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)
+        public async Task BeginTransactionAsync(CancellationToken cancellationToken = default)
         {
-            return await _context.Database.BeginTransactionAsync(cancellationToken);
+            _transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+        }
+
+        public async Task CommitTransactionAsync(CancellationToken cancellationToken = default)
+        {
+            if (_transaction == null)
+            {
+                throw new InvalidOperationException("Transaction not started.");
+            }
+
+            await _transaction.CommitAsync(cancellationToken);
+            await _transaction.DisposeAsync();
+            _transaction = null;
+        }
+
+        public async Task RollbackTransactionAsync(CancellationToken cancellationToken = default)
+        {
+            if (_transaction == null)
+            {
+                throw new InvalidOperationException("Transaction not started.");
+            }
+
+            await _transaction.RollbackAsync(cancellationToken);
+            await _transaction.DisposeAsync();
+            _transaction = null;
         }
 
         public void Dispose()

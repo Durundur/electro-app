@@ -1,10 +1,11 @@
 ﻿using Application.Features.ProductCatalog.GetProduct;
 using Application.Features.ProductCatalog.GetProductCatalog;
 using Application.Features.ProductCatalog.CreateProduct;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Application.Features.ProductCatalog.GetSearchProducts;
 using Application.Features.ProductCatalog.GetSearchFilters;
+using Microsoft.AspNetCore.Mvc;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebAPI.Controllers
 {
@@ -39,7 +40,7 @@ namespace WebAPI.Controllers
             return Ok(response);
         }
 
-
+        [Authorize(Roles = "Admin")]
         [HttpGet("productCatalog")]
         [ProducesResponseType<GetProductCatalogResult>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -49,6 +50,7 @@ namespace WebAPI.Controllers
             return Ok(response);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ProducesResponseType<CreateOrUpdateProductResult>(StatusCodes.Status200OK)]
         public async Task<ActionResult<CreateOrUpdateProductResult>> CreateOrUpdateProduct([FromBody] CreateOrUpdateProductCommand command)

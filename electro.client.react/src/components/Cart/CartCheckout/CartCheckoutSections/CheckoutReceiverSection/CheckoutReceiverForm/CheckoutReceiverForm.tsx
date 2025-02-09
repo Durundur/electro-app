@@ -15,7 +15,8 @@ const CheckoutReceiverForm: FC<CheckoutReceiverFormProps> = ({ recipient, onCanc
 	const dispatch = useDispatch();
 	const initialReceiverType = recipient?.type ?? RecipientType.Personal;
 	const [receiverType, setReceiverType] = useState<RecipientType>(initialReceiverType);
-	const userProfileId = useSelector((store) => store.AuthStore.userProfile.id);
+	const userId = useSelector((store) => store.AuthStore.user.id);
+	const recipientsSelector = useSelector((store) => store.CartStore.checkoutRecipients.data);
 
 	const validationSchema = Yup.object<CreateOrUpdateRecipientCommand>().shape({
 		type: Yup.mixed<RecipientType>().oneOf(Object.values(RecipientType)).required(),
@@ -64,8 +65,8 @@ const CheckoutReceiverForm: FC<CheckoutReceiverFormProps> = ({ recipient, onCanc
 	};
 
 	const handleSubmit = (values: CreateOrUpdateRecipientCommand) => {
-		if (!userProfileId) return;
-		dispatch(createOrUpdateRecipient(values, userProfileId)).then(() => {
+		if (!userId) return;
+		dispatch(createOrUpdateRecipient(values, userId)).then(() => {
 			onCancel();
 		});
 	};
@@ -92,9 +93,11 @@ const CheckoutReceiverForm: FC<CheckoutReceiverFormProps> = ({ recipient, onCanc
 					{receiverType === RecipientType.Personal && <PersonalReceiverForm formik={formik} />}
 					{receiverType === RecipientType.Company && <CompanyReceiverForm formik={formik} />}
 					<Stack direction={"row"} justifyContent={"center"} spacing={4}>
-						<Button variant="contained" onClick={onCancel}>
-							Anuluj
-						</Button>
+						{recipientsSelector?.recipients && recipientsSelector.recipients?.length > 0 && (
+							<Button variant="contained" onClick={onCancel}>
+								Anuluj
+							</Button>
+						)}
 						<Button variant="contained" onClick={() => formik.submitForm()}>
 							Zapisz
 						</Button>
@@ -112,7 +115,6 @@ interface CompanyReceiverFormProps {
 }
 
 const CompanyReceiverForm: FC<CompanyReceiverFormProps> = ({ formik }) => {
-	console.log(formik);
 	return (
 		<Stack spacing={2}>
 			<TextField

@@ -14,7 +14,7 @@ const CartCheckoutConfirmSummary: FC = () => {
 	const deliveryOptionSelector = useSelector((store) => store.CartStore.checkout.deliveryOption);
 	const cartProductsSelector = useSelector((store) => store.CartStore.cart.data?.products);
 	const recipientSelector = useSelector((store) => store.CartStore.checkout.recipientOption);
-	const userProfileId = useSelector((store) => store.AuthStore.userProfile.id);
+	const userId = useSelector((store) => store.AuthStore.user.id);
 
 	const createOrderResultSelector = useSelector((store) => store.CartStore.createOrder.result);
 	const createOrderErrorSelector = useSelector((store) => store.CartStore.createOrder.error);
@@ -34,16 +34,17 @@ const CartCheckoutConfirmSummary: FC = () => {
 	const totalAmountCurrency = "PLN";
 
 	const handleCreateOrder = async () => {
-		if (!cartProductsSelector || !paymentOptionSelector?.value || !deliveryOptionSelector?.value || !recipientSelector || !userProfileId) return;
+		if (!cartProductsSelector || !paymentOptionSelector?.value || !deliveryOptionSelector?.value || !recipientSelector || !userId) return;
 		const createOrderCommand = getCreateOrderCommand(cartProductsSelector, paymentOptionSelector?.value, deliveryOptionSelector?.value, recipientSelector);
 		dispatch(createOrder(createOrderCommand));
-		dispatch(fetchCart(userProfileId));
+		dispatch(fetchCart(userId));
 	};
 
 	useEffect(() => {
 		if (createOrderIsLoadingSelector) return;
-		if (createOrderErrorSelector && !createOrderResultSelector) return;
-		router.replace("/cart/checkout/success");
+		if (!createOrderErrorSelector && createOrderResultSelector) {
+			router.replace("/cart/checkout/success");
+		}
 	}, [createOrderErrorSelector, createOrderIsLoadingSelector, createOrderResultSelector]);
 
 	return (

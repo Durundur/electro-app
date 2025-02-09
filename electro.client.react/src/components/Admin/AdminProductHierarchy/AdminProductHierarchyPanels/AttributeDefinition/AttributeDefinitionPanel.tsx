@@ -6,6 +6,7 @@ import { DataGrid, GridColDef, GridRowSelectionModel } from "@mui/x-data-grid";
 import { AddOutlined, DeleteOutlined, EditOutlined } from "@mui/icons-material";
 import AttributeDefinitionDialog from "./AttributeDefinitionDialog";
 import { AttributeDefinitionCommand, AttributeDefinitionResult } from "@/libs/api-contract/api-contract";
+import { translateAttributeType } from "@/libs/Helpers/Translations/AttributesTranslations";
 
 interface AttributeDefinitionRow {
 	id: string | undefined;
@@ -42,7 +43,7 @@ const AttributeDefinitionPanel: FC<AttributeDefinitionPanelProps> = ({ attribute
 			id: attribute.id,
 			rowId: `attribute-definition-row-${index}`,
 			name: attribute.name,
-			type: attribute.type?.toString(),
+			type: translateAttributeType(attribute.type!),
 			isRequired: attribute.isRequired ? "Tak" : "Nie",
 			description: attribute.description,
 			isFilterable: attribute.isFilterable ? "Tak" : "Nie",

@@ -1,4 +1,5 @@
-﻿using Application.Reposiotories;
+﻿using Application.Services.UserContext;
+using Domain.Reposiotories;
 using MediatR;
 
 namespace Application.Features.Cart.DeleteRecipient
@@ -11,18 +12,13 @@ namespace Application.Features.Cart.DeleteRecipient
         {
             _unitOfWork = unitOfWork;
         }
-        public async Task<bool> Handle(DeleteRecipientCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(DeleteRecipientCommand command, CancellationToken cancellationToken)
         {
-            var recipient = await _unitOfWork.RecipientRepository.GetByIdAsync(request.Id, cancellationToken);
+            var recipient = await _unitOfWork.RecipientRepository.GetByIdAsync(command.Id, cancellationToken);
 
             if (recipient == null)
             {
-                throw new Exception($"Recipient with ID {request.Id} not found");
-            }
-
-            if (recipient.UserProfileId != request.UserProfileId)
-            {
-                throw new InvalidOperationException("You are not authorized to delete this recipient.");
+                throw new Exception($"Recipient with ID {command.Id} not found");
             }
 
             _unitOfWork.RecipientRepository.DeleteRecipient(recipient);

@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Domain.Aggregates.UserAggregate;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -16,12 +17,12 @@ namespace Application.Services.TokenService
             _configuration = configuration;
         }
 
-        public string GenerateToken(Application.Models.Identity.UserIdentity user, IList<string> roles)
+        public string GenerateToken(IUser user, IList<string> roles)
         {
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Email,user.Email)
+                new Claim(ClaimTypes.Email, user.Email),
             };
 
             claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));

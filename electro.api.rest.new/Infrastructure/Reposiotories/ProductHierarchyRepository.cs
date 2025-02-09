@@ -1,4 +1,4 @@
-﻿using Application.Reposiotories;
+﻿using Domain.Reposiotories;
 using Domain.Aggregates.ProductHierarchyAggregate;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;

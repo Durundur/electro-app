@@ -54,9 +54,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-if (app.Environment.IsProduction())
-{
-    app.Services.ApplyMigrations();
-}
-
 app.Run();

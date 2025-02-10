@@ -7,6 +7,7 @@
             return new GetOrderDetailsResult
             {
                 Id = order.Id,
+                Number = order.Number,
                 Status = order.Status,
                 Products = order.Products
                     .Select(orderProduct =>

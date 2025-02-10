@@ -14,6 +14,7 @@ namespace Application.Features.Order.GetUserOrders
     public class GetUserOrdersResultOrder
     {
         public Guid Id { get; set; }
+        public int Number { get; set; }
         public Money TotalPrice { get; set; }
         public OrderStatus Status { get; set; }
         public IList<GetUserOrdersResultOrderProduct> Products { get; set; }

@@ -11,6 +11,7 @@ namespace Application.Features.Order.GetUserOrders
                 Orders = orders.Select(order => new GetUserOrdersResultOrder()
                 {
                     Id = order.Id,
+                    Number = order.Number,
                     Status = order.Status,
                     TotalPrice = order.TotalPrice,
                     CreatedAt = order.CreatedAt,

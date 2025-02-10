@@ -6,6 +6,7 @@ namespace Application.Features.Order.GetOrderDetails
     public class GetOrderDetailsResult
     {
         public Guid Id { get; set; }
+        public int Number { get; set; }
         public OrderStatus Status { get; set; }
         public IList<GetOrderDetailsResultProduct> Products { get; set; }
         public Payment Payment { get; set; }

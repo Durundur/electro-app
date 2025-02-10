@@ -6,6 +6,7 @@ namespace Domain.Aggregates.OrderAggregate
     {
         public Guid Id { get; private set; }
         public Guid UserId { get; private set; }
+        public int Number {  get; private set; }
         public OrderStatus Status { get; private set; }
         private readonly List<OrderProduct> _products;
         public IReadOnlyCollection<OrderProduct> Products => _products.AsReadOnly();

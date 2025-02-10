@@ -13,6 +13,7 @@ namespace Infrastructure.Configurations.Order
             builder.HasOne<UserIdentity>().WithMany().HasForeignKey(o => o.UserId);
             builder.HasMany<D.OrderAggregate.OrderProduct>(o => o.Products).WithOne().HasForeignKey(op => op.OrderId);
             builder.Ignore(o => o.TotalPrice);
+            builder.Property(o => o.Number).ValueGeneratedOnAdd();
         }
     }
 }

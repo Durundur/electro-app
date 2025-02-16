@@ -6,7 +6,7 @@ import SearchProductsSidebar from "@/components/SearchProducts/SearchProductsSid
 import { buildQueryString } from "@/libs/Helpers/QueryHelper";
 import { ISearchProductsStateUrlParamsFilters, ISearchProductsStateUrlParamsHierarchy, ISearchProductsStateUrlParamsPagination } from "@/libs/SearchProducts/interfaces";
 import { ISearchProductsStateUrlParams, clearFilters, clearProductHierarchy, clearProducts, clearUrlParams, setUrlParams } from "@/libs/SearchProducts/slice";
-import store, { useDispatch, useSelector } from "@/libs/Store";
+import { useDispatch, useSelector } from "@/libs/Store";
 import { Grid2, Stack } from "@mui/material";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
@@ -99,7 +99,7 @@ const SearchProductPage: React.FC = () => {
 	}, []);
 
 	return (
-		<Stack spacing={1}>
+		<Stack>
 			<FullScreenLoader isVisible={isLoading} />
 			<SearchProductHeader />
 			<Grid2 container columnSpacing={2}>

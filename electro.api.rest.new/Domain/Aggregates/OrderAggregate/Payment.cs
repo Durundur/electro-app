@@ -18,13 +18,25 @@ namespace Domain.Aggregates.OrderAggregate
             Status = PaymentStatus.Pending;
         }
 
-        public void UpdateStatus(PaymentStatus newStatus)
+        public void MarkAsPaid()
         {
-            Status = newStatus;
-            if (newStatus == PaymentStatus.Paid)
+            if (Status != PaymentStatus.Pending)
             {
-                PaidAt = DateTime.UtcNow;
+                throw new InvalidOperationException("Only pending payments can be marked as paid.");
             }
+
+            Status = PaymentStatus.Paid;
+            PaidAt = DateTime.UtcNow;
+        }
+
+        public void Cancel()
+        {
+            if (Status == PaymentStatus.Paid)
+            {
+                throw new InvalidOperationException("Cannot cancel a completed payment. Consider refunding.");
+            }
+
+            Status = PaymentStatus.Failed;
         }
     }
 }

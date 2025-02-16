@@ -1,4 +1,5 @@
-﻿using Application.Services.UserContext;
+﻿using Application.Exceptions;
+using Application.Services.UserContext;
 using Domain.Reposiotories;
 using MediatR;
 
@@ -21,7 +22,7 @@ namespace Application.Features.Order.GetOrderDetails
 
             if (order.UserId != _userContext.UserId && !_userContext.IsAdmin)
             {
-                throw new UnauthorizedAccessException("You do not have permission to access this order.");
+                throw new UnauthorizedException("You do not have permission to access this order.");
             }
 
             var productsIds = order.Products.Select(x => x.ProductId);

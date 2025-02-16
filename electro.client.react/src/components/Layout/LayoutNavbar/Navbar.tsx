@@ -14,7 +14,7 @@ const Navbar: FC = () => {
 
 	return (
 		<AppBar color="transparent" position="relative">
-			<Container disableGutters>
+			<Container disableGutters sx={{ paddingX: { xs: 2, lg: 0 } }}>
 				<Toolbar
 					disableGutters
 					sx={{

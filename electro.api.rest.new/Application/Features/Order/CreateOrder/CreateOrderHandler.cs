@@ -3,6 +3,7 @@ using Domain.Aggregates.OrderAggregate;
 using Domain.ValueObjects;
 using MediatR;
 using Application.Services.UserContext;
+using Application.Exceptions;
 
 namespace Application.Features.Order.CreateOrder
 {
@@ -25,7 +26,7 @@ namespace Application.Features.Order.CreateOrder
                 var product = await _unitOfWork.ProductRepository.GetByIdAsync(productCommand.ProductId);
                 if (product == null)
                 {
-                    throw new InvalidOperationException($"Product with ID {productCommand.ProductId} does not exist.");
+                    throw new NotFoundException(nameof(OrderProduct), productCommand.ProductId);
                 }
                 if (product.StockQuantity < productCommand.Quantity)
                 {

@@ -2,7 +2,7 @@ import { FormikProps } from "formik";
 import { FC } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { ExpandMoreRounded } from "@mui/icons-material";
 import { CreateOrUpdateProductCommand } from "@/libs/api-contract/api-contract";
 
 interface DescriptionPanelProps {
@@ -14,7 +14,7 @@ const DescriptionPanel: FC<DescriptionPanelProps> = ({ formik }) => {
 
 	return (
 		<Accordion defaultExpanded={false}>
-			<AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1-content" id="panel1-header">
+			<AccordionSummary expandIcon={<ExpandMoreRounded />} aria-controls="panel1-content" id="panel1-header">
 				Opis
 			</AccordionSummary>
 			<AccordionDetails>

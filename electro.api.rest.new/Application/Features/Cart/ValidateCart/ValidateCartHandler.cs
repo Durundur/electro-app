@@ -21,15 +21,10 @@ namespace Application.Features.Cart.ValidateAndSaveCart
         public async Task<ValidateCartResult> Handle(ValidateCartCommand command, CancellationToken cancellationToken)
         {
             var validationResult = await ValidateCartAsync(command, cancellationToken);
-
-            try
+            if (_userContext.IsAuthenticated)
             {
                 var userId = _userContext.UserId;
                 await SaveCartAsync(userId, validationResult, cancellationToken);
-            }
-            catch (Exception ex) 
-            {
-
             }
 
             return validationResult;
@@ -74,7 +69,7 @@ namespace Application.Features.Cart.ValidateAndSaveCart
                         Photo = product.Photos.FirstOrDefault()
                     });
                 }
-                
+
                 var productTotalPrice = productCommand.Quantity * product.Price.Amount;
                 totalPrice += productTotalPrice;
                 totalQuantity += productCommand.Quantity;

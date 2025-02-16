@@ -1,5 +1,5 @@
 import { Accordion, AccordionDetails, AccordionSummary, Checkbox, FormControl, FormControlLabel, FormHelperText, Grid2 as Grid, InputLabel, MenuItem, Select, Stack, TextField } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { ExpandMoreRounded } from "@mui/icons-material";
 import { FormikProps } from "formik";
 import { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "@/libs/Store";
@@ -46,7 +46,7 @@ const GeneralInfoPanel: FC<GeneralInfoPanelProps> = ({ formik }) => {
 
 	return (
 		<Accordion defaultExpanded>
-			<AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1-content" id="panel1-header">
+			<AccordionSummary expandIcon={<ExpandMoreRounded />} aria-controls="panel1-content" id="panel1-header">
 				Informacje ogólne
 			</AccordionSummary>
 			<AccordionDetails>

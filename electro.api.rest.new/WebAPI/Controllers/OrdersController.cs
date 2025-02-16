@@ -4,6 +4,7 @@ using Application.Features.Order.GetOrders;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using MediatR;
+using Application.Features.Order.UpdateOrder;
 
 namespace WebAPI.Controllers
 {
@@ -23,6 +24,16 @@ namespace WebAPI.Controllers
         [ProducesResponseType<CreateOrderResult>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<CreateOrderResult>> CreateOrder([FromBody] CreateOrderCommand command)
+        {
+            var response = await _mediator.Send(command);
+            return Ok(response);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut]
+        [ProducesResponseType<UpdateOrderResult>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<UpdateOrderResult>> UpdateOrders([FromBody] UpdateOrderCommand command)
         {
             var response = await _mediator.Send(command);
             return Ok(response);

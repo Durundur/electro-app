@@ -303,6 +303,7 @@ export interface GetMenuSubCategory {
 
 export interface GetOrderDetailsResult {
     id?: string;
+    number?: number;
     status?: OrderStatus;
     products?: GetOrderDetailsResultProduct[] | undefined;
     payment?: Payment;
@@ -431,6 +432,7 @@ export interface GetSubCategoryResult {
 
 export interface GetUserOrderDetailsResult {
     id?: string;
+    number?: number;
     status?: OrderStatus;
     products?: GetUserOrderDetailsResultProduct[] | undefined;
     payment?: Payment;
@@ -460,6 +462,7 @@ export interface GetUserOrdersResult {
 
 export interface GetUserOrdersResultOrder {
     id?: string;
+    number?: number;
     totalPrice?: Money;
     status?: OrderStatus;
     products?: GetUserOrdersResultOrderProduct[] | undefined;
@@ -605,6 +608,49 @@ export interface RegisterUserSuccessResult {
     refreshToken?: string | undefined;
     refreshTokenExpiry?: Date;
     roles?: string[] | undefined;
+}
+
+export interface UpdateOrderCommand {
+    orderId?: string;
+    status?: OrderStatus;
+    trackingNumber?: string | undefined;
+    recipient?: UpdateOrderCommandRecipient;
+}
+
+export interface UpdateOrderCommandRecipient {
+    firstName?: string | undefined;
+    surname?: string | undefined;
+    companyName?: string | undefined;
+    taxIdentificationNumber?: string | undefined;
+    type?: RecipientType;
+    phoneNumber?: string | undefined;
+    street?: string | undefined;
+    houseNumber?: string | undefined;
+    postalCode?: string | undefined;
+    city?: string | undefined;
+}
+
+export interface UpdateOrderResult {
+    id?: string;
+    number?: number;
+    status?: OrderStatus;
+    products?: UpdateOrderResultProduct[] | undefined;
+    payment?: Payment;
+    delivery?: Delivery;
+    recipient?: Recipient;
+    totalPrice?: Money;
+    createdAt?: Date;
+    updatedAt?: Date;
+}
+
+export interface UpdateOrderResultProduct {
+    id?: string;
+    productId?: string;
+    name?: string | undefined;
+    photo?: string | undefined;
+    quantity?: number;
+    price?: Money;
+    totalPrice?: Money;
 }
 
 export interface ValidateCartCommand {

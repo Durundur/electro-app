@@ -1,5 +1,5 @@
 import React from "react";
-import { Backdrop, Box, CircularProgress, Fade } from "@mui/material";
+import { Backdrop, CircularProgress, Fade } from "@mui/material";
 
 interface FullScreenLoaderProps {
 	isVisible: boolean;

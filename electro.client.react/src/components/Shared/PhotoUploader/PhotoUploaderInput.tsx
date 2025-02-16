@@ -1,14 +1,12 @@
 import React from "react";
 import { Typography, Card, Stack } from "@mui/material";
-
-import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
+import { FileUploadOutlined } from "@mui/icons-material";
 
 interface PhotoUploaderInputProps {
 	onNewFile: (files: File[]) => void;
 }
 
 const PhotoUploaderInput: React.FC<PhotoUploaderInputProps> = ({ onNewFile }) => {
-
 	const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		if (event.target.files) {
 			const filesArray = Array.from(event.target.files);
@@ -67,7 +65,7 @@ const PhotoUploaderInput: React.FC<PhotoUploaderInputProps> = ({ onNewFile }) =>
 					pointerEvents: "none",
 				}}
 			>
-				<FileUploadOutlinedIcon />
+				<FileUploadOutlined />
 				<Typography variant="body1">Dodaj zdjęcie</Typography>
 			</Stack>
 			<input

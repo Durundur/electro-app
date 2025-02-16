@@ -18,7 +18,7 @@ const AccountOrdersListHeader: FC = () => {
 			<Breadcrumbs separator={<NavigateNextOutlined fontSize="small" />} aria-label="breadcrumb">
 				{breadcrumbs}
 			</Breadcrumbs>
-			<Typography variant="h5">Historia zamówień</Typography>
+			<Typography variant="h6">Historia zamówień</Typography>
 		</Stack>
 	);
 };

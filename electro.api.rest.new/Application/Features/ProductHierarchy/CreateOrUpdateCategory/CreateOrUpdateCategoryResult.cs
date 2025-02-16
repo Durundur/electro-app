@@ -1,7 +1,6 @@
 ﻿using Application.Features.Shared.AttributeDefinition;
 
 namespace Application.Features.ProductHierarchy.CreateOrUpdateCategory
-    
 {
     public class CreateOrUpdateCategoryResult
     {

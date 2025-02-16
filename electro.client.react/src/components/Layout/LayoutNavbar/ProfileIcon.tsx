@@ -44,7 +44,7 @@ const ProfileIcon: FC = () => {
 						</ListItemIcon>
 						<ListItemText>Wyloguj</ListItemText>
 					</MenuItem>
-					<Link href="/product-catalog/list">
+					<Link href="/admin">
 						<MenuItem LinkComponent={Link} href="/admin">
 							<ListItemIcon>
 								<AdminPanelSettings></AdminPanelSettings>

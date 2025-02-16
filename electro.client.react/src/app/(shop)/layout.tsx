@@ -1,17 +1,17 @@
 "use client";
-import "../globals.css";
-import { Container, ThemeProvider } from "@mui/material";
-import theme from "../theme";
+import { Container } from "@mui/material";
 import Navbar from "@/components/Layout/LayoutNavbar/Navbar";
+import PageBreadcrumbs from "@/components/Layout/PageBreadcrumbs/PageBreadcrumbs";
 
 const ShopLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
 	return (
-		<ThemeProvider theme={theme}>
+		<>
 			<Navbar />
-			<Container disableGutters sx={{ paddingTop: 2, paddingBottom: 2 }}>
+			<Container disableGutters sx={{ paddingY: 2, paddingX: { xs: 2, lg: 0 } }}>
+				<PageBreadcrumbs />
 				{children}
 			</Container>
-		</ThemeProvider>
+		</>
 	);
 };
 

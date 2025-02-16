@@ -10,7 +10,7 @@ interface AdminOrderDetailsPaymentProps {
 const AdminOrderDetailsPayment: FC<AdminOrderDetailsPaymentProps> = ({ payment }) => {
 	return (
 		<Stack>
-			<Typography fontWeight={500} variant="subtitle1">
+			<Typography fontWeight={500}>
 				Płatność
 			</Typography>
 			<Typography variant="body2">Sposób płatności: {translatePaymentMethod(payment.method!)}</Typography>

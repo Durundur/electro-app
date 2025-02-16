@@ -12,7 +12,7 @@ import { Formik, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import { useRouter } from "next/navigation";
 import { translateErrorMessage } from "@/libs/api-contract/Error";
-
+import TextInput from "@/components/Shared/TextInput/TextInput";
 
 const AuthLoginPage = () => {
 	const dispatch = useDispatch();
@@ -56,7 +56,8 @@ const AuthLoginPage = () => {
 						<Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleLoginSubmit}>
 							{({ submitForm, handleChange, handleBlur, setFieldValue, values, touched, errors }) => (
 								<Stack spacing={2}>
-									<TextField
+									<TextInput
+										placeholder="lorem ipsum sob amennd"
 										size="small"
 										variant="outlined"
 										label="Email"
@@ -78,7 +79,7 @@ const AuthLoginPage = () => {
 											},
 										}}
 									/>
-									<TextField
+									<TextInput
 										size="small"
 										variant="outlined"
 										label="Hasło"
@@ -110,9 +111,7 @@ const AuthLoginPage = () => {
 										}}
 									/>
 									{authErrorSelector && authErrorSelector.statusCode && <FormHelperText error>{translateErrorMessage(authErrorSelector.message)}</FormHelperText>}
-									<Button variant="text" size="small">
-										Zapomniałeś hasło?
-									</Button>
+									<Button variant="text">Zapomniałeś hasło?</Button>
 									<Button variant="contained" color="primary" onClick={() => fillTestAccount(setFieldValue)}>
 										Testowe konto
 									</Button>

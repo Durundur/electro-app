@@ -8,7 +8,7 @@ import Link from "next/link";
 const NavbarProductHierarchy: FC = () => {
 	const dispatch = useDispatch();
 	const layoutState = useSelector((state) => state.LayoutStore);
-	const productHierarchy = layoutState.data.groups || [];
+	const productHierarchy = layoutState.productHierarchy.data.groups || [];
 
 	const [activeGroupElement, setActiveGroupElement] = useState<HTMLElement | undefined>(undefined);
 	const [activeGroupId, setActiveGroupId] = useState<number | undefined>(undefined);
@@ -41,7 +41,7 @@ const NavbarProductHierarchy: FC = () => {
 						}}
 						variant="text"
 						color="inherit"
-						sx={{ fontWeight: 400, paddingX: 1.5, paddingY: 1.25, lineHeight: 1, textAlign: 'center' }}
+						sx={{ fontWeight: 400, paddingX: 1.5, paddingY: 1.25, lineHeight: 1, textAlign: "center" }}
 						LinkComponent={Link}
 						href={`/search?group=${group.id}`}
 					>
@@ -65,7 +65,7 @@ const NavbarProductHierarchy: FC = () => {
 						<MenuList dense sx={{ width: "100%" }}>
 							<Stack paddingX={2} paddingY={0.5} direction={"row"} justifyContent={"space-between"} alignItems={"center"} width={"100%"}>
 								<ListItemText>{activeGroup?.name}</ListItemText>
-								<Button size="small" variant="text" LinkComponent={Link} href={`/search?group=${activeGroup?.id}`}>
+								<Button variant="text" LinkComponent={Link} href={`/search?group=${activeGroup?.id}`}>
 									wszyskie
 								</Button>
 							</Stack>
@@ -92,7 +92,7 @@ const NavbarProductHierarchy: FC = () => {
 								<MenuList dense>
 									<Stack paddingX={2} paddingY={0.5} direction={"row"} justifyContent={"space-between"} alignItems={"center"} width={"100%"}>
 										<ListItemText>{activeCategory?.name}</ListItemText>
-										<Button size="small" variant="text" component={Link} href={`/search?group=${activeGroup?.id}&category=${activeCategory?.id}`}>
+										<Button variant="text" component={Link} href={`/search?group=${activeGroup?.id}&category=${activeCategory?.id}`}>
 											wszyskie
 										</Button>
 									</Stack>
@@ -104,14 +104,7 @@ const NavbarProductHierarchy: FC = () => {
 										))
 									) : (
 										<Box sx={{ marginX: 2, marginY: 0.5 }}>
-											<Button
-												sx={{ width: "100%" }}
-												size="small"
-												variant="outlined"
-												color="inherit"
-												LinkComponent={Link}
-												href={`/search?group=${activeGroup?.id}&category=${activeCategory?.id}`}
-											>
+											<Button fullWidth variant="outlined" color="inherit" LinkComponent={Link} href={`/search?group=${activeGroup?.id}&category=${activeCategory?.id}`}>
 												Pokaż {activeCategory?.name}
 											</Button>
 										</Box>

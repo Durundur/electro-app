@@ -1,19 +1,34 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { GetMenuResult } from "../api-contract/api-contract";
 import { IError } from "../api-contract/Error";
+import { Breadcrumb } from "@/hooks/Breadcrumbs/useBreadcrumbs";
 
-export interface ProductHierarchyState {
+interface LayoutStore {
+	productHierarchy: ProductHierarchyState;
+	breadcrumbs: BreadcrumbsState;
+}
+
+interface ProductHierarchyState {
 	data: GetMenuResult;
 	error?: IError;
 	isLoading: boolean;
 }
 
-const initialState: ProductHierarchyState = {
-	data: {
-		groups: [],
+interface BreadcrumbsState {
+	items: Breadcrumb[];
+}
+
+const initialState: LayoutStore = {
+	breadcrumbs: {
+		items: [],
 	},
-	error: undefined,
-	isLoading: false,
+	productHierarchy: {
+		data: {
+			groups: [],
+		},
+		error: undefined,
+		isLoading: false,
+	},
 };
 
 const LayoutStore = createSlice({
@@ -21,20 +36,26 @@ const LayoutStore = createSlice({
 	initialState,
 	reducers: {
 		fetchProductHierarchyStart(state) {
-			state.isLoading = true;
-			state.error = undefined;
+			state.productHierarchy.isLoading = true;
+			state.productHierarchy.error = undefined;
 		},
 		fetchProductHierarchySuccess(state, action: PayloadAction<GetMenuResult>) {
-			state.isLoading = false;
-			state.data.groups = action.payload.groups;
+			state.productHierarchy.isLoading = false;
+			state.productHierarchy.data.groups = action.payload.groups;
 		},
 		fetchProductHierarchyError(state, action: PayloadAction<IError>) {
-			state.isLoading = false;
-			state.error = action.payload;
+			state.productHierarchy.isLoading = false;
+			state.productHierarchy.error = action.payload;
+		},
+		setBreadcrumbsItems(state, action: PayloadAction<Breadcrumb[]>) {
+			state.breadcrumbs.items = action.payload;
+		},
+		clearBreadcrumbsItems(state) {
+			state.breadcrumbs.items = [];
 		},
 	},
 });
 
-export const { fetchProductHierarchyStart, fetchProductHierarchyError, fetchProductHierarchySuccess } = LayoutStore.actions;
+export const { fetchProductHierarchyStart, fetchProductHierarchyError, fetchProductHierarchySuccess, clearBreadcrumbsItems, setBreadcrumbsItems } = LayoutStore.actions;
 
 export default LayoutStore.reducer;

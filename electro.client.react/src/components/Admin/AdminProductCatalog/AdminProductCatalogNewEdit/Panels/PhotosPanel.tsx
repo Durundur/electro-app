@@ -1,5 +1,5 @@
 import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { ExpandMoreRounded } from "@mui/icons-material";
 import { FormikProps } from "formik";
 import { FC } from "react";
 import { CreateOrUpdateProductCommand } from "@/libs/api-contract/api-contract";
@@ -14,7 +14,7 @@ const PhotosPanel: FC<PhotosPanelProps> = ({ formik }) => {
 
 	return (
 		<Accordion defaultExpanded>
-			<AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1-content" id="panel1-header">
+			<AccordionSummary expandIcon={<ExpandMoreRounded />} aria-controls="panel1-content" id="panel1-header">
 				Zdjęcia
 			</AccordionSummary>
 			<AccordionDetails>

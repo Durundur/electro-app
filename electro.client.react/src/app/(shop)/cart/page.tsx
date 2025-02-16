@@ -4,11 +4,17 @@ import { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "@/libs/Store";
 import { fetchCart } from "@/libs/Cart/thunks";
 import FullScreenLoader from "@/components/Layout/FullScreenLoader/FullScreenLoader";
-import EmptyCartInfo from "@/components/Cart/Cart/EmptyCartInfo/EmptyCartInfo";
 import CartProductList from "@/components/Cart/Cart/CartProduct/CartProductList/CartProductList";
 import CartSummary from "@/components/Cart/Cart/CartSummary/CartSummary";
+import CartEmpty from "@/components/Cart/Cart/CartEmpty/CartEmpty";
+import Error from "@/components/Layout/Error/Error";
+import { useBreadcrumbs } from "@/hooks/Breadcrumbs/useBreadcrumbs";
 
 const CartPage: FC = () => {
+	useBreadcrumbs([
+		{ label: "electro", link: "/" },
+		{ label: "Koszyk", link: "/cart" },
+	]);
 	const dispatch = useDispatch();
 	const cartDataSelector = useSelector((store) => store.CartStore.cart.data);
 	const cartIsLoadingSelector = useSelector((store) => store.CartStore.cart.isLoading);
@@ -28,10 +34,10 @@ const CartPage: FC = () => {
 	}, []);
 
 	if (cartErrorSelector) {
-		return <p>Error: {cartErrorSelector.message}</p>;
+		return <Error message="Wystąpił błąd podczas ładowania koszyka"></Error>;
 	}
 	if (cartDataSelector && cartDataSelector.products?.length === 0) {
-		return <EmptyCartInfo />;
+		return <CartEmpty />;
 	}
 	if (cartDataSelector) {
 		return (

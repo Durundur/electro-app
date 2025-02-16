@@ -2,6 +2,7 @@
 using Domain.Aggregates.ProductCatalogAggregate;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Application.Exceptions;
 
 namespace Application.Features.ProductCatalog.CreateProduct
 {
@@ -20,7 +21,7 @@ namespace Application.Features.ProductCatalog.CreateProduct
             if (command.Id.HasValue)
             {
                 product = await _unitOfWork.ProductRepository.GetByIdAsync(command.Id.Value)
-                    ?? throw new Exception($"Product with ID {command.Id.Value} not found");
+                    ?? throw new NotFoundException(nameof(Product), command.Id.Value);
                 product.Update(command.Name, command.Description, new Domain.ValueObjects.Money(command.Amount, command.Currency), ProductStatus.Active, command.Active, command.StockQuantity);
             }
             else

@@ -1,8 +1,8 @@
 import { translateOrderStatus } from "@/libs/Helpers/Translations/OrdersTranslations";
 import { formatAmount } from "@/libs/Helpers/Formatters";
-import { GetOrdersResult } from "@/libs/api-contract/api-contract";
-import { OpenInNewRounded } from "@mui/icons-material";
-import { IconButton } from "@mui/material";
+import { GetOrdersResult, OrderStatus } from "@/libs/api-contract/api-contract";
+import { OpenInNewRounded, EditRounded } from "@mui/icons-material";
+import { Button, IconButton } from "@mui/material";
 import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid";
 import { useRouter } from "next/navigation";
 import { FC } from "react";
@@ -19,8 +19,14 @@ const AdminOrdersList: FC<AdminOrdersListProps> = ({ onPaginationChange, ordersL
 
 	const columns: GridColDef[] = [
 		{ field: "id", headerName: "ID", flex: 1, disableColumnMenu: true },
-		{ field: "totalPrice", headerName: "Wartość", flex: 1, disableColumnMenu: true, renderCell: (v) => <>{formatAmount(v.value.amount, v.value.currency)}</> },
-		{ field: "status", headerName: "Status", flex: 2, disableColumnMenu: true, valueFormatter: (v) => translateOrderStatus(v) },
+		{ field: "totalPrice", headerName: "Wartość", flex: 2, disableColumnMenu: true, renderCell: (v) => <>{formatAmount(v.value.amount, v.value.currency)}</> },
+		{
+			field: "status",
+			headerName: "Status",
+			flex: 2,
+			disableColumnMenu: true,
+			renderCell: (params) => getStatusButton(params.value),
+		},
 		{ field: "createdAt", headerName: "Utworzono", flex: 2, disableColumnMenu: true, valueFormatter: (v) => new Date(v).toLocaleString() },
 		{
 			field: " ",
@@ -30,12 +36,44 @@ const AdminOrdersList: FC<AdminOrdersListProps> = ({ onPaginationChange, ordersL
 			disableColumnMenu: true,
 			align: "center",
 			renderCell: (params) => (
-				<IconButton size="small" onClick={() => router.push(`/orders/${params.row.id}`)}>
-					<OpenInNewRounded fontSize="small" />
-				</IconButton>
+				<>
+					<IconButton size="small" onClick={() => router.push(`/admin/orders/${params.row.id}/edit`)}>
+						<EditRounded fontSize="small" />
+					</IconButton>
+					<IconButton size="small" onClick={() => router.push(`/admin/orders/${params.row.id}`)}>
+						<OpenInNewRounded fontSize="small" />
+					</IconButton>
+				</>
 			),
 		},
 	];
+
+	const getStatusButton = (status: OrderStatus) => {
+		const getStatusColor = (status: OrderStatus) => {
+			switch (status) {
+				case OrderStatus.Created:
+					return "inherit";
+				case OrderStatus.PaymentPending:
+					return "info";
+				case OrderStatus.Paid:
+					return "primary";
+				case OrderStatus.Shipped:
+					return "warning";
+				case OrderStatus.Delivered:
+					return "success";
+				case OrderStatus.Cancelled:
+					return "error";
+				default:
+					return "inherit";
+			}
+		};
+
+		return (
+			<Button sx={{ pointerEvents: "none" }} size="small" variant="contained" color={getStatusColor(status)}>
+				{translateOrderStatus(status)}
+			</Button>
+		);
+	};
 
 	const handlePaginationChange = (model: GridPaginationModel) => {
 		onPaginationChange({

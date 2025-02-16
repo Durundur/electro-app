@@ -1,6 +1,7 @@
 using WebAPI.Extensions;
 using Application;
 using Microsoft.OpenApi.Models;
+using WebAPI.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.ConfigureCorsPolicy();
@@ -40,6 +41,7 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 });
+builder.Services.AddExceptionHandler<ExceptionMiddleware>();
 
 var app = builder.Build();
 app.UseCors("allow_cors");

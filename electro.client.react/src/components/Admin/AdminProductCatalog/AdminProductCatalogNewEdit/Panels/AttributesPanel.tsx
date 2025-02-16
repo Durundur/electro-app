@@ -1,7 +1,7 @@
 import { FormikProps } from "formik";
 import { FC, useEffect } from "react";
 import { Accordion, AccordionDetails, AccordionSummary, Checkbox, Typography } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { ExpandMoreRounded } from "@mui/icons-material";
 import { useDispatch, useSelector } from "@/libs/Store";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { AttributeDefinitionResult, CreateOrUpdateProductCommand } from "@/libs/api-contract/api-contract";
@@ -112,7 +112,7 @@ const AttributesPanel: FC<AttributesPanelProps> = ({ formik }) => {
 
 	return (
 		<Accordion defaultExpanded>
-			<AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1-content" id="panel1-header">
+			<AccordionSummary expandIcon={<ExpandMoreRounded />} aria-controls="panel1-content" id="panel1-header">
 				Atrybuty
 			</AccordionSummary>
 			<AccordionDetails>

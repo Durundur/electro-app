@@ -1,10 +1,11 @@
 import { IError } from "@/libs/api-contract/Error";
-import { GetOrderDetailsResult, GetOrdersResult } from "@/libs/api-contract/api-contract";
+import { GetOrderDetailsResult, GetOrdersResult, UpdateOrderResult } from "@/libs/api-contract/api-contract";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface IAdminOrdersState {
 	list: IAdminOrdersListState;
 	details: IAdminOrderDetailsState;
+	edit: IAdminOrderEditState;
 }
 
 interface IAdminOrdersListState {
@@ -19,6 +20,13 @@ interface IAdminOrderDetailsState {
 	error?: IError;
 }
 
+interface IAdminOrderEditState {
+	data?: GetOrderDetailsResult;
+	isLoading: boolean;
+	error?: IError;
+	result?: UpdateOrderResult;
+}
+
 const initialState: IAdminOrdersState = {
 	list: {
 		data: undefined,
@@ -29,6 +37,12 @@ const initialState: IAdminOrdersState = {
 		data: undefined,
 		error: undefined,
 		isLoading: false,
+	},
+	edit: {
+		data: undefined,
+		error: undefined,
+		isLoading: false,
+		result: undefined,
 	},
 };
 
@@ -60,10 +74,36 @@ const AdminOrdersStore = createSlice({
 			state.details.isLoading = false;
 			state.details.error = action.payload;
 		},
+		adminOrderEditStart(state) {
+			state.edit.isLoading = true;
+			state.edit.error = undefined;
+		},
+		getAdminOrderEditSuccess(state, action: PayloadAction<GetOrderDetailsResult>) {
+			state.edit.isLoading = false;
+			state.edit.data = action.payload;
+		},
+		putAdminOrderEditSuccess(state, action: PayloadAction<UpdateOrderResult>) {
+			state.edit.isLoading = false;
+			state.edit.result = action.payload;
+		},
+		adminOrderEditError(state, action: PayloadAction<IError>) {
+			state.edit.isLoading = false;
+			state.edit.error = action.payload;
+		},
 	},
 });
 
-export const { fetchAdminOrderDetailsError, fetchAdminOrderDetailsStart, fetchAdminOrderDetailsSuccess, fetchAdminOrdersListError, fetchAdminOrdersListStart, fetchAdminOrdersListSuccess } =
-	AdminOrdersStore.actions;
+export const {
+	fetchAdminOrderDetailsError,
+	fetchAdminOrderDetailsStart,
+	fetchAdminOrderDetailsSuccess,
+	fetchAdminOrdersListError,
+	fetchAdminOrdersListStart,
+	fetchAdminOrdersListSuccess,
+	adminOrderEditError,
+	adminOrderEditStart,
+	getAdminOrderEditSuccess,
+	putAdminOrderEditSuccess,
+} = AdminOrdersStore.actions;
 
 export default AdminOrdersStore.reducer;

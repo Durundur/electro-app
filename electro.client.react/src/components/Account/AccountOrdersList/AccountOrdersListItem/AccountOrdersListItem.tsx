@@ -16,7 +16,7 @@ const AccountOrdersListItem: FC<AccountOrdersListItemProps> = ({ order }) => {
 		<Card variant="elevation">
 			<CardContent>
 				<Stack direction={"column"} spacing={2}>
-					<AccountOrdersListItemHeader orderNumber={""} status={order.status!} createdAt={order.createdAt!}></AccountOrdersListItemHeader>
+					<AccountOrdersListItemHeader orderNumber={order.number!} status={order.status!} createdAt={order.createdAt!}></AccountOrdersListItemHeader>
 					<AccountOrdersListItemProducts products={order.products ?? []}></AccountOrdersListItemProducts>
 					<AccountOrdersListItemFooter orderId={order.id!} totalPrice={order.totalPrice!} totalQuantity={totalProductsQuantity!}></AccountOrdersListItemFooter>
 				</Stack>

@@ -2,8 +2,7 @@ import { GetProductCatalogResult } from "@/libs/api-contract/api-contract";
 import { IconButton, Typography } from "@mui/material";
 import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid";
 import { FC } from "react";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { EditRounded, DeleteRounded } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import { translateProductStatus } from "@/libs/Helpers/Translations/ProductsTranslations";
 
@@ -23,21 +22,19 @@ const AdminProductCatalogList: FC<AdminProductCatalogListProps> = ({ productCata
 		{ field: "status", headerName: "Status", flex: 2, disableColumnMenu: true, valueFormatter: (v) => translateProductStatus(v) },
 		{ field: "stockQuantity", headerName: "Stan magazynowy", flex: 2, disableColumnMenu: true },
 		{
-			field: "actions",
-			headerName: "Akcje",
+			field: " ",
 			flex: 1,
 			sortable: false,
 			filterable: false,
-			align: "right",
-			headerAlign: "right",
 			disableColumnMenu: true,
+			align: "center",
 			renderCell: (params) => (
 				<>
 					<IconButton size="small" onClick={() => handleEditProduct(params.row.id)}>
-						<EditIcon fontSize="small" />
+						<EditRounded fontSize="small" />
 					</IconButton>
 					<IconButton size="small" onClick={() => handleDeleteProduct(params.row.id)}>
-						<DeleteIcon fontSize="small" />
+						<DeleteRounded fontSize="small" />
 					</IconButton>
 				</>
 			),
@@ -45,7 +42,7 @@ const AdminProductCatalogList: FC<AdminProductCatalogListProps> = ({ productCata
 	];
 
 	const handleEditProduct = (productId: string) => {
-		router.push(`/product-catalog/edit/${productId}`);
+		router.push(`/admin/product-catalog/${productId}/edit`);
 	};
 
 	const handleDeleteProduct = (productId: string) => {};

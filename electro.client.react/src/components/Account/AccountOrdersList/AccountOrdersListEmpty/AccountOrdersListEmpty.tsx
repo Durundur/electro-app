@@ -10,7 +10,7 @@ const AccountOrdersListEmpty: FC = () => {
 				<Typography variant="h6" fontWeight={500}>
 					Twoja historia zamówień jest pusta.
 				</Typography>
-				<Typography>Szukasz inspiracji?</Typography>
+				<Typography variant="body2">Szukasz inspiracji?</Typography>
 			</Stack>
 			<Stack direction={"row"} spacing={2}>
 				<Button LinkComponent={Link} href="/" variant="contained">

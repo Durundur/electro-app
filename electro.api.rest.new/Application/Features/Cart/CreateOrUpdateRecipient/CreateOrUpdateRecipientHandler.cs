@@ -1,4 +1,4 @@
-﻿using Application.Services.UserContext;
+﻿using Application.Exceptions;
 using Domain.Aggregates.UserAggregate;
 using Domain.Reposiotories;
 using MediatR;
@@ -22,7 +22,7 @@ namespace Application.Features.Cart.CreateOrUpdateRecipient
                 recipient = await _unitOfWork.RecipientRepository.GetByIdAsync(command.Id.Value, cancellationToken);
                 if (recipient == null)
                 {
-                    throw new InvalidOperationException($"Recipient with ID {command.Id.Value} not found.");
+                    throw new NotFoundException(nameof(Recipient), command.Id.Value);
                 }
 
                 recipient.Update(

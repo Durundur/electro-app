@@ -7,7 +7,6 @@ import { TreeItem2Provider } from "@mui/x-tree-view/TreeItem2Provider";
 import { TreeItem2DragAndDropOverlay } from "@mui/x-tree-view/TreeItem2DragAndDropOverlay";
 import { useTreeItem2Utils } from "@mui/x-tree-view/hooks";
 import { ChevronRightRounded, ExpandMore } from "@mui/icons-material";
-import theme from "@/app/theme";
 
 const TreeItem = React.forwardRef(function CustomTreeItem({ id, itemId, label, disabled, children }: TreeItem2Props, ref: React.Ref<HTMLLIElement>) {
 	const { getRootProps, getContentProps, getLabelProps, getGroupTransitionProps, getDragAndDropOverlayProps, status } = useTreeItem2({ id, itemId, children, label, disabled, rootRef: ref });
@@ -39,7 +38,7 @@ const TreeItem = React.forwardRef(function CustomTreeItem({ id, itemId, label, d
 						</div>
 					)}
 					<TreeItem2Content {...getContentProps()} sx={{ marginLeft: status.expandable ? "0px" : "30px" }}>
-						<TreeItem2Label {...getLabelProps()} sx={{ fontSize: theme.typography.fontSize }} />
+						<TreeItem2Label {...getLabelProps()} />
 						<TreeItem2DragAndDropOverlay {...getDragAndDropOverlayProps()} />
 					</TreeItem2Content>
 				</Box>

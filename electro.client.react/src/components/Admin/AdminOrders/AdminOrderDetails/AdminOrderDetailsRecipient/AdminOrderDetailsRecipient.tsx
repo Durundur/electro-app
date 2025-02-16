@@ -10,7 +10,7 @@ const AdminOrderDetailsRecipient: FC<AdminOrderDetailsRecipientProps> = ({ recip
 	const isCompany = recipient.type === RecipientType.Company;
 	return (
 		<Stack>
-			<Typography fontWeight={500} variant="subtitle1">Odbiorca</Typography>
+			<Typography fontWeight={500}>Odbiorca</Typography>
 			{isCompany ? (
 				<Typography paddingY={0.5}>{recipient.companyName}</Typography>
 			) : (

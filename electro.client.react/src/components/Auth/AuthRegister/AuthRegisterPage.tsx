@@ -12,6 +12,7 @@ import * as Yup from "yup";
 import { useRouter } from "next/navigation";
 import FullScreenLoader from "@/components/Layout/FullScreenLoader/FullScreenLoader";
 import { translateErrorMessage } from "@/libs/api-contract/Error";
+import TextInput from "@/components/Shared/TextInput/TextInput";
 
 interface RegisterUserForm extends RegisterUserCommand {
 	firstName: string;
@@ -71,7 +72,7 @@ const AuthRegisterPage = () => {
 						<Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleRegisterSubmit}>
 							{({ submitForm, handleChange, handleBlur, values, touched, errors }) => (
 								<Stack spacing={2}>
-									<TextField
+									<TextInput
 										size="small"
 										variant="outlined"
 										label="Imie"
@@ -94,7 +95,7 @@ const AuthRegisterPage = () => {
 											},
 										}}
 									/>
-									<TextField
+									<TextInput
 										size="small"
 										variant="outlined"
 										label="Nazwisko"
@@ -117,7 +118,7 @@ const AuthRegisterPage = () => {
 											},
 										}}
 									/>
-									<TextField
+									<TextInput
 										size="small"
 										variant="outlined"
 										label="Email"
@@ -140,7 +141,7 @@ const AuthRegisterPage = () => {
 											},
 										}}
 									/>
-									<TextField
+									<TextInput
 										size="small"
 										variant="outlined"
 										label="Hasło"
@@ -171,7 +172,7 @@ const AuthRegisterPage = () => {
 											},
 										}}
 									/>
-									<TextField
+									<TextInput
 										size="small"
 										variant="outlined"
 										label="Powtórz hasło"

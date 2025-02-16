@@ -1,8 +1,7 @@
-import { Breadcrumbs, Stack, Typography } from "@mui/material";
-import { FC } from "react";
+import { Typography } from "@mui/material";
+import { FC, useMemo } from "react";
 import { useSelector } from "@/libs/Store";
-import { NavigateNextOutlined } from "@mui/icons-material";
-import Link from "next/link";
+import { Breadcrumb, useBreadcrumbs } from "@/hooks/Breadcrumbs/useBreadcrumbs";
 
 const SearchProductsHeader: FC = () => {
 	const productHierarchySelector = useSelector((store) => store.SearchProductsPageStore.productHierarchy);
@@ -25,47 +24,30 @@ const SearchProductsHeader: FC = () => {
 		}
 	};
 
-	const getBreadcrumbsItems = () => {
-		const breadcrumbs = [];
+	const breadcrumbsItems = useMemo<Breadcrumb[]>(() => {
+		const breadcrumbs: Breadcrumb[] = [];
 
-		breadcrumbs.push(
-			<Link key={"breadcrumb-group-item"} color="inherit" href={`/search`}>
-				electro
-			</Link>
-		);
+		breadcrumbs.push({ label: "electro", link: "/" });
 
 		if (group && group.name) {
-			breadcrumbs.push(
-				<Link key={"breadcrumb-group-item"} color="inherit" href={`/search?group=${groupId}`}>
-					{group.name}
-				</Link>
-			);
+			breadcrumbs.push({ label: group.name, link: `/search?group=${group.id}` });
 		}
-		if (category && category.name) {
-			breadcrumbs.push(
-				<Link key={"breadcrumb-category-item"} color="inherit" href={`/search?group=${groupId}&category=${categoryId}`}>
-					{category.name}
-				</Link>
-			);
+		if (category && category.name && group) {
+			breadcrumbs.push({ label: category.name, link: `/search?group=${group.id}&category=${category.id}` });
 		}
-		if (subCategory && subCategory.name) {
-			breadcrumbs.push(
-				<Link key={"breadcrumb-subCategory-item"} color="inherit" href={`/search?group=${groupId}&category=${categoryId}&subCategory=${subCategoryId}`}>
-					{subCategory.name}
-				</Link>
-			);
+		if (subCategory && subCategory.name && category && group) {
+			breadcrumbs.push({ label: subCategory.name, link: `/search?group=${group.id}&category=${category.id}&subCategory=${subCategory.id}` });
 		}
 
 		return breadcrumbs;
-	};
+	}, [groupId, categoryId, subCategoryId, productHierarchy]);
+
+	useBreadcrumbs(breadcrumbsItems);
 
 	return (
-		<Stack spacing={1}>
-			<Breadcrumbs separator={<NavigateNextOutlined fontSize="small" />} aria-label="breadcrumb">
-				{getBreadcrumbsItems()}
-			</Breadcrumbs>
-			<Typography variant="h5">{getHeaderText()}</Typography>
-		</Stack>
+		<Typography marginBottom={2} variant="h6">
+			{getHeaderText()}
+		</Typography>
 	);
 };
 

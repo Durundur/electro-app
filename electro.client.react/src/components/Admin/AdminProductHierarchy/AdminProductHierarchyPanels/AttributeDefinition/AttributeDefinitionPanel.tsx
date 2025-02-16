@@ -1,6 +1,6 @@
 "use client";
 import { Accordion, AccordionDetails, AccordionSummary, Button, Stack } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { ExpandMoreRounded } from "@mui/icons-material";
 import { FC, useState } from "react";
 import { DataGrid, GridColDef, GridRowSelectionModel } from "@mui/x-data-grid";
 import { AddOutlined, DeleteOutlined, EditOutlined } from "@mui/icons-material";
@@ -70,7 +70,7 @@ const AttributeDefinitionPanel: FC<AttributeDefinitionPanelProps> = ({ attribute
 
 	return (
 		<Accordion defaultExpanded>
-			<AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1-content" id="panel1-header">
+			<AccordionSummary expandIcon={<ExpandMoreRounded />} aria-controls="panel1-content" id="panel1-header">
 				Atrybuty produktów
 			</AccordionSummary>
 			<AccordionDetails>

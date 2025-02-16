@@ -28,7 +28,7 @@ const AccountOrdersPage: FC = () => {
 		return () => {
 			dispatch(clearAccountOrders());
 		};
-	}, []);
+	}, [userId]);
 
 	const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
 		if (!userId) return;

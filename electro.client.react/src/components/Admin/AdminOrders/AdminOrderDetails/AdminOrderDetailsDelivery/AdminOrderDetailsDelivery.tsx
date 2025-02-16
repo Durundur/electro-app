@@ -11,16 +11,16 @@ interface AdminOrderDetailsDeliveryProps {
 const AdminOrderDetailsDelivery: FC<AdminOrderDetailsDeliveryProps> = ({ delivery }) => {
 	return (
 		<Stack>
-			<Typography fontWeight={500} variant="subtitle1">
-				Dostawa
-			</Typography>
+			<Typography fontWeight={500}>Dostawa</Typography>
 			<Typography variant="body2">Sposób dostawy: {translateDeliveryMethod(delivery.method!)}</Typography>
-			<Stack direction={"row"} alignItems={"center"} spacing={2}>
-				<Typography variant="body2">Numer przesyłki: </Typography>
-				<Button sx={{ paddingY: 0 }} size="small" variant="outlined" color="inherit" endIcon={<OpenInNewRounded fontSize="small" />}>
-					852313067057
-				</Button>
-			</Stack>
+			{delivery.trackingNumber && (
+				<Stack direction={"row"} alignItems={"center"} spacing={2}>
+					<Typography variant="body2">Numer przesyłki: </Typography>
+					<Button sx={{ paddingY: 0 }} variant="outlined" color="inherit" endIcon={<OpenInNewRounded fontSize="small" />}>
+						{delivery.trackingNumber}
+					</Button>
+				</Stack>
+			)}
 		</Stack>
 	);
 };

@@ -45,7 +45,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 
 		const now = new Date().getTime();
 		const expiryTime = new Date(authState.refreshTokenExpiry).getTime();
-		const timeUntilRefresh = expiryTime - now - 60 * 1000;
+		const timeUntilRefresh = expiryTime - now - 60 * 10 * 1000;
 
 		if (timeUntilRefresh > 0) {
 			if (refreshTimeout) clearTimeout(refreshTimeout);

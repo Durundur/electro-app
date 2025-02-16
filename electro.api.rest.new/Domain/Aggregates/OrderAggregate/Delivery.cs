@@ -18,6 +18,10 @@ namespace Domain.Aggregates.OrderAggregate
 
         public void SetTrackingNumber(string trackingNumber)
         {
+            if (string.IsNullOrWhiteSpace(trackingNumber))
+            {
+                throw new ArgumentException("Tracking number cannot be empty.");
+            }
             TrackingNumber = trackingNumber;
         }
     }

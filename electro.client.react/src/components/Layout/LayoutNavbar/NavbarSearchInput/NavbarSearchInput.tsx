@@ -1,4 +1,4 @@
-import SearchOutlined from "@mui/icons-material/SearchOutlined";
+import { SearchOutlined } from "@mui/icons-material";
 import { IconButton, InputAdornment, TextField } from "@mui/material";
 import React, { FC, useEffect, useState } from "react";
 import "./search-input.scss";

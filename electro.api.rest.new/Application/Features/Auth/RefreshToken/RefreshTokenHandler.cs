@@ -1,8 +1,8 @@
-﻿using Domain.Reposiotories;
-using Application.Services.IdentityService;
+﻿using Application.Services.IdentityService;
 using Application.Services.TokenService;
 using MediatR;
 using System.Security.Claims;
+using Application.Exceptions;
 
 namespace Application.Features.Auth.RefreshToken
 {
@@ -22,24 +22,24 @@ namespace Application.Features.Auth.RefreshToken
             var principal = _tokenService.GetTokenPrincipal(request.Token);
             if (principal == null)
             {
-                throw new UnauthorizedAccessException("Invalid JWT token");
+                throw new UnauthorizedException("Invalid JWT token");
             }
 
             var userId = principal.FindFirst(ClaimTypes.NameIdentifier);
             if (userId == null)
             {
-                throw new UnauthorizedAccessException("Invalid JWT token");
+                throw new UnauthorizedException("Invalid JWT token");
             }
 
             var user = await _identityService.FindUserByIdAsync(new Guid(userId.Value));
             if (user == null)
             {
-                throw new UnauthorizedAccessException("Invalid JWT token");
+                throw new UnauthorizedException("Invalid JWT token");
             }
 
             if (user.RefreshToken != request.RefreshToken || user.RefreshTokenExpiry < DateTime.UtcNow)
             {
-                throw new UnauthorizedAccessException("Invalid or expired refresh token");
+                throw new UnauthorizedException("Invalid or expired refresh token");
             }
 
             var roles = await _identityService.GetRolesAsync(user.Id);

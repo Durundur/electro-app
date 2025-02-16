@@ -1,7 +1,7 @@
 "use client";
 import { useSelector } from "@/libs/Store";
 import { Accordion, AccordionDetails, AccordionSummary, Checkbox, FormControl, FormControlLabel, FormLabel, Grid2 as Grid, Switch, TextField, Typography } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { ExpandMoreRounded } from "@mui/icons-material";
 import { FC } from "react";
 import { FormikProps } from "formik";
 
@@ -15,7 +15,7 @@ const GroupGeneralInfoPanel: FC<GroupGeneralInfoPanelProps> = ({ formik }) => {
 
 	return (
 		<Accordion defaultExpanded>
-			<AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="GroupGeneralInfoPanel-content" id="GroupGeneralInfoPanel-header">
+			<AccordionSummary expandIcon={<ExpandMoreRounded />} aria-controls="GroupGeneralInfoPanel-content" id="GroupGeneralInfoPanel-header">
 				Podstawowe informacje
 			</AccordionSummary>
 			<AccordionDetails>

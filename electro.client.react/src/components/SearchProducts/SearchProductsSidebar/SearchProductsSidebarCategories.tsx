@@ -78,7 +78,7 @@ const SearchProductsSidebarCategories: FC = () => {
 
 	return (
 		<Box>
-			<Typography variant="body1" fontWeight={500} paddingY={0.5} paddingX={1.5}>
+			<Typography fontWeight={500} paddingY={0.5} paddingX={1.5}>
 				Kategorie
 			</Typography>
 			<SimpleTreeView

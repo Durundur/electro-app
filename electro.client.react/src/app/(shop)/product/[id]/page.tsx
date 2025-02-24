@@ -13,6 +13,8 @@ import { formatAmount } from "@/libs/Helpers/Formatters";
 import QuantityInput from "@/components/Shared/QuantityInput/QuantityInput";
 import { addProductToCart } from "@/libs/Cart/thunks";
 import { Breadcrumb, useBreadcrumbs } from "@/hooks/Breadcrumbs/useBreadcrumbs";
+import Error from "@/components/Layout/Error/Error";
+import FullScreenLoader from "@/components/Layout/FullScreenLoader/FullScreenLoader";
 
 interface ProductPageParams {
 	params: { id: string };
@@ -21,8 +23,9 @@ interface ProductPageParams {
 const ProductPage: FC<ProductPageParams> = ({ params }) => {
 	const [quantity, setQuantity] = useState(1);
 	const dispatch = useDispatch();
-	const productSelector = useSelector((state) => state.ProductPageStore.product);
-	const product = productSelector.data;
+	const productSelector = useSelector((state) => state.ProductPageStore.product.data);
+	const errorSelector = useSelector((state) => state.ProductPageStore.product.error);
+	const isLoadingSelector = useSelector((state) => state.ProductPageStore.product.error);
 	const productHierarchySelector = useSelector((store) => store.LayoutStore.productHierarchy.data);
 
 	useEffect(() => {
@@ -34,7 +37,7 @@ const ProductPage: FC<ProductPageParams> = ({ params }) => {
 	}, []);
 
 	const handleAddToCart = () => {
-		dispatch(addProductToCart(product?.id!, quantity, product?.amount!, product?.currency!));
+		dispatch(addProductToCart(productSelector?.id!, quantity, productSelector?.amount!, productSelector?.currency!));
 	};
 
 	const breadcrumbsItems = useMemo<Breadcrumb[]>(() => {
@@ -42,11 +45,11 @@ const ProductPage: FC<ProductPageParams> = ({ params }) => {
 
 		breadcrumbs.push({ label: "electro", link: "/" });
 
-		if (!product) return breadcrumbs;
+		if (!productSelector) return breadcrumbs;
 
-		const group = productHierarchySelector.groups?.find((g) => g.id === product.groupId);
-		const category = group?.categories?.find((c) => c.id === product.categoryId);
-		const subCategory = category?.subCategories?.find((sc) => sc.id === product.subCategoryId);
+		const group = productHierarchySelector.groups?.find((g) => g.id === productSelector.groupId);
+		const category = group?.categories?.find((c) => c.id === productSelector.categoryId);
+		const subCategory = category?.subCategories?.find((sc) => sc.id === productSelector.subCategoryId);
 
 		if (group && group.name) {
 			breadcrumbs.push({ label: group.name, link: `/search?group=${group.id}` });
@@ -59,22 +62,21 @@ const ProductPage: FC<ProductPageParams> = ({ params }) => {
 		}
 
 		return breadcrumbs;
-	}, [product, productHierarchySelector]);
+	}, [productSelector, productHierarchySelector]);
 
 	useBreadcrumbs(breadcrumbsItems);
 
-	if (productSelector.isLoading) return <CircularProgress />;
-	if (productSelector.error) return <p>error</p>;
-	return (
-		product && (
+	if (errorSelector) return <Error message="Błąd podczas pobierania produktu"></Error>;
+	if (productSelector)
+		return (
 			<Box>
 				<Grid container spacing={2}>
 					<Grid size={{ xs: 12, md: 6 }}>
-						<ProductPageSlider photos={product.photos!}></ProductPageSlider>
+						<ProductPageSlider photos={productSelector.photos ?? []}></ProductPageSlider>
 					</Grid>
 					<Grid size={{ xs: 12, md: 6 }}>
 						<Stack spacing={1}>
-							<Typography variant="h6">{product.name}</Typography>
+							<Typography variant="h6">{productSelector.name}</Typography>
 							<Stack direction={"row"} alignItems={"center"} spacing={1}>
 								<Rating size="small" value={3.5} readOnly precision={0.5} emptyIcon={<StarBorderRounded style={{ opacity: 0.5 }} fontSize="inherit" />} />
 								<Typography variant="caption">({90}) opinii</Typography>
@@ -82,7 +84,7 @@ const ProductPage: FC<ProductPageParams> = ({ params }) => {
 							<div>
 								<Grid container direction={"row"} size={{ xs: 12 }} spacing={2}>
 									<Grid size={{ xs: 6 }}>
-										<ProductPageSpecificationPrimary specification={product.attributes!} />
+										<ProductPageSpecificationPrimary specification={productSelector.attributes ?? []} />
 										<Button color="inherit" variant="text" fullWidth endIcon={<KeyboardDoubleArrowDownRounded />}>
 											Przewiń do pełnej specyfikacji
 										</Button>
@@ -90,11 +92,11 @@ const ProductPage: FC<ProductPageParams> = ({ params }) => {
 									<Grid size={{ xs: 6 }}>
 										<Card sx={{ padding: 2 }}>
 											<Stack spacing={1}>
-												<Typography variant="h6" textAlign={"end"}>
-													{formatAmount(product.amount!, product.currency!)}
-												</Typography>
-												<Stack alignItems={"center"}>
-													<QuantityInput value={quantity} id={product.id!} onChange={(q) => setQuantity(q)}></QuantityInput>
+												<Stack direction={"row"} alignItems={"center"} justifyContent={"space-between"}>
+													<QuantityInput value={quantity} id={productSelector.id!} onChange={(q) => setQuantity(q)}></QuantityInput>
+													<Typography variant="h6" textAlign={"end"}>
+														{formatAmount(productSelector.amount!, productSelector.currency!)}
+													</Typography>
 												</Stack>
 												<Button onClick={handleAddToCart} variant="contained" color="success" startIcon={<ShoppingCartOutlined />}>
 													Dodaj do koszyka
@@ -136,11 +138,11 @@ const ProductPage: FC<ProductPageParams> = ({ params }) => {
 				</Stack>
 				<Box>
 					<Typography variant="h6">Opis</Typography>
-					<div dangerouslySetInnerHTML={{ __html: product.description! }} />
+					<div dangerouslySetInnerHTML={{ __html: productSelector.description! }} />
 				</Box>
 				<Box>
 					<Typography variant="h6">Specyfikacja</Typography>
-					<ProductPageSpecificationTable specification={product.attributes!} />
+					<ProductPageSpecificationTable specification={productSelector.attributes ?? []} />
 				</Box>
 				<Box>
 					<Typography variant="h6">Akcesoria</Typography>
@@ -150,8 +152,8 @@ const ProductPage: FC<ProductPageParams> = ({ params }) => {
 					<OpinionsSection />
 				</Box>
 			</Box>
-		)
-	);
+		);
+	return <FullScreenLoader isVisible></FullScreenLoader>;
 };
 
 export default ProductPage;

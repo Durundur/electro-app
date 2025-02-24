@@ -14,7 +14,7 @@ const AccountOrdersListItemHeader: FC<AccountOrdersListItemHeaderProps> = ({ ord
 		<Stack direction={"row"} justifyContent={"space-between"} alignItems={"center"}>
 			<Stack direction={"column"}>
 				<Typography variant="body2">Zamówienie nr</Typography>
-				<Typography fontWeight={500}>#{orderNumber}</Typography>
+				<Typography variant="h6">#{orderNumber}</Typography>
 			</Stack>
 			<Stack direction={"row"}>
 				<Chip label={translateOrderStatus(status)} color="primary" variant="outlined" />

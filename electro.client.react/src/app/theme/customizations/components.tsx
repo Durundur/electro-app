@@ -8,6 +8,11 @@ export const componentsCustomizations: Components<Theme> = {
 				paddingBottom: 0,
 			},
 		},
+		defaultProps: {
+			titleTypographyProps: {
+				variant: "h6",
+			},
+		},
 	},
 	MuiCard: {
 		defaultProps: {

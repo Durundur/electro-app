@@ -10,7 +10,20 @@ interface AccountOrdersListItemProductsProps {
 
 const AccountOrdersListItemProducts: FC<AccountOrdersListItemProductsProps> = ({ products }) => {
 	return (
-		<Grid2 container sx={{ overflowY: "auto", height: "140px" }}>
+		<Grid2
+			container
+			sx={(theme) => ({
+				overflowY: "auto",
+				height: "140px",
+				"&::-webkit-scrollbar": {
+					width: "0.33rem",
+				},
+				"&::-webkit-scrollbar-thumb": {
+					background: theme.palette.primary.main,
+					borderRadius: theme.shape.borderRadius,
+				},
+			})}
+		>
 			{products.map((product) => (
 				<Grid2 size={{ xs: 12 }} key={product.id}>
 					<AccountOrdersListItemProduct product={product}></AccountOrdersListItemProduct>

@@ -27,7 +27,7 @@ const SearchProductsListItem: FC<SearchProductsListItemProps> = ({ product }) =>
 					<Grid2 size={{ xs: 7 }}>
 						<CardContent>
 							<Stack spacing={1}>
-								<Typography variant="body1" component="p">
+								<Typography variant="subtitle2" fontWeight={400}>
 									{product.name}
 								</Typography>
 								<Stack direction={"row"} spacing={1}>

@@ -5,6 +5,7 @@ import { FC, useState } from "react";
 import { CreateOrUpdateRecipientCommand, GetRecipientsResultItem, RecipientType } from "@/libs/api-contract/api-contract";
 import { useDispatch, useSelector } from "@/libs/Store";
 import { createOrUpdateRecipient } from "@/libs/Cart/thunks";
+import TextInput from "@/components/Shared/TextInput/TextInput";
 
 interface CheckoutReceiverFormProps {
 	recipient: GetRecipientsResultItem | null;
@@ -117,7 +118,7 @@ interface CompanyReceiverFormProps {
 const CompanyReceiverForm: FC<CompanyReceiverFormProps> = ({ formik }) => {
 	return (
 		<Stack spacing={2}>
-			<TextField
+			<TextInput
 				size="small"
 				variant="outlined"
 				label="Nazwa firmy"
@@ -129,7 +130,7 @@ const CompanyReceiverForm: FC<CompanyReceiverFormProps> = ({ formik }) => {
 				helperText={formik.touched.companyName && <>{formik.errors.companyName}</>}
 				fullWidth
 			/>
-			<TextField
+			<TextInput
 				size="small"
 				variant="outlined"
 				label="NIP"
@@ -153,7 +154,7 @@ interface PersonalReceiverFormProps {
 const PersonalReceiverForm: FC<PersonalReceiverFormProps> = ({ formik }) => {
 	return (
 		<Stack spacing={2}>
-			<TextField
+			<TextInput
 				size="small"
 				variant="outlined"
 				label="Imię"
@@ -165,7 +166,7 @@ const PersonalReceiverForm: FC<PersonalReceiverFormProps> = ({ formik }) => {
 				helperText={formik.touched.firstName && <>{formik.errors.firstName}</>}
 				fullWidth
 			/>
-			<TextField
+			<TextInput
 				size="small"
 				variant="outlined"
 				label="Nazwisko"
@@ -188,7 +189,7 @@ interface SharedReceiverFieldsProps {
 
 const SharedReceiverFields: FC<SharedReceiverFieldsProps> = ({ formik }) => (
 	<Stack spacing={2}>
-		<TextField
+		<TextInput
 			size="small"
 			variant="outlined"
 			label="Numer telefonu"
@@ -202,7 +203,7 @@ const SharedReceiverFields: FC<SharedReceiverFieldsProps> = ({ formik }) => (
 		/>
 		<Grid2 container spacing={2}>
 			<Grid2 size={{ xs: 8 }}>
-				<TextField
+				<TextInput
 					size="small"
 					variant="outlined"
 					label="Ulica"
@@ -216,7 +217,7 @@ const SharedReceiverFields: FC<SharedReceiverFieldsProps> = ({ formik }) => (
 				/>
 			</Grid2>
 			<Grid2 size={{ xs: 4 }}>
-				<TextField
+				<TextInput
 					size="small"
 					variant="outlined"
 					label="Numer domu/lokalu"
@@ -232,7 +233,7 @@ const SharedReceiverFields: FC<SharedReceiverFieldsProps> = ({ formik }) => (
 		</Grid2>
 		<Grid2 container spacing={2}>
 			<Grid2 size={{ xs: 4 }}>
-				<TextField
+				<TextInput
 					size="small"
 					variant="outlined"
 					label="Kod pocztowy"
@@ -246,7 +247,7 @@ const SharedReceiverFields: FC<SharedReceiverFieldsProps> = ({ formik }) => (
 				/>
 			</Grid2>
 			<Grid2 size={{ xs: 8 }}>
-				<TextField
+				<TextInput
 					size="small"
 					variant="outlined"
 					label="Miejscowość"

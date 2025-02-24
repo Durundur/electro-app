@@ -9,8 +9,13 @@ import { FC, useEffect } from "react";
 import AccountOrdersListHeader from "@/components/Account/AccountOrdersList/AccountOrdersListHeader/AccountOrdersListHeader";
 import AccountOrdersListEmpty from "@/components/Account/AccountOrdersList/AccountOrdersListEmpty/AccountOrdersListEmpty";
 import Error from "@/components/Layout/Error/Error";
+import { useBreadcrumbs } from "@/hooks/Breadcrumbs/useBreadcrumbs";
 
 const AccountOrdersPage: FC = () => {
+	useBreadcrumbs([
+		{ label: "electro", link: "/" },
+		{ label: "Zamówienia", link: "/account/orders" },
+	]);
 	const dispatch = useDispatch();
 	const userId = useSelector((store) => store.AuthStore.user.id);
 	const accountOrdersListIsLoading = useSelector((store) => store.AccountStore.list.isLoading);
@@ -37,7 +42,7 @@ const AccountOrdersPage: FC = () => {
 
 	if (accountOrdersListError) {
 		return (
-			<Stack spacing={1}>
+			<Stack spacing={2}>
 				<AccountOrdersListHeader />
 				<Error message={"Wystąpił błąd podczas ładowania zamówień"}></Error>
 			</Stack>
@@ -46,7 +51,7 @@ const AccountOrdersPage: FC = () => {
 
 	if (accountOrdersList?.orders?.length === 0) {
 		return (
-			<Stack spacing={1}>
+			<Stack spacing={2}>
 				<AccountOrdersListHeader />
 				<AccountOrdersListEmpty />
 			</Stack>
@@ -55,8 +60,7 @@ const AccountOrdersPage: FC = () => {
 
 	if (!accountOrdersListError && accountOrdersList) {
 		return (
-			<Stack spacing={1}>
-				<FullScreenLoader isVisible={accountOrdersListIsLoading} />
+			<Stack spacing={2}>
 				<AccountOrdersListHeader />
 				<AccountOrdersList />
 				<Stack justifyContent={"center"} alignItems={"center"} paddingTop={2}>

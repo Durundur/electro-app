@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Grid2 as Grid, Card, CardContent, Button, TextField, IconButton, InputAdornment, CardHeader, Stack, FormHelperText } from "@mui/material";
+import { Grid2 as Grid, Card, CardContent, Button, IconButton, InputAdornment, CardHeader, Stack, FormHelperText } from "@mui/material";
 import { EmailOutlined, LockOutlined, Visibility, VisibilityOff } from "@mui/icons-material";
 import Link from "next/link";
 import AuthAccountBenefits from "@/components/Shared/Auth/AuthAccountBenefits";
@@ -13,8 +13,10 @@ import * as Yup from "yup";
 import { useRouter } from "next/navigation";
 import { translateErrorMessage } from "@/libs/api-contract/Error";
 import TextInput from "@/components/Shared/TextInput/TextInput";
+import { usePermissionGuard } from "@/hooks/PermissionGuard/usePermissionGuard";
 
 const AuthLoginPage = () => {
+	usePermissionGuard({ denyAuth: true, redirectTo: "/" });
 	const dispatch = useDispatch();
 	const router = useRouter();
 	const [showPass, setShowPass] = useState(false);
@@ -57,7 +59,6 @@ const AuthLoginPage = () => {
 							{({ submitForm, handleChange, handleBlur, setFieldValue, values, touched, errors }) => (
 								<Stack spacing={2}>
 									<TextInput
-										placeholder="lorem ipsum sob amennd"
 										size="small"
 										variant="outlined"
 										label="Email"

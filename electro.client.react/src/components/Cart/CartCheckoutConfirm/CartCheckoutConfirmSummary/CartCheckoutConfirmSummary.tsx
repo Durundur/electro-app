@@ -1,5 +1,5 @@
 import { getCreateOrderCommand } from "@/libs/Cart/services";
-import { createOrder, fetchCart } from "@/libs/Cart/thunks";
+import { createOrder } from "@/libs/Cart/thunks";
 import { formatAmount } from "@/libs/Helpers/Formatters";
 import { useDispatch, useSelector } from "@/libs/Store";
 import { Button, Card, CardContent, Stack, Typography } from "@mui/material";
@@ -37,7 +37,6 @@ const CartCheckoutConfirmSummary: FC = () => {
 		if (!cartProductsSelector || !paymentOptionSelector?.value || !deliveryOptionSelector?.value || !recipientSelector || !userId) return;
 		const createOrderCommand = getCreateOrderCommand(cartProductsSelector, paymentOptionSelector?.value, deliveryOptionSelector?.value, recipientSelector);
 		dispatch(createOrder(createOrderCommand));
-		dispatch(fetchCart(userId));
 	};
 
 	useEffect(() => {

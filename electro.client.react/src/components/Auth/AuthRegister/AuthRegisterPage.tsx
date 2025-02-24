@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import FullScreenLoader from "@/components/Layout/FullScreenLoader/FullScreenLoader";
 import { translateErrorMessage } from "@/libs/api-contract/Error";
 import TextInput from "@/components/Shared/TextInput/TextInput";
+import { usePermissionGuard } from "@/hooks/PermissionGuard/usePermissionGuard";
 
 interface RegisterUserForm extends RegisterUserCommand {
 	firstName: string;
@@ -22,6 +23,7 @@ interface RegisterUserForm extends RegisterUserCommand {
 }
 
 const AuthRegisterPage = () => {
+	usePermissionGuard({ denyAuth: true, redirectTo: "/" });
 	const router = useRouter();
 	const [showPass, setShowPass] = useState(false);
 	const dispatch = useDispatch();

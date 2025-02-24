@@ -170,6 +170,24 @@ const CartStore = createSlice({
 		setRecipientOptionValidation: (state, action: PayloadAction<boolean>) => {
 			state.checkout.isRecipientOptionValid = action.payload;
 		},
+		clearCheckoutState: (state) => {
+			state.checkout.deliveryOption = initialState.checkout.deliveryOption;
+			state.checkout.isDeliveryOptionValid = initialState.checkout.isDeliveryOptionValid;
+			state.checkout.isPaymentOptionValid = initialState.checkout.isPaymentOptionValid;
+			state.checkout.isRecipientOptionValid = initialState.checkout.isRecipientOptionValid;
+			state.checkout.paymentOption = initialState.checkout.paymentOption;
+			state.checkout.recipientOption = initialState.checkout.recipientOption;
+		},
+		clearCheckoutRecipientsState: (state) => {
+			state.checkoutRecipients.data = initialState.checkoutRecipients.data;
+			state.checkoutRecipients.isLoading = initialState.checkoutRecipients.isLoading;
+			state.checkoutRecipients.error = initialState.checkoutRecipients.error;
+		},
+		clearCreateOrderState: (state) => {
+			state.createOrder.error = initialState.createOrder.error;
+			state.createOrder.isLoading = initialState.createOrder.isLoading;
+			state.createOrder.result = initialState.createOrder.result;
+		},
 		createOrderStart(state) {
 			state.createOrder.isLoading = true;
 		},
@@ -215,6 +233,9 @@ export const {
 	createOrderStart,
 	createOrderSuccess,
 	restoreCart,
+	clearCheckoutRecipientsState,
+	clearCheckoutState,
+	clearCreateOrderState,
 } = CartStore.actions;
 
 export default CartStore.reducer;

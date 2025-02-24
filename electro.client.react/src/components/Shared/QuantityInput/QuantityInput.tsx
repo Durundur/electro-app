@@ -29,7 +29,7 @@ const QuantityInput: FC<QuantityInputProps> = ({ value, onChange, id }) => {
 	};
 
 	return (
-		<Stack direction={"row"} alignItems={"center"}>
+		<Stack direction={"row"} alignItems={"center"} spacing={1}>
 			<IconButton disabled={value - 1 <= 0} size="small" onClick={handleDecrease}>
 				<RemoveRounded fontSize="small" />
 			</IconButton>
@@ -40,13 +40,21 @@ const QuantityInput: FC<QuantityInputProps> = ({ value, onChange, id }) => {
 						pattern: "^[0-9]*$",
 					},
 				}}
-				sx={{
+				sx={(theme) => ({
 					".MuiInputBase-input": {
 						width: "30px",
 						padding: "6px 8px",
 						textAlign: "center",
 					},
-				}}
+					".MuiInputBase-input.Mui-disabled": {
+						color: theme.palette.text.primary,
+						WebkitTextFillColor: "unset",
+					},
+					".Mui-disabled": {
+						color: theme.palette.text.primary,
+						WebkitTextFillColor: "unset",
+					},
+				})}
 				value={value}
 				onChange={handleInputChange}
 				size="small"

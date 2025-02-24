@@ -1,10 +1,10 @@
 import { SearchOutlined } from "@mui/icons-material";
-import { IconButton, InputAdornment, TextField } from "@mui/material";
+import { IconButton, InputAdornment } from "@mui/material";
 import React, { FC, useEffect, useState } from "react";
-import "./search-input.scss";
 import { useRouter } from "next/navigation";
 import { buildQueryString } from "@/libs/Helpers/QueryHelper";
 import { useSelector } from "@/libs/Store";
+import TextInput from "@/components/Shared/TextInput/TextInput";
 
 const NavbarSearchInput: FC = () => {
 	const router = useRouter();
@@ -28,27 +28,26 @@ const NavbarSearchInput: FC = () => {
 	};
 
 	return (
-		<div className="SearchInput">
-			<TextField
-				placeholder="Wyszukaj"
-				variant="outlined"
-				size="small"
-				value={searchInput}
-				onChange={(e) => setSearchInput(e.target.value)}
-				onKeyDown={handleKeyDown}
-				slotProps={{
-					input: {
-						startAdornment: (
-							<InputAdornment position="start">
-								<IconButton onClick={handleSearchClick}>
-									<SearchOutlined></SearchOutlined>
-								</IconButton>
-							</InputAdornment>
-						),
-					},
-				}}
-			></TextField>
-		</div>
+		<TextInput
+			size="small"
+			variant="outlined"
+			placeholder="Wyszukaj"
+			label=" "
+			value={searchInput}
+			onChange={(e) => setSearchInput(e.target.value)}
+			onKeyDown={handleKeyDown}
+			slotProps={{
+				input: {
+					startAdornment: (
+						<InputAdornment position="start">
+							<IconButton onClick={handleSearchClick} size="small">
+								<SearchOutlined></SearchOutlined>
+							</IconButton>
+						</InputAdornment>
+					),
+				},
+			}}
+		></TextInput>
 	);
 };
 

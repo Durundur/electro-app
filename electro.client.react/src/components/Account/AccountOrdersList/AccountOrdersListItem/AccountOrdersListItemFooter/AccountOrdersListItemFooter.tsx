@@ -15,7 +15,7 @@ const AccountOrdersListItemFooter: FC<AccountOrdersListItemFooterProps> = ({ ord
 		<Stack direction={"row"} justifyContent={"space-between"} alignItems={'center'}>
 			<Stack direction={"row"} alignItems={'baseline'} spacing={1}>
 				<Typography fontWeight={500}>{formatAmount(totalPrice.amount!, totalPrice.currency!)}</Typography>
-				<Typography variant="caption">{`(${totalQuantity} produktów)`}</Typography>
+				<Typography variant="caption" color="textSecondary">{`(${totalQuantity} produktów)`}</Typography>
 			</Stack>
 			<Button LinkComponent={Link} href={`/account/orders/${orderId}`} variant="contained">
 				Szczegóły

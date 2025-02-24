@@ -24,7 +24,7 @@ const Navbar: FC = () => {
 				>
 					<Logo href="/" />
 					<SearchInput></SearchInput>
-					<Stack direction={"row"} spacing={2}>
+					<Stack direction={"row"} spacing={2} alignItems={"center"}>
 						{isLoggedInSelector ? <ProfileIcons></ProfileIcons> : <AuthButtons></AuthButtons>}
 						<CartIcon />
 					</Stack>

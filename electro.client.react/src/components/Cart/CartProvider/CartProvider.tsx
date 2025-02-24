@@ -7,30 +7,56 @@ interface CartProviderProps {
 	children: ReactNode;
 }
 
+const initialCart: StoredCartState = {
+	id: undefined,
+	products: [],
+	totalPrice: {
+		amount: 0,
+		currency: "PLN",
+	},
+	totalQuantity: 0,
+};
+
 const CartProvider: FC<CartProviderProps> = ({ children }) => {
 	const dispatch = useDispatch();
 	const cartStateSelector = useSelector((store) => store.CartStore.cart.data);
 	const isAuthenticatedSelector = useSelector((store) => store.AuthStore.auth.isAuthenticated);
-	const userId = useSelector((store) => store.AuthStore.user.id);
+	const userSelector = useSelector((store) => store.AuthStore.user);
 	const localStorageKey = "electro-cart";
 
 	useEffect(() => {
-		if (isAuthenticatedSelector && userId) {
-			dispatch(fetchCart(userId));
-		} else {
-			if (typeof window === "undefined") return;
-			const storedCart = localStorage.getItem(localStorageKey);
-			if (!storedCart) return;
-			try {
-				const parsedStoredCart: StoredCartState = JSON.parse(storedCart) as StoredCartState;
-				dispatch(restoreCart(parsedStoredCart));
-			} catch (e) {}
+		if (isAuthenticatedSelector && userSelector.id) {
+			dispatch(fetchCart(userSelector.id));
+			return;
 		}
-	}, [isAuthenticatedSelector, userId]);
+
+		if (typeof window === "undefined") return;
+
+		const storedCart = localStorage.getItem(localStorageKey);
+		if (!storedCart) {
+			dispatch(restoreCart(initialCart));
+			return;
+		}
+
+		try {
+			const parsedStoredCart = JSON.parse(storedCart);
+			if (parsedStoredCart && typeof parsedStoredCart === "object") {
+				dispatch(restoreCart(parsedStoredCart));
+			} else {
+				dispatch(restoreCart(initialCart));
+			}
+		} catch (error) {
+			console.log("Error while parsing cart from local storage", error);
+			dispatch(restoreCart(initialCart));
+		}
+	}, [isAuthenticatedSelector, userSelector, userSelector.id]);
 
 	useEffect(() => {
-		if (typeof window === "undefined" || isAuthenticatedSelector) return;
-		localStorage.setItem(localStorageKey, JSON.stringify(cartStateSelector as StoredCartState));
+		if (typeof window === "undefined") return;
+
+		if (!isAuthenticatedSelector && cartStateSelector && typeof cartStateSelector === "object") {
+			localStorage.setItem(localStorageKey, JSON.stringify(cartStateSelector));
+		}
 	}, [cartStateSelector, isAuthenticatedSelector]);
 
 	return children;

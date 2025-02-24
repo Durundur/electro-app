@@ -13,6 +13,7 @@ import AttributesPanel from "@/components/Admin/AdminProductCatalog/AdminProduct
 import { createOrUpdateProduct } from "@/libs/Admin/AdminProductCatalog/AdminProductCatalogNewEdit/thunk";
 import { initialValues } from "@/libs/Admin/AdminProductCatalog/AdminProductCatalogNewEdit/initialValues";
 import { useBreadcrumbs } from "@/hooks/Breadcrumbs/useBreadcrumbs";
+import { usePermissionGuard } from "@/hooks/PermissionGuard/usePermissionGuard";
 
 const ProductCatalogNewPage: FC = () => {
 	const dispatch = useDispatch();
@@ -22,6 +23,10 @@ const ProductCatalogNewPage: FC = () => {
 		{ label: "Katalog produktów", link: "/admin/product-catalog/list" },
 		{ label: "Nowy produkt" },
 	]);
+	usePermissionGuard({
+		allowedRoles: ["ADMIN"],
+		requireAuth: true,
+	});
 
 	const handleSubmitCreateProduct = async (values: CreateOrUpdateProductCommand) => {
 		const photos = await dispatch(uploadPhotos());

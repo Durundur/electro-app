@@ -9,6 +9,7 @@ import AdminOrderDetailsSummary from "@/components/Admin/AdminOrders/AdminOrderD
 import Error from "@/components/Layout/Error/Error";
 import FullScreenLoader from "@/components/Layout/FullScreenLoader/FullScreenLoader";
 import { useBreadcrumbs } from "@/hooks/Breadcrumbs/useBreadcrumbs";
+import { usePermissionGuard } from "@/hooks/PermissionGuard/usePermissionGuard";
 import { fetchAdminOrderDetails } from "@/libs/Admin/AdminOrders/thunk";
 import { useDispatch, useSelector } from "@/libs/Store";
 import { Grid2, Stack } from "@mui/material";
@@ -20,6 +21,10 @@ interface AdminOrderDetailsPageParams {
 
 const AdminOrderDetailsPage: FC<AdminOrderDetailsPageParams> = ({ params }) => {
 	useBreadcrumbs([{ label: "electro", link: "/" }, { label: "Panel administratora", link: "/admin" }, { label: "Zamówienia", link: "/admin/orders" }, { label: "Szczegóły" }]);
+	usePermissionGuard({
+		allowedRoles: ["ADMIN"],
+		requireAuth: true,
+	});
 	const dispatch = useDispatch();
 	const orderDetailsSelector = useSelector((store) => store.AdminOrdersStore.details.data);
 	const errorOrderDetailsSelector = useSelector((store) => store.AdminOrdersStore.details.error);

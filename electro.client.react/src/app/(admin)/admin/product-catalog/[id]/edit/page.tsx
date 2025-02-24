@@ -15,6 +15,7 @@ import { initialValues as defaultInitialValues } from "@/libs/Admin/AdminProduct
 import { useBreadcrumbs } from "@/hooks/Breadcrumbs/useBreadcrumbs";
 import FullScreenLoader from "@/components/Layout/FullScreenLoader/FullScreenLoader";
 import Error from "@/components/Layout/Error/Error";
+import { usePermissionGuard } from "@/hooks/PermissionGuard/usePermissionGuard";
 
 interface ProductCatalogEditPageProps {
 	params: { id: string };
@@ -22,6 +23,10 @@ interface ProductCatalogEditPageProps {
 
 const ProductCatalogEditPage: FC<ProductCatalogEditPageProps> = ({ params }) => {
 	useBreadcrumbs([{ label: "electro", link: "/" }, { label: "Panel administratora", link: "/admin" }, { label: "Katalog produktów", link: "/admin/product-catalog/list" }, { label: "Edycja" }]);
+	usePermissionGuard({
+		allowedRoles: ["ADMIN"],
+		requireAuth: true,
+	});
 	const dispatch = useDispatch();
 	const productSelector = useSelector((store) => store.AdminProductCatalogNewEditPageStore.product.data);
 	const isLoadingSelector = useSelector((store) => store.AdminProductCatalogNewEditPageStore.product.isLoading);

@@ -8,6 +8,7 @@ import AccountOrderDetailsRecipient from "@/components/Account/AccountOrderDetai
 import AccountOrderDetailsSummary from "@/components/Account/AccountOrderDetails/AccountOrderDetailsSummary/AccountOrderDetailsSummary";
 import FullScreenLoader from "@/components/Layout/FullScreenLoader/FullScreenLoader";
 import { useBreadcrumbs } from "@/hooks/Breadcrumbs/useBreadcrumbs";
+import { usePermissionGuard } from "@/hooks/PermissionGuard/usePermissionGuard";
 import { clearAccountOrderDetails } from "@/libs/Account/slice";
 import { getAccountOrderDetails } from "@/libs/Account/thunks";
 import { useDispatch, useSelector } from "@/libs/Store";
@@ -20,6 +21,10 @@ interface AccountOrderDetailsPageParams {
 
 const AccountOrderDetailsPage: FC<AccountOrderDetailsPageParams> = ({ params }) => {
 	useBreadcrumbs([{ label: "electro", link: "/" }, { label: "Zamówienia", link: "/account/orders" }, { label: "Szczegóły" }]);
+	usePermissionGuard({
+		allowedRoles: ["USER", "ADMIN"],
+		requireAuth: true,
+	});
 	const dispatch = useDispatch();
 	const userId = useSelector((store) => store.AuthStore.user.id);
 	const orderDetailsIsLoading = useSelector((store) => store.AccountStore.details.isLoading);

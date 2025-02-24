@@ -9,6 +9,7 @@ import AdminProductCatalogList from "@/components/Admin/AdminProductCatalog/Admi
 import { useBreadcrumbs } from "@/hooks/Breadcrumbs/useBreadcrumbs";
 import FullScreenLoader from "@/components/Layout/FullScreenLoader/FullScreenLoader";
 import Error from "@/components/Layout/Error/Error";
+import { usePermissionGuard } from "@/hooks/PermissionGuard/usePermissionGuard";
 
 const ProductCatalogPage: FC = () => {
 	useBreadcrumbs([
@@ -16,6 +17,11 @@ const ProductCatalogPage: FC = () => {
 		{ label: "Panel administratora", link: "/admin" },
 		{ label: "Katalog produktów", link: "/admin/product-catalog/list" },
 	]);
+	usePermissionGuard({
+		allowedRoles: ["ADMIN"],
+		requireAuth: true,
+	});
+
 	const router = useRouter();
 	const dispatch = useDispatch();
 	const productCatalogSelector = useSelector((state) => state.AdminProductCatalogListPageStore);

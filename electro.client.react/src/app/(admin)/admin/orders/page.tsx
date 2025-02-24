@@ -3,6 +3,7 @@ import AdminOrdersList from "@/components/Admin/AdminOrders/AdminOrdersList/Admi
 import Error from "@/components/Layout/Error/Error";
 import FullScreenLoader from "@/components/Layout/FullScreenLoader/FullScreenLoader";
 import { useBreadcrumbs } from "@/hooks/Breadcrumbs/useBreadcrumbs";
+import { usePermissionGuard } from "@/hooks/PermissionGuard/usePermissionGuard";
 import { fetchAdminOrdersList } from "@/libs/Admin/AdminOrders/thunk";
 import { useDispatch, useSelector } from "@/libs/Store";
 import { Stack } from "@mui/material";
@@ -14,6 +15,10 @@ const AdminOrdersPage: FC = () => {
 		{ label: "Panel administratora", link: "/admin" },
 		{ label: "Zamówienia", link: "/admin/orders" },
 	]);
+	usePermissionGuard({
+		allowedRoles: ["ADMIN"],
+		requireAuth: true,
+	});
 	const dispatch = useDispatch();
 	const ordersListSelector = useSelector((store) => store.AdminOrdersStore.list.data);
 	const ordersListErrorSelector = useSelector((store) => store.AdminOrdersStore.list.error);

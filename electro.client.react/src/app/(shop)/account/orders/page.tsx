@@ -10,12 +10,17 @@ import AccountOrdersListHeader from "@/components/Account/AccountOrdersList/Acco
 import AccountOrdersListEmpty from "@/components/Account/AccountOrdersList/AccountOrdersListEmpty/AccountOrdersListEmpty";
 import Error from "@/components/Layout/Error/Error";
 import { useBreadcrumbs } from "@/hooks/Breadcrumbs/useBreadcrumbs";
+import { usePermissionGuard } from "@/hooks/PermissionGuard/usePermissionGuard";
 
 const AccountOrdersPage: FC = () => {
 	useBreadcrumbs([
 		{ label: "electro", link: "/" },
 		{ label: "Zamówienia", link: "/account/orders" },
 	]);
+	usePermissionGuard({
+		allowedRoles: ["USER", "ADMIN"],
+		requireAuth: true,
+	});
 	const dispatch = useDispatch();
 	const userId = useSelector((store) => store.AuthStore.user.id);
 	const accountOrdersListIsLoading = useSelector((store) => store.AccountStore.list.isLoading);

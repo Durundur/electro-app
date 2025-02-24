@@ -5,6 +5,7 @@ import AdminOrderEditRecipientSection from "@/components/Admin/AdminOrders/Admin
 import Error from "@/components/Layout/Error/Error";
 import FullScreenLoader from "@/components/Layout/FullScreenLoader/FullScreenLoader";
 import { useBreadcrumbs } from "@/hooks/Breadcrumbs/useBreadcrumbs";
+import { usePermissionGuard } from "@/hooks/PermissionGuard/usePermissionGuard";
 import { getAdminOrderEdit, putAdminOrderEdit } from "@/libs/Admin/AdminOrders/thunk";
 import { useDispatch, useSelector } from "@/libs/Store";
 import { OrderStatus, RecipientType, UpdateOrderCommand } from "@/libs/api-contract/api-contract";
@@ -36,6 +37,10 @@ export interface UpdateOrderCommandFlat {
 
 const AdminOrderEditPage: FC<AdminOrderEditPageProps> = ({ params }) => {
 	useBreadcrumbs([{ label: "electro", link: "/" }, { label: "Panel administratora", link: "/admin" }, { label: "Zamówienia", link: "/admin/orders" }, { label: "Edycja" }]);
+	usePermissionGuard({
+		allowedRoles: ["ADMIN"],
+		requireAuth: true,
+	});
 	const orderId = params.id;
 	const dispatch = useDispatch();
 	const orderSelector = useSelector((store) => store.AdminOrdersStore.edit.data);

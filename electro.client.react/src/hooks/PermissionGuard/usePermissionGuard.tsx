@@ -15,7 +15,7 @@ interface IUsePermissionGuardProps {
 	customCondition?: () => boolean;
 }
 
-export const usePermissionGuard = ({ requireAuth = false, denyAuth = false, allowedRoles = [], redirectTo = "/login", customCondition = () => true }: IUsePermissionGuardProps) => {
+export const usePermissionGuard = ({ requireAuth = false, denyAuth = false, allowedRoles = [], redirectTo = "/auth/login", customCondition = () => true }: IUsePermissionGuardProps) => {
 	const router = useRouter();
 	const { user, auth } = useSelector((state) => state.AuthStore);
 

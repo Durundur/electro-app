@@ -53,13 +53,13 @@ const AdminOrdersList: FC<AdminOrdersListProps> = ({ onPaginationChange, ordersL
 			switch (status) {
 				case OrderStatus.Created:
 					return "inherit";
-				case OrderStatus.PaymentPending:
+				case OrderStatus.Processing:
 					return "info";
 				case OrderStatus.Paid:
 					return "primary";
 				case OrderStatus.Shipped:
 					return "warning";
-				case OrderStatus.Delivered:
+				case OrderStatus.Completed:
 					return "success";
 				case OrderStatus.Cancelled:
 					return "error";

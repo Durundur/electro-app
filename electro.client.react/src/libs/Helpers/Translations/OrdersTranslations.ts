@@ -3,10 +3,10 @@ import { DeliveryMethod, OrderStatus, PaymentMethod, PaymentStatus } from "@/lib
 export const translateOrderStatus = (orderStatus: OrderStatus): string => {
 	const orderStatusMap: { [key in OrderStatus]: string } = {
 		Created: "Utworzone",
-		PaymentPending: "Oczekiwanie na płatność",
+		Processing: "Przetwarzanie",
 		Paid: "Opłacone",
 		Shipped: "Wysłane",
-		Delivered: "Dostarczone",
+		Completed: "Zakończone",
 		Cancelled: "Anulowane",
 	};
 

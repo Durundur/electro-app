@@ -9,10 +9,11 @@ interface AdminOrderDetailsProgressProps {
 const AdminOrderDetailsProgress: FC<AdminOrderDetailsProgressProps> = ({ currentStatus }) => {
 	const steps = [
 		{ status: OrderStatus.Created, label: "Utworzono" },
-		{ status: OrderStatus.PaymentPending, label: "Oczekiwanie na płatność" },
+		{ status: OrderStatus.Processing, label: "Przetwarzanie" },
 		{ status: OrderStatus.Paid, label: "Opłacono" },
 		{ status: OrderStatus.Shipped, label: "Wysłano" },
-		{ status: OrderStatus.Delivered, label: "Dostarczono" },
+		{ status: OrderStatus.Completed, label: "Zakończone" },
+		{ status: OrderStatus.Cancelled, label: "Anulowane" },
 	];
 
 	const activeStep = steps.findIndex((step) => step.status === currentStatus);

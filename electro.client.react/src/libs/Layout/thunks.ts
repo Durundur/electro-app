@@ -7,7 +7,7 @@ import { fetchProductHierarchyError, fetchProductHierarchySuccess, fetchProductH
 export const fetchProductHierarchy = () => async (dispatch: AppDispatch) => {
 	try {
 		dispatch(fetchProductHierarchyStart());
-		const response = await ApiClient.get<GetMenuResult>(`/api/ProductHierarchy/menu`);
+		const response = await ApiClient.get<GetMenuResult>(`/api/product-hierarchy/menu`);
 		dispatch(fetchProductHierarchySuccess(response.data));
 	} catch (error: any) {
 		dispatch(fetchProductHierarchyError(createError(error)));

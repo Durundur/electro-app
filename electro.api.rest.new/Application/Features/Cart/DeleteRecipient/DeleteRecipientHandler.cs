@@ -21,7 +21,7 @@ namespace Application.Features.Cart.DeleteRecipient
                 throw new Exception($"Recipient with ID {command.Id} not found");
             }
 
-            _unitOfWork.RecipientRepository.DeleteRecipient(recipient);
+            await _unitOfWork.RecipientRepository.DeleteRecipientAsync(recipient.Id, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return true;

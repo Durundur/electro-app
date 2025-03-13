@@ -1,16 +1,17 @@
 ﻿using Application.Features.Shared.ProductAttribute;
-using Domain.Aggregates.ProductHierarchyAggregate;
 
 namespace Application.Features.ProductCatalog.GetSearchProducts
 {
     public static class GetSearchProductsMapper
     {
-        public static GetSearchProductsResult MapToGetSearchProductsResult(IList<Domain.Aggregates.ProductCatalogAggregate.Product> products, IEnumerable<Domain.Aggregates.ProductHierarchyAggregate.AttributeDefinition> attributeDefinitions)
+        public static GetSearchProductsResult MapToGetSearchProductsResult(IList<Domain.Aggregates.ProductCatalogAggregate.Product> products, 
+            IEnumerable<Domain.Aggregates.ProductHierarchyAggregate.AttributeDefinition> attributeDefinitions, int totalCount, int page, int pageSize)
         {
-            return new GetSearchProductsResult()
-            {
-                Products = products.Select(p => MapToGetSearchProductsResultProduct(p, attributeDefinitions)).ToList(),
-            };
+            var mappedProducts = products
+                .Select(p => MapToGetSearchProductsResultProduct(p, attributeDefinitions))
+                .ToList();
+
+            return new GetSearchProductsResult(mappedProducts, totalCount, page, pageSize);
         }
 
         public static GetSearchProductsResultProduct MapToGetSearchProductsResultProduct(Domain.Aggregates.ProductCatalogAggregate.Product product, IEnumerable<Domain.Aggregates.ProductHierarchyAggregate.AttributeDefinition> attributeDefinitions)
@@ -23,7 +24,7 @@ namespace Application.Features.ProductCatalog.GetSearchProducts
                 Currency = product.Price.Currency,
                 Photo = product.Photos.FirstOrDefault(),
                 Status = product.Status,
-                AverageOpinionRating = 3.5M,
+                AverageOpinionRating = product.Opinions.Any() ? (float)Math.Round(product.Opinions.Average(o => o.Rating), 1) : 0,
                 OpinionCount = product.Opinions.Count(),
                 Attributes = ProductAttributeMapper.MapToListOfProductAttributeResult(product.Attributes, attributeDefinitions)
             };

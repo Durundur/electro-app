@@ -21,7 +21,7 @@ namespace Application.Features.ProductHierarchy.DeleteGroup
                 throw new Exception($"Group with ID {request.Id} not found");
             }
 
-            _unitOfWork.ProductHierarchyRepository.DeleteGroup(group);
+            await _unitOfWork.ProductHierarchyRepository.DeleteGroupAsync(group.Id, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return true;

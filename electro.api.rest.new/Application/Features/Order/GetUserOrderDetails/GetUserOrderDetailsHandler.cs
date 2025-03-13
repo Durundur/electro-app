@@ -14,7 +14,7 @@ namespace Application.Features.Order.GetUserOrderDetails
 
         public async Task<GetUserOrderDetailsResult> Handle(GetUserOrderDetailsQuery request, CancellationToken cancellationToken)
         {
-            var order = await _unitOfWork.OrderRepository.GetOrderByIdAsync(request.OrderId);
+            var order = await _unitOfWork.OrderRepository.GetOrderByIdAsync(request.OrderId, cancellationToken);
 
             var productsIds = order.Products.Select(x => x.ProductId);
             var productCatalog = await _unitOfWork.ProductRepository.GetProductsByIdsAsync(productsIds);

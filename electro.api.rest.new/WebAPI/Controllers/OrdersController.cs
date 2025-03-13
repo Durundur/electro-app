@@ -9,7 +9,7 @@ using Application.Features.Order.UpdateOrder;
 namespace WebAPI.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/orders")]
     public class OrdersController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -33,7 +33,7 @@ namespace WebAPI.Controllers
         [HttpPut]
         [ProducesResponseType<UpdateOrderResult>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<UpdateOrderResult>> UpdateOrders([FromBody] UpdateOrderCommand command)
+        public async Task<ActionResult<UpdateOrderResult>> UpdateOrder([FromBody] UpdateOrderCommand command)
         {
             var response = await _mediator.Send(command);
             return Ok(response);

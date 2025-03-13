@@ -11,7 +11,7 @@ using Application.Features.Order.GetUserOrderDetails;
 namespace WebAPI.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/users")]
     public class UsersController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -21,7 +21,7 @@ namespace WebAPI.Controllers
         }
 
         [AuthorizeOnlyForOwnerOrAdmin]
-        [HttpGet("{UserId}/recipients")]
+        [HttpGet("{userId}/recipients")]
         [ProducesResponseType<GetRecipientsResult>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<GetRecipientsResult>> GetUserRecipients([FromRoute] GetRecipientsQuery query)
@@ -31,7 +31,7 @@ namespace WebAPI.Controllers
         }
 
         [AuthorizeOnlyForOwnerOrAdmin]
-        [HttpPost("{UserId}/recipients")]
+        [HttpPost("{userId}/recipients")]
         [ProducesResponseType<CreateOrUpdateRecipientResult>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<CreateOrUpdateRecipientResult>> CreateOrUpdateUserRecipient([FromBody] CreateOrUpdateRecipientCommand command, [FromRoute] Guid UserId)
@@ -42,7 +42,7 @@ namespace WebAPI.Controllers
         }
 
         [AuthorizeOnlyForOwnerOrAdmin]
-        [HttpDelete("{UserId}/recipients/{Id}")]
+        [HttpDelete("{userId}/recipients/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DeleteRecipient([FromRoute] DeleteRecipientCommand command)
@@ -52,7 +52,7 @@ namespace WebAPI.Controllers
         }
 
         [AuthorizeOnlyForOwnerOrAdmin]
-        [HttpGet("{UserId}/cart")]
+        [HttpGet("{userId}/cart")]
         [ProducesResponseType<GetCartResult>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<GetCartResult>> GetUserCart([FromRoute] GetCartQuery query)
@@ -62,7 +62,7 @@ namespace WebAPI.Controllers
         }
 
         [AuthorizeOnlyForOwnerOrAdmin]
-        [HttpGet("{UserId}/orders")]
+        [HttpGet("{userId}/orders")]
         [ProducesResponseType<GetUserOrdersResult>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<GetUserOrdersResult>> GetUserOrders([FromRoute] Guid UserId, [FromQuery] int Page = 1, [FromQuery] int PageSize = 10)
@@ -78,7 +78,7 @@ namespace WebAPI.Controllers
         }
 
         [AuthorizeOnlyForOwnerOrAdmin]
-        [HttpGet("{UserId}/orders/{OrderId}")]
+        [HttpGet("{userId}/orders/{orderId}")]
         [ProducesResponseType<GetUserOrderDetailsResult>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<GetUserOrderDetailsResult>> GetUserOrderDetails([FromRoute] GetUserOrderDetailsQuery query)

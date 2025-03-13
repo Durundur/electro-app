@@ -14,7 +14,7 @@ namespace Application.Features.ProductHierarchy.GetGroup
 
         public async Task<GetGroupResult> Handle(GetGroupQuery request, CancellationToken cancellationToken)
         {
-            var group = await _productHierarchyRepository.GetGroupByIdAsync(request.Id);
+            var group = await _productHierarchyRepository.GetGroupByIdAsync(request.Id, cancellationToken);
 
             var result = GetGroupMapper.MapToGetGroupResult(group);
             return result;

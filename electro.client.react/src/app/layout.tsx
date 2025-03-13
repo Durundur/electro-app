@@ -9,7 +9,7 @@ import "./global.css";
 const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
 	return (
 		<html lang="en">
-			<body style={{ width: "100vw" }}>
+			<body>
 				<AppRouterCacheProvider>
 					<ReduxProvider>
 						<AuthProvider>

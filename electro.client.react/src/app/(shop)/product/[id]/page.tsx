@@ -21,8 +21,10 @@ interface ProductPageParams {
 }
 
 const ProductPage: FC<ProductPageParams> = ({ params }) => {
-	const [quantity, setQuantity] = useState(1);
 	const dispatch = useDispatch();
+
+	const [quantity, setQuantity] = useState(1);
+
 	const productSelector = useSelector((state) => state.ProductPageStore.product.data);
 	const errorSelector = useSelector((state) => state.ProductPageStore.product.error);
 	const isLoadingSelector = useSelector((state) => state.ProductPageStore.product.error);
@@ -78,8 +80,8 @@ const ProductPage: FC<ProductPageParams> = ({ params }) => {
 						<Stack spacing={1}>
 							<Typography variant="h6">{productSelector.name}</Typography>
 							<Stack direction={"row"} alignItems={"center"} spacing={1}>
-								<Rating size="small" value={3.5} readOnly precision={0.5} emptyIcon={<StarBorderRounded style={{ opacity: 0.5 }} fontSize="inherit" />} />
-								<Typography variant="caption">({90}) opinii</Typography>
+								<Rating size="small" value={productSelector.averageOpinionRating} readOnly precision={0.5} emptyIcon={<StarBorderRounded style={{ opacity: 0.5 }} fontSize="inherit" />} />
+								<Typography variant="caption">({productSelector.opinionCount}) opinii</Typography>
 							</Stack>
 							<div>
 								<Grid container direction={"row"} size={{ xs: 12 }} spacing={2}>
@@ -149,7 +151,7 @@ const ProductPage: FC<ProductPageParams> = ({ params }) => {
 				</Box>
 				<Box>
 					<Typography variant="h6">Opinie</Typography>
-					<OpinionsSection />
+					<OpinionsSection productId={productSelector.id} />
 				</Box>
 			</Box>
 		);

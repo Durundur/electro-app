@@ -1,5 +1,5 @@
 ﻿using Domain.Reposiotories;
-using Domain.Aggregates.CartAggregate;
+using D = Domain.Aggregates.CartAggregate;
 using Domain.ValueObjects;
 using Application.Services.UserContext;
 using MediatR;
@@ -39,7 +39,7 @@ namespace Application.Features.Cart.ValidateAndSaveCart
 
             foreach (var productCommand in command.Products)
             {
-                var product = await _unitOfWork.ProductRepository.GetByIdAsync(productCommand.ProductId);
+                var product = await _unitOfWork.ProductRepository.GetByIdAsync(productCommand.ProductId, cancellationToken);
 
                 if (product == null)
                 {
@@ -87,12 +87,12 @@ namespace Application.Features.Cart.ValidateAndSaveCart
 
         private async Task SaveCartAsync(Guid userId, ValidateCartResult validationResult, CancellationToken cancellationToken)
         {
-            var existingCart = await _unitOfWork.CartRepository.GetCartByUserIdAsync(userId);
+            var existingCart = await _unitOfWork.CartRepository.GetCartByUserIdAsync(userId, cancellationToken);
 
             if (existingCart == null)
             {
-                existingCart = new Domain.Aggregates.CartAggregate.Cart(userId);
-                _unitOfWork.CartRepository.AddCart(existingCart);
+                existingCart = D.Cart.Create(userId);
+                await _unitOfWork.CartRepository.AddCartAsync(existingCart, cancellationToken);
             }
 
             var existingProductIds = existingCart.Products.Select(p => p.ProductId).ToList();
@@ -113,17 +113,10 @@ namespace Application.Features.Cart.ValidateAndSaveCart
                 if (cartProduct != null)
                 {
                     cartProduct.UpdateQuantity(validatedProduct.Quantity);
-                    cartProduct.UpdatePrice(validatedProduct.Price);
                 }
                 else
                 {
-                    var newCartProduct = new CartProduct(
-                        existingCart.Id,
-                        validatedProduct.ProductId,
-                        validatedProduct.Quantity,
-                        validatedProduct.Price
-                    );
-                    existingCart.AddOrUpdateItem(newCartProduct);
+                    existingCart.AddItem(validatedProduct.ProductId, validatedProduct.Quantity, validatedProduct.Price);
                 }
             }
 

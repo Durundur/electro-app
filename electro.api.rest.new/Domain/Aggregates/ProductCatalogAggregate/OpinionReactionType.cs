@@ -1,6 +1,6 @@
 ﻿namespace Domain.Aggregates.ProductCatalogAggregate
 {
-    public enum OpinionActionType
+    public enum OpinionReactionType
     {
         Like,
         Dislike

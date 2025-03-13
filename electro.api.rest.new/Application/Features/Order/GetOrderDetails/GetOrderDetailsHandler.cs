@@ -18,7 +18,7 @@ namespace Application.Features.Order.GetOrderDetails
 
         public async Task<GetOrderDetailsResult> Handle(GetOrderDetailsQuery request, CancellationToken cancellationToken)
         {
-            var order = await _unitOfWork.OrderRepository.GetOrderByIdAsync(request.Id);
+            var order = await _unitOfWork.OrderRepository.GetOrderByIdAsync(request.Id, cancellationToken);
 
             if (order.UserId != _userContext.UserId && !_userContext.IsAdmin)
             {

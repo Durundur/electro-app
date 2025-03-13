@@ -4,9 +4,9 @@ namespace Domain.Reposiotories
 {
     public interface IProductRepository
     {
-        Task<Product> GetByIdAsync(Guid id);
-        Task<IList<Product>> GetProductsByIdsAsync(IEnumerable<Guid> productsIds);
+        Task<Product> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+        Task<IList<Product>> GetProductsByIdsAsync(IEnumerable<Guid> productsIds, CancellationToken cancellationToken = default);
         IQueryable<Product> GetProductsQuery();
-        void AddProduct(Product product);
+        Task<Product> AddProductAsync(Product product, CancellationToken cancellationToken = default);
     }
 }

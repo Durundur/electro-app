@@ -1,27 +1,28 @@
-﻿using Domain.ValueObjects;
+﻿using Domain.Exceptions;
+using Domain.ValueObjects;
 
 namespace Domain.Aggregates.CartAggregate
 {
     public class CartProduct
     {
         public Guid Id { get; private set; }
-        public Guid CartId { get; private set; }
         public Guid ProductId { get; private set; }
         public int Quantity { get; private set; }
-        public Money Price { get; private set; }
+        public Money UnitPrice { get; private set; }
 
         private CartProduct() { }
-        public CartProduct(Guid cartId, Guid productId, int quantity, Money price)
+        
+        public static CartProduct Create(Guid productId, int quantity, Money unitPrice)
         {
             if (quantity <= 0)
-            {
-                throw new ArgumentException("Quantity must be positive.", nameof(quantity));
-            }
+                throw new DomainException("Quantity must be positive");
 
-            CartId = cartId;
-            ProductId = productId;
-            Quantity = quantity;
-            Price = price;
+            return new CartProduct
+            {
+                ProductId = productId,
+                Quantity = quantity,
+                UnitPrice = unitPrice
+            };
         }
 
         public void UpdateQuantity(int newQuantity)
@@ -32,14 +33,9 @@ namespace Domain.Aggregates.CartAggregate
             Quantity = newQuantity;
         }
 
-        public void UpdatePrice(Money price)
+        public Money CalculateSubtotal()
         {
-            Price = price;
-        }
-
-        public Money GetTotalPrice()
-        {
-            return new Money(Price.Amount * Quantity, Price.Currency);
+            return new Money(UnitPrice.Amount * Quantity, UnitPrice.Currency);
         }
     }
 }

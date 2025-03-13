@@ -28,7 +28,7 @@ namespace Application.Features.ProductHierarchy.CreateOrUpdateSubCategory
             {
                 subCategory = new SubCategory(command.Name, command.Description, command.Active, command.DisplayOrder);
                 subCategory.AssignToCategory(command.CategoryId);
-                _unitOfWork.ProductHierarchyRepository.AddSubCategory(subCategory);
+                await _unitOfWork.ProductHierarchyRepository.AddSubCategoryAsync(subCategory, cancellationToken);
             }
 
             var attributesToRemove = subCategory.Attributes

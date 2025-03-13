@@ -14,7 +14,7 @@ namespace Application.Features.ProductHierarchy.GetMenu
 
         public async Task<GetMenuResult> Handle(GetMenuQuery request, CancellationToken cancellationToken)
         {
-            var groups = await _productHierarchyRepository.GetMenuAsync();
+            var groups = await _productHierarchyRepository.GetMenuAsync(cancellationToken);
 
             var result = GetMenuMapper.MapToGetMenuResult(groups);
             return result;

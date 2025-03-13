@@ -11,7 +11,7 @@ namespace Infrastructure.Configurations.Cart
         {
             builder.ToTable("CartProducts");
             builder.HasKey(c => c.Id);
-            builder.OwnsOne(c => c.Price, priceBuilder =>
+            builder.OwnsOne(c => c.UnitPrice, priceBuilder =>
             {
                 priceBuilder.Property(m => m.Amount)
                     .HasColumnName("Amount")

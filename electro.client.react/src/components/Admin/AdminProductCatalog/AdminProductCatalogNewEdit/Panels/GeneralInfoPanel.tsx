@@ -90,26 +90,6 @@ const GeneralInfoPanel: FC<GeneralInfoPanelProps> = ({ formik }) => {
 								fullWidth
 							/>
 						</Grid>
-						{/* <Grid size={{ xs: 4 }}>
-							<TextField
-								size="small"
-								variant="outlined"
-								label="Stara cena"
-								type="number"
-								id="oldAmount"
-								value={formik.values["oldAmount"]}
-								onChange={formik.handleChange}
-								onBlur={formik.handleBlur}
-								error={formik.touched["oldAmount"] && Boolean(formik.errors["oldAmount"])}
-								helperText={formik.touched["oldAmount"] && <>{formik.errors["oldAmount"]}</>}
-								slotProps={{
-									input: {
-										startAdornment: <></>,
-									},
-								}}
-								fullWidth
-							/>
-						</Grid> */}
 						<Grid size={{ xs: 4 }}>
 							<FormControl size="small" fullWidth error={formik.touched["currency"] && Boolean(formik.errors["currency"])}>
 								<InputLabel id="priceCurrency-label">Waluta</InputLabel>

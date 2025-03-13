@@ -1,4 +1,5 @@
-﻿using Domain.ValueObjects;
+﻿using Domain.Exceptions;
+using Domain.ValueObjects;
 
 namespace Domain.Aggregates.ProductCatalogAggregate
 {
@@ -8,7 +9,7 @@ namespace Domain.Aggregates.ProductCatalogAggregate
         public string Name { get; private set; }
         public string Description { get; private set; }
         public Money Price { get; private set; }
-        public ProductStatus Status{ get; set; }
+        public ProductStatus Status { get; private set; }
         public int? GroupId { get; private set; }
         public int? CategoryId { get; private set; }
         public int? SubCategoryId { get; private set; }
@@ -21,16 +22,35 @@ namespace Domain.Aggregates.ProductCatalogAggregate
         private readonly List<string> _photos = new List<string>();
         public IReadOnlyCollection<string> Photos => _photos.AsReadOnly();
 
-        public Product() { }
-
-        public Product(string name, string description, Money price, ProductStatus status, bool active, int stockQuantity)
+        private Product()
         {
-            Name = name;
-            Description = description;
-            Price = price;
-            Status = status;
-            Active = active;
-            StockQuantity = stockQuantity;
+            _attributes = new List<AttributeValue>();
+            _opinions = new List<Opinion>();
+            _photos = new List<string>();
+        }
+
+        public static Product Create(
+            string name, 
+            string description, 
+            Money price, 
+            bool active, 
+            int stockQuantity)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new DomainException("Product name cannot be empty");
+                
+            var product = new Product
+            {
+                Id = Guid.NewGuid(),
+                Name = name,
+                Description = description,
+                Price = price,
+                Status = ProductStatus.Active,
+                Active = active,
+                StockQuantity = stockQuantity
+            };
+
+            return product;
         }
 
         public void Update(string name, string description, Money price, ProductStatus status, bool active, int stockQuantity)
@@ -43,30 +63,16 @@ namespace Domain.Aggregates.ProductCatalogAggregate
             StockQuantity = stockQuantity;
         }
 
-        public void AddOpinion(Guid userProfileId, string content, int rating)
+        public Opinion AddOpinion(Guid userId, string content, float rating, string authorDisplayName)
         {
-            var opinion = new Opinion(userProfileId, content, rating);
+            if (_opinions.Any(o => o.UserId == userId))
+            {
+                throw new DomainException("User has already added an opinion to this product.");
+            }
+            
+            var opinion = Opinion.Create(userId, content, rating, authorDisplayName);
             _opinions.Add(opinion);
-        }
-
-        public void AddOpinionAction(Guid opinionId, Guid userProfileId, OpinionActionType actionType)
-        {
-            var opinion = _opinions.FirstOrDefault(o => o.Id == opinionId);
-            if (opinion == null)
-                throw new InvalidOperationException("Opinion not found");
-
-            opinion.AddAction(userProfileId, actionType);
-        }
-
-        public void UpdatePrice(Money newPrice)
-        {
-            Price = newPrice;
-        }
-
-        public void UpdateStockQuantity(int newStockQuantity)
-        {
-            if(newStockQuantity < 0) throw new InvalidOperationException("Stock Quantity cannot be lower than 0.");
-            StockQuantity = newStockQuantity;
+            return opinion;
         }
 
         public void AssignToGroup(int groupId)
@@ -104,28 +110,11 @@ namespace Domain.Aggregates.ProductCatalogAggregate
             {
                 SubCategoryId = subCategoryId;
             }
-           
         }
-        public void AddPhoto(string photo)
+        public void UpdateStockQuantity(int newStockQuantity)
         {
-            if (string.IsNullOrWhiteSpace(photo))
-                throw new ArgumentNullException(nameof(photo), "Photo cannot be null or empty.");
-
-            if (_photos.Contains(photo))
-                throw new InvalidOperationException("Photo already exists.");
-
-            _photos.Add(photo);
-        }
-
-        public void RemovePhoto(string photo)
-        {
-            if (string.IsNullOrWhiteSpace(photo))
-                throw new ArgumentNullException(nameof(photo), "Photo cannot be null or empty.");
-
-            if (!_photos.Contains(photo))
-                throw new InvalidOperationException("Photo not found.");
-
-            _photos.Remove(photo);
+            if (newStockQuantity < 0) throw new InvalidOperationException("Stock Quantity cannot be lower than 0.");
+            StockQuantity = newStockQuantity;
         }
 
         public void ReplacePhotos(IEnumerable<string> photos)
@@ -135,11 +124,6 @@ namespace Domain.Aggregates.ProductCatalogAggregate
 
             _photos.Clear();
             _photos.AddRange(photos.Where(p => !string.IsNullOrWhiteSpace(p)).Distinct());
-        }
-
-        public void UpdateStatus(ProductStatus newStatus)
-        {
-            Status = newStatus;
         }
 
         public void AddOrUpdateAttribute(AttributeValue attributeValue)

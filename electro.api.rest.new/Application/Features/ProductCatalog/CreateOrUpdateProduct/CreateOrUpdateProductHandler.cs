@@ -26,8 +26,9 @@ namespace Application.Features.ProductCatalog.CreateProduct
             }
             else
             {
-                product = new Product(command.Name, command.Description, new Domain.ValueObjects.Money(command.Amount, command.Currency), ProductStatus.Active, command.Active, command.StockQuantity);
-                _unitOfWork.ProductRepository.AddProduct(product);
+                var price = new Domain.ValueObjects.Money(command.Amount, command.Currency);
+                product = Product.Create(command.Name, command.Description, price, command.Active, command.StockQuantity);
+                await _unitOfWork.ProductRepository.AddProductAsync(product, cancellationToken);
             }
 
             product.ReplacePhotos(command.Photos);
@@ -50,7 +51,7 @@ namespace Application.Features.ProductCatalog.CreateProduct
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            var savedProduct = await _unitOfWork.ProductRepository.GetByIdAsync(product.Id);
+            var savedProduct = await _unitOfWork.ProductRepository.GetByIdAsync(product.Id, cancellationToken);
 
             var attributeDefinitions = await _unitOfWork.AttributeDefinitionRepository.GetAttributesDefinitionsQuery()
                 .Where(ad => savedProduct.Attributes.Select(a => a.AttributeDefinitionId).Contains(ad.Id)).ToListAsync(cancellationToken: cancellationToken);

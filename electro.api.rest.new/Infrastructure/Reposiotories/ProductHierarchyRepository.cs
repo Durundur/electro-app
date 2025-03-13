@@ -14,7 +14,7 @@ namespace Infrastructure.Reposiotories
             _context = context;
         }
 
-        public async Task<IList<Group>> GetAllProductHierarchiesAsync()
+        public async Task<IList<Group>> GetAllProductHierarchiesAsync(CancellationToken cancellationToken)
         {
             return await _context.Groups
                 .Include(g => g.Categories
@@ -22,10 +22,10 @@ namespace Infrastructure.Reposiotories
                     .ThenInclude(c => c.SubCategories
                         .OrderBy(sc => sc.DisplayOrder))
                 .OrderBy(g => g.DisplayOrder)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
         }
 
-        public async Task<IList<Group>> GetMenuAsync()
+        public async Task<IList<Group>> GetMenuAsync(CancellationToken cancellationToken)
         {
             return await _context.Groups
                 .Where(g => g.Active)
@@ -35,52 +35,67 @@ namespace Infrastructure.Reposiotories
                     .ThenInclude(c => c.SubCategories
                             .Where(sc => sc.Active)
                             .OrderBy(sc => sc.DisplayOrder))
-                .OrderBy(g => g.DisplayOrder).ToListAsync();
+                .OrderBy(g => g.DisplayOrder).ToListAsync(cancellationToken);
         }
 
-        public async Task<Group> GetGroupByIdAsync(int id)
+        public async Task<Group> GetGroupByIdAsync(int id, CancellationToken cancellationToken)
         {
-            return await _context.Groups.Include(g => g.Attributes).FirstOrDefaultAsync(g => g.Id == id);
+            return await _context.Groups.Include(g => g.Attributes).FirstOrDefaultAsync(g => g.Id == id, cancellationToken);
         }
 
-        public void DeleteGroup(Group group)
+        public async Task<Category> GetCategoryByIdAsync(int id, CancellationToken cancellationToken)
         {
-            _context.Groups.Remove(group);
+            return await _context.Categories.Include(g => g.Attributes).FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
         }
 
-        public async Task<Category> GetCategoryByIdAsync(int id)
+        public async Task<SubCategory> GetSubCategoryByIdAsync(int id, CancellationToken cancellationToken)
         {
-            return await _context.Categories.Include(g => g.Attributes).FirstOrDefaultAsync(c => c.Id == id);
+            return await _context.SubCategories.Include(sc => sc.Attributes).FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
         }
 
-        public void AddGroup(Group group)
+        public async Task DeleteGroupAsync(int groupId, CancellationToken cancellationToken)
         {
-            _context.Groups.Add(group);
+            var group = await _context.Groups.FirstOrDefaultAsync(g => g.Id == groupId, cancellationToken);
+            if (group != null)
+            {
+                _context.Groups.Remove(group);
+            }
         }
 
-        public void DeleteCategory(Category category)
+        public async Task<Group> AddGroupAsync(Group group, CancellationToken cancellationToken)
         {
-            _context.Categories.Remove(category);
+            var entry = await _context.Groups.AddAsync(group, cancellationToken);
+            return entry.Entity;
         }
 
-        public void AddCategory(Category category)
+        public async Task DeleteCategoryAsync(int categoryId, CancellationToken cancellationToken)
         {
-            _context.Categories.Add(category);
+            var category = await _context.Categories.FirstOrDefaultAsync(c => c.Id == categoryId, cancellationToken);
+            if (category != null)
+            {
+                _context.Categories.Remove(category);
+            }
         }
 
-        public async Task<SubCategory> GetSubCategoryByIdAsync(int id)
+        public async Task<Category> AddCategoryAsync(Category category, CancellationToken cancellationToken)
         {
-            return await _context.SubCategories.Include(sc => sc.Attributes).FirstOrDefaultAsync(s => s.Id == id);
+            var entry = await _context.Categories.AddAsync(category, cancellationToken);
+            return entry.Entity;
         }
 
-        public void DeleteSubCategory(SubCategory subCategory)
+        public async Task DeleteSubCategoryAsync(int subCategoryId, CancellationToken cancellationToken)
         {
-            _context.SubCategories.Remove(subCategory);
+            var subCategory = await _context.SubCategories.FirstOrDefaultAsync(sc => sc.Id == subCategoryId, cancellationToken);
+            if (subCategory != null)
+            {
+                _context.SubCategories.Remove(subCategory);
+            }
         }
 
-        public void AddSubCategory(SubCategory subCategory)
+        public async Task<SubCategory> AddSubCategoryAsync(SubCategory subCategory, CancellationToken cancellationToken)
         {
-            _context.SubCategories.Add(subCategory);
+            var entry = await _context.SubCategories.AddAsync(subCategory, cancellationToken);
+            return entry.Entity;
         }
     }
 }

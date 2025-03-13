@@ -33,7 +33,7 @@ namespace Application.Features.Order.GetUserOrders
             var pageCount = (int)Math.Ceiling(totalOrders / (double)query.PageSize);
 
             var orderProductsIds = orders.SelectMany(o => o.Products.Select(p => p.ProductId)).Distinct().ToList();
-            var products = await _unitOfWork.ProductRepository.GetProductsByIdsAsync(orderProductsIds);
+            var products = await _unitOfWork.ProductRepository.GetProductsByIdsAsync(orderProductsIds, cancellationToken);
 
             var result = GetUserOrdersMapper.MapToGetUserOrdersResult(orders, products);
 

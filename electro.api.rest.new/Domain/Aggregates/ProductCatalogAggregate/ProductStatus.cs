@@ -2,8 +2,9 @@
 {
     public enum ProductStatus
     {
+        Draft,
         Active,
-        Inavtive,
-        Removed,
+        Inactive,
+        Discontinued
     }
 }

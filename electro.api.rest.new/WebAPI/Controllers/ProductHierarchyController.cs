@@ -18,7 +18,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace WebAPI.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/product-hierarchy")]
     public class ProductHierarchyController: ControllerBase
     {
         private readonly IMediator _mediator;
@@ -115,7 +115,7 @@ namespace WebAPI.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpPost("subCategories")]
+        [HttpPost("subcategories")]
         [ProducesResponseType<CreateOrUpdateSubCategoryResult>(StatusCodes.Status200OK)]
         public async Task<ActionResult<CreateOrUpdateSubCategoryResult>> CreateOrUpdateSubCategory([FromBody] CreateOrUpdateSubCategoryCommand command)
         {
@@ -125,7 +125,7 @@ namespace WebAPI.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpDelete("subCategories/{id}")]
+        [HttpDelete("subcategories/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteSubCategory([FromRoute] DeleteSubCategoryCommand command)
@@ -139,7 +139,7 @@ namespace WebAPI.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpGet("subCategories/{id}")]
+        [HttpGet("subcategories/{id}")]
         [ProducesResponseType<GetSubCategoryResult>(StatusCodes.Status200OK)]
         public async Task<ActionResult<GetSubCategoryResult>> GetSubCategory([FromRoute] GetSubCategoryQuery query)
         {

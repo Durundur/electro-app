@@ -27,19 +27,3 @@ const TextInput = (props: TextFieldProps) => {
 };
 
 export default TextInput;
-
-// "& legend > span": {
-// 	display: "none",
-// },
-// "& label": {
-// 	position: "initial",
-// 	transform: "none",
-// 	pointerEvents: "auto",
-// 	fontSize: "0.875rem",
-// 	fontWeight: 500,
-// 	color: "text.primary",
-// 	marginBottom: 0.75,
-// 	"&.Mui-focused, &.Mui-error": {
-// 		color: "text.primary",
-// 	},
-// },

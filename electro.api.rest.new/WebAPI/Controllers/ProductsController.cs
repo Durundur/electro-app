@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace WebAPI.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/products")]
     public class ProductsController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -41,7 +41,7 @@ namespace WebAPI.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpGet("productCatalog")]
+        [HttpGet("catalog")]
         [ProducesResponseType<GetProductCatalogResult>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<GetProductCatalogResult>> GetProductCatalog([FromQuery] GetProductCatalogQuery query)
@@ -75,7 +75,7 @@ namespace WebAPI.Controllers
             return Ok(response);
         }
 
-        [HttpGet("search/filters")]
+        [HttpGet("filters")]
         [ProducesResponseType<GetSearchFiltersResult>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<GetSearchFiltersResult>> GetSearchFilters([FromQuery] GetSearchFiltersQuery query)

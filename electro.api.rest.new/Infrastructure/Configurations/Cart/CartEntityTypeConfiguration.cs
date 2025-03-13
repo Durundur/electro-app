@@ -11,7 +11,8 @@ namespace Infrastructure.Configurations.Cart
         {
             builder.ToTable("Carts");
             builder.HasKey(c => c.Id);
-            builder.HasMany<D.CartAggregate.CartProduct>(c => c.Products).WithOne().HasForeignKey(c => c.CartId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasIndex(c => c.Id).IsUnique();
+            builder.HasMany<D.CartAggregate.CartProduct>(c => c.Products).WithOne();
             builder.HasOne<UserIdentity>().WithOne().HasForeignKey<D.CartAggregate.Cart>(c => c.UserId);
         }
     }

@@ -21,7 +21,7 @@ namespace Application.Features.ProductHierarchy.DeleteCategory
                 throw new Exception($"Category with ID {request.Id} not found");
             }
 
-            _unitOfWork.ProductHierarchyRepository.DeleteCategory(category);
+            await _unitOfWork.ProductHierarchyRepository.DeleteCategoryAsync(category.Id, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return true;

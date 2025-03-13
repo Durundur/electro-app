@@ -17,6 +17,8 @@ namespace Application.Features.ProductCatalog.GetProduct
         public int? SubCategoryId { get; set; }
         public bool Active { get; set; }
         public int StockQuantity { get; set; }
+        public float AverageOpinionRating { get; set; }
+        public int OpinionCount { get; set; }
         public IList<ProductAttributeResult> Attributes { get; set; }
     }
 }

@@ -5,7 +5,7 @@ using MediatR;
 namespace WebAPI.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/carts")]
     public class CartsController : ControllerBase
     {
         private readonly IMediator _mediator;

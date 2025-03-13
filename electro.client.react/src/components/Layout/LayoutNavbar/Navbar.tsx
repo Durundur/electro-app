@@ -10,7 +10,7 @@ import { useSelector } from "@/libs/Store";
 import CartIcon from "./CartIcon";
 
 const Navbar: FC = () => {
-	const isLoggedInSelector = useSelector((store) => store.AuthStore.auth.isAuthenticated);
+	const isLoggedIn = useSelector((store) => store.AuthStore.auth.isAuthenticated);
 
 	return (
 		<AppBar color="transparent" position="relative">
@@ -25,7 +25,7 @@ const Navbar: FC = () => {
 					<Logo href="/" />
 					<SearchInput></SearchInput>
 					<Stack direction={"row"} spacing={2} alignItems={"center"}>
-						{isLoggedInSelector ? <ProfileIcons></ProfileIcons> : <AuthButtons></AuthButtons>}
+						{isLoggedIn ? <ProfileIcons></ProfileIcons> : <AuthButtons></AuthButtons>}
 						<CartIcon />
 					</Stack>
 				</Toolbar>

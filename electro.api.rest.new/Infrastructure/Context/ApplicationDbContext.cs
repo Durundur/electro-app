@@ -29,6 +29,7 @@ namespace Infrastructure.Context
         public DbSet<Domain.Aggregates.OrderAggregate.Recipient> OrderRecipients { get; set; }
         public DbSet<Payment> OrderPayments { get; set; }
         public DbSet<Delivery> OrderDeliveries { get; set; }
+        public DbSet<Opinion> Opinions { get; set; }
 
 
         public ApplicationDbContext()
@@ -47,7 +48,7 @@ namespace Infrastructure.Context
 
             builder.ApplyConfiguration(new ProductEntityTypeConfiguration());
             builder.ApplyConfiguration(new OpinionEntityTypeConfiguration());
-            builder.ApplyConfiguration(new OpinionActionEntityTypeConfiguration());
+            builder.ApplyConfiguration(new OpinionReactionEntityTypeConfiguration());
             builder.ApplyConfiguration(new AttributeValueEntityTypeConfiguration());
 
             builder.ApplyConfiguration(new GroupEntityTypeConfiguration());

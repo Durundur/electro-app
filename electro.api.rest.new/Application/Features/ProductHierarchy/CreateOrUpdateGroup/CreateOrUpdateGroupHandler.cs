@@ -27,7 +27,7 @@ namespace Application.Features.ProductHierarchy.CreateOrUpdateGroup
             else
             {
                 group = new Group(command.Name, command.Photo, command.Icon, command.Description, command.Active, command.DisplayOrder);
-                _unitOfWork.ProductHierarchyRepository.AddGroup(group);
+                await _unitOfWork.ProductHierarchyRepository.AddGroupAsync(group, cancellationToken);
             }
 
             var attributesToRemove = group.Attributes

@@ -3,10 +3,10 @@
     public enum OrderStatus
     {
         Created,
-        PaymentPending,
         Paid,
+        Processing,
         Shipped,
-        Delivered,
+        Completed,
         Cancelled
     }
 }

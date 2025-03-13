@@ -37,16 +37,17 @@ namespace Application.Features.Order.CreateOrder
                     throw new InvalidOperationException($"Product price mismatch for product ID {productCommand.ProductId}.");
                 }
                 product.UpdateStockQuantity(product.StockQuantity - productCommand.Quantity);
-                orderProducts.Add(new OrderProduct(productCommand.ProductId, product.Name, productCommand.Quantity, new Money(product.Price.Amount, product.Price.Currency)));
+                var orderProduct = OrderProduct.Create(productCommand.ProductId, product.Name, productCommand.Quantity, new Money(product.Price.Amount, product.Price.Currency));
+                orderProducts.Add(orderProduct);
             }
 
-            var payment = new Payment(request.PaymentMethod, new Money((decimal)1.99, "PLN"));
-            var delivery = new Delivery(request.DeliveryMethod, new Money((decimal)8.99, "PLN"));
+            var payment = Payment.Create(request.PaymentMethod, new Money((decimal)1.99, "PLN"));
+            var delivery = Delivery.Create(request.DeliveryMethod, new Money((decimal)8.99, "PLN"));
             var recipient = Recipient.Create(request.Recipient.Type, request.Recipient.FirstName, request.Recipient.Surname, request.Recipient.CompanyName, request.Recipient.TaxIdentificationNumber, request.Recipient.PhoneNumber, request.Recipient.Street, request.Recipient.HouseNumber, request.Recipient.PostalCode, request.Recipient.City);
 
-            var order = new Domain.Aggregates.OrderAggregate.Order(_userContext.UserId, orderProducts, payment, delivery, recipient);
+            var order = Domain.Aggregates.OrderAggregate.Order.Create(_userContext.UserId, orderProducts, payment, delivery, recipient);
             await _unitOfWork.OrderRepository.AddOrderAsync(order, cancellationToken);
-            await _unitOfWork.CartRepository.DeleteUserCartAsync(_userContext.UserId);
+            await _unitOfWork.CartRepository.DeleteUserCartAsync(_userContext.UserId, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return new CreateOrderResult

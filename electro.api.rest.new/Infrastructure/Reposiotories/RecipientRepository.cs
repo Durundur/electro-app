@@ -27,14 +27,19 @@ namespace Infrastructure.Reposiotories
                 .FirstOrDefaultAsync(r => r.Id == id, cancellationToken);
         }
 
-        public async Task AddRecipientAsync(Recipient recipient, CancellationToken cancellationToken)
+        public async Task<Recipient> AddRecipientAsync(Recipient recipient, CancellationToken cancellationToken)
         {
-            await _context.Recipients.AddAsync(recipient, cancellationToken);
+            var entry = await _context.Recipients.AddAsync(recipient, cancellationToken);
+            return entry.Entity;
         }
 
-        public void DeleteRecipient(Recipient recipient)
+        public async Task DeleteRecipientAsync(Guid recipientId, CancellationToken cancellationToken)
         {
-            _context.Recipients.Remove(recipient);
+            var recipient = await _context.Recipients.FirstOrDefaultAsync(r => r.Id == recipientId, cancellationToken);
+            if (recipient != null)
+            {
+                _context.Recipients.Remove(recipient);
+            }
         }
     }
 }

@@ -34,6 +34,27 @@ export enum AttributeType {
     Boolean = "Boolean",
 }
 
+export interface CreateOpinionCommand {
+    productId?: string;
+    content?: string | undefined;
+    rating?: number;
+    authorDisplayName?: string | undefined;
+}
+
+export interface CreateOpinionReactionResult {
+    reactionType?: OpinionReactionType;
+    likesCount?: number;
+    dislikesCount?: number;
+}
+
+export interface CreateOpinionResult {
+    id?: string;
+    content?: string | undefined;
+    rating?: number;
+    createdAt?: Date;
+    authorDisplayName?: string | undefined;
+}
+
 export interface CreateOrUpdateCategoryCommand {
     id?: number | undefined;
     name?: string | undefined;
@@ -198,9 +219,13 @@ export interface CreateOrderResult {
 }
 
 export interface Delivery {
+    readonly id?: string;
     method?: DeliveryMethod;
     cost?: Money;
     readonly trackingNumber?: string | undefined;
+    status?: DeliveryStatus;
+    readonly shippedAt?: Date | undefined;
+    readonly deliveredAt?: Date | undefined;
 }
 
 export enum DeliveryMethod {
@@ -209,6 +234,13 @@ export enum DeliveryMethod {
     CourierCashOnDelivery = "CourierCashOnDelivery",
     Locker = "Locker",
     PickupZabka = "PickupZabka",
+}
+
+export enum DeliveryStatus {
+    Pending = "Pending",
+    Shipped = "Shipped",
+    Delivered = "Delivered",
+    Cancelled = "Cancelled",
 }
 
 export interface GetAllProductHierarchyCategory {
@@ -301,6 +333,17 @@ export interface GetMenuSubCategory {
     name?: string | undefined;
 }
 
+export interface GetOpinionResult {
+    id?: string;
+    content?: string | undefined;
+    rating?: number;
+    createdAt?: Date;
+    authorDisplayName?: string | undefined;
+    userReaction?: OpinionReactionType;
+    likesCount?: number;
+    dislikesCount?: number;
+}
+
 export interface GetOrderDetailsResult {
     id?: string;
     number?: number;
@@ -354,6 +397,28 @@ export interface GetProductCatalogResultProduct {
     stockQuantity?: number;
 }
 
+export interface GetProductOpinionsResult {
+    items?: GetProductOpinionsResultOpinion[] | undefined;
+    page?: number;
+    pageSize?: number;
+    readonly totalPages?: number;
+}
+
+export interface GetProductOpinionsResultOpinion {
+    id?: string;
+    content?: string | undefined;
+    rating?: number;
+    createdAt?: Date;
+    authorDisplayName?: string | undefined;
+    reactionType?: OpinionReactionType;
+    likesCount?: number;
+    dislikesCount?: number;
+}
+
+export interface GetProductOpinionsStatsResult {
+    stats?: OpinionsStatsItem[] | undefined;
+}
+
 export interface GetProductResult {
     id?: string;
     name?: string | undefined;
@@ -367,6 +432,8 @@ export interface GetProductResult {
     subCategoryId?: number | undefined;
     active?: boolean;
     stockQuantity?: number;
+    averageOpinionRating?: number;
+    opinionCount?: number;
     attributes?: ProductAttributeResult[] | undefined;
 }
 
@@ -400,10 +467,10 @@ export interface GetSearchFiltersResultElement {
 }
 
 export interface GetSearchProductsResult {
-    products?: GetSearchProductsResultProduct[] | undefined;
-    pageCount?: number;
-    pageSize?: number;
+    items?: GetSearchProductsResultProduct[] | undefined;
     page?: number;
+    pageSize?: number;
+    readonly totalPages?: number;
 }
 
 export interface GetSearchProductsResultProduct {
@@ -502,16 +569,27 @@ export interface Money {
     currency?: string | undefined;
 }
 
+export enum OpinionReactionType {
+    Like = "Like",
+    Dislike = "Dislike",
+}
+
+export interface OpinionsStatsItem {
+    rating?: number;
+    count?: number;
+}
+
 export enum OrderStatus {
     Created = "Created",
-    PaymentPending = "PaymentPending",
     Paid = "Paid",
+    Processing = "Processing",
     Shipped = "Shipped",
-    Delivered = "Delivered",
+    Completed = "Completed",
     Cancelled = "Cancelled",
 }
 
 export interface Payment {
+    readonly id?: string;
     method?: PaymentMethod;
     cost?: Money;
     status?: PaymentStatus;
@@ -552,9 +630,10 @@ export interface ProductAttributeResult {
 }
 
 export enum ProductStatus {
+    Draft = "Draft",
     Active = "Active",
-    Inavtive = "Inavtive",
-    Removed = "Removed",
+    Inactive = "Inactive",
+    Discontinued = "Discontinued",
 }
 
 export interface Recipient {

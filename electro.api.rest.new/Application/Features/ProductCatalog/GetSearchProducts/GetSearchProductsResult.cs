@@ -1,14 +1,15 @@
 ﻿using Application.Features.Shared.ProductAttribute;
+using Application.Features.Shared.Pagination;
 using Domain.Aggregates.ProductCatalogAggregate;
 
 namespace Application.Features.ProductCatalog.GetSearchProducts
 {
-    public class GetSearchProductsResult
+    public class GetSearchProductsResult : PaginatedResult<GetSearchProductsResultProduct>
     {
-        public IList<GetSearchProductsResultProduct> Products { get; set; }
-        public int PageCount { get; set; }
-        public int PageSize { get; set; }
-        public int Page { get; set; }
+        public GetSearchProductsResult(IReadOnlyList<GetSearchProductsResultProduct> items, int count, int page, int pageSize)
+            : base(items, count, page, pageSize)
+        {
+        }
     }
 
     public class GetSearchProductsResultProduct
@@ -19,7 +20,7 @@ namespace Application.Features.ProductCatalog.GetSearchProducts
         public string Currency { get; set; }
         public string Photo { get; set; }
         public ProductStatus Status { get; set; }
-        public decimal AverageOpinionRating { get; set; }
+        public float AverageOpinionRating { get; set; }
         public int OpinionCount { get; set; }
         public IList<ProductAttributeResult> Attributes { get; set; }
     }

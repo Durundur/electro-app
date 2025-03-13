@@ -14,7 +14,7 @@ namespace Application.Features.Cart.GetCart
                 {
                     ProductId = cp.ProductId,
                     Quantity = cp.Quantity,
-                    Price = cp.Price,
+                    Price = cp.UnitPrice,
                     Name = productLookup[cp.ProductId].Name,
                     Photo = productLookup[cp.ProductId].Photos.FirstOrDefault()
                 }).ToList();

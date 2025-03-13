@@ -17,7 +17,10 @@ namespace Application.Features.ProductCatalog.GetSearchProducts
 
         public async Task<GetSearchProductsResult> Handle(GetSearchProductsQuery request, CancellationToken cancellationToken)
         {
-            var productsQuery = _productRepository.GetProductsQuery().Include(p => p.Attributes.Where(a => a.IsPrimary)).AsQueryable();
+            var productsQuery = _productRepository.GetProductsQuery()
+                .Include(p => p.Attributes.Where(a => a.IsPrimary))
+                .Include(p => p.Opinions)
+                .AsQueryable();
 
             if (request.GroupId.HasValue)
             {
@@ -104,15 +107,9 @@ namespace Application.Features.ProductCatalog.GetSearchProducts
 
             var attributeDefinitions = await _attributeDefinitionRepository.GetAttributesDefinitionsQuery()
                 .Where(ad => primaryAttributeDefinitionIds.Contains(ad.Id))
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
-            var result = GetSearchProductsMapper.MapToGetSearchProductsResult(products, attributeDefinitions);
-
-            result.PageCount = (int)Math.Ceiling(totalProducts / (double)request.PageSize);
-            result.PageSize = request.PageSize;
-            result.Page = request.Page;
-
-            return result;
+            return GetSearchProductsMapper.MapToGetSearchProductsResult(products, attributeDefinitions, totalProducts, request.Page, request.PageSize);
         }
     }
 }

@@ -1,13 +1,41 @@
 import { IError } from "@/libs/api-contract/Error";
-import { GetProductResult } from "@/libs/api-contract/api-contract";
+import { CreateOpinionResult, GetProductOpinionsResult, GetProductOpinionsStatsResult, GetProductResult, OpinionReactionType } from "@/libs/api-contract/api-contract";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 interface IProductPageState {
 	product: IProductState;
+	opinions: IOpinionsState;
+	opinionsStats: IOpinionsStatsState;
+    createOpinion: ICreateOpinionState;
+    createOpinionReaction: ICreateOpinionReactionState;
 }
 
 interface IProductState {
 	data?: GetProductResult;
+	error?: IError;
+	isLoading: boolean;
+}
+
+interface IOpinionsState {
+	data?: GetProductOpinionsResult;
+	error?: IError;
+	isLoading: boolean;
+}
+
+interface IOpinionsStatsState {
+	data?: GetProductOpinionsStatsResult;
+	error?: IError;
+	isLoading: boolean;
+}
+
+interface ICreateOpinionReactionState {
+	success?: boolean;
+	error?: IError;
+	isLoading: boolean;
+}
+
+interface ICreateOpinionState {
+	data?: CreateOpinionResult;
 	error?: IError;
 	isLoading: boolean;
 }
@@ -18,6 +46,26 @@ const initialState: IProductPageState = {
 		error: undefined,
 		isLoading: false,
 	},
+	opinions: {
+		data: undefined,
+		error: undefined,
+		isLoading: false,
+	},
+	opinionsStats: {
+		data: undefined,
+		error: undefined,
+		isLoading: false,
+	},
+	createOpinionReaction: {
+		success: undefined,
+		error: undefined,
+		isLoading: false,
+	},
+	createOpinion: {
+		data: undefined,
+		error: undefined,
+		isLoading: false,
+	}
 };
 
 const ProductPageStore = createSlice({
@@ -41,9 +89,111 @@ const ProductPageStore = createSlice({
 			state.product.error = undefined;
 			state.product.isLoading = false;
 		},
+		getOpinionsStart(state) {
+			state.opinions.isLoading = true;
+			state.opinions.error = undefined;
+		},
+		getOpinionsSuccess(state, action: PayloadAction<GetProductOpinionsResult>) {
+			state.opinions.isLoading = false;
+			state.opinions.data = action.payload;
+		},
+		getOpinionsError(state, action: PayloadAction<IError>) {
+			state.opinions.isLoading = false;
+			state.opinions.error = action.payload;
+		},
+		clearOpinionsState(state) {
+			state.opinions.data = undefined;
+			state.opinions.error = undefined;
+			state.opinions.isLoading = false;
+		},
+		getOpinionsStatsStart(state) {
+			state.opinionsStats.isLoading = true;
+			state.opinionsStats.error = undefined;
+		},
+		getOpinionsStatsSuccess(state, action: PayloadAction<GetProductOpinionsStatsResult>) {
+			state.opinionsStats.isLoading = false;
+			state.opinionsStats.data = action.payload;
+		},
+		getOpinionsStatsError(state, action: PayloadAction<IError>) {
+			state.opinionsStats.isLoading = false;
+			state.opinionsStats.error = action.payload;
+		},
+		clearOpinionsStatsState(state) {
+			state.opinionsStats.data = undefined;
+			state.opinionsStats.error = undefined;
+			state.opinionsStats.isLoading = false;
+		},
+		createOpinionReactionStart(state) {
+			state.createOpinionReaction.isLoading = true;
+			state.createOpinionReaction.error = undefined;
+		},
+		createOpinionReactionSuccess(state) {
+			state.createOpinionReaction.isLoading = false;
+			state.createOpinionReaction.success = true;
+		},
+		createOpinionReactionError(state, action: PayloadAction<IError>) {
+			state.createOpinionReaction.isLoading = false;
+			state.createOpinionReaction.error = action.payload;
+		},
+		clearOpinionReactionState(state) {
+			state.createOpinionReaction.success = undefined;
+			state.createOpinionReaction.error = undefined;
+			state.createOpinionReaction.isLoading = false;
+		},
+		updateOpinionReaction(state, action: PayloadAction<{ opinionId: string, reactionType: OpinionReactionType, likesCount: number, dislikesCount: number }>) {
+            if (state.opinions.data?.items) {
+                const opinion = state.opinions.data.items.find(
+                    o => o.id === action.payload.opinionId
+                );
+                if (opinion) {
+                    opinion.reactionType = action.payload.reactionType;
+                    opinion.likesCount = action.payload.likesCount;
+                    opinion.dislikesCount = action.payload.dislikesCount;
+                }
+            }
+        },
+		createOpinionStart(state) {
+			state.createOpinion.isLoading = true;
+			state.createOpinion.error = undefined;
+		},
+		createOpinionSuccess(state, action: PayloadAction<CreateOpinionResult>) {
+			state.createOpinion.isLoading = false;
+			state.createOpinion.data = action.payload;
+		},
+		createOpinionError(state, action: PayloadAction<IError>) {
+			state.createOpinion.isLoading = false;
+			state.createOpinion.error = action.payload;
+		},
+		clearCreateOpinionState(state) {
+			state.createOpinion.data = undefined;
+			state.createOpinion.error = undefined;
+			state.createOpinion.isLoading = false;
+		},
 	},
 });
 
-export const { clearProductState, fetchProductError, fetchProductStart, fetchProductSuccess } = ProductPageStore.actions;
+export const {
+	clearProductState,
+	fetchProductError,
+	fetchProductStart,
+	fetchProductSuccess,
+	getOpinionsError,
+	getOpinionsStart,
+	getOpinionsSuccess,
+	clearOpinionsState,
+	getOpinionsStatsError,
+	getOpinionsStatsStart,
+	getOpinionsStatsSuccess,
+	clearOpinionsStatsState,
+	createOpinionReactionError,
+	createOpinionReactionStart,
+	createOpinionReactionSuccess,
+	clearOpinionReactionState,
+	updateOpinionReaction,
+	createOpinionError,
+	createOpinionStart,
+	createOpinionSuccess,
+	clearCreateOpinionState,
+} = ProductPageStore.actions;
 
 export default ProductPageStore.reducer;

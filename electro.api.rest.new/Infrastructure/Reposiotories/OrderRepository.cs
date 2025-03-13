@@ -14,9 +14,10 @@ namespace Infrastructure.Reposiotories
             _context = context;
         }
 
-        public async Task AddOrderAsync(Order order, CancellationToken cancellationToken)
+        public async Task<Order> AddOrderAsync(Order order, CancellationToken cancellationToken)
         {
-            await _context.Orders.AddAsync(order, cancellationToken);
+            var entry = await _context.Orders.AddAsync(order, cancellationToken);
+            return entry.Entity;
         }
 
         public IQueryable<Order> GetOrdersQuery()
@@ -24,13 +25,13 @@ namespace Infrastructure.Reposiotories
             return _context.Orders.AsQueryable();
         }
 
-        public async Task<Order> GetOrderByIdAsync(Guid id)
+        public async Task<Order> GetOrderByIdAsync(Guid id, CancellationToken cancellationToken)
         {
             return await _context.Orders
                 .Include(o => o.Products)
                 .Include(o => o.Delivery)
                 .Include(o => o.Recipient)
-                .Include(o => o.Payment).FirstOrDefaultAsync(o => o.Id == id);
+                .Include(o => o.Payment).FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
         }
     }
 }

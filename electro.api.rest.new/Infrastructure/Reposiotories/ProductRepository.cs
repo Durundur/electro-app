@@ -13,20 +13,22 @@ namespace Infrastructure.Reposiotories
             _context = context;
         }
 
-        public void AddProduct(Product product)
+        public async Task<Product> AddProductAsync(Product product, CancellationToken cancellationToken)
         {
-            _context.Products.Add(product);
+            var entry = await _context.Products.AddAsync(product);
+            return entry.Entity;
         }
 
-        public async Task<Product> GetByIdAsync(Guid id)
+        public async Task<Product> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
             var product = await _context.Products
                 .Include(p => p.Attributes)
+                .Include(p => p.Opinions)
                 .FirstOrDefaultAsync(p => p.Id == id);
             return product;
         }
 
-        public async Task<IList<Product>> GetProductsByIdsAsync(IEnumerable<Guid> productsIds)
+        public async Task<IList<Product>> GetProductsByIdsAsync(IEnumerable<Guid> productsIds, CancellationToken cancellationToken)
         {
             var products = await _context.Products.Where(p => productsIds.Contains(p.Id)).ToListAsync();
             return products;

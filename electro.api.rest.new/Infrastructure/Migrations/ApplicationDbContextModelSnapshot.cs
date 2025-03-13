@@ -39,6 +39,9 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Id")
+                        .IsUnique();
+
                     b.HasIndex("UserId")
                         .IsUnique();
 
@@ -51,7 +54,7 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("CartId")
+                    b.Property<Guid?>("CartId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("ProductId")
@@ -75,7 +78,16 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime?>("DeliveredAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<int>("Method")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("ShippedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Status")
                         .HasColumnType("integer");
 
                     b.Property<string>("TrackingNumber")
@@ -142,7 +154,7 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("OrderId")
+                    b.Property<Guid?>("OrderId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("ProductId")
@@ -284,31 +296,25 @@ namespace Infrastructure.Migrations
                     b.ToTable("ProductOpinions", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Aggregates.ProductCatalogAggregate.OpinionAction", b =>
+            modelBuilder.Entity("Domain.Aggregates.ProductCatalogAggregate.OpinionReaction", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
-                    b.Property<int>("ActionType")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("OpinionId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid?>("OpinionId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("Reaction")
+                        .HasColumnType("integer");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
+                    b.HasKey("UserId", "OpinionId");
 
                     b.HasIndex("OpinionId");
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("OpinionActions", (string)null);
+                    b.ToTable("ProductOpinionReactions", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Aggregates.ProductCatalogAggregate.Product", b =>
@@ -790,9 +796,7 @@ namespace Infrastructure.Migrations
                 {
                     b.HasOne("Domain.Aggregates.CartAggregate.Cart", null)
                         .WithMany("Products")
-                        .HasForeignKey("CartId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CartId");
 
                     b.HasOne("Domain.Aggregates.ProductCatalogAggregate.Product", null)
                         .WithMany()
@@ -800,7 +804,7 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("Domain.ValueObjects.Money", "Price", b1 =>
+                    b.OwnsOne("Domain.ValueObjects.Money", "UnitPrice", b1 =>
                         {
                             b1.Property<Guid>("CartProductId")
                                 .HasColumnType("uuid");
@@ -823,7 +827,7 @@ namespace Infrastructure.Migrations
                                 .HasForeignKey("CartProductId");
                         });
 
-                    b.Navigation("Price")
+                    b.Navigation("UnitPrice")
                         .IsRequired();
                 });
 
@@ -893,9 +897,7 @@ namespace Infrastructure.Migrations
                 {
                     b.HasOne("Domain.Aggregates.OrderAggregate.Order", null)
                         .WithMany("Products")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("OrderId");
 
                     b.HasOne("Domain.Aggregates.ProductCatalogAggregate.Product", null)
                         .WithMany()
@@ -987,16 +989,18 @@ namespace Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Aggregates.ProductCatalogAggregate.OpinionAction", b =>
+            modelBuilder.Entity("Domain.Aggregates.ProductCatalogAggregate.OpinionReaction", b =>
                 {
                     b.HasOne("Domain.Aggregates.ProductCatalogAggregate.Opinion", null)
-                        .WithMany("Actions")
-                        .HasForeignKey("OpinionId");
+                        .WithMany("Reactions")
+                        .HasForeignKey("OpinionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Infrastructure.Identity.UserIdentity", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
@@ -1145,7 +1149,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Aggregates.ProductCatalogAggregate.Opinion", b =>
                 {
-                    b.Navigation("Actions");
+                    b.Navigation("Reactions");
                 });
 
             modelBuilder.Entity("Domain.Aggregates.ProductCatalogAggregate.Product", b =>

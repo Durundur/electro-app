@@ -18,8 +18,8 @@ const SearchProductsList: FC = () => {
 	const filtersSelector = useSelector((store) => store.SearchProductsPageStore.filters);
 	const filters = filtersSelector.data?.filters ?? [];
 
-	const { products, ...pagination } = productsSelector.data ?? {};
-	const pageCount = pagination.pageCount;
+	const { items: products, ...pagination } = productsSelector.data ?? {};
+	const pageCount = pagination.totalPages;
 
 	const getFiltersSearchParams = (activeFilters: ISearchProductsStateUrlParamsFilters, filters: GetSearchFiltersResultElement[]) => {
 		const queryFilters: Record<string, string[]> = {};

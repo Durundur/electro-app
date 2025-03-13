@@ -11,7 +11,7 @@ namespace Infrastructure.Configurations.Order
         {
             builder.ToTable("Orders");
             builder.HasOne<UserIdentity>().WithMany().HasForeignKey(o => o.UserId);
-            builder.HasMany<D.OrderAggregate.OrderProduct>(o => o.Products).WithOne().HasForeignKey(op => op.OrderId);
+            builder.HasMany<D.OrderAggregate.OrderProduct>(o => o.Products).WithOne();
             builder.Ignore(o => o.TotalPrice);
             builder.Property(o => o.Number).ValueGeneratedOnAdd();
         }

@@ -17,7 +17,7 @@ namespace Application.Features.ProductCatalog.GetProduct
 
         public async Task<GetProductResult> Handle(GetProductQuery queryParams, CancellationToken cancellationToken)
         {
-            var product = await _productRepository.GetByIdAsync(queryParams.Id);
+            var product = await _productRepository.GetByIdAsync(queryParams.Id, cancellationToken);
 
             var attributeDefinitions = await _attributeDefinitionRepository.GetAttributesDefinitionsQuery()
                 .Where(ad => product.Attributes.Select(a => a.AttributeDefinitionId).Contains(ad.Id))

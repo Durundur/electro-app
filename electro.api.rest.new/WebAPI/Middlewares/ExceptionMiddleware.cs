@@ -1,4 +1,5 @@
 ﻿using Application.Exceptions;
+using Domain.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 
 namespace WebAPI.Middlewares

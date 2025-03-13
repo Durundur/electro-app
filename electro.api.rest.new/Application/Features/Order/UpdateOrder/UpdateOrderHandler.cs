@@ -19,7 +19,7 @@ namespace Application.Features.Order.UpdateOrder
 
         public async Task<UpdateOrderResult> Handle(UpdateOrderCommand command, CancellationToken cancellationToken)
         {
-            var order = await _unitOfWork.OrderRepository.GetOrderByIdAsync(command.OrderId);
+            var order = await _unitOfWork.OrderRepository.GetOrderByIdAsync(command.OrderId, cancellationToken);
 
             if (order == null)
             {

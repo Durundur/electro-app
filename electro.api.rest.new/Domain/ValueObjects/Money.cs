@@ -11,5 +11,10 @@ namespace Domain.ValueObjects
             Amount = amount;
             Currency = currency;
         }
+
+        public static Money Zero(string currency)
+        {
+            return new Money(0, currency);
+        }
     }
 }

@@ -1,9 +1,11 @@
-﻿using Domain.ValueObjects;
+﻿using Domain.Exceptions;
+using Domain.ValueObjects;
 
 namespace Domain.Aggregates.OrderAggregate
 {
     public class Payment
     {
+        public Guid Id { get; private set; }
         public PaymentMethod Method { get; private set; }
         public Money Cost { get; private set; }
         public PaymentStatus Status { get; private set; }
@@ -11,12 +13,20 @@ namespace Domain.Aggregates.OrderAggregate
 
         private Payment() { }
 
-        public Payment(PaymentMethod method, Money cost)
+        public static Payment Create(PaymentMethod method, Money cost)
         {
-            Method = method;
-            Cost = cost;
-            Status = PaymentStatus.Pending;
+            if (cost.Amount <= 0)
+                throw new DomainException("Payment cost must be greater than zero.");
+
+            return new Payment
+            {
+                Id = Guid.NewGuid(),
+                Method = method,
+                Cost = cost,
+                Status = PaymentStatus.Pending,
+            };
         }
+
 
         public void MarkAsPaid()
         {

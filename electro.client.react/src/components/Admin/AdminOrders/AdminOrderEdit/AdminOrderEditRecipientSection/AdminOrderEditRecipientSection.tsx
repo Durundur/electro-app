@@ -77,7 +77,7 @@ const PersonalRecipientForm: FC<PersonalRecipientFormProps> = ({ formik }) => {
 					onChange={formik.handleChange}
 					onBlur={formik.handleBlur}
 					error={Boolean(formik.touched.recipientSurname && formik.errors.recipientSurname)}
-					helperText={formik.touched.recipientSurname && <>{formik.errors.recipientSurname}</>}
+					helperText={formik.touched.recipientSurname && formik.errors.recipientSurname}
 					fullWidth
 				/>
 			</Grid2>
@@ -103,7 +103,7 @@ const CompanyRecipientForm: FC<CompanyRecipientFormProps> = ({ formik }) => {
 					onChange={formik.handleChange}
 					onBlur={formik.handleBlur}
 					error={Boolean(formik.touched.recipientCompanyName && formik.errors.recipientCompanyName)}
-					helperText={formik.touched.recipientCompanyName && <>{formik.errors.recipientCompanyName}</>}
+					helperText={formik.touched.recipientCompanyName && formik.errors.recipientCompanyName}
 					fullWidth
 				/>
 			</Grid2>
@@ -117,7 +117,7 @@ const CompanyRecipientForm: FC<CompanyRecipientFormProps> = ({ formik }) => {
 					onChange={formik.handleChange}
 					onBlur={formik.handleBlur}
 					error={Boolean(formik.touched.recipientTaxIdentificationNumber && formik.errors.recipientTaxIdentificationNumber)}
-					helperText={formik.touched.recipientTaxIdentificationNumber && <>{formik.errors.recipientTaxIdentificationNumber}</>}
+					helperText={formik.touched.recipientTaxIdentificationNumber && formik.errors.recipientTaxIdentificationNumber}
 					fullWidth
 				/>
 			</Grid2>
@@ -143,7 +143,7 @@ const SharedRecipientForm: FC<SharedRecipientFormProps> = ({ formik }) => {
 					onChange={formik.handleChange}
 					onBlur={formik.handleBlur}
 					error={Boolean(formik.touched.recipientPhoneNumber && formik.errors.recipientPhoneNumber)}
-					helperText={formik.touched.recipientPhoneNumber && <>{formik.errors.recipientPhoneNumber}</>}
+					helperText={formik.touched.recipientPhoneNumber && formik.errors.recipientPhoneNumber}
 					fullWidth
 				/>
 			</Grid2>
@@ -157,7 +157,7 @@ const SharedRecipientForm: FC<SharedRecipientFormProps> = ({ formik }) => {
 					onChange={formik.handleChange}
 					onBlur={formik.handleBlur}
 					error={Boolean(formik.touched.recipientStreet && formik.errors.recipientStreet)}
-					helperText={formik.touched.recipientStreet && <>{formik.errors.recipientStreet}</>}
+					helperText={formik.touched.recipientStreet && formik.errors.recipientStreet}
 					fullWidth
 				/>
 			</Grid2>
@@ -171,7 +171,7 @@ const SharedRecipientForm: FC<SharedRecipientFormProps> = ({ formik }) => {
 					onChange={formik.handleChange}
 					onBlur={formik.handleBlur}
 					error={Boolean(formik.touched.recipientHouseNumber && formik.errors.recipientHouseNumber)}
-					helperText={formik.touched.recipientHouseNumber && <>{formik.errors.recipientHouseNumber}</>}
+					helperText={formik.touched.recipientHouseNumber && formik.errors.recipientHouseNumber}
 					fullWidth
 				/>
 			</Grid2>
@@ -185,7 +185,7 @@ const SharedRecipientForm: FC<SharedRecipientFormProps> = ({ formik }) => {
 					onChange={formik.handleChange}
 					onBlur={formik.handleBlur}
 					error={Boolean(formik.touched.recipientPostalCode && formik.errors.recipientPostalCode)}
-					helperText={formik.touched.recipientPostalCode && <>{formik.errors.recipientPostalCode}</>}
+					helperText={formik.touched.recipientPostalCode && formik.errors.recipientPostalCode}
 					fullWidth
 				/>
 			</Grid2>
@@ -199,7 +199,7 @@ const SharedRecipientForm: FC<SharedRecipientFormProps> = ({ formik }) => {
 					onChange={formik.handleChange}
 					onBlur={formik.handleBlur}
 					error={Boolean(formik.touched.recipientCity && formik.errors.recipientCity)}
-					helperText={formik.touched.recipientCity && <>{formik.errors.recipientCity}</>}
+					helperText={formik.touched.recipientCity && formik.errors.recipientCity}
 					fullWidth
 				/>
 			</Grid2>

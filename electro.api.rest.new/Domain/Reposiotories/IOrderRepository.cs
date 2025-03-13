@@ -5,7 +5,7 @@ namespace Domain.Reposiotories
     public interface IOrderRepository
     {
         IQueryable<Order> GetOrdersQuery();
-        Task AddOrderAsync(Order order, CancellationToken cancellationToken);
-        Task<Order> GetOrderByIdAsync(Guid id);
+        Task<Order> AddOrderAsync(Order order, CancellationToken cancellationToken = default);
+        Task<Order> GetOrderByIdAsync(Guid id, CancellationToken cancellationToken = default);
     }
 }

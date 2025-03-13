@@ -20,6 +20,8 @@ namespace Application.Features.ProductCatalog.GetProduct
                 GroupId = product.GroupId,
                 SubCategoryId = product.SubCategoryId,
                 StockQuantity = product.StockQuantity,
+                AverageOpinionRating = product.Opinions.Any() ? (float)Math.Round(product.Opinions.Average(o => o.Rating), 1) : 0,
+                OpinionCount = product.Opinions.Count(),
                 Attributes = ProductAttributeMapper.MapToListOfProductAttributeResult(product.Attributes, attributeDefinitions)
             };
         }

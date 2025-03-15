@@ -1,11 +1,11 @@
 "use client";
 import { FC, useEffect, useMemo, useState } from "react";
-import { Box, Button, Card, CircularProgress, Grid2 as Grid, Paper, Rating, Stack, Typography } from "@mui/material";
+import { Box, Button, Card, Grid2 as Grid, Paper, Rating, Stack, Typography } from "@mui/material";
 import { ShoppingCartOutlined, StarBorderRounded, CheckCircleOutlineRounded, AccessTimeRounded, LocalShippingOutlined, KeyboardDoubleArrowDownRounded } from "@mui/icons-material";
 import { useDispatch, useSelector } from "@/libs/Store";
 import { fetchProduct } from "@/libs/ProductPage/thunk";
 import { clearProductState } from "@/libs/ProductPage/slice";
-import ProductPageSlider from "@/components/ProductPage/ProductPageSlider/ProductPageSlider";
+import ProductPageSlider from "@/components/ProductPage/ProductPageOverview/ProductPageSlider/ProductPageSlider";
 import ProductPageSpecificationTable from "@/components/ProductPage/ProductPageSpecification/ProductPageSpecificationTable";
 import OpinionsSection from "@/components/ProductPage/ProductPageOpinions/OpinionsSection";
 import ProductPageSpecificationPrimary from "@/components/ProductPage/ProductPageSpecification/ProductPageSpecificationPrimary";
@@ -15,6 +15,7 @@ import { addProductToCart } from "@/libs/Cart/thunks";
 import { Breadcrumb, useBreadcrumbs } from "@/hooks/Breadcrumbs/useBreadcrumbs";
 import Error from "@/components/Layout/Error/Error";
 import FullScreenLoader from "@/components/Layout/FullScreenLoader/FullScreenLoader";
+import ProductPageOverview from "@/components/ProductPage/ProductPageOverview/ProductPageOverview";
 
 interface ProductPageParams {
 	params: { id: string };
@@ -71,67 +72,8 @@ const ProductPage: FC<ProductPageParams> = ({ params }) => {
 	if (errorSelector) return <Error message="Błąd podczas pobierania produktu"></Error>;
 	if (productSelector)
 		return (
-			<Box>
-				<Grid container spacing={2}>
-					<Grid size={{ xs: 12, md: 6 }}>
-						<ProductPageSlider photos={productSelector.photos ?? []}></ProductPageSlider>
-					</Grid>
-					<Grid size={{ xs: 12, md: 6 }}>
-						<Stack spacing={1}>
-							<Typography variant="h6">{productSelector.name}</Typography>
-							<Stack direction={"row"} alignItems={"center"} spacing={1}>
-								<Rating size="small" value={productSelector.averageOpinionRating} readOnly precision={0.5} emptyIcon={<StarBorderRounded style={{ opacity: 0.5 }} fontSize="inherit" />} />
-								<Typography variant="caption">({productSelector.opinionCount}) opinii</Typography>
-							</Stack>
-							<div>
-								<Grid container direction={"row"} size={{ xs: 12 }} spacing={2}>
-									<Grid size={{ xs: 6 }}>
-										<ProductPageSpecificationPrimary specification={productSelector.attributes ?? []} />
-										<Button color="inherit" variant="text" fullWidth endIcon={<KeyboardDoubleArrowDownRounded />}>
-											Przewiń do pełnej specyfikacji
-										</Button>
-									</Grid>
-									<Grid size={{ xs: 6 }}>
-										<Card sx={{ padding: 2 }}>
-											<Stack spacing={1}>
-												<Stack direction={"row"} alignItems={"center"} justifyContent={"space-between"}>
-													<QuantityInput value={quantity} id={productSelector.id!} onChange={(q) => setQuantity(q)}></QuantityInput>
-													<Typography variant="h6" textAlign={"end"}>
-														{formatAmount(productSelector.amount!, productSelector.currency!)}
-													</Typography>
-												</Stack>
-												<Button onClick={handleAddToCart} variant="contained" color="success" startIcon={<ShoppingCartOutlined />}>
-													Dodaj do koszyka
-												</Button>
-												<Stack direction={"row"} sx={{ padding: 1 }} spacing={2} alignItems={"center"}>
-													<CheckCircleOutlineRounded />
-													<div>
-														<Typography variant="body2">Dostępny</Typography>
-														<Typography variant="caption">Dowiedz się więcej</Typography>
-													</div>
-												</Stack>
-												<Stack direction={"row"} sx={{ padding: 1 }} spacing={2} alignItems={"center"}>
-													<AccessTimeRounded />
-													<div>
-														<Typography variant="body2">Kup teraz, a otrzymasz jutro</Typography>
-														<Typography variant="caption">Dowiedz się więcej</Typography>
-													</div>
-												</Stack>
-												<Stack direction={"row"} sx={{ padding: 1 }} spacing={2} alignItems={"center"}>
-													<LocalShippingOutlined />
-													<div>
-														<Typography variant="body2">Darmowa dostawa</Typography>
-														<Typography variant="caption">Sprawdz szczegóły</Typography>
-													</div>
-												</Stack>
-											</Stack>
-										</Card>
-									</Grid>
-								</Grid>
-							</div>
-						</Stack>
-					</Grid>
-				</Grid>
+			<Stack spacing={2}>
+				<ProductPageOverview product={productSelector} onAddToCart={handleAddToCart}></ProductPageOverview>
 				<Stack component={Card} spacing={1} direction={"row"}>
 					<Button color="inherit">Opis</Button>
 					<Button color="inherit">Specyfikacja</Button>
@@ -153,7 +95,7 @@ const ProductPage: FC<ProductPageParams> = ({ params }) => {
 					<Typography variant="h6">Opinie</Typography>
 					<OpinionsSection productId={productSelector.id} />
 				</Box>
-			</Box>
+			</Stack>
 		);
 	return <FullScreenLoader isVisible></FullScreenLoader>;
 };

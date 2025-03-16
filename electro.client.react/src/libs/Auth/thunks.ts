@@ -2,7 +2,7 @@ import { AppDispatch } from "../Store";
 import ApiClient from "../api-contract/ApiClient";
 import { IError, createError } from "../api-contract/Error";
 import { LoginUserCommand, LoginUserSuccessResult, RefreshTokenCommand, RefreshTokenResult, RegisterUserCommand, RegisterUserSuccessResult } from "../api-contract/api-contract";
-import { authErrorSet, authLoadingStart, loginUserSuccess, refreshTokenSuccess, registerUserSuccess } from "./slice";
+import { authErrorSet, authLoadingStart, loginUserSuccess, logout, refreshTokenSuccess, registerUserSuccess } from "./slice";
 
 export const registerUser = (command: RegisterUserCommand) => async (dispatch: AppDispatch) => {
     try {
@@ -35,5 +35,15 @@ export const refreshToken = (command: RefreshTokenCommand) => async (dispatch: A
     } catch (error) {
         dispatch(authErrorSet(createError(error as IError)));
         throw error;
+    }
+};
+
+export const logoutUser = () => async (dispatch: AppDispatch) => {
+    try {
+        dispatch(authLoadingStart());
+        const response = await ApiClient.post("/api/auth/logout");
+        dispatch(logout());
+    } catch (error) {
+        dispatch(logout());
     }
 };

@@ -31,7 +31,7 @@ export const fetchProduct = (productId: string) => async (dispatch: AppDispatch)
 export const fetchProductHierarchy = () => async (dispatch: AppDispatch) => {
 	try {
 		dispatch(fetchProductHierarchyStart());
-		const response = await ApiClient.get<GetAllProductHierarchyResult>(`/api/productHierarchy`);
+		const response = await ApiClient.get<GetAllProductHierarchyResult>(`/api/product-hierarchy`);
 		dispatch(fetchProductHierarchySuccess(response.data));
 	} catch (error: any) {
 		dispatch(fetchProductHierarchyError(createError(error)));
@@ -41,7 +41,7 @@ export const fetchProductHierarchy = () => async (dispatch: AppDispatch) => {
 export const fetchAttributesDefinitions = (query: IGetAttributesDefinitionsQuery) => async (dispatch: AppDispatch) => {
 	try {
 		dispatch(fetchAttributesDefinitionsStart());
-		const response = await ApiClient.get<GetAttributesDefinitionsResult>(`/api/productHierarchy/attributes-definitions?${buildQueryString(query)}`);
+		const response = await ApiClient.get<GetAttributesDefinitionsResult>(`/api/product-hierarchy/attributes-definitions?${buildQueryString(query)}`);
 		dispatch(fetchAttributesDefinitionsSuccess(response.data));
 	} catch (error: any) {
 		dispatch(fetchAttributesDefinitionsError(createError(error)));

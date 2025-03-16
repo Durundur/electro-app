@@ -32,7 +32,7 @@ namespace Application.Services.TokenService
             var tokenDescriptor = new JwtSecurityToken(
                issuer: _configuration.GetSection("Jwt:Issuer").Value,
                claims: claims,
-               expires: GetRefreshTokenExpiry(),
+               expires: GetTokenExpiry(),
                signingCredentials: new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             );
 
@@ -52,6 +52,11 @@ namespace Application.Services.TokenService
         }
 
         public DateTime GetRefreshTokenExpiry()
+        {
+            return DateTime.UtcNow.AddMinutes(Double.Parse(_configuration.GetSection("Jwt:RefreshTokenExpirationTimeMinutes").Value));
+        }
+
+        public DateTime GetTokenExpiry()
         {
             return DateTime.UtcNow.AddMinutes(Double.Parse(_configuration.GetSection("Jwt:ExpirationTimeMinutes").Value));
         }

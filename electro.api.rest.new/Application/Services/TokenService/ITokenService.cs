@@ -7,6 +7,7 @@ namespace Application.Services.TokenService
     {
         string GenerateToken(IUser user, IList<string> roles);
         DateTime GetRefreshTokenExpiry();
+        DateTime GetTokenExpiry();
         string GenerateRefreshToken();
         ClaimsPrincipal GetTokenPrincipal(string token);
     }

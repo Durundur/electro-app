@@ -9,7 +9,7 @@ import ApiClient from "@/libs/api-contract/ApiClient";
 export const fetchProductCatalogList = (query: GetProductCatalogQuery) => async (dispatch: AppDispatch) => {
 	try {
 		dispatch(fetchProductCatalogListStart());
-		const response = await ApiClient.get<GetProductCatalogResult>(`/api/products/productCatalog?${buildQueryString(query)}`);
+		const response = await ApiClient.get<GetProductCatalogResult>(`/api/products/catalog?${buildQueryString(query)}`);
 		dispatch(fetchProductCatalogListSuccess(response.data));
 	} catch (error: any) {
 		dispatch(fetchProductCatalogListError(createError(error)));

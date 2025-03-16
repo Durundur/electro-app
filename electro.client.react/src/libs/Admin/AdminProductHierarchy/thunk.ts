@@ -46,7 +46,7 @@ import ApiClient from "@/libs/api-contract/ApiClient";
 export const fetchHierarchy = () => async (dispatch: AppDispatch) => {
 	try {
 		dispatch(fetchHierarchyStart());
-		const response = await ApiClient.get<GetAllProductHierarchyResult>(`/api/ProductHierarchy`);
+		const response = await ApiClient.get<GetAllProductHierarchyResult>(`/api/product-hierarchy`);
 		dispatch(fetchHierarchySuccess(response.data));
 	} catch (error: any) {
 		dispatch(fetchHierarchyError(createError(error)));
@@ -56,7 +56,7 @@ export const fetchHierarchy = () => async (dispatch: AppDispatch) => {
 export const fetchGroup = (groupId: string) => async (dispatch: AppDispatch) => {
 	try {
 		dispatch(fetchGroupStart());
-		const response = await ApiClient.get<GetGroupResult>(`/api/ProductHierarchy/groups/${groupId}`);
+		const response = await ApiClient.get<GetGroupResult>(`/api/product-hierarchy/groups/${groupId}`);
 		dispatch(fetchGroupSuccess(response.data));
 	} catch (error: any) {
 		dispatch(fetchGroupError(createError(error)));
@@ -66,7 +66,7 @@ export const fetchGroup = (groupId: string) => async (dispatch: AppDispatch) => 
 export const fetchCategory = (categoryId: string) => async (dispatch: AppDispatch) => {
 	try {
 		dispatch(fetchCategoryStart());
-		const response = await ApiClient.get<GetCategoryResult>(`/api/ProductHierarchy/categories/${categoryId}`);
+		const response = await ApiClient.get<GetCategoryResult>(`/api/product-hierarchy/categories/${categoryId}`);
 		dispatch(fetchCategorySuccess(response.data));
 	} catch (error: any) {
 		dispatch(fetchCategoryError(createError(error)));
@@ -76,7 +76,7 @@ export const fetchCategory = (categoryId: string) => async (dispatch: AppDispatc
 export const fetchSubCategory = (subCategoryId: string) => async (dispatch: AppDispatch) => {
 	try {
 		dispatch(fetchSubCategoryStart());
-		const response = await ApiClient.get<GetGroupResult>(`/api/ProductHierarchy/subcategories/${subCategoryId}`);
+		const response = await ApiClient.get<GetGroupResult>(`/api/product-hierarchy/subcategories/${subCategoryId}`);
 		dispatch(fetchSubCategorySuccess(response.data));
 	} catch (error: any) {
 		dispatch(fetchSubCategoryError(createError(error)));
@@ -86,7 +86,7 @@ export const fetchSubCategory = (subCategoryId: string) => async (dispatch: AppD
 export const createOrUpdateGroup = (groupData: CreateOrUpdateGroupCommand) => async (dispatch: AppDispatch) => {
 	try {
 		dispatch(createOrUpdateGroupStart());
-		const response = await ApiClient.post<CreateOrUpdateGroupResult>(`/api/ProductHierarchy/groups`, groupData);
+		const response = await ApiClient.post<CreateOrUpdateGroupResult>(`/api/product-hierarchy/groups`, groupData);
 		dispatch(createOrUpdateGroupSuccess(response.data));
 		dispatch(fetchHierarchy());
 	} catch (error: any) {
@@ -97,7 +97,7 @@ export const createOrUpdateGroup = (groupData: CreateOrUpdateGroupCommand) => as
 export const deleteGroup = (groupId: string) => async (dispatch: AppDispatch) => {
 	try {
 		dispatch(deleteGroupStart());
-		const response = await ApiClient.delete(`/api/ProductHierarchy/groups/${groupId}`);
+		const response = await ApiClient.delete(`/api/product-hierarchy/groups/${groupId}`);
 		dispatch(deleteGroupSuccess());
 		dispatch(fetchHierarchy());
 	} catch (error: any) {
@@ -108,7 +108,7 @@ export const deleteGroup = (groupId: string) => async (dispatch: AppDispatch) =>
 export const createOrUpdateCategory = (category: CreateOrUpdateCategoryCommand) => async (dispatch: AppDispatch) => {
 	try {
 		dispatch(createOrUpdateCategoryStart());
-		const response = await ApiClient.post<CreateOrUpdateGroupResult>(`/api/ProductHierarchy/categories`, category);
+		const response = await ApiClient.post<CreateOrUpdateGroupResult>(`/api/product-hierarchy/categories`, category);
 		dispatch(createOrUpdateCategorySuccess(response.data));
 		dispatch(fetchHierarchy());
 	} catch (error: any) {
@@ -119,7 +119,7 @@ export const createOrUpdateCategory = (category: CreateOrUpdateCategoryCommand) 
 export const deleteCategory = (categoryId: string) => async (dispatch: AppDispatch) => {
 	try {
 		dispatch(deleteCategoryStart());
-		const response = await ApiClient.delete(`/api/ProductHierarchy/categories/${categoryId}`);
+		const response = await ApiClient.delete(`/api/product-hierarchy/categories/${categoryId}`);
 		dispatch(deleteCategorySuccess());
 		dispatch(fetchHierarchy());
 	} catch (error: any) {
@@ -130,7 +130,7 @@ export const deleteCategory = (categoryId: string) => async (dispatch: AppDispat
 export const createOrUpdateSubCategory = (subCategory: CreateOrUpdateSubCategoryCommand) => async (dispatch: AppDispatch) => {
 	try {
 		dispatch(createOrUpdateSubCategoryStart());
-		const response = await ApiClient.post<CreateOrUpdateGroupResult>(`/api/ProductHierarchy/subCategories`, subCategory);
+		const response = await ApiClient.post<CreateOrUpdateGroupResult>(`/api/product-hierarchy/subCategories`, subCategory);
 		dispatch(createOrUpdateSubCategorySuccess(response.data));
 		dispatch(fetchHierarchy());
 	} catch (error: any) {
@@ -141,7 +141,7 @@ export const createOrUpdateSubCategory = (subCategory: CreateOrUpdateSubCategory
 export const deleteSubCategory = (subCategoryId: string) => async (dispatch: AppDispatch) => {
 	try {
 		dispatch(deleteSubCategoryStart());
-		const response = await ApiClient.delete(`/api/ProductHierarchy/subCategories/${subCategoryId}`);
+		const response = await ApiClient.delete(`/api/product-hierarchy/subCategories/${subCategoryId}`);
 		dispatch(deleteSubCategorySuccess());
 		dispatch(fetchHierarchy());
 	} catch (error: any) {

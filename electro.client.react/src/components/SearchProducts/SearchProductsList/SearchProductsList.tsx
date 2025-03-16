@@ -11,14 +11,14 @@ import { GetSearchFiltersResultElement } from "@/libs/api-contract/api-contract"
 
 const SearchProductsList: FC = () => {
 	const dispatch = useDispatch();
-	const productsSelector = useSelector((store) => store.SearchProductsPageStore.products);
+	const productsSelector = useSelector((store) => store.SearchProductsPageStore.products.data);
 	const hierarchyParamsSelector = useSelector((store) => store.SearchProductsPageStore.urlParams.hierarchy);
 	const paginationParamsSelector = useSelector((store) => store.SearchProductsPageStore.urlParams.pagination);
 	const filtersParamsSelector = useSelector((store) => store.SearchProductsPageStore.urlParams.filters);
 	const filtersSelector = useSelector((store) => store.SearchProductsPageStore.filters);
 	const filters = filtersSelector.data?.filters ?? [];
 
-	const { items: products, ...pagination } = productsSelector.data ?? {};
+	const { items: products, ...pagination } = productsSelector ?? {};
 	const pageCount = pagination.totalPages;
 
 	const getFiltersSearchParams = (activeFilters: ISearchProductsStateUrlParamsFilters, filters: GetSearchFiltersResultElement[]) => {
@@ -67,19 +67,21 @@ const SearchProductsList: FC = () => {
 	}, [JSON.stringify(hierarchyParams), JSON.stringify(paginationParams), JSON.stringify(filtersParams), JSON.stringify(filters)]);
 
 	return (
-		<Stack spacing={2}>
-			<SearchProductsListFilters />
-			<div>
-				{products?.length ? (
-					<Stack spacing={2}>
-						{products?.map((p, i) => <SearchProductsListItem key={`product-${i}`} product={p} />)}
-						<SearchProductsListPagination page={paginationParamsSelector.page ?? 1} pageCount={pageCount ?? 1} />
-					</Stack>
-				) : (
-					<SearchProductsListNoRecords />
-				)}
-			</div>
-		</Stack>
+		productsSelector && (
+			<Stack spacing={2}>
+				<SearchProductsListFilters />
+				<div>
+					{products?.length ? (
+						<Stack spacing={2}>
+							{products?.map((p, i) => <SearchProductsListItem key={`product-${i}`} product={p} />)}
+							<SearchProductsListPagination page={paginationParamsSelector.page ?? 1} pageCount={pageCount ?? 1} />
+						</Stack>
+					) : (
+						<SearchProductsListNoRecords />
+					)}
+				</div>
+			</Stack>
+		)
 	);
 };
 

@@ -7,9 +7,9 @@ import { fetchProductCatalogList } from "@/libs/Admin/AdminProductCatalog/AdminP
 import { clearProductCatalogListState } from "@/libs/Admin/AdminProductCatalog/AdminProductCatalogList/slice";
 import AdminProductCatalogList from "@/components/Admin/AdminProductCatalog/AdminProductCatalogList/AdminProductCatalogList";
 import { useBreadcrumbs } from "@/hooks/Breadcrumbs/useBreadcrumbs";
-import FullScreenLoader from "@/components/Layout/FullScreenLoader/FullScreenLoader";
 import Error from "@/components/Layout/Error/Error";
 import { usePermissionGuard } from "@/hooks/PermissionGuard/usePermissionGuard";
+import { usePageTransition } from "@/hooks/PageTransition/usePageTransition";
 
 const ProductCatalogPage: FC = () => {
 	useBreadcrumbs([
@@ -24,8 +24,13 @@ const ProductCatalogPage: FC = () => {
 
 	const router = useRouter();
 	const dispatch = useDispatch();
-	const productCatalogSelector = useSelector((state) => state.AdminProductCatalogListPageStore);
-	const productCatalogData = productCatalogSelector.data!;
+
+	const productCatalogSelector = useSelector((state) => state.AdminProductCatalogListPageStore.data);
+	const productCatalogErrorSelector = useSelector((state) => state.AdminProductCatalogListPageStore.error);
+	const isLoadingProductCatalogSelector = useSelector((state) => state.AdminProductCatalogListPageStore.isLoading);
+
+	usePageTransition([isLoadingProductCatalogSelector]);
+
 	const [pagination, setPagination] = useState({
 		page: 1,
 		pageSize: 10,
@@ -43,20 +48,19 @@ const ProductCatalogPage: FC = () => {
 		router.push("/admin/product-catalog/new");
 	};
 
-	if (productCatalogSelector.data && !productCatalogSelector.error && !productCatalogSelector.isLoading) {
-		return (
+	if (productCatalogErrorSelector) return <Error message="Wystąpił błąd podczas pobierania produktów"></Error>;
+	return (
+		productCatalogSelector && (
 			<Stack spacing={2}>
 				<Stack direction={"row-reverse"}>
 					<Button onClick={handleCreateProduct} variant="outlined">
 						Nowy produkt
 					</Button>
 				</Stack>
-				<AdminProductCatalogList productCatalogData={productCatalogData} onPaginationChange={setPagination} />
+				<AdminProductCatalogList productCatalogData={productCatalogSelector} onPaginationChange={setPagination} />
 			</Stack>
-		);
-	}
-	if (productCatalogSelector.error && !productCatalogSelector.isLoading) return <Error message="Wystąpił błąd podczas pobierania produktów"></Error>;
-	return <FullScreenLoader isVisible />;
+		)
+	);
 };
 
 export default ProductCatalogPage;

@@ -13,9 +13,9 @@ import AttributesPanel from "@/components/Admin/AdminProductCatalog/AdminProduct
 import { createOrUpdateProduct, fetchProduct } from "@/libs/Admin/AdminProductCatalog/AdminProductCatalogNewEdit/thunk";
 import { initialValues as defaultInitialValues } from "@/libs/Admin/AdminProductCatalog/AdminProductCatalogNewEdit/initialValues";
 import { useBreadcrumbs } from "@/hooks/Breadcrumbs/useBreadcrumbs";
-import FullScreenLoader from "@/components/Layout/FullScreenLoader/FullScreenLoader";
 import Error from "@/components/Layout/Error/Error";
 import { usePermissionGuard } from "@/hooks/PermissionGuard/usePermissionGuard";
+import { usePageTransition } from "@/hooks/PageTransition/usePageTransition";
 
 interface ProductCatalogEditPageProps {
 	params: { id: string };
@@ -31,6 +31,8 @@ const ProductCatalogEditPage: FC<ProductCatalogEditPageProps> = ({ params }) => 
 	const productSelector = useSelector((store) => store.AdminProductCatalogNewEditPageStore.product.data);
 	const isLoadingSelector = useSelector((store) => store.AdminProductCatalogNewEditPageStore.product.isLoading);
 	const errorSelector = useSelector((store) => store.AdminProductCatalogNewEditPageStore.product.error);
+
+	usePageTransition([isLoadingSelector]);
 
 	useEffect(() => {
 		if (!params.id) return;
@@ -89,8 +91,9 @@ const ProductCatalogEditPage: FC<ProductCatalogEditPageProps> = ({ params }) => 
 			}
 		: defaultInitialValues;
 
-	if (productSelector && !errorSelector && !isLoadingSelector) {
-		return (
+	if (errorSelector) return <Error message="Wystąpił błąd podczas pobierania produktu"></Error>;
+	return (
+		productSelector && (
 			<Box>
 				<Formik enableReinitialize initialValues={initialValues} onSubmit={handleSubmitEditProduct} validationSchema={validationSchema}>
 					{(formik) => (
@@ -108,11 +111,8 @@ const ProductCatalogEditPage: FC<ProductCatalogEditPageProps> = ({ params }) => 
 					)}
 				</Formik>
 			</Box>
-		);
-	}
-
-	if (errorSelector && !isLoadingSelector) return <Error message="Wystąpił błąd podczas pobierania produktu"></Error>;
-	return <FullScreenLoader isVisible />;
+		)
+	);
 };
 
 export default ProductCatalogEditPage;

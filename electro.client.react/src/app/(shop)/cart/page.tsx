@@ -3,12 +3,12 @@ import { Alert, Grid2, Stack } from "@mui/material";
 import { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "@/libs/Store";
 import { fetchCart } from "@/libs/Cart/thunks";
-import FullScreenLoader from "@/components/Layout/FullScreenLoader/FullScreenLoader";
 import CartProductList from "@/components/Cart/Cart/CartProduct/CartProductList/CartProductList";
 import CartSummary from "@/components/Cart/Cart/CartSummary/CartSummary";
 import CartEmpty from "@/components/Cart/Cart/CartEmpty/CartEmpty";
 import Error from "@/components/Layout/Error/Error";
 import { useBreadcrumbs } from "@/hooks/Breadcrumbs/useBreadcrumbs";
+import { usePageTransition } from "@/hooks/PageTransition/usePageTransition";
 
 const CartPage: FC = () => {
 	useBreadcrumbs([
@@ -21,6 +21,8 @@ const CartPage: FC = () => {
 	const cartErrorSelector = useSelector((store) => store.CartStore.cart.error);
 	const cartValidationErrorsSelector = useSelector((store) => store.CartStore.cart.validationErrors);
 	const userId = useSelector((store) => store.AuthStore.user.id);
+
+	usePageTransition([cartIsLoadingSelector]);
 
 	const alerts = cartValidationErrorsSelector.map((message, index) => (
 		<Alert key={`cart-validation-msg-${index}`} variant="outlined" severity="warning">
@@ -39,8 +41,8 @@ const CartPage: FC = () => {
 	if (cartDataSelector && cartDataSelector.products?.length === 0) {
 		return <CartEmpty />;
 	}
-	if (cartDataSelector) {
-		return (
+	return (
+		cartDataSelector && (
 			<Grid2 container spacing={2}>
 				<Grid2 size={{ xs: 12, md: 8 }}>
 					<Stack spacing={2}>
@@ -51,11 +53,9 @@ const CartPage: FC = () => {
 				<Grid2 size={{ xs: 12, md: 4 }}>
 					<CartSummary />
 				</Grid2>
-				<FullScreenLoader isVisible={cartIsLoadingSelector} />
 			</Grid2>
-		);
-	}
-	return <FullScreenLoader isVisible />;
+		)
+	);
 };
 
 export default CartPage;

@@ -7,8 +7,8 @@ import AdminOrderDetailsProgress from "@/components/Admin/AdminOrders/AdminOrder
 import AdminOrderDetailsRecipient from "@/components/Admin/AdminOrders/AdminOrderDetails/AdminOrderDetailsRecipient/AdminOrderDetailsRecipient";
 import AdminOrderDetailsSummary from "@/components/Admin/AdminOrders/AdminOrderDetails/AdminOrderDetailsSummary/AdminOrderDetailsSummary";
 import Error from "@/components/Layout/Error/Error";
-import FullScreenLoader from "@/components/Layout/FullScreenLoader/FullScreenLoader";
 import { useBreadcrumbs } from "@/hooks/Breadcrumbs/useBreadcrumbs";
+import { usePageTransition } from "@/hooks/PageTransition/usePageTransition";
 import { usePermissionGuard } from "@/hooks/PermissionGuard/usePermissionGuard";
 import { fetchAdminOrderDetails } from "@/libs/Admin/AdminOrders/thunk";
 import { useDispatch, useSelector } from "@/libs/Store";
@@ -30,14 +30,17 @@ const AdminOrderDetailsPage: FC<AdminOrderDetailsPageParams> = ({ params }) => {
 	const errorOrderDetailsSelector = useSelector((store) => store.AdminOrdersStore.details.error);
 	const isLoadingSelector = useSelector((store) => store.AdminOrdersStore.details.isLoading);
 
+	usePageTransition([isLoadingSelector]);
+
 	useEffect(() => {
 		dispatch(fetchAdminOrderDetails(params.id));
 	}, []);
 
 	const totalProductsCost = orderDetailsSelector?.products?.reduce((acc, product) => acc + product.price?.amount! * product.quantity!, 0);
 
-	if (orderDetailsSelector && !errorOrderDetailsSelector && !isLoadingSelector) {
-		return (
+	if (errorOrderDetailsSelector) return <Error message="Wystąpił błąd podczas pobierania szczegółów zamówienia."></Error>;
+	return (
+		orderDetailsSelector && (
 			<Stack spacing={4}>
 				<AdminOrderDetailsHeader orderId={orderDetailsSelector.id!} />
 				<AdminOrderDetailsProgress currentStatus={orderDetailsSelector.status!} />
@@ -64,10 +67,8 @@ const AdminOrderDetailsPage: FC<AdminOrderDetailsPageParams> = ({ params }) => {
 					</Grid2>
 				</Grid2>
 			</Stack>
-		);
-	}
-	if (errorOrderDetailsSelector && !isLoadingSelector) return <Error message="Wystąpił błąd podczas pobierania szczegółów zamówienia."></Error>;
-	return <FullScreenLoader isVisible />;
+		)
+	);
 };
 
 export default AdminOrderDetailsPage;

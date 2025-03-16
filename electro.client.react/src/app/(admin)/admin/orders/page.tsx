@@ -1,9 +1,9 @@
 "use client";
 import AdminOrdersList from "@/components/Admin/AdminOrders/AdminOrdersList/AdminOrdersList";
 import Error from "@/components/Layout/Error/Error";
-import FullScreenLoader from "@/components/Layout/FullScreenLoader/FullScreenLoader";
 import { useBreadcrumbs } from "@/hooks/Breadcrumbs/useBreadcrumbs";
 import { usePermissionGuard } from "@/hooks/PermissionGuard/usePermissionGuard";
+import { usePageTransition } from "@/hooks/PageTransition/usePageTransition";
 import { fetchAdminOrdersList } from "@/libs/Admin/AdminOrders/thunk";
 import { useDispatch, useSelector } from "@/libs/Store";
 import { Stack } from "@mui/material";
@@ -28,18 +28,20 @@ const AdminOrdersPage: FC = () => {
 		pageSize: 10,
 	});
 
+	usePageTransition([ordersListIsLoadingSelector]);
+
 	useEffect(() => {
 		dispatch(fetchAdminOrdersList({ page: pagination.page, pageSize: pagination.pageSize }));
 	}, [pagination.page, pagination.pageSize]);
 
-	if (ordersListSelector && !ordersListIsLoadingSelector && !ordersListErrorSelector)
-		return (
+	if (ordersListErrorSelector) return <Error message="Wystąpił bląd podczas pobierania listy zamówień"></Error>;
+	return (
+		ordersListSelector && (
 			<Stack spacing={2}>
 				<AdminOrdersList onPaginationChange={setPagination} ordersListData={ordersListSelector!} />
 			</Stack>
-		);
-	if (!ordersListIsLoadingSelector && ordersListErrorSelector) return <Error message="Wystąpił bląd podczas pobierania listy zamówień"></Error>;
-	return <FullScreenLoader isVisible />;
+		)
+	);
 };
 
 export default AdminOrdersPage;

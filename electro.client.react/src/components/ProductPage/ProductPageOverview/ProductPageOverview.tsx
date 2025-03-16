@@ -19,19 +19,19 @@ const ProductPageOverview: FC<ProductPageOverviewProps> = ({ product, onAddToCar
 	return (
 		<Grid container spacing={2}>
 			<Grid size={{ xs: 12, md: 6 }}>
-				<ProductPageSlider photos={product.photos ?? []} />
+				<ProductPageSlider photos={product?.photos ?? []} />
 			</Grid>
 			<Grid size={{ xs: 12, md: 6 }}>
 				<Stack spacing={1}>
-					<Typography variant="h6">{product.name}</Typography>
+					<Typography variant="h6">{product?.name}</Typography>
 					<Stack direction="row" alignItems="center" spacing={1}>
-						<Rating size="small" value={product.averageOpinionRating} readOnly precision={0.5} emptyIcon={<StarBorderRounded style={{ opacity: 0.5 }} fontSize="inherit" />} />
-						<Typography variant="caption">({product.opinionCount}) opinii</Typography>
+						<Rating size="small" value={product?.averageOpinionRating} readOnly precision={0.5} emptyIcon={<StarBorderRounded style={{ opacity: 0.5 }} fontSize="inherit" />} />
+						<Typography variant="caption">({product?.opinionCount}) opinii</Typography>
 					</Stack>
 					<Grid container direction="row" size={{ xs: 12 }} spacing={2}>
 						<Grid size={{ xs: 12, sm: 6 }} order={{ xs: 2, sm: 1 }}>
 							<Stack spacing={1}>
-								<ProductPageSpecificationPrimary specification={product.attributes ?? []} />
+								<ProductPageSpecificationPrimary specification={product?.attributes ?? []} />
 								<Button onClick={() => scrollTo("specification")} color="inherit" variant="text" fullWidth endIcon={<KeyboardDoubleArrowDownRounded />}>
 									Przewiń do pełnej specyfikacji
 								</Button>

@@ -7,13 +7,13 @@ import AuthAccountBenefits from "@/components/Shared/Auth/AuthAccountBenefits";
 import { useDispatch, useSelector } from "@/libs/Store";
 import { LoginUserCommand } from "@/libs/api-contract/api-contract";
 import { loginUser } from "@/libs/Auth/thunks";
-import FullScreenLoader from "@/components/Layout/FullScreenLoader/FullScreenLoader";
 import { Formik, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import { useRouter } from "next/navigation";
 import { translateErrorMessage } from "@/libs/api-contract/Error";
 import TextInput from "@/components/Shared/TextInput/TextInput";
 import { usePermissionGuard } from "@/hooks/PermissionGuard/usePermissionGuard";
+import { usePageTransition } from "@/hooks/PageTransition/usePageTransition";
 
 const AuthLoginPage = () => {
 	usePermissionGuard({ denyAuth: true, redirectTo: "/" });
@@ -22,6 +22,8 @@ const AuthLoginPage = () => {
 	const [showPass, setShowPass] = useState(false);
 	const authLoadingSelector = useSelector((store) => store.AuthStore.isLoading);
 	const authErrorSelector = useSelector((store) => store.AuthStore.error);
+
+	usePageTransition([authLoadingSelector]);
 
 	const toggleShowPassword = () => {
 		setShowPass(!showPass);
@@ -136,7 +138,6 @@ const AuthLoginPage = () => {
 				</Card>
 				<AuthAccountBenefits />
 			</Grid>
-			<FullScreenLoader isVisible={authLoadingSelector}></FullScreenLoader>
 		</Grid>
 	);
 };

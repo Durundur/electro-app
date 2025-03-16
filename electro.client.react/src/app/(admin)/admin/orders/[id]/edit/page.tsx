@@ -3,8 +3,8 @@ import AdminOrderEditDeliverySection from "@/components/Admin/AdminOrders/AdminO
 import AdminOrderEditGeneralSection from "@/components/Admin/AdminOrders/AdminOrderEdit/AdminOrderEditGeneralSection/AdminOrderEditGeneralSection";
 import AdminOrderEditRecipientSection from "@/components/Admin/AdminOrders/AdminOrderEdit/AdminOrderEditRecipientSection/AdminOrderEditRecipientSection";
 import Error from "@/components/Layout/Error/Error";
-import FullScreenLoader from "@/components/Layout/FullScreenLoader/FullScreenLoader";
 import { useBreadcrumbs } from "@/hooks/Breadcrumbs/useBreadcrumbs";
+import { usePageTransition } from "@/hooks/PageTransition/usePageTransition";
 import { usePermissionGuard } from "@/hooks/PermissionGuard/usePermissionGuard";
 import { getAdminOrderEdit, putAdminOrderEdit } from "@/libs/Admin/AdminOrders/thunk";
 import { useDispatch, useSelector } from "@/libs/Store";
@@ -48,6 +48,8 @@ const AdminOrderEditPage: FC<AdminOrderEditPageProps> = ({ params }) => {
 	const errorSelector = useSelector((store) => store.AdminOrdersStore.edit.error);
 	const resultSelector = useSelector((store) => store.AdminOrdersStore.edit.result);
 	const router = useRouter();
+
+	usePageTransition([loadingSelector]);
 
 	const validationSchema = Yup.object<UpdateOrderCommandFlat>().shape({
 		status: Yup.mixed<OrderStatus>().oneOf(Object.values(OrderStatus)).required("Status zamówienia jest wymagany"),
@@ -139,8 +141,9 @@ const AdminOrderEditPage: FC<AdminOrderEditPageProps> = ({ params }) => {
 		}
 	}, [errorSelector, loadingSelector, resultSelector]);
 
-	if (orderSelector && !errorSelector && !loadingSelector) {
-		return (
+	if (errorSelector) return <Error message="Wystąpił błąd podczas pobierania szczegółów zamówienia."></Error>;
+	return (
+		orderSelector && (
 			<Formik initialValues={initialValues} enableReinitialize onSubmit={handleSubmit} validationSchema={validationSchema}>
 				{(formik) => (
 					<Stack spacing={2}>
@@ -158,10 +161,8 @@ const AdminOrderEditPage: FC<AdminOrderEditPageProps> = ({ params }) => {
 					</Stack>
 				)}
 			</Formik>
-		);
-	}
-	if (errorSelector && !loadingSelector) return <Error message="Wystąpił błąd podczas pobierania szczegółów zamówienia."></Error>;
-	return <FullScreenLoader isVisible />;
+		)
+	);
 };
 
 export default AdminOrderEditPage;

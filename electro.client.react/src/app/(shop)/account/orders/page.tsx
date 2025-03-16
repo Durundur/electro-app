@@ -1,6 +1,5 @@
 "use client";
 import AccountOrdersList from "@/components/Account/AccountOrdersList/AccountOrdersList";
-import FullScreenLoader from "@/components/Layout/FullScreenLoader/FullScreenLoader";
 import { clearAccountOrders } from "@/libs/Account/slice";
 import { getAccountOrders } from "@/libs/Account/thunks";
 import { useDispatch, useSelector } from "@/libs/Store";
@@ -11,6 +10,7 @@ import AccountOrdersListEmpty from "@/components/Account/AccountOrdersList/Accou
 import Error from "@/components/Layout/Error/Error";
 import { useBreadcrumbs } from "@/hooks/Breadcrumbs/useBreadcrumbs";
 import { usePermissionGuard } from "@/hooks/PermissionGuard/usePermissionGuard";
+import { usePageTransition } from "@/hooks/PageTransition/usePageTransition";
 
 const AccountOrdersPage: FC = () => {
 	useBreadcrumbs([
@@ -30,6 +30,8 @@ const AccountOrdersPage: FC = () => {
 	const page = useSelector((store) => store.AccountStore.list.data?.page) ?? 1;
 	const pageSize = useSelector((store) => store.AccountStore.list.data?.pageSize) ?? 8;
 	const pageCount = useSelector((store) => store.AccountStore.list.data?.pageCount) ?? 1;
+
+	usePageTransition([accountOrdersListIsLoading]);
 
 	useEffect(() => {
 		if (!userId) return;
@@ -54,28 +56,23 @@ const AccountOrdersPage: FC = () => {
 		);
 	}
 
-	if (accountOrdersList?.orders?.length === 0) {
-		return (
+	return (
+		accountOrdersList && (
 			<Stack spacing={2}>
 				<AccountOrdersListHeader />
-				<AccountOrdersListEmpty />
+				{accountOrdersList.orders?.length ? (
+					<>
+						<AccountOrdersList />
+						<Stack justifyContent="center" alignItems="center" paddingTop={2}>
+							<Pagination onChange={handlePageChange} page={page} count={pageCount} variant="outlined" shape="rounded" />
+						</Stack>
+					</>
+				) : (
+					<AccountOrdersListEmpty />
+				)}
 			</Stack>
-		);
-	}
-
-	if (!accountOrdersListError && accountOrdersList) {
-		return (
-			<Stack spacing={2}>
-				<AccountOrdersListHeader />
-				<AccountOrdersList />
-				<Stack justifyContent={"center"} alignItems={"center"} paddingTop={2}>
-					<Pagination onChange={handlePageChange} page={page} count={pageCount} variant="outlined" shape="rounded" />
-				</Stack>
-			</Stack>
-		);
-	}
-
-	return <FullScreenLoader isVisible={true} />;
+		)
+	);
 };
 
 export default AccountOrdersPage;

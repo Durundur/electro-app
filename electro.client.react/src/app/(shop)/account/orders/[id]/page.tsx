@@ -6,8 +6,9 @@ import AccountOrderDetailsProducts from "@/components/Account/AccountOrderDetail
 import AccountOrderDetailsProgress from "@/components/Account/AccountOrderDetails/AccountOrderDetailsProgress/AccountOrderDetailsProgress";
 import AccountOrderDetailsRecipient from "@/components/Account/AccountOrderDetails/AccountOrderDetailsRecipient/AccountOrderDetailsRecipient";
 import AccountOrderDetailsSummary from "@/components/Account/AccountOrderDetails/AccountOrderDetailsSummary/AccountOrderDetailsSummary";
-import FullScreenLoader from "@/components/Layout/FullScreenLoader/FullScreenLoader";
+import Error from "@/components/Layout/Error/Error";
 import { useBreadcrumbs } from "@/hooks/Breadcrumbs/useBreadcrumbs";
+import { usePageTransition } from "@/hooks/PageTransition/usePageTransition";
 import { usePermissionGuard } from "@/hooks/PermissionGuard/usePermissionGuard";
 import { clearAccountOrderDetails } from "@/libs/Account/slice";
 import { getAccountOrderDetails } from "@/libs/Account/thunks";
@@ -33,6 +34,8 @@ const AccountOrderDetailsPage: FC<AccountOrderDetailsPageParams> = ({ params }) 
 
 	const totalProductsCost = orderDetails?.products?.reduce((acc, product) => acc + product.price?.amount! * product.quantity!, 0);
 
+	usePageTransition([orderDetailsIsLoading]);
+
 	useEffect(() => {
 		if (!userId) return;
 		dispatch(getAccountOrderDetails({ orderId: params.id, userId }));
@@ -42,8 +45,9 @@ const AccountOrderDetailsPage: FC<AccountOrderDetailsPageParams> = ({ params }) 
 		};
 	}, [userId]);
 
-	if (!orderDetailsError && orderDetails) {
-		return (
+	if (orderDetailsError) return <Error message="Wystąpił błąd podczas ładowania szczegółów zamówienia" />;
+	return (
+		orderDetails && (
 			<Stack spacing={2}>
 				<AccountOrderDetailsHeader orderId={orderDetails.id!} orderNumber={orderDetails.number!}></AccountOrderDetailsHeader>
 				<AccountOrderDetailsProgress status={orderDetails.status!}></AccountOrderDetailsProgress>
@@ -70,10 +74,8 @@ const AccountOrderDetailsPage: FC<AccountOrderDetailsPageParams> = ({ params }) 
 					</Grid2>
 				</Grid2>
 			</Stack>
-		);
-	}
-
-	return <FullScreenLoader isVisible={orderDetailsIsLoading} />;
+		)
+	);
 };
 
 export default AccountOrderDetailsPage;

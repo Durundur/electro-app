@@ -19,11 +19,11 @@ const ProductPageActionCard: FC<ProductPageActionCardProps> = ({ product, onAddT
                 <Stack direction="row" alignItems="center" justifyContent="space-between">
                     <QuantityInput 
                         value={quantity} 
-                        id={product.id!} 
+                        id={product?.id!} 
                         onChange={(q) => setQuantity(q)}
                     />
                     <Typography variant="h6" textAlign="end">
-                        {formatAmount(product.amount!, product.currency!)}
+                        {formatAmount(product?.amount!, product?.currency!)}
                     </Typography>
                 </Stack>
                 <Button 

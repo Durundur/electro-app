@@ -10,10 +10,10 @@ import { RegisterUserCommand } from "@/libs/api-contract/api-contract";
 import { registerUser } from "@/libs/Auth/thunks";
 import * as Yup from "yup";
 import { useRouter } from "next/navigation";
-import FullScreenLoader from "@/components/Layout/FullScreenLoader/FullScreenLoader";
 import { translateErrorMessage } from "@/libs/api-contract/Error";
 import TextInput from "@/components/Shared/TextInput/TextInput";
 import { usePermissionGuard } from "@/hooks/PermissionGuard/usePermissionGuard";
+import { usePageTransition } from "@/hooks/PageTransition/usePageTransition";
 
 interface RegisterUserForm extends RegisterUserCommand {
 	firstName: string;
@@ -29,6 +29,8 @@ const AuthRegisterPage = () => {
 	const dispatch = useDispatch();
 	const authLoadingSelector = useSelector((store) => store.AuthStore.isLoading);
 	const authErrorSelector = useSelector((store) => store.AuthStore.error);
+
+	usePageTransition([authLoadingSelector]);
 
 	const toggleShowPassword = () => {
 		setShowPass(!showPass);
@@ -227,7 +229,6 @@ const AuthRegisterPage = () => {
 				</Card>
 				<AuthAccountBenefits />
 			</Grid>
-			<FullScreenLoader isVisible={authLoadingSelector}></FullScreenLoader>
 		</Grid>
 	);
 };

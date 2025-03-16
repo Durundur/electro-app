@@ -1,23 +1,17 @@
 "use client";
 import { FC, useEffect, useMemo, useState } from "react";
-import { Box, Button, Card, Grid2 as Grid, Paper, Rating, Stack, Typography } from "@mui/material";
-import { ShoppingCartOutlined, StarBorderRounded, CheckCircleOutlineRounded, AccessTimeRounded, LocalShippingOutlined, KeyboardDoubleArrowDownRounded } from "@mui/icons-material";
+import { Box, Button, Card, Grid2 as Grid, Stack, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "@/libs/Store";
 import { fetchProduct } from "@/libs/ProductPage/thunk";
 import { clearProductState } from "@/libs/ProductPage/slice";
-import ProductPageSlider from "@/components/ProductPage/ProductPageOverview/ProductPageSlider/ProductPageSlider";
-import ProductPageSpecificationTable from "@/components/ProductPage/ProductPageSpecification/ProductPageSpecificationTable";
 import OpinionsSection from "@/components/ProductPage/ProductPageOpinions/OpinionsSection";
-import ProductPageSpecificationPrimary from "@/components/ProductPage/ProductPageSpecification/ProductPageSpecificationPrimary";
-import { formatAmount } from "@/libs/Helpers/Formatters";
-import QuantityInput from "@/components/Shared/QuantityInput/QuantityInput";
 import { addProductToCart } from "@/libs/Cart/thunks";
 import { Breadcrumb, useBreadcrumbs } from "@/hooks/Breadcrumbs/useBreadcrumbs";
 import Error from "@/components/Layout/Error/Error";
-import FullScreenLoader from "@/components/Layout/FullScreenLoader/FullScreenLoader";
 import ProductPageOverview from "@/components/ProductPage/ProductPageOverview/ProductPageOverview";
-import Link from "next/link";
 import useScrollTo from "@/hooks/ScrollTo/useScrollTo";
+import { usePageTransition } from "@/hooks/PageTransition/usePageTransition";
+import ProductPageSpecificationTable from "@/components/ProductPage/ProductPageSpecification/ProductPageSpecificationTable";
 
 interface ProductPageParams {
 	params: { id: string };
@@ -26,13 +20,14 @@ interface ProductPageParams {
 const ProductPage: FC<ProductPageParams> = ({ params }) => {
 	const dispatch = useDispatch();
 	const scrollTo = useScrollTo();
-
 	const [quantity, setQuantity] = useState(1);
 
 	const productSelector = useSelector((state) => state.ProductPageStore.product.data);
 	const errorSelector = useSelector((state) => state.ProductPageStore.product.error);
-	const isLoadingSelector = useSelector((state) => state.ProductPageStore.product.error);
+	const isLoadingSelector = useSelector((state) => state.ProductPageStore.product.isLoading);
 	const productHierarchySelector = useSelector((store) => store.LayoutStore.productHierarchy.data);
+
+	usePageTransition([isLoadingSelector]);
 
 	useEffect(() => {
 		dispatch(fetchProduct(params.id));
@@ -73,8 +68,8 @@ const ProductPage: FC<ProductPageParams> = ({ params }) => {
 	useBreadcrumbs(breadcrumbsItems);
 
 	if (errorSelector) return <Error message="Błąd podczas pobierania produktu"></Error>;
-	if (productSelector)
-		return (
+	return (
+		productSelector && (
 			<Stack spacing={2}>
 				<ProductPageOverview product={productSelector} onAddToCart={handleAddToCart}></ProductPageOverview>
 				<Stack component={Card} spacing={1} direction={"row"}>
@@ -95,13 +90,13 @@ const ProductPage: FC<ProductPageParams> = ({ params }) => {
 					<Typography id="description" variant="h6">
 						Opis
 					</Typography>
-					<div dangerouslySetInnerHTML={{ __html: productSelector.description! }} />
+					<div dangerouslySetInnerHTML={{ __html: productSelector?.description! }} />
 				</Box>
 				<Box>
 					<Typography id="specification" variant="h6">
 						Specyfikacja
 					</Typography>
-					<ProductPageSpecificationTable specification={productSelector.attributes ?? []} />
+					<ProductPageSpecificationTable specification={productSelector?.attributes ?? []} />
 				</Box>
 				<Box>
 					<Typography id="accessories" variant="h6">
@@ -112,11 +107,11 @@ const ProductPage: FC<ProductPageParams> = ({ params }) => {
 					<Typography id="opinions" variant="h6">
 						Opinie
 					</Typography>
-					<OpinionsSection productId={productSelector.id} />
+					<OpinionsSection productId={productSelector?.id} />
 				</Box>
 			</Stack>
-		);
-	return <FullScreenLoader isVisible></FullScreenLoader>;
+		)
+	);
 };
 
 export default ProductPage;

@@ -3,7 +3,7 @@ import { FC, useState } from "react";
 import { PersonOutlineRounded, Settings, AdminPanelSettings, StickyNote2, Logout } from "@mui/icons-material";
 import Link from "next/link";
 import { useDispatch } from "@/libs/Store";
-import { logout } from "@/libs/Auth/slice";
+import { logoutUser } from "@/libs/Auth/thunks";
 
 const ProfileIcon: FC = () => {
 	const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
@@ -18,7 +18,8 @@ const ProfileIcon: FC = () => {
 	};
 
 	const handleLogout = () => {
-		dispatch(logout());
+		dispatch(logoutUser());
+		handleCloseProfileMenu();
 	};
 
 	return (

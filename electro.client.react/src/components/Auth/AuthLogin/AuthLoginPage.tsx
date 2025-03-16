@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Grid2 as Grid, Card, CardContent, Button, IconButton, InputAdornment, CardHeader, Stack, FormHelperText } from "@mui/material";
 import { EmailOutlined, LockOutlined, Visibility, VisibilityOff } from "@mui/icons-material";
 import Link from "next/link";
@@ -19,9 +19,12 @@ const AuthLoginPage = () => {
 	usePermissionGuard({ denyAuth: true, redirectTo: "/" });
 	const dispatch = useDispatch();
 	const router = useRouter();
+
 	const [showPass, setShowPass] = useState(false);
+
 	const authLoadingSelector = useSelector((store) => store.AuthStore.isLoading);
 	const authErrorSelector = useSelector((store) => store.AuthStore.error);
+	const isAuthenticatedSelector = useSelector((store) => store.AuthStore.auth.isAuthenticated);
 
 	usePageTransition([authLoadingSelector]);
 
@@ -34,12 +37,16 @@ const AuthLoginPage = () => {
 		setFieldValue("password", "test123!@#");
 	};
 
-	const handleLoginSubmit = async (loginUserCommand: LoginUserCommand, formikHelpers: FormikHelpers<LoginUserCommand>) => {
-		try {
-			await dispatch(loginUser(loginUserCommand));
-			router.replace("/");
-		} catch (e) {}
+	const handleLoginSubmit = (loginUserCommand: LoginUserCommand, formikHelpers: FormikHelpers<LoginUserCommand>) => {
+		dispatch(loginUser(loginUserCommand));
 	};
+
+	console.log("authLoadingSelector");
+	console.log(authLoadingSelector);
+
+	useEffect(() => {
+		if (isAuthenticatedSelector && !authLoadingSelector) router.replace("/");
+	}, [authLoadingSelector, isAuthenticatedSelector]);
 
 	const validationSchema = Yup.object<LoginUserCommand>({
 		email: Yup.string().email("Nieprawidłowy adres email").required("Email jest wymagany"),

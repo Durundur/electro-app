@@ -87,6 +87,7 @@ const AuthStore = createSlice({
 			state.error = undefined;
 			state.user.id = undefined;
 			state.user.roles = undefined;
+			state.isLoading = false;
 		},
 		restoreAuth(state, action: PayloadAction<StoredAuthState>) {
 			state.auth = action.payload.auth;

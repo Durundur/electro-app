@@ -3,6 +3,8 @@ using Application.Features.Auth.RefreshToken;
 using Application.Features.Auth.RegisterUser;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Application.Features.Auth.LogoutUser;
 
 namespace WebAPI.Controllers
 {
@@ -54,6 +56,17 @@ namespace WebAPI.Controllers
                 return Ok(response);
             }
             return Unauthorized(response);
+        }
+
+        [HttpPost("logout")]
+        [Authorize]
+        [ProducesResponseType<RefreshTokenResult>(StatusCodes.Status200OK)]
+        [ProducesResponseType<RefreshTokenResult>(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> Logout()
+        {
+            var command = new LogoutUserCommand();
+            var response = await _mediator.Send(command);
+            return Ok(response);
         }
     }
 }

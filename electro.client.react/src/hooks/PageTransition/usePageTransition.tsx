@@ -7,13 +7,10 @@ interface UsePageTransitionOptions {
 	minLoadingTime?: number;
 }
 
-export const usePageTransition = (
-	loadingStates: boolean[],
-	options: UsePageTransitionOptions = {}
-) => {
-	const { disabled = false, debounceTime = 100, minLoadingTime = 500 } = options;
+export const usePageTransition = (loadingStates: boolean[], options: UsePageTransitionOptions = {}) => {
+	const { disabled = false, debounceTime = 100, minLoadingTime = 200 } = options;
 	const { setIsLoading, setIsEnabled } = usePageTransitionContext();
-	const anyLoading = loadingStates.some(state => state === true);
+	const anyLoading = loadingStates.some((state) => state === true);
 
 	useEffect(() => {
 		setIsEnabled(!disabled);
@@ -38,6 +35,7 @@ export const usePageTransition = (
 		return () => {
 			clearTimeout(debounceTimeout);
 			clearTimeout(minLoadingTimeout);
+			setIsLoading(false);
 		};
 	}, [anyLoading, disabled, debounceTime, minLoadingTime]);
 };

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Grid2 as Grid, Card, CardContent, Button, TextField, IconButton, InputAdornment, CardHeader, Stack, Checkbox, FormControlLabel, FormControl, FormHelperText } from "@mui/material";
 import { EmailOutlined, LockOutlined, PersonOutlineRounded, Visibility, VisibilityOff } from "@mui/icons-material";
 import Link from "next/link";
@@ -27,8 +27,10 @@ const AuthRegisterPage = () => {
 	const router = useRouter();
 	const [showPass, setShowPass] = useState(false);
 	const dispatch = useDispatch();
+
 	const authLoadingSelector = useSelector((store) => store.AuthStore.isLoading);
 	const authErrorSelector = useSelector((store) => store.AuthStore.error);
+	const isAuthenticatedSelector = useSelector((store) => store.AuthStore.auth.isAuthenticated);
 
 	usePageTransition([authLoadingSelector]);
 
@@ -41,11 +43,12 @@ const AuthRegisterPage = () => {
 			email: values.email,
 			password: values.password,
 		};
-		try {
-			await dispatch(registerUser(registerUserCommand));
-			router.replace("/");
-		} catch (e) {}
+		dispatch(registerUser(registerUserCommand));
 	};
+
+	useEffect(() => {
+		if (isAuthenticatedSelector && !authLoadingSelector) router.replace("/");
+	}, [authLoadingSelector, isAuthenticatedSelector]);
 
 	const validationSchema = Yup.object<RegisterUserForm>({
 		firstName: Yup.string().min(2, "Imię musi mieć co najmniej 2 znaki").required("Imię jest wymagane"),

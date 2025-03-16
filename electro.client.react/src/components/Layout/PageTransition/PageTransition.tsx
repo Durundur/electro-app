@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import { Backdrop, Box, CircularProgress, Fade } from "@mui/material";
 import { usePageTransitionContext } from "@/contexts/PageTransition/PageTransitionContext";
 
@@ -24,7 +24,17 @@ const PageTransition: FC<PageTransitionProps> = ({ children }) => {
 					}}
 					open={isLoading}
 				>
-					<CircularProgress color="primary" size={100} thickness={2.5} />
+					<CircularProgress
+						sx={{
+							".MuiCircularProgress-circle": {
+								strokeLinecap: "round",
+							},
+						}}
+						color="primary"
+						disableShrink
+						size={100}
+						thickness={2.5}
+					/>
 				</Backdrop>
 			</Fade>
 		</>

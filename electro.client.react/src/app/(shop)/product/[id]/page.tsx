@@ -16,6 +16,8 @@ import { Breadcrumb, useBreadcrumbs } from "@/hooks/Breadcrumbs/useBreadcrumbs";
 import Error from "@/components/Layout/Error/Error";
 import FullScreenLoader from "@/components/Layout/FullScreenLoader/FullScreenLoader";
 import ProductPageOverview from "@/components/ProductPage/ProductPageOverview/ProductPageOverview";
+import Link from "next/link";
+import useScrollTo from "@/hooks/ScrollTo/useScrollTo";
 
 interface ProductPageParams {
 	params: { id: string };
@@ -23,6 +25,7 @@ interface ProductPageParams {
 
 const ProductPage: FC<ProductPageParams> = ({ params }) => {
 	const dispatch = useDispatch();
+	const scrollTo = useScrollTo();
 
 	const [quantity, setQuantity] = useState(1);
 
@@ -75,24 +78,40 @@ const ProductPage: FC<ProductPageParams> = ({ params }) => {
 			<Stack spacing={2}>
 				<ProductPageOverview product={productSelector} onAddToCart={handleAddToCart}></ProductPageOverview>
 				<Stack component={Card} spacing={1} direction={"row"}>
-					<Button color="inherit">Opis</Button>
-					<Button color="inherit">Specyfikacja</Button>
-					<Button color="inherit">Akcesoria</Button>
-					<Button color="inherit">Opinie</Button>
+					<Button color="inherit" onClick={() => scrollTo("description")}>
+						Opis
+					</Button>
+					<Button color="inherit" onClick={() => scrollTo("specification")}>
+						Specyfikacja
+					</Button>
+					<Button color="inherit" onClick={() => scrollTo("accessories")}>
+						Akcesoria
+					</Button>
+					<Button color="inherit" onClick={() => scrollTo("opinions")}>
+						Opinie
+					</Button>
 				</Stack>
 				<Box>
-					<Typography variant="h6">Opis</Typography>
+					<Typography id="description" variant="h6">
+						Opis
+					</Typography>
 					<div dangerouslySetInnerHTML={{ __html: productSelector.description! }} />
 				</Box>
 				<Box>
-					<Typography variant="h6">Specyfikacja</Typography>
+					<Typography id="specification" variant="h6">
+						Specyfikacja
+					</Typography>
 					<ProductPageSpecificationTable specification={productSelector.attributes ?? []} />
 				</Box>
 				<Box>
-					<Typography variant="h6">Akcesoria</Typography>
+					<Typography id="accessories" variant="h6">
+						Akcesoria
+					</Typography>
 				</Box>
 				<Box>
-					<Typography variant="h6">Opinie</Typography>
+					<Typography id="opinions" variant="h6">
+						Opinie
+					</Typography>
 					<OpinionsSection productId={productSelector.id} />
 				</Box>
 			</Stack>

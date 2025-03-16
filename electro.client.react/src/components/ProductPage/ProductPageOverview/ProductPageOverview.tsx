@@ -5,6 +5,8 @@ import ProductPageSlider from "./ProductPageSlider/ProductPageSlider";
 import ProductPageSpecificationPrimary from "../ProductPageSpecification/ProductPageSpecificationPrimary";
 import { GetProductResult } from "@/libs/api-contract/api-contract";
 import ProductPageActionCard from "./ProductPageActionCard/ProductPageActionCard";
+import Link from "next/link";
+import useScrollTo from "@/hooks/ScrollTo/useScrollTo";
 
 interface ProductPageOverviewProps {
 	product: GetProductResult;
@@ -12,6 +14,8 @@ interface ProductPageOverviewProps {
 }
 
 const ProductPageOverview: FC<ProductPageOverviewProps> = ({ product, onAddToCart }) => {
+	const scrollTo = useScrollTo();
+
 	return (
 		<Grid container spacing={2}>
 			<Grid size={{ xs: 12, md: 6 }}>
@@ -28,7 +32,7 @@ const ProductPageOverview: FC<ProductPageOverviewProps> = ({ product, onAddToCar
 						<Grid size={{ xs: 12, sm: 6 }} order={{ xs: 2, sm: 1 }}>
 							<Stack spacing={1}>
 								<ProductPageSpecificationPrimary specification={product.attributes ?? []} />
-								<Button color="inherit" variant="text" fullWidth endIcon={<KeyboardDoubleArrowDownRounded />}>
+								<Button onClick={() => scrollTo("specification")} color="inherit" variant="text" fullWidth endIcon={<KeyboardDoubleArrowDownRounded />}>
 									Przewiń do pełnej specyfikacji
 								</Button>
 							</Stack>

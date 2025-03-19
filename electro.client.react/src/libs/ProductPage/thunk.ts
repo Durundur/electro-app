@@ -15,9 +15,12 @@ import {
 	getOpinionsStatsStart,
 	getOpinionsStatsSuccess,
 	getOpinionsSuccess,
+	getSimilarProductsError,
+	getSimilarProductsStart,
+	getSimilarProductsSuccess,
 	updateOpinionReaction,
 } from "./slice";
-import { CreateOpinionCommand, CreateOpinionReactionResult, CreateOpinionResult, GetProductOpinionsResult, GetProductOpinionsStatsResult, GetProductResult, OpinionReactionType } from "@/libs/api-contract/api-contract";
+import { CreateOpinionCommand, CreateOpinionReactionResult, CreateOpinionResult, GetProductOpinionsResult, GetProductOpinionsStatsResult, GetProductResult, GetSimilarProductsResult, OpinionReactionType } from "@/libs/api-contract/api-contract";
 import { createError } from "@/libs/api-contract/Error";
 import ApiClient from "../api-contract/ApiClient";
 import { buildQueryString } from "../Helpers/QueryHelper";
@@ -46,7 +49,7 @@ export const getOpinions = (productId: string, queryParams: IGetOpinionsQueryPar
 export const getOpinionsStats = (productId: string) => async (dispatch: AppDispatch) => {
 	try {
 		dispatch(getOpinionsStatsStart());
-		const response = await ApiClient.get<GetProductOpinionsStatsResult>(`/api/opinions/products/${productId}/stats/`);
+		const response = await ApiClient.get<GetProductOpinionsStatsResult>(`/api/opinions/products/${productId}/stats`);
 		dispatch(getOpinionsStatsSuccess(response.data));
 	} catch (error: any) {
 		dispatch(getOpinionsStatsError(createError(error)));
@@ -78,5 +81,15 @@ export const createOpinion = (command: CreateOpinionCommand) => async (dispatch:
 		dispatch(createOpinionSuccess(response.data));
 	} catch (error: any) {
 		dispatch(createOpinionError(createError(error)));
+	}
+};
+
+export const getSimilarProducts = (productId: string, limit?: number) => async (dispatch: AppDispatch) => {
+	try {
+		dispatch(getSimilarProductsStart());
+		const response = await ApiClient.get<GetSimilarProductsResult>(`/api/products/${productId}/similar?limit=${limit ?? 8}`);
+		dispatch(getSimilarProductsSuccess(response.data));
+	} catch (error: any) {
+		dispatch(getSimilarProductsError(createError(error)));
 	}
 };

@@ -6,6 +6,7 @@ using Application.Features.ProductCatalog.GetSearchFilters;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Application.Features.ProductCatalog.GetSimilarProducts;
 
 namespace WebAPI.Controllers
 {
@@ -25,7 +26,7 @@ namespace WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<GetProductResult>> GetProductById([FromRoute] string id)
         {
-            if(!Guid.TryParse(id, out var productId))
+            if (!Guid.TryParse(id, out var productId))
             {
                 return BadRequest();
             }
@@ -37,6 +38,22 @@ namespace WebAPI.Controllers
                 return NotFound();
             }
 
+            return Ok(response);
+        }
+
+        [HttpGet("{id}/similar")]
+        [ProducesResponseType<GetSimilarProductsResult>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<GetSimilarProductsResult>> GetSimilarProducts([FromRoute] Guid id, [FromQuery] int limit = 8)
+        {
+            var query = new GetSimilarProductsQuery
+            {
+                ProductId = id,
+                Limit = Math.Min(limit, 20)
+            };
+
+            var response = await _mediator.Send(query);
             return Ok(response);
         }
 

@@ -209,6 +209,55 @@
 		  }
 		}
 	  },
+	  "/api/auth/logout": {
+		"post": {
+		  "tags": [
+			"Auth"
+		  ],
+		  "responses": {
+			"200": {
+			  "description": "Success",
+			  "content": {
+				"text/plain": {
+				  "schema": {
+					"$ref": "#/components/schemas/RefreshTokenResult"
+				  }
+				},
+				"application/json": {
+				  "schema": {
+					"$ref": "#/components/schemas/RefreshTokenResult"
+				  }
+				},
+				"text/json": {
+				  "schema": {
+					"$ref": "#/components/schemas/RefreshTokenResult"
+				  }
+				}
+			  }
+			},
+			"401": {
+			  "description": "Unauthorized",
+			  "content": {
+				"text/plain": {
+				  "schema": {
+					"$ref": "#/components/schemas/RefreshTokenResult"
+				  }
+				},
+				"application/json": {
+				  "schema": {
+					"$ref": "#/components/schemas/RefreshTokenResult"
+				  }
+				},
+				"text/json": {
+				  "schema": {
+					"$ref": "#/components/schemas/RefreshTokenResult"
+				  }
+				}
+			  }
+			}
+		  }
+		}
+	  },
 	  "/api/carts/validate": {
 		"post": {
 		  "tags": [
@@ -1476,6 +1525,95 @@
 				"text/json": {
 				  "schema": {
 					"$ref": "#/components/schemas/GetProductResult"
+				  }
+				}
+			  }
+			},
+			"404": {
+			  "description": "Not Found",
+			  "content": {
+				"text/plain": {
+				  "schema": {
+					"$ref": "#/components/schemas/ProblemDetails"
+				  }
+				},
+				"application/json": {
+				  "schema": {
+					"$ref": "#/components/schemas/ProblemDetails"
+				  }
+				},
+				"text/json": {
+				  "schema": {
+					"$ref": "#/components/schemas/ProblemDetails"
+				  }
+				}
+			  }
+			},
+			"400": {
+			  "description": "Bad Request",
+			  "content": {
+				"text/plain": {
+				  "schema": {
+					"$ref": "#/components/schemas/ProblemDetails"
+				  }
+				},
+				"application/json": {
+				  "schema": {
+					"$ref": "#/components/schemas/ProblemDetails"
+				  }
+				},
+				"text/json": {
+				  "schema": {
+					"$ref": "#/components/schemas/ProblemDetails"
+				  }
+				}
+			  }
+			}
+		  }
+		}
+	  },
+	  "/api/products/{id}/similar": {
+		"get": {
+		  "tags": [
+			"Products"
+		  ],
+		  "parameters": [
+			{
+			  "name": "id",
+			  "in": "path",
+			  "required": true,
+			  "schema": {
+				"type": "string",
+				"format": "uuid"
+			  }
+			},
+			{
+			  "name": "limit",
+			  "in": "query",
+			  "schema": {
+				"type": "integer",
+				"format": "int32",
+				"default": 8
+			  }
+			}
+		  ],
+		  "responses": {
+			"200": {
+			  "description": "Success",
+			  "content": {
+				"text/plain": {
+				  "schema": {
+					"$ref": "#/components/schemas/GetSimilarProductsResult"
+				  }
+				},
+				"application/json": {
+				  "schema": {
+					"$ref": "#/components/schemas/GetSimilarProductsResult"
+				  }
+				},
+				"text/json": {
+				  "schema": {
+					"$ref": "#/components/schemas/GetSimilarProductsResult"
 				  }
 				}
 			  }
@@ -3838,6 +3976,45 @@
 			  "items": {
 				"$ref": "#/components/schemas/ProductAttributeResult"
 			  },
+			  "nullable": true
+			}
+		  },
+		  "additionalProperties": false
+		},
+		"GetSimilarProductsResult": {
+		  "type": "object",
+		  "properties": {
+			"products": {
+			  "type": "array",
+			  "items": {
+				"$ref": "#/components/schemas/GetSimilarProductsResultProduct"
+			  },
+			  "nullable": true
+			}
+		  },
+		  "additionalProperties": false
+		},
+		"GetSimilarProductsResultProduct": {
+		  "type": "object",
+		  "properties": {
+			"id": {
+			  "type": "string",
+			  "format": "uuid"
+			},
+			"name": {
+			  "type": "string",
+			  "nullable": true
+			},
+			"amount": {
+			  "type": "number",
+			  "format": "double"
+			},
+			"currency": {
+			  "type": "string",
+			  "nullable": true
+			},
+			"photo": {
+			  "type": "string",
 			  "nullable": true
 			}
 		  },

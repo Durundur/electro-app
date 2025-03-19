@@ -1,5 +1,5 @@
 import { IError } from "@/libs/api-contract/Error";
-import { CreateOpinionResult, GetProductOpinionsResult, GetProductOpinionsStatsResult, GetProductResult, OpinionReactionType } from "@/libs/api-contract/api-contract";
+import { CreateOpinionResult, GetProductOpinionsResult, GetProductOpinionsStatsResult, GetProductResult, GetSimilarProductsResult, OpinionReactionType } from "@/libs/api-contract/api-contract";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 interface IProductPageState {
@@ -8,6 +8,7 @@ interface IProductPageState {
 	opinionsStats: IOpinionsStatsState;
     createOpinion: ICreateOpinionState;
     createOpinionReaction: ICreateOpinionReactionState;
+	similarProducts: ISimilarProductsState;
 }
 
 interface IProductState {
@@ -40,6 +41,12 @@ interface ICreateOpinionState {
 	isLoading: boolean;
 }
 
+interface ISimilarProductsState {
+	data?: GetSimilarProductsResult;
+	error?: IError;
+	isLoading: boolean;
+}
+
 const initialState: IProductPageState = {
 	product: {
 		data: undefined,
@@ -65,7 +72,12 @@ const initialState: IProductPageState = {
 		data: undefined,
 		error: undefined,
 		isLoading: false,
-	}
+	},
+	similarProducts: {
+		data: undefined,
+		error: undefined,
+		isLoading: false,
+	},
 };
 
 const ProductPageStore = createSlice({
@@ -169,6 +181,23 @@ const ProductPageStore = createSlice({
 			state.createOpinion.error = undefined;
 			state.createOpinion.isLoading = false;
 		},
+		getSimilarProductsStart(state) {
+			state.similarProducts.isLoading = true;
+			state.similarProducts.error = undefined;
+		},
+		getSimilarProductsSuccess(state, action: PayloadAction<GetSimilarProductsResult>) {
+			state.similarProducts.isLoading = false;
+			state.similarProducts.data = action.payload;
+		},
+		getSimilarProductsError(state, action: PayloadAction<IError>) {
+			state.similarProducts.isLoading = false;
+			state.similarProducts.error = action.payload;
+		},
+		clearSimilarProductsState(state) {
+			state.similarProducts.data = undefined;
+			state.similarProducts.error = undefined;
+			state.similarProducts.isLoading = false;
+		},
 	},
 });
 
@@ -194,6 +223,10 @@ export const {
 	createOpinionStart,
 	createOpinionSuccess,
 	clearCreateOpinionState,
+	getSimilarProductsError,
+	getSimilarProductsStart,
+	getSimilarProductsSuccess,
+	clearSimilarProductsState,
 } = ProductPageStore.actions;
 
 export default ProductPageStore.reducer;

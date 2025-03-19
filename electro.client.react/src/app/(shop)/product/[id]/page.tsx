@@ -12,6 +12,7 @@ import ProductPageOverview from "@/components/ProductPage/ProductPageOverview/Pr
 import useScrollTo from "@/hooks/ScrollTo/useScrollTo";
 import { usePageTransition } from "@/hooks/PageTransition/usePageTransition";
 import ProductPageSpecificationTable from "@/components/ProductPage/ProductPageSpecification/ProductPageSpecificationTable";
+import ProductPageSilimarProducts from "@/components/ProductPage/ProductPageSilimarProducts/ProductPageSilimarProducts";
 
 interface ProductPageParams {
 	params: { id: string };
@@ -79,7 +80,7 @@ const ProductPage: FC<ProductPageParams> = ({ params }) => {
 					<Button color="inherit" onClick={() => scrollTo("specification")}>
 						Specyfikacja
 					</Button>
-					<Button color="inherit" onClick={() => scrollTo("accessories")}>
+					<Button color="inherit" onClick={() => scrollTo("similar-products")}>
 						Akcesoria
 					</Button>
 					<Button color="inherit" onClick={() => scrollTo("opinions")}>
@@ -99,9 +100,10 @@ const ProductPage: FC<ProductPageParams> = ({ params }) => {
 					<ProductPageSpecificationTable specification={productSelector?.attributes ?? []} />
 				</Box>
 				<Box>
-					<Typography id="accessories" variant="h6">
-						Akcesoria
+					<Typography id="similar-products" variant="h6">
+						Podobne produkty
 					</Typography>
+					<ProductPageSilimarProducts productId={productSelector?.id!}></ProductPageSilimarProducts>
 				</Box>
 				<Box>
 					<Typography id="opinions" variant="h6">

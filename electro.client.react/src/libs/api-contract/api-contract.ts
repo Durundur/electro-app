@@ -485,6 +485,18 @@ export interface GetSearchProductsResultProduct {
     attributes?: ProductAttributeResult[] | undefined;
 }
 
+export interface GetSimilarProductsResult {
+    products?: GetSimilarProductsResultProduct[] | undefined;
+}
+
+export interface GetSimilarProductsResultProduct {
+    id?: string;
+    name?: string | undefined;
+    amount?: number;
+    currency?: string | undefined;
+    photo?: string | undefined;
+}
+
 export interface GetSubCategoryResult {
     id?: number;
     name?: string | undefined;

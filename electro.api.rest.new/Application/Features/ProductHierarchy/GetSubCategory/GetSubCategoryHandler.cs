@@ -5,16 +5,16 @@ namespace Application.Features.ProductHierarchy.GetSubCategory
 {
     public class GetSubCategoryHandler : IRequestHandler<GetSubCategoryQuery, GetSubCategoryResult>
     {
-        private readonly IProductHierarchyRepository _productHierarchyRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public GetSubCategoryHandler(IProductHierarchyRepository productHierarchyRepository)
+        public GetSubCategoryHandler(IUnitOfWork unitOfWork)
         {
-            _productHierarchyRepository = productHierarchyRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<GetSubCategoryResult> Handle(GetSubCategoryQuery request, CancellationToken cancellationToken)
         {
-            var subCategory = await _productHierarchyRepository.GetSubCategoryByIdAsync(request.Id, cancellationToken);
+            var subCategory = await _unitOfWork.ProductHierarchyRepository.GetSubCategoryByIdAsync(request.Id, cancellationToken);
 
             var result = GetSubCategoryMapper.MapToGetSubCategoryResult(subCategory);
             return result;

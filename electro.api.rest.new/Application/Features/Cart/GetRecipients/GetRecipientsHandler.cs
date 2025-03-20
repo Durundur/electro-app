@@ -5,16 +5,16 @@ namespace Application.Features.Cart.GetRecipients
 {
     public class GetRecipientsHandler: IRequestHandler<GetRecipientsQuery, GetRecipientsResult>
     {
-        private readonly IRecipientRepository _recipientRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public GetRecipientsHandler(IRecipientRepository recipientRepository) 
+        public GetRecipientsHandler(IUnitOfWork unitOfWork) 
         {
-            _recipientRepository = recipientRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<GetRecipientsResult> Handle(GetRecipientsQuery request, CancellationToken cancellationToken)
         {
-            var recipients = await _recipientRepository.GetUserRecipientsAsync(request.UserId, cancellationToken);
+            var recipients = await _unitOfWork.RecipientRepository.GetUserRecipientsAsync(request.UserId, cancellationToken);
             return GetRecipientsMapper.MapToGetRecipientsResult(recipients);
         }
     }

@@ -270,6 +270,18 @@ export interface GetAttributesDefinitionsResult {
     attributesDefinitions?: AttributeDefinitionResult[] | undefined;
 }
 
+export interface GetBestsellerProductsResult {
+    products?: GetBestsellerProductsResultProduct[] | undefined;
+}
+
+export interface GetBestsellerProductsResultProduct {
+    id?: string;
+    name?: string | undefined;
+    amount?: number;
+    currency?: string | undefined;
+    photo?: string | undefined;
+}
+
 export interface GetCartResult {
     id?: string;
     totalQuantity?: number;

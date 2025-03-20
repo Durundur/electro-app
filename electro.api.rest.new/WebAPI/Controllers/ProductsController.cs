@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Application.Features.ProductCatalog.GetSimilarProducts;
+using Application.Features.ProductCatalog.GetBestsellerProducts;
 
 namespace WebAPI.Controllers
 {
@@ -24,20 +25,14 @@ namespace WebAPI.Controllers
         [ProducesResponseType<GetProductResult>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<GetProductResult>> GetProductById([FromRoute] string id)
+        public async Task<ActionResult<GetProductResult>> GetProductById([FromRoute] Guid id)
         {
-            if (!Guid.TryParse(id, out var productId))
+            var query = new GetProductQuery
             {
-                return BadRequest();
-            }
-            var query = new GetProductQuery(productId);
+                Id = id
+            };
+
             var response = await _mediator.Send(query);
-
-            if (response == null)
-            {
-                return NotFound();
-            }
-
             return Ok(response);
         }
 
@@ -97,6 +92,16 @@ namespace WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<GetSearchFiltersResult>> GetSearchFilters([FromQuery] GetSearchFiltersQuery query)
         {
+            var response = await _mediator.Send(query);
+            return Ok(response);
+        }
+
+        [HttpGet("bestsellers")]
+        [ProducesResponseType<GetBestsellerProductsResult>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<GetBestsellerProductsResult>> GetBestsellerProducts([FromQuery] int limit = 10)
+        {
+            var query = new GetBestsellerProductsQuery { Limit = Math.Min(limit, 50) };
             var response = await _mediator.Send(query);
             return Ok(response);
         }

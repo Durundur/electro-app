@@ -6,19 +6,17 @@ namespace Application.Features.ProductCatalog.GetSearchFilters
 {
     public class GetSearchFiltersHandler : IRequestHandler<GetSearchFiltersQuery, GetSearchFiltersResult>
     {
-        private readonly IProductRepository _productRepository;
-        private readonly IAttributeDefinitionRepository _attributeDefinitionRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public GetSearchFiltersHandler(IProductRepository productRepository, IAttributeDefinitionRepository attributeDefinitionRepository)
+        public GetSearchFiltersHandler(IUnitOfWork unitOfWork)
         {
-            _productRepository = productRepository;
-            _attributeDefinitionRepository = attributeDefinitionRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<GetSearchFiltersResult> Handle(GetSearchFiltersQuery request, CancellationToken cancellationToken)
         {
 
-            var productsQuery = _productRepository.GetProductsQuery().Include(p => p.Attributes).AsQueryable();
+            var productsQuery = _unitOfWork.ProductRepository.GetProductsQuery().Include(p => p.Attributes).AsQueryable();
 
             if (request.GroupId.HasValue)
             {
@@ -44,7 +42,7 @@ namespace Application.Features.ProductCatalog.GetSearchFilters
                 );
 
             var attributeDefinitionIds = attributeValues.Keys.ToList();
-            var attributeDefinitions = await _attributeDefinitionRepository.GetAttributesDefinitionsQuery()
+            var attributeDefinitions = await _unitOfWork.AttributeDefinitionRepository.GetAttributesDefinitionsQuery()
                 .Where(ad => attributeDefinitionIds.Contains(ad.Id) && ad.IsFilterable)
                 .ToListAsync(cancellationToken);
 

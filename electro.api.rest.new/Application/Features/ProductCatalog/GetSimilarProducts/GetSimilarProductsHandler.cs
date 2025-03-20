@@ -8,16 +8,16 @@ namespace Application.Features.ProductCatalog.GetSimilarProducts
 {
     public class GetSimilarProductsHandler : IRequestHandler<GetSimilarProductsQuery, GetSimilarProductsResult>
     {
-        private readonly IProductRepository _productRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public GetSimilarProductsHandler(IProductRepository productRepository)
+        public GetSimilarProductsHandler(IUnitOfWork unitOfWork)
         {
-            _productRepository = productRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<GetSimilarProductsResult> Handle(GetSimilarProductsQuery request, CancellationToken cancellationToken)
         {
-            var sourceProduct = await _productRepository.GetByIdAsync(request.ProductId, cancellationToken);
+            var sourceProduct = await _unitOfWork.ProductRepository.GetByIdAsync(request.ProductId, cancellationToken);
             if (sourceProduct == null)
             {
                 throw new NotFoundException($"Product with ID {request.ProductId} not found");
@@ -25,7 +25,7 @@ namespace Application.Features.ProductCatalog.GetSimilarProducts
 
             var sourceAttributes = sourceProduct.Attributes.ToList();
 
-            var similarProductsQuery = await _productRepository.GetProductsQuery()
+            var similarProductsQuery = await _unitOfWork.ProductRepository.GetProductsQuery()
                 .Include(p => p.Attributes)
                 .Where(p => p.Id != request.ProductId)
                 .Where(p => sourceProduct.GroupId.HasValue && p.GroupId == sourceProduct.GroupId)

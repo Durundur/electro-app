@@ -6,15 +6,15 @@ namespace Application.Features.ProductHierarchy.GetAttributesDefinitions
 {
     public class GetAttributesDefinitionsHandler : IRequestHandler<GetAttributesDefinitionsQuery, GetAttributesDefinitionsResult>
     {
-        private readonly IAttributeDefinitionRepository _attributeDefinitionRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public GetAttributesDefinitionsHandler(IAttributeDefinitionRepository attributeDefinitionRepository)
+        public GetAttributesDefinitionsHandler(IUnitOfWork unitOfWork)
         {
-            _attributeDefinitionRepository = attributeDefinitionRepository;
+            _unitOfWork = unitOfWork;
         }
         public async Task<GetAttributesDefinitionsResult> Handle(GetAttributesDefinitionsQuery request, CancellationToken cancellationToken)
         {
-            var query = _attributeDefinitionRepository.GetAttributesDefinitionsQuery();
+            var query = _unitOfWork.AttributeDefinitionRepository.GetAttributesDefinitionsQuery();
 
             query = query.Where(ad =>
                 (request.GroupId.HasValue && EF.Property<int>(ad, "GroupId") == request.GroupId.Value) ||

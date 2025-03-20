@@ -5,16 +5,16 @@ namespace Application.Features.ProductHierarchy.GetGroup
 {
     public class GetGroupHandler : IRequestHandler<GetGroupQuery, GetGroupResult>
     {
-        private readonly IProductHierarchyRepository _productHierarchyRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public GetGroupHandler(IProductHierarchyRepository productHierarchyRepository)
+        public GetGroupHandler(IUnitOfWork unitOfWork)
         {
-            _productHierarchyRepository = productHierarchyRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<GetGroupResult> Handle(GetGroupQuery request, CancellationToken cancellationToken)
         {
-            var group = await _productHierarchyRepository.GetGroupByIdAsync(request.Id, cancellationToken);
+            var group = await _unitOfWork.ProductHierarchyRepository.GetGroupByIdAsync(request.Id, cancellationToken);
 
             var result = GetGroupMapper.MapToGetGroupResult(group);
             return result;

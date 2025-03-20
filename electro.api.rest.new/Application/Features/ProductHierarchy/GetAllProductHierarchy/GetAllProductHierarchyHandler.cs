@@ -5,16 +5,16 @@ namespace Application.Features.ProductHierarchy.GetProductHierarchy
 {
     public class GetAllProductHierarchyHandler : IRequestHandler<GetAllProductHierarchyQuery, GetAllProductHierarchyResult>
     {
-        private readonly IProductHierarchyRepository _productHierarchyRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public GetAllProductHierarchyHandler(IProductHierarchyRepository productHierarchyRepository)
+        public GetAllProductHierarchyHandler(IUnitOfWork unitOfWork)
         {
-            _productHierarchyRepository = productHierarchyRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<GetAllProductHierarchyResult> Handle(GetAllProductHierarchyQuery request, CancellationToken cancellationToken)
         {
-            var groups = await _productHierarchyRepository.GetAllProductHierarchiesAsync(cancellationToken);
+            var groups = await _unitOfWork.ProductHierarchyRepository.GetAllProductHierarchiesAsync(cancellationToken);
 
             var result = GetAllProductHierarchyMapper.MapToGetAllProductHierarchyResult(groups);
             return result;

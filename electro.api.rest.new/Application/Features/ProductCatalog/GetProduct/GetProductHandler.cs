@@ -4,22 +4,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.ProductCatalog.GetProduct
 {
-    public class GetProductHandler: IRequestHandler<GetProductQuery, GetProductResult>
+    public class GetProductHandler : IRequestHandler<GetProductQuery, GetProductResult>
     {
-        private readonly IProductRepository _productRepository;
-        private readonly IAttributeDefinitionRepository _attributeDefinitionRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public GetProductHandler(IProductRepository productRepository, IAttributeDefinitionRepository attributeDefinitionRepository)
+        public GetProductHandler(IUnitOfWork unitOfWork)
         {
-            _productRepository = productRepository;
-            _attributeDefinitionRepository = attributeDefinitionRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<GetProductResult> Handle(GetProductQuery queryParams, CancellationToken cancellationToken)
         {
-            var product = await _productRepository.GetByIdAsync(queryParams.Id, cancellationToken);
+            var product = await _unitOfWork.ProductRepository.GetByIdAsync(queryParams.Id, cancellationToken);
 
-            var attributeDefinitions = await _attributeDefinitionRepository.GetAttributesDefinitionsQuery()
+            var attributeDefinitions = await _unitOfWork.AttributeDefinitionRepository.GetAttributesDefinitionsQuery()
                 .Where(ad => product.Attributes.Select(a => a.AttributeDefinitionId).Contains(ad.Id))
                 .ToListAsync();
 

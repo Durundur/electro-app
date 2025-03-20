@@ -6,16 +6,16 @@ namespace Application.Features.ProductCatalog.GetProductCatalog
 {
     public class GetProductCatalogHandler : IRequestHandler<GetProductCatalogQuery, GetProductCatalogResult>
     {
-        private readonly IProductRepository _productRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public GetProductCatalogHandler(IProductRepository productRepository)
+        public GetProductCatalogHandler(IUnitOfWork unitOfWork)
         {
-            _productRepository = productRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<GetProductCatalogResult> Handle(GetProductCatalogQuery request, CancellationToken cancellationToken)
         {
-            var productsQuery = _productRepository.GetProductsQuery();
+            var productsQuery = _unitOfWork.ProductRepository.GetProductsQuery();
 
             var totalProducts = await productsQuery.CountAsync();
 

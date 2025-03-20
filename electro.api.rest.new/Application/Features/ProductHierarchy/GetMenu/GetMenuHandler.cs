@@ -5,16 +5,16 @@ namespace Application.Features.ProductHierarchy.GetMenu
 {
     public class GetMenuHandler : IRequestHandler<GetMenuQuery, GetMenuResult>
     {
-        private readonly IProductHierarchyRepository _productHierarchyRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public GetMenuHandler(IProductHierarchyRepository productHierarchyRepository)
+        public GetMenuHandler(IUnitOfWork unitOfWork)
         {
-            _productHierarchyRepository = productHierarchyRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<GetMenuResult> Handle(GetMenuQuery request, CancellationToken cancellationToken)
         {
-            var groups = await _productHierarchyRepository.GetMenuAsync(cancellationToken);
+            var groups = await _unitOfWork.ProductHierarchyRepository.GetMenuAsync(cancellationToken);
 
             var result = GetMenuMapper.MapToGetMenuResult(groups);
             return result;

@@ -6,18 +6,16 @@ namespace Application.Features.ProductCatalog.GetSearchProducts
 {
     public class GetSearchProductsHandler : IRequestHandler<GetSearchProductsQuery, GetSearchProductsResult>
     {
-        private readonly IProductRepository _productRepository;
-        private readonly IAttributeDefinitionRepository _attributeDefinitionRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public GetSearchProductsHandler(IProductRepository productRepository, IAttributeDefinitionRepository attributeDefinitionRepository)
+        public GetSearchProductsHandler(IUnitOfWork unitOfWork)
         {
-            _productRepository = productRepository;
-            _attributeDefinitionRepository = attributeDefinitionRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<GetSearchProductsResult> Handle(GetSearchProductsQuery request, CancellationToken cancellationToken)
         {
-            var productsQuery = _productRepository.GetProductsQuery()
+            var productsQuery = _unitOfWork.ProductRepository.GetProductsQuery()
                 .Include(p => p.Attributes.Where(a => a.IsPrimary))
                 .Include(p => p.Opinions)
                 .AsQueryable();
@@ -105,7 +103,7 @@ namespace Application.Features.ProductCatalog.GetSearchProducts
                 .Distinct()
                 .ToList();
 
-            var attributeDefinitions = await _attributeDefinitionRepository.GetAttributesDefinitionsQuery()
+            var attributeDefinitions = await _unitOfWork.AttributeDefinitionRepository.GetAttributesDefinitionsQuery()
                 .Where(ad => primaryAttributeDefinitionIds.Contains(ad.Id))
                 .ToListAsync(cancellationToken);
 

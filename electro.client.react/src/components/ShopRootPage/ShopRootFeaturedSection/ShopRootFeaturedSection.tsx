@@ -1,33 +1,33 @@
 "use client";
 import ProductCard from "@/components/Shared/ProductCard/ProductCard";
 import ProductCardContainer from "@/components/Shared/ProductCardContainer/ProductCardContainer";
-import { clearBestsellerProductsState } from "@/libs/ShopRootPage/slice";
-import { getBestsellerProducts } from "@/libs/ShopRootPage/thunk";
+import { clearFeaturedProductsState } from "@/libs/ShopRootPage/slice";
+import { getFeaturedProducts } from "@/libs/ShopRootPage/thunk";
 import { useDispatch, useSelector } from "@/libs/Store";
 import { Typography } from "@mui/material";
 import { useEffect } from "react";
 
-const ShopRootBestsellersSection = () => {
+const ShopRootFeaturedSection = () => {
 	const dispatch = useDispatch();
-	const bestsellerProductsSelector = useSelector((state) => state.ShopRootPageStore.bestsellers.data?.products);
+	const featuredProductsSelector = useSelector((state) => state.ShopRootPageStore.featured.data?.products);
 
 	useEffect(() => {
-		dispatch(getBestsellerProducts());
+		dispatch(getFeaturedProducts());
 
 		return () => {
-			dispatch(clearBestsellerProductsState());
+			dispatch(clearFeaturedProductsState());
 		};
 	}, []);
 
-	const productCards = bestsellerProductsSelector?.map((product) => (
+	const productCards = featuredProductsSelector?.map((product) => (
 		<ProductCard key={product.id} id={product.id!} name={product.name!} photo={product.photo!} amount={product.amount!} currency={product.currency!} />
 	));
 
 	return (
 		productCards && (
 			<>
-				<Typography variant="h6">Bestsellery</Typography>
-				<ProductCardContainer cols={{ xs: 2, sm: 3, md: 4, lg: 5 }} slidesPerGroup={{ xs: 1, sm: 2 }}>
+				<Typography variant="h6">Polecane</Typography>
+				<ProductCardContainer cols={{ xs: 2, sm: 3, md: 4 }} rows={2} navigation={false}>
 					{productCards}
 				</ProductCardContainer>
 			</>
@@ -35,4 +35,4 @@ const ShopRootBestsellersSection = () => {
 	);
 };
 
-export default ShopRootBestsellersSection;
+export default ShopRootFeaturedSection;

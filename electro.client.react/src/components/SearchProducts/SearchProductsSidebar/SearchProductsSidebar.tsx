@@ -5,7 +5,7 @@ import SearchProductsSidebarFilters from "./SearchProductsSidebarFilters/SearchP
 
 const SearchProductsSidebar: FC = () => {
 	return (
-		<Card variant="elevation">
+		<Card>
 			<Stack direction={"column"}>
 				<SearchProductsSidebarCategories />
 				<SearchProductsSidebarFilters />

@@ -309,6 +309,18 @@ export interface GetCategoryResult {
     attributes?: AttributeDefinitionResult[] | undefined;
 }
 
+export interface GetFeaturedProductsResult {
+    products?: GetFeaturedProductsResultProduct[] | undefined;
+}
+
+export interface GetFeaturedProductsResultProduct {
+    id?: string;
+    name?: string | undefined;
+    amount?: number;
+    currency?: string | undefined;
+    photo?: string | undefined;
+}
+
 export interface GetGroupResult {
     id?: number;
     name?: string | undefined;
@@ -447,6 +459,14 @@ export interface GetProductResult {
     averageOpinionRating?: number;
     opinionCount?: number;
     attributes?: ProductAttributeResult[] | undefined;
+}
+
+export interface GetPromotionHighlightResult {
+    id?: string;
+    name?: string | undefined;
+    amount?: number;
+    currency?: string | undefined;
+    photo?: string | undefined;
 }
 
 export interface GetRecipientsResult {

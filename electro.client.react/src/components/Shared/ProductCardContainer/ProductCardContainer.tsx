@@ -1,5 +1,5 @@
 import { ChevronLeftRounded, ChevronRightRounded } from "@mui/icons-material";
-import { Box, IconButton } from "@mui/material";
+import { Box, IconButton, useTheme } from "@mui/material";
 import { FC, ReactNode } from "react";
 import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 import "swiper/css";
@@ -7,16 +7,41 @@ import "swiper/css/navigation";
 import "swiper/css/grid";
 import { Navigation, Grid } from "swiper/modules";
 
-interface ProductContainerProps {
+interface ResponsiveBreakpoint {
+	xs?: number;
+	sm?: number;
+	md?: number;
+	lg?: number;
+	xl?: number;
+}
+
+interface ProductCardContainerProps {
 	children: ReactNode[];
-	rows?: number;
-	cols?: number;
-	slidesPerGroup?: number;
+	rows?: ResponsiveBreakpoint | number;
+	cols: ResponsiveBreakpoint | number;
+	slidesPerGroup?: ResponsiveBreakpoint | number;
 	spaceBetween?: number;
 	navigation?: boolean;
 }
 
-const ProductContainer: FC<ProductContainerProps> = ({ children, rows = 1, cols = 4, slidesPerGroup = 1, spaceBetween = 12, navigation = true }) => {
+const ProductCardContainer: FC<ProductCardContainerProps> = ({ children, rows = 1, cols = 4, slidesPerGroup = 1, spaceBetween = 12, navigation = true }) => {
+	const theme = useTheme();
+
+	const getBreakpointValue = (value: ResponsiveBreakpoint | number, breakpoint: keyof ResponsiveBreakpoint): number => {
+		if (typeof value === "number") return value;
+
+		const breakpoints: (keyof ResponsiveBreakpoint)[] = ["xl", "lg", "md", "sm", "xs"];
+		const breakpointIndex = breakpoints.indexOf(breakpoint);
+
+		for (let i = breakpointIndex; i < breakpoints.length; i++) {
+			if (value[breakpoints[i]] !== undefined) {
+				return value[breakpoints[i]]!;
+			}
+		}
+
+		return typeof value === "number" ? value : 1;
+	};
+
 	return (
 		<Box
 			sx={{
@@ -25,7 +50,52 @@ const ProductContainer: FC<ProductContainerProps> = ({ children, rows = 1, cols 
 				},
 			}}
 		>
-			<Swiper grid={{ rows, fill: "row" }} slidesPerView={cols} slidesPerGroup={slidesPerGroup} spaceBetween={spaceBetween} modules={[Navigation, Grid]}>
+			<Swiper
+				modules={[Navigation, Grid]}
+				spaceBetween={spaceBetween}
+				breakpoints={{
+					[theme.breakpoints.values.xs]: {
+						grid: {
+							rows: getBreakpointValue(rows, "xs"),
+							fill: "row",
+						},
+						slidesPerView: getBreakpointValue(cols, "xs"),
+						slidesPerGroup: getBreakpointValue(slidesPerGroup, "xs"),
+					},
+					[theme.breakpoints.values.sm]: {
+						grid: {
+							rows: getBreakpointValue(rows, "sm"),
+							fill: "row",
+						},
+						slidesPerView: getBreakpointValue(cols, "sm"),
+						slidesPerGroup: getBreakpointValue(slidesPerGroup, "sm"),
+					},
+					[theme.breakpoints.values.md]: {
+						grid: {
+							rows: getBreakpointValue(rows, "md"),
+							fill: "row",
+						},
+						slidesPerView: getBreakpointValue(cols, "md"),
+						slidesPerGroup: getBreakpointValue(slidesPerGroup, "md"),
+					},
+					[theme.breakpoints.values.lg]: {
+						grid: {
+							rows: getBreakpointValue(rows, "lg"),
+							fill: "row",
+						},
+						slidesPerView: getBreakpointValue(cols, "lg"),
+						slidesPerGroup: getBreakpointValue(slidesPerGroup, "lg"),
+					},
+					[theme.breakpoints.values.xl]: {
+						grid: {
+							rows: getBreakpointValue(rows, "xl"),
+							fill: "row",
+						},
+						slidesPerView: getBreakpointValue(cols, "xl"),
+						slidesPerGroup: getBreakpointValue(slidesPerGroup, "xl"),
+					},
+				}}
+			>
 				{children.map((child, i) => (
 					<SwiperSlide key={`child-${i}`}>{child}</SwiperSlide>
 				))}
@@ -60,4 +130,4 @@ const SliderNavigation: FC = () => {
 	);
 };
 
-export default ProductContainer;
+export default ProductCardContainer;

@@ -32,7 +32,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ id, name, photo, amount, curr
 								overflow: "hidden",
 								textOverflow: "ellipsis",
 								display: "-webkit-box",
-								WebkitLineClamp: "3",
+								WebkitLineClamp: "2",
 								WebkitBoxOrient: "vertical",
 							}}
 						>

@@ -13,7 +13,7 @@ const AccountOrdersListItem: FC<AccountOrdersListItemProps> = ({ order }) => {
 	const totalProductsQuantity = order.products?.reduce((acc, item) => (acc += item.quantity ?? 0), 0);
 
 	return (
-		<Card variant="elevation">
+		<Card>
 			<CardContent>
 				<Stack direction={"column"} spacing={2}>
 					<AccountOrdersListItemHeader orderNumber={order.number!} status={order.status!} createdAt={order.createdAt!}></AccountOrdersListItemHeader>

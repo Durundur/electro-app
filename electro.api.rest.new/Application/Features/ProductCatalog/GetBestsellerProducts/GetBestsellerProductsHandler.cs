@@ -14,10 +14,8 @@ namespace Application.Features.ProductCatalog.GetBestsellerProducts
 
         public async Task<GetBestsellerProductsResult> Handle(GetBestsellerProductsQuery request, CancellationToken cancellationToken)
         {
-            var thirtyDaysAgo = DateTime.UtcNow.AddDays(-30);
-            
             var bestsellers = await _unitOfWork.OrderRepository.GetOrdersQuery()
-                .Where(o => o.CreatedAt >= thirtyDaysAgo)
+                .OrderByDescending(o => o.CreatedAt)
                 .SelectMany(o => o.Products)
                 .GroupBy(p => p.ProductId)
                 .Select(g => new 

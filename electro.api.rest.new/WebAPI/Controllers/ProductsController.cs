@@ -8,6 +8,8 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Application.Features.ProductCatalog.GetSimilarProducts;
 using Application.Features.ProductCatalog.GetBestsellerProducts;
+using Application.Features.ProductCatalog.GetFeaturedProducts;
+using Application.Features.ProductCatalog.GetPromotionHighlight;
 
 namespace WebAPI.Controllers
 {
@@ -102,6 +104,26 @@ namespace WebAPI.Controllers
         public async Task<ActionResult<GetBestsellerProductsResult>> GetBestsellerProducts([FromQuery] int limit = 10)
         {
             var query = new GetBestsellerProductsQuery { Limit = Math.Min(limit, 50) };
+            var response = await _mediator.Send(query);
+            return Ok(response);
+        }
+
+        [HttpGet("featured")]
+        [ProducesResponseType<GetFeaturedProductsResult>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<GetFeaturedProductsResult>> GetFeaturedProducts([FromQuery] int limit = 10)
+        {
+            var query = new GetFeaturedProductsQuery { Limit = Math.Min(limit, 50) };
+            var response = await _mediator.Send(query);
+            return Ok(response);
+        }
+
+        [HttpGet("promotion-highlight")]
+        [ProducesResponseType<GetPromotionHighlightResult>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<GetPromotionHighlightResult>> GetPromotionHighlight()
+        {
+            var query = new GetPromotionHighlightQuery();
             var response = await _mediator.Send(query);
             return Ok(response);
         }

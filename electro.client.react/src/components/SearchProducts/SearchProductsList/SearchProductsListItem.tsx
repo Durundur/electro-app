@@ -1,6 +1,6 @@
 import { formatAmount } from "@/libs/Helpers/Formatters";
 import { GetSearchProductsResultProduct } from "@/libs/api-contract/api-contract";
-import { Box, Card, CardContent, CardMedia, Grid2, IconButton, Rating, Stack, Typography } from "@mui/material";
+import { Card, CardActionArea, CardContent, CardMedia, Grid2, IconButton, Rating, Stack, Typography } from "@mui/material";
 import Link from "next/link";
 import { FC } from "react";
 
@@ -10,8 +10,8 @@ interface SearchProductsListItemProps {
 
 const SearchProductsListItem: FC<SearchProductsListItemProps> = ({ product }) => {
 	return (
-		<Link href={`/product/${product.id}`}>
-			<Card variant="elevation">
+		<Card>
+			<CardActionArea LinkComponent={Link} href={`/product/${product.id}`}>
 				<Grid2 container>
 					<Grid2 size={{ xs: 3 }} alignSelf={"center"}>
 						<CardMedia
@@ -54,8 +54,8 @@ const SearchProductsListItem: FC<SearchProductsListItemProps> = ({ product }) =>
 						</CardContent>
 					</Grid2>
 				</Grid2>
-			</Card>
-		</Link>
+			</CardActionArea>
+		</Card>
 	);
 };
 

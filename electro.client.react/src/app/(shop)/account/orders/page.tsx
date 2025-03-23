@@ -29,7 +29,7 @@ const AccountOrdersPage: FC = () => {
 
 	const page = useSelector((store) => store.AccountStore.list.data?.page) ?? 1;
 	const pageSize = useSelector((store) => store.AccountStore.list.data?.pageSize) ?? 8;
-	const pageCount = useSelector((store) => store.AccountStore.list.data?.pageCount) ?? 1;
+	const totalPages = useSelector((store) => store.AccountStore.list.data?.totalPages) ?? 1;
 
 	usePageTransition([accountOrdersListIsLoading]);
 
@@ -60,11 +60,11 @@ const AccountOrdersPage: FC = () => {
 		accountOrdersList && (
 			<Stack spacing={2}>
 				<AccountOrdersListHeader />
-				{accountOrdersList.orders?.length ? (
+				{accountOrdersList.items?.length ? (
 					<>
 						<AccountOrdersList />
 						<Stack justifyContent="center" alignItems="center" paddingTop={2}>
-							<Pagination onChange={handlePageChange} page={page} count={pageCount} variant="outlined" shape="rounded" />
+							<Pagination onChange={handlePageChange} page={page} count={totalPages} variant="outlined" shape="rounded" />
 						</Stack>
 					</>
 				) : (

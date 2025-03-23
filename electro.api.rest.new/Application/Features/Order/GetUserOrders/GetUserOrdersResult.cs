@@ -1,14 +1,15 @@
-﻿using Domain.Aggregates.OrderAggregate;
+﻿using Application.Features.Shared.Pagination;
+using Domain.Aggregates.OrderAggregate;
 using Domain.ValueObjects;
 
 namespace Application.Features.Order.GetUserOrders
 {
-    public class GetUserOrdersResult
+    public class GetUserOrdersResult : PaginatedResult<GetUserOrdersResultOrder>
     {
-        public IList<GetUserOrdersResultOrder> Orders { get; set; }
-        public int PageCount { get; set; }
-        public int PageSize { get; set; }
-        public int Page { get; set; }
+        public GetUserOrdersResult(IReadOnlyList<GetUserOrdersResultOrder> items, int count, int page, int pageSize)
+            : base(items, count, page, pageSize)
+        {
+        }
     }
 
     public class GetUserOrdersResultOrder
@@ -24,6 +25,7 @@ namespace Application.Features.Order.GetUserOrders
     public class GetUserOrdersResultOrderProduct
     {
         public Guid Id { get; set; }
+        public Guid ProductId { get; set; }
         public int Quantity { get; set; }
         public Money Price { get; set; }
         public string Name { get; set; }

@@ -6,7 +6,7 @@ import { useSelector } from "@/libs/Store";
 interface AccountOrdersListProps {}
 
 const AccountOrdersList: FC<AccountOrdersListProps> = () => {
-	const accountOrders = useSelector((store) => store.AccountStore.list.data?.orders);
+	const accountOrders = useSelector((store) => store.AccountStore.list.data?.items);
 
 	return (
 		<Grid2 container columnSpacing={2} rowSpacing={2}>

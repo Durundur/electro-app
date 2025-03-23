@@ -1,6 +1,6 @@
 import { formatAmount } from "@/libs/Helpers/Formatters";
 import { GetUserOrdersResultOrderProduct } from "@/libs/api-contract/api-contract";
-import { Box, Card, CardActionArea, CardContent, CardMedia, Grid2, Stack, Typography } from "@mui/material";
+import { Card, CardActionArea, CardContent, CardMedia, Grid2, Stack, Typography } from "@mui/material";
 import Link from "next/link";
 import { FC } from "react";
 
@@ -40,7 +40,7 @@ interface AccountOrdersListItemProductProps {
 const AccountOrdersListItemProduct: FC<AccountOrdersListItemProductProps> = ({ product }) => {
 	return (
 		<Card elevation={0}>
-			<CardActionArea LinkComponent={Link} href={`/product/${product.id}`}>
+			<CardActionArea LinkComponent={Link} href={`/product/${product.productId}`}>
 				<CardContent sx={{ height: "100%" }}>
 					<Grid2 container spacing={1}>
 						<Grid2 size={{ xs: 4 }} alignSelf={"center"} sx={{ maxHeight: "100px" }}>

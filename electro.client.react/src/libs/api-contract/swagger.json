@@ -4401,14 +4401,14 @@
 		"GetUserOrdersResult": {
 		  "type": "object",
 		  "properties": {
-			"orders": {
+			"items": {
 			  "type": "array",
 			  "items": {
 				"$ref": "#/components/schemas/GetUserOrdersResultOrder"
 			  },
 			  "nullable": true
 			},
-			"pageCount": {
+			"page": {
 			  "type": "integer",
 			  "format": "int32"
 			},
@@ -4416,9 +4416,10 @@
 			  "type": "integer",
 			  "format": "int32"
 			},
-			"page": {
+			"totalPages": {
 			  "type": "integer",
-			  "format": "int32"
+			  "format": "int32",
+			  "readOnly": true
 			}
 		  },
 		  "additionalProperties": false
@@ -4458,6 +4459,10 @@
 		  "type": "object",
 		  "properties": {
 			"id": {
+			  "type": "string",
+			  "format": "uuid"
+			},
+			"productId": {
 			  "type": "string",
 			  "format": "uuid"
 			},

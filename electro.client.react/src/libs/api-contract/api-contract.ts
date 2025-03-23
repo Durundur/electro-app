@@ -565,10 +565,10 @@ export interface GetUserOrderDetailsResultProduct {
 }
 
 export interface GetUserOrdersResult {
-    orders?: GetUserOrdersResultOrder[] | undefined;
-    pageCount?: number;
-    pageSize?: number;
+    items?: GetUserOrdersResultOrder[] | undefined;
     page?: number;
+    pageSize?: number;
+    readonly totalPages?: number;
 }
 
 export interface GetUserOrdersResultOrder {
@@ -582,6 +582,7 @@ export interface GetUserOrdersResultOrder {
 
 export interface GetUserOrdersResultOrderProduct {
     id?: string;
+    productId?: string;
     quantity?: number;
     price?: Money;
     name?: string | undefined;

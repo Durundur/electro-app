@@ -35,13 +35,12 @@ namespace Application.Features.Order.GetUserOrders
             var orderProductsIds = orders.SelectMany(o => o.Products.Select(p => p.ProductId)).Distinct().ToList();
             var products = await _unitOfWork.ProductRepository.GetProductsByIdsAsync(orderProductsIds, cancellationToken);
 
-            var result = GetUserOrdersMapper.MapToGetUserOrdersResult(orders, products);
-
-            result.PageCount = pageCount;
-            result.PageSize = query.PageSize;
-            result.Page = query.Page;
-
-            return result;
+            return new GetUserOrdersResult(
+                GetUserOrdersMapper.MapToGetUserOrders(orders, products).ToList(),
+                totalOrders,
+                query.Page,
+                query.PageSize
+            );
         }
     }
 }

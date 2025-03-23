@@ -603,6 +603,7 @@ export interface LoginUserSuccessResult {
     message?: string | undefined;
     userId?: string;
     token?: string | undefined;
+    tokenExpiry?: Date;
     refreshToken?: string | undefined;
     refreshTokenExpiry?: Date;
     roles?: string[] | undefined;
@@ -703,14 +704,20 @@ export interface RefreshTokenCommand {
     token?: string | undefined;
 }
 
-export interface RefreshTokenResult {
-    userId?: string;
-    roles?: string[] | undefined;
-    token?: string | undefined;
-    refreshToken?: string | undefined;
-    refreshTokenExpiry?: Date;
+export interface RefreshTokenErrorResult {
     success?: boolean;
     message?: string | undefined;
+}
+
+export interface RefreshTokenSuccessResult {
+    success?: boolean;
+    message?: string | undefined;
+    userId?: string;
+    token?: string | undefined;
+    tokenExpiry?: Date;
+    refreshToken?: string | undefined;
+    refreshTokenExpiry?: Date;
+    roles?: string[] | undefined;
 }
 
 export interface RegisterUserCommand {
@@ -728,6 +735,7 @@ export interface RegisterUserSuccessResult {
     message?: string | undefined;
     userId?: string;
     token?: string | undefined;
+    tokenExpiry?: Date;
     refreshToken?: string | undefined;
     refreshTokenExpiry?: Date;
     roles?: string[] | undefined;

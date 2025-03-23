@@ -17,16 +17,38 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 
 	const [isHydrated, setIsHydrated] = useState(false);
 	const [refreshTimeout, setRefreshTimeout] = useState<NodeJS.Timeout | null>(null);
-	
+
+	const isTokenExpired = (expiryDate?: string) => {
+		if (!expiryDate) return true;
+		return new Date(expiryDate).getTime() <= new Date().getTime();
+	};
+
 	useEffect(() => {
 		if (typeof window !== "undefined") {
 			const authStateToRestore = localStorage.getItem(localStorageKey);
 			if (authStateToRestore) {
 				try {
 					const parsedStoredAuthState: StoredAuthState = JSON.parse(authStateToRestore);
+
+					if (isTokenExpired(parsedStoredAuthState.auth.refreshTokenExpiry)) {
+						dispatch(logout());
+						localStorage.removeItem(localStorageKey);
+						return;
+					}
+
 					dispatch(restoreAuth(parsedStoredAuthState));
+
+					if (isTokenExpired(parsedStoredAuthState.auth.tokenExpiry)) {
+						dispatch(
+							refreshToken({
+								refreshToken: parsedStoredAuthState.auth.refreshToken,
+								token: parsedStoredAuthState.auth.token,
+							})
+						);
+					}
 				} catch (error) {
 					console.error("Error while parsing stored auth state", error);
+					localStorage.removeItem(localStorageKey);
 				}
 			}
 		}
@@ -35,25 +57,38 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 
 	useEffect(() => {
 		if (typeof window !== "undefined" && isHydrated) {
-			const authStateToStore: StoredAuthState = {
-				auth: authState,
-				user: userState,
-			};
-			localStorage.setItem(localStorageKey, JSON.stringify(authStateToStore));
+			if (authState.isAuthenticated) {
+				const authStateToStore: StoredAuthState = {
+					auth: authState,
+					user: userState,
+				};
+				localStorage.setItem(localStorageKey, JSON.stringify(authStateToStore));
+			} else {
+				localStorage.removeItem(localStorageKey);
+			}
 		}
 	}, [authState, userState, isHydrated]);
 
 	const scheduleTokenRefresh = () => {
-		if (!authState.isAuthenticated || !authState.refreshTokenExpiry) return;
+		if (!authState.isAuthenticated || !authState.tokenExpiry) return;
 
 		const now = new Date().getTime();
-		const expiryTime = new Date(authState.refreshTokenExpiry).getTime();
+		const tokenExpiryTime = new Date(authState.tokenExpiry).getTime();
+		const refreshTokenExpiryTime = authState.refreshTokenExpiry ? new Date(authState.refreshTokenExpiry).getTime() : 0;
+
+		if (now >= refreshTokenExpiryTime) {
+			dispatch(logout());
+			return;
+		}
+
 		const refreshMargin = 3 * 60 * 1000;
-		const timeUntilRefresh = expiryTime - now - refreshMargin;
+		const timeUntilRefresh = tokenExpiryTime - now - refreshMargin;
 
-		if (timeUntilRefresh > 0 || expiryTime <= now) {
-			if (refreshTimeout) clearTimeout(refreshTimeout);
+		if (refreshTimeout) {
+			clearTimeout(refreshTimeout);
+		}
 
+		if (timeUntilRefresh > 0) {
 			const timeout = setTimeout(async () => {
 				try {
 					await dispatch(
@@ -68,6 +103,13 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 				}
 			}, timeUntilRefresh);
 			setRefreshTimeout(timeout);
+		} else if (now < refreshTokenExpiryTime) {
+			dispatch(
+				refreshToken({
+					refreshToken: authState.refreshToken,
+					token: authState.token,
+				})
+			);
 		}
 	};
 
@@ -75,9 +117,11 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 		scheduleTokenRefresh();
 
 		return () => {
-			if (refreshTimeout) clearTimeout(refreshTimeout);
+			if (refreshTimeout) {
+				clearTimeout(refreshTimeout);
+			}
 		};
-	}, [authState.refreshToken, authState.refreshTokenExpiry]);
+	}, [authState.token, authState.tokenExpiry, authState.refreshToken, authState.refreshTokenExpiry]);
 
 	return children;
 };

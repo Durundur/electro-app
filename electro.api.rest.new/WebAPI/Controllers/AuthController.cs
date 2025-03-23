@@ -40,14 +40,14 @@ namespace WebAPI.Controllers
             var response = await _mediator.Send(command);
             if (response.Success)
             {
-                return Ok(response as LoginUserSuccessResult);
+                return Ok(response);
             }
-            return Unauthorized(response as LoginUserErrorResult);
+            return Unauthorized(response);
         }
 
         [HttpPost("refresh-token")]
-        [ProducesResponseType<RefreshTokenResult>(StatusCodes.Status200OK)]
-        [ProducesResponseType<RefreshTokenResult>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<RefreshTokenSuccessResult>(StatusCodes.Status200OK)]
+        [ProducesResponseType<RefreshTokenErrorResult>(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<RefreshTokenResult>> RefreshToken([FromBody] RefreshTokenCommand command)
         {
             var response = await _mediator.Send(command);
@@ -60,8 +60,8 @@ namespace WebAPI.Controllers
 
         [HttpPost("logout")]
         [Authorize]
-        [ProducesResponseType<RefreshTokenResult>(StatusCodes.Status200OK)]
-        [ProducesResponseType<RefreshTokenResult>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Logout()
         {
             var command = new LogoutUserCommand();

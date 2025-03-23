@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IError } from "../api-contract/Error";
-import { LoginUserSuccessResult, RefreshTokenResult, RegisterUserSuccessResult } from "../api-contract/api-contract";
+import { LoginUserSuccessResult, RefreshTokenSuccessResult, RegisterUserSuccessResult } from "../api-contract/api-contract";
 
 interface AuthStore {
 	auth: AuthState;
@@ -11,6 +11,7 @@ interface AuthStore {
 
 interface AuthState {
 	token?: string;
+	tokenExpiry?: string;
 	refreshToken?: string;
 	refreshTokenExpiry?: string;
 	isAuthenticated: boolean;
@@ -26,6 +27,7 @@ export type StoredAuthState = Pick<AuthStore, "auth" | "user">;
 const initialState: AuthStore = {
 	auth: {
 		token: undefined,
+		tokenExpiry: undefined,
 		refreshToken: undefined,
 		refreshTokenExpiry: undefined,
 		isAuthenticated: false,
@@ -44,6 +46,7 @@ const AuthStore = createSlice({
 	reducers: {
 		registerUserSuccess(state, action: PayloadAction<RegisterUserSuccessResult>) {
 			state.auth.token = action.payload.token;
+			state.auth.tokenExpiry = new Date(action.payload.tokenExpiry!).toISOString();
 			state.auth.refreshToken = action.payload.refreshToken;
 			state.auth.refreshTokenExpiry = new Date(action.payload.refreshTokenExpiry!).toISOString();
 			state.auth.isAuthenticated = true;
@@ -55,6 +58,7 @@ const AuthStore = createSlice({
 		},
 		loginUserSuccess(state, action: PayloadAction<LoginUserSuccessResult>) {
 			state.auth.token = action.payload.token;
+			state.auth.tokenExpiry = new Date(action.payload.tokenExpiry!).toISOString();
 			state.auth.refreshToken = action.payload.refreshToken;
 			state.auth.refreshTokenExpiry = new Date(action.payload.refreshTokenExpiry!).toISOString();
 			state.auth.isAuthenticated = true;
@@ -64,8 +68,9 @@ const AuthStore = createSlice({
 			};
 			state.isLoading = false;
 		},
-		refreshTokenSuccess(state, action: PayloadAction<RefreshTokenResult>) {
+		refreshTokenSuccess(state, action: PayloadAction<RefreshTokenSuccessResult>) {
 			state.auth.token = action.payload.token;
+			state.auth.tokenExpiry = new Date(action.payload.tokenExpiry!).toISOString();
 			state.auth.refreshToken = action.payload.refreshToken;
 			state.auth.refreshTokenExpiry = new Date(action.payload.refreshTokenExpiry!).toISOString();
 			state.auth.isAuthenticated = true;
@@ -81,6 +86,7 @@ const AuthStore = createSlice({
 		},
 		logout(state) {
 			state.auth.token = undefined;
+			state.auth.tokenExpiry = undefined;
 			state.auth.refreshToken = undefined;
 			state.auth.refreshTokenExpiry = undefined;
 			state.auth.isAuthenticated = false;

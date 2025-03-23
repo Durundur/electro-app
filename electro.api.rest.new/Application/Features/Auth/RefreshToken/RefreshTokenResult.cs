@@ -1,11 +1,17 @@
-﻿using Application.Features.Auth.Shared;
-
-namespace Application.Features.Auth.RefreshToken
+﻿namespace Application.Features.Auth.RefreshToken
 {
-    public class RefreshTokenResult : TokenResult
-    {
-        public bool Success { get; set; }
-        public string Message { get; set; }
-    }
+    public abstract record RefreshTokenResult(bool Success, string Message);
+
+    public record RefreshTokenSuccessResult(
+        Guid UserId,
+        string Token,
+        DateTime TokenExpiry,
+        string RefreshToken,
+        DateTime RefreshTokenExpiry,
+        IList<string> Roles,
+        string Message
+    ) : RefreshTokenResult(true, Message);
+
+    public record RefreshTokenErrorResult(string Message) : RefreshTokenResult(false, Message);
 }
 

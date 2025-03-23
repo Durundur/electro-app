@@ -51,6 +51,7 @@ const ProductCardContainer: FC<ProductCardContainerProps> = ({ children, rows = 
 			}}
 		>
 			<Swiper
+				touchStartPreventDefault={false}
 				modules={[Navigation, Grid]}
 				spaceBetween={spaceBetween}
 				breakpoints={{

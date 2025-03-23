@@ -41,9 +41,6 @@ const AuthLoginPage = () => {
 		dispatch(loginUser(loginUserCommand));
 	};
 
-	console.log("authLoadingSelector");
-	console.log(authLoadingSelector);
-
 	useEffect(() => {
 		if (isAuthenticatedSelector && !authLoadingSelector) router.replace("/");
 	}, [authLoadingSelector, isAuthenticatedSelector]);

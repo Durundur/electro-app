@@ -48,21 +48,19 @@ namespace Application.Features.Auth.RefreshToken
                 }
 
                 var roles = await _identityService.GetRolesAsync(user.Id);
-                var token = _tokenService.GenerateToken(user, roles);
-                var refreshToken = _tokenService.GenerateRefreshToken();
-                var refreshTokenExpiry = _tokenService.GetRefreshTokenExpiry();
+                var (token, tokenExpiry) = _tokenService.GenerateToken(user, roles);
+                var (refreshToken, refreshTokenExpiry) = _tokenService.GenerateRefreshToken();
+                
                 await _identityService.UpdateRefreshTokenAsync(user.Id, refreshToken, refreshTokenExpiry);
 
-                return new RefreshTokenResult
-                {
-                    UserId = user.Id,
-                    Token = token,
-                    Roles = roles,
-                    RefreshToken = refreshToken,
-                    RefreshTokenExpiry = refreshTokenExpiry,
-                    Success = true,
-                    Message = "Token refreshed successfully."
-                };
+                return new RefreshTokenSuccessResult(
+                    user.Id,
+                    token,
+                    tokenExpiry,
+                    refreshToken,
+                    refreshTokenExpiry,
+                    roles,
+                    "Token refreshed successfully.");
             }
             catch (UnauthorizedException)
             {

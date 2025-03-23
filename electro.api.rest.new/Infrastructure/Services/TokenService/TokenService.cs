@@ -17,7 +17,8 @@ namespace Application.Services.TokenService
             _configuration = configuration;
         }
 
-        public string GenerateToken(IUser user, IList<string> roles)
+        
+        public (string, DateTime) GenerateToken(IUser user, IList<string> roles)
         {
             var claims = new List<Claim>
             {
@@ -28,18 +29,19 @@ namespace Application.Services.TokenService
             claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
             var key = Encoding.UTF8.GetBytes(_configuration.GetSection("Jwt:Key").Value);
+            var expiresAt = GetTokenExpiry();
 
             var tokenDescriptor = new JwtSecurityToken(
                issuer: _configuration.GetSection("Jwt:Issuer").Value,
                claims: claims,
-               expires: GetTokenExpiry(),
+               expires: expiresAt,
                signingCredentials: new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             );
 
-            return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
+            return (new JwtSecurityTokenHandler().WriteToken(tokenDescriptor), expiresAt);
         }
 
-        public string GenerateRefreshToken()
+        public (string, DateTime) GenerateRefreshToken()
         {
             var randomNumber = new byte[64];
 
@@ -48,15 +50,15 @@ namespace Application.Services.TokenService
                 numberGenerator.GetBytes(randomNumber);
             }
 
-            return Convert.ToBase64String(randomNumber);
+            return (Convert.ToBase64String(randomNumber), GetRefreshTokenExpiry());
         }
 
-        public DateTime GetRefreshTokenExpiry()
+        private DateTime GetRefreshTokenExpiry()
         {
             return DateTime.UtcNow.AddMinutes(Double.Parse(_configuration.GetSection("Jwt:RefreshTokenExpirationTimeMinutes").Value));
         }
 
-        public DateTime GetTokenExpiry()
+        private DateTime GetTokenExpiry()
         {
             return DateTime.UtcNow.AddMinutes(Double.Parse(_configuration.GetSection("Jwt:ExpirationTimeMinutes").Value));
         }

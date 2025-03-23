@@ -40,15 +40,15 @@ namespace Application.Features.Auth.LoginUser
 
                 var roles = await _identityService.GetRolesAsync(user.Id);
 
-                var token = _tokenService.GenerateToken(user, roles);
-                var refreshToken = _tokenService.GenerateRefreshToken();
-                var refreshTokenExpiry = _tokenService.GetRefreshTokenExpiry();
+                var (token, tokenExpiry) = _tokenService.GenerateToken(user, roles);
+                var (refreshToken, refreshTokenExpiry) = _tokenService.GenerateRefreshToken();
 
                 await _identityService.UpdateRefreshTokenAsync(user.Id, refreshToken, refreshTokenExpiry);
 
                 return new LoginUserSuccessResult(
                     user.Id,
                     token,
+                    tokenExpiry,
                     refreshToken,
                     refreshTokenExpiry,
                     roles,

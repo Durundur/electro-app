@@ -5,6 +5,7 @@
     public record RegisterUserSuccessResult(
         Guid UserId,
         string Token,
+        DateTime TokenExpiry,
         string RefreshToken,
         DateTime RefreshTokenExpiry,
         IList<string> Roles,
@@ -12,5 +13,4 @@
     ) : RegisterUserResult(true, Message);
 
     public record RegisterUserErrorResult(string Message) : RegisterUserResult(false, Message);
-
 }

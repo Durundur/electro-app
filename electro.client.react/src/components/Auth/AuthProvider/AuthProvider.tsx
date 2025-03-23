@@ -8,13 +8,16 @@ interface AuthProviderProps {
 }
 
 const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
-	const dispatch = useDispatch();
-	const authState = useSelector((store) => store.AuthStore.auth);
-	const userState = useSelector((store) => store.AuthStore.user);
-	const [isHydrated, setIsHydrated] = useState(false);
-	const [refreshTimeout, setRefreshTimeout] = useState<NodeJS.Timeout | null>(null);
 	const localStorageKey = "electro-auth";
 
+	const dispatch = useDispatch();
+
+	const authState = useSelector((store) => store.AuthStore.auth);
+	const userState = useSelector((store) => store.AuthStore.user);
+
+	const [isHydrated, setIsHydrated] = useState(false);
+	const [refreshTimeout, setRefreshTimeout] = useState<NodeJS.Timeout | null>(null);
+	
 	useEffect(() => {
 		if (typeof window !== "undefined") {
 			const authStateToRestore = localStorage.getItem(localStorageKey);

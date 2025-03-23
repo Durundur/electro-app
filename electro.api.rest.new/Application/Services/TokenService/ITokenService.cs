@@ -5,10 +5,8 @@ namespace Application.Services.TokenService
 {
     public interface ITokenService
     {
-        string GenerateToken(IUser user, IList<string> roles);
-        DateTime GetRefreshTokenExpiry();
-        DateTime GetTokenExpiry();
-        string GenerateRefreshToken();
+        (string, DateTime) GenerateToken(IUser user, IList<string> roles);
+        (string, DateTime) GenerateRefreshToken();
         ClaimsPrincipal GetTokenPrincipal(string token);
     }
 }

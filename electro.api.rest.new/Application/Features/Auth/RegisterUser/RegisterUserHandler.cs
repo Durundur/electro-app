@@ -41,9 +41,8 @@ namespace Application.Features.Auth.RegisterUser
 
                 var roles = await _identityService.GetRolesAsync(user.Id);
 
-                var token = _tokenService.GenerateToken(user, roles);
-                var refreshToken = _tokenService.GenerateRefreshToken();
-                var refreshTokenExpiry = _tokenService.GetRefreshTokenExpiry();
+                var (token, tokenExpiry) = _tokenService.GenerateToken(user, roles);
+                var (refreshToken, refreshTokenExpiry) = _tokenService.GenerateRefreshToken();
 
                 await _identityService.UpdateRefreshTokenAsync(user.Id, refreshToken, refreshTokenExpiry);
 
@@ -52,6 +51,7 @@ namespace Application.Features.Auth.RegisterUser
                 return new RegisterUserSuccessResult(
                     user.Id,
                     token,
+                    tokenExpiry,
                     refreshToken,
                     refreshTokenExpiry,
                     roles,

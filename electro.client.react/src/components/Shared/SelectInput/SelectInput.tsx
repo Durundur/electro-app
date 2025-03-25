@@ -28,7 +28,17 @@ const SelectInput = <T,>({ label, helperText, error, children, ...props }: Selec
 			})}
 		>
 			<InputLabel id={labelId}>{label}</InputLabel>
-			<Select labelId={labelId} {...props}>
+			<Select
+				labelId={labelId}
+				{...props}
+				MenuProps={{
+					sx: {
+						"&.MuiPopover-root": {
+							position: "absolute",
+						},
+					},
+				}}
+			>
 				{children}
 			</Select>
 			{helperText && <FormHelperText>{helperText}</FormHelperText>}

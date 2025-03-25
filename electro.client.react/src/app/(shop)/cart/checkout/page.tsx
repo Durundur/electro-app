@@ -2,7 +2,10 @@
 import CartCheckoutSections from "@/components/Cart/CartCheckout/CartCheckoutSections/CartCheckoutSections";
 import CartCheckoutSummary from "@/components/Cart/CartCheckout/CartCheckoutSummary/CartCheckoutSummary";
 import { useBreadcrumbs } from "@/hooks/Breadcrumbs/useBreadcrumbs";
-import { Grid2 } from "@mui/material";
+import { useOrderFlowGuard } from "@/hooks/OrderFlowGuard/useOrderFlowGuard";
+import { usePageTransition } from "@/hooks/PageTransition/usePageTransition";
+import { useSelector } from "@/libs/Store";
+import { Button, Grid2 } from "@mui/material";
 import { FC } from "react";
 
 const CartCheckoutPage: FC = () => {
@@ -10,6 +13,12 @@ const CartCheckoutPage: FC = () => {
 		{ label: "electro", link: "/" },
 		{ label: "Koszyk", link: "/cart" },
 	]);
+
+	const isLoadingRecipientsSelector = useSelector((store) => store.CartStore.checkoutRecipients.isLoading);
+
+	usePageTransition([isLoadingRecipientsSelector]);
+
+	useOrderFlowGuard({ requiredStep: "checkout" });
 
 	return (
 		<Grid2 container spacing={2}>

@@ -6,20 +6,24 @@ import { useDispatch } from "@/libs/Store";
 import { logoutUser } from "@/libs/Auth/thunks";
 
 const ProfileIcon: FC = () => {
-	const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
+	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+	const open = Boolean(anchorEl);
+
 	const dispatch = useDispatch();
 
 	const handleOpenProfileMenu = (event: React.MouseEvent<HTMLElement>) => {
-		setAnchorElNav(event.currentTarget);
+		event.stopPropagation();
+		setAnchorEl(event.currentTarget);
 	};
 
-	const handleCloseProfileMenu = () => {
-		setAnchorElNav(null);
+	const handleCloseProfileMenu = (event: React.MouseEvent<HTMLElement>) => {
+		event.stopPropagation();
+		setAnchorEl(null);
 	};
 
 	const handleLogout = () => {
 		dispatch(logoutUser());
-		handleCloseProfileMenu();
+		setAnchorEl(null);
 	};
 
 	return (
@@ -29,7 +33,18 @@ const ProfileIcon: FC = () => {
 					<PersonOutlineRounded />
 				</IconButton>
 			</Tooltip>
-			<Menu open={Boolean(anchorElNav)} anchorEl={anchorElNav} onClose={handleCloseProfileMenu}>
+			<Menu
+				sx={{
+					"&.MuiPopover-root": {
+						position: "absolute",
+					},
+				}}
+				anchorEl={anchorEl}
+				transformOrigin={{ horizontal: "right", vertical: "top" }}
+				anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+				open={open}
+				onClose={handleCloseProfileMenu}
+			>
 				<MenuList sx={{ p: 0 }}>
 					<Link href="/account/settings">
 						<MenuItem>

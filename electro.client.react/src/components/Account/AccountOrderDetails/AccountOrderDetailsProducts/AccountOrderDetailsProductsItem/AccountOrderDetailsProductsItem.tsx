@@ -10,7 +10,7 @@ interface AccountOrderDetailsProductsItemProps {
 
 const AccountOrderDetailsProductsItem: FC<AccountOrderDetailsProductsItemProps> = ({ product }) => {
 	return (
-		<Card elevation={0}>
+		<Card>
 			<CardActionArea LinkComponent={Link} href={`/product/${product.id}`}>
 				<CardContent sx={{ height: "100%" }}>
 					<Grid2 container spacing={1}>

@@ -2,6 +2,7 @@ import { getCreateOrderCommand } from "@/libs/Cart/services";
 import { createOrder } from "@/libs/Cart/thunks";
 import { formatAmount } from "@/libs/Helpers/Formatters";
 import { useDispatch, useSelector } from "@/libs/Store";
+import { ChevronLeftRounded } from "@mui/icons-material";
 import { Button, Card, CardContent, Stack, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { FC, useEffect } from "react";
@@ -46,6 +47,10 @@ const CartCheckoutConfirmSummary: FC = () => {
 		}
 	}, [createOrderErrorSelector, createOrderIsLoadingSelector, createOrderResultSelector]);
 
+	const handlePreviousStepClick = () => {
+		router.replace("/cart/checkout");
+	};
+
 	return (
 		<Card>
 			<CardContent>
@@ -75,9 +80,14 @@ const CartCheckoutConfirmSummary: FC = () => {
 								{formatAmount(totalAmount, totalAmountCurrency)}
 							</Typography>
 						</Stack>
-						<Button variant="contained" fullWidth onClick={handleCreateOrder}>
-							Kupuję i płacę
-						</Button>
+						<Stack spacing={2}>
+							<Button variant="contained" fullWidth onClick={handleCreateOrder}>
+								Kupuję i płacę
+							</Button>
+							<Button startIcon={<ChevronLeftRounded />} variant="outlined" fullWidth onClick={handlePreviousStepClick}>
+								Poprzedni krok
+							</Button>
+						</Stack>
 					</Stack>
 				</Stack>
 			</CardContent>

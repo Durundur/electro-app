@@ -2,6 +2,7 @@
 import CartCheckoutConfirmSections from "@/components/Cart/CartCheckoutConfirm/CartCheckoutConfirmSections/CartCheckoutConfirmSections";
 import CartCheckoutConfirmSummary from "@/components/Cart/CartCheckoutConfirm/CartCheckoutConfirmSummary/CartCheckoutConfirmSummary";
 import { useBreadcrumbs } from "@/hooks/Breadcrumbs/useBreadcrumbs";
+import { useOrderFlowGuard } from "@/hooks/OrderFlowGuard/useOrderFlowGuard";
 import { Grid2 } from "@mui/material";
 import { FC } from "react";
 
@@ -10,6 +11,8 @@ const CartCheckoutConfirmPage: FC = () => {
 		{ label: "electro", link: "/" },
 		{ label: "Koszyk", link: "/cart" },
 	]);
+
+	useOrderFlowGuard({ requiredStep: "confirm" });
 
 	return (
 		<Grid2 container spacing={2}>

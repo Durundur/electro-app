@@ -5,6 +5,7 @@ import CartCheckoutSummaryProductsList from "./CartCheckoutSummaryProductsList/C
 import { useDispatch, useSelector } from "@/libs/Store";
 import { setDeliveryOptionValidation, setPaymentOptionValidation, setRecipientOptionValidation } from "@/libs/Cart/slice";
 import { useRouter } from "next/navigation";
+import { ChevronLeftRounded, ChevronRightRounded } from "@mui/icons-material";
 
 const CartCheckoutSummary: FC = () => {
 	const router = useRouter();
@@ -47,6 +48,10 @@ const CartCheckoutSummary: FC = () => {
 		}
 	};
 
+	const handlePreviousStepClick = () => {
+		router.replace("/cart");
+	};
+
 	return (
 		<Card>
 			<CardContent>
@@ -77,9 +82,14 @@ const CartCheckoutSummary: FC = () => {
 								{formatAmount(totalAmount, totalAmountCurrency)}
 							</Typography>
 						</Stack>
-						<Button variant="contained" fullWidth onClick={handleNextStepClick}>
-							Przejdź do podsumowania
-						</Button>
+						<Stack spacing={2}>
+							<Button endIcon={<ChevronRightRounded />} variant="contained" fullWidth onClick={handleNextStepClick}>
+								Przejdź do podsumowania
+							</Button>
+							<Button startIcon={<ChevronLeftRounded />} variant="outlined" fullWidth onClick={handlePreviousStepClick}>
+								Poprzedni krok
+							</Button>
+						</Stack>
 					</Stack>
 				</Stack>
 			</CardContent>

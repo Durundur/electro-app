@@ -46,36 +46,30 @@ const ProfileIcon: FC = () => {
 				onClose={handleCloseProfileMenu}
 			>
 				<MenuList sx={{ p: 0 }}>
-					<Link href="/account/settings">
-						<MenuItem>
-							<ListItemIcon>
-								<Settings></Settings>
-							</ListItemIcon>
-							<ListItemText>Ustawienia</ListItemText>
-						</MenuItem>
-					</Link>
+					<MenuItem onClick={handleCloseProfileMenu} component={Link} href="/account/settings">
+						<ListItemIcon>
+							<Settings />
+						</ListItemIcon>
+						<ListItemText>Ustawienia</ListItemText>
+					</MenuItem>
 					<MenuItem onClick={handleLogout}>
 						<ListItemIcon>
-							<Logout></Logout>
+							<Logout />
 						</ListItemIcon>
 						<ListItemText>Wyloguj</ListItemText>
 					</MenuItem>
-					<Link href="/admin">
-						<MenuItem LinkComponent={Link} href="/admin">
-							<ListItemIcon>
-								<AdminPanelSettings></AdminPanelSettings>
-							</ListItemIcon>
-							<ListItemText>Panel administratora</ListItemText>
-						</MenuItem>
-					</Link>
-					<Link href="/account/orders">
-						<MenuItem LinkComponent={Link} href="/account/orders">
-							<ListItemIcon>
-								<StickyNote2></StickyNote2>
-							</ListItemIcon>
-							<ListItemText>Zamówienia</ListItemText>
-						</MenuItem>
-					</Link>
+					<MenuItem onClick={handleCloseProfileMenu} component={Link} href="/admin">
+						<ListItemIcon>
+							<AdminPanelSettings />
+						</ListItemIcon>
+						<ListItemText>Panel administratora</ListItemText>
+					</MenuItem>
+					<MenuItem onClick={handleCloseProfileMenu} component={Link} href="/account/orders">
+						<ListItemIcon>
+							<StickyNote2 />
+						</ListItemIcon>
+						<ListItemText>Zamówienia</ListItemText>
+					</MenuItem>
 				</MenuList>
 			</Menu>
 		</div>

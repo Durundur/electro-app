@@ -2,10 +2,13 @@ import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Toolt
 import { FC, useState } from "react";
 import { PersonOutlineRounded, Settings, AdminPanelSettings, StickyNote2, Logout } from "@mui/icons-material";
 import Link from "next/link";
-import { useDispatch } from "@/libs/Store";
+import { useDispatch, useSelector } from "@/libs/Store";
 import { logoutUser } from "@/libs/Auth/thunks";
 
 const ProfileIcon: FC = () => {
+	const userRolesSelector = useSelector((store) => store.AuthStore.user.roles);
+	const isAdmin = userRolesSelector?.includes("Admin");
+
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
 
@@ -58,12 +61,14 @@ const ProfileIcon: FC = () => {
 						</ListItemIcon>
 						<ListItemText>Wyloguj</ListItemText>
 					</MenuItem>
-					<MenuItem onClick={handleCloseProfileMenu} component={Link} href="/admin">
-						<ListItemIcon>
-							<AdminPanelSettings />
-						</ListItemIcon>
-						<ListItemText>Panel administratora</ListItemText>
-					</MenuItem>
+					{isAdmin && (
+						<MenuItem onClick={handleCloseProfileMenu} component={Link} href="/admin">
+							<ListItemIcon>
+								<AdminPanelSettings />
+							</ListItemIcon>
+							<ListItemText>Panel administratora</ListItemText>
+						</MenuItem>
+					)}
 					<MenuItem onClick={handleCloseProfileMenu} component={Link} href="/account/orders">
 						<ListItemIcon>
 							<StickyNote2 />

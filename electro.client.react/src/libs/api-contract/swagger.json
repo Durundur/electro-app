@@ -2850,16 +2850,12 @@
 			  },
 			  "nullable": true
 			},
-			"active": {
-			  "type": "boolean"
-			},
-			"stockQuantity": {
+			"stockQuantityDelta": {
 			  "type": "integer",
 			  "format": "int32"
 			},
 			"status": {
-			  "type": "string",
-			  "nullable": true
+			  "$ref": "#/components/schemas/ProductStatus"
 			},
 			"groupId": {
 			  "type": "integer",
@@ -2934,8 +2930,7 @@
 			  "nullable": true
 			},
 			"status": {
-			  "type": "string",
-			  "nullable": true
+			  "$ref": "#/components/schemas/ProductStatus"
 			},
 			"groupId": {
 			  "type": "integer",
@@ -4018,9 +4013,6 @@
 			  "format": "int32",
 			  "nullable": true
 			},
-			"active": {
-			  "type": "boolean"
-			},
 			"stockQuantity": {
 			  "type": "integer",
 			  "format": "int32"
@@ -4697,7 +4689,6 @@
 		  "enum": [
 			"Draft",
 			"Active",
-			"Inactive",
 			"Discontinued"
 		  ],
 		  "type": "string"

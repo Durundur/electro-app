@@ -15,7 +15,6 @@ namespace Application.Features.ProductCatalog.GetProduct
                 Currency = product.Price.Currency,
                 Photos = product.Photos.ToList(),
                 Status = product.Status,
-                Active = product.Active,
                 CategoryId = product.CategoryId,
                 GroupId = product.GroupId,
                 SubCategoryId = product.SubCategoryId,

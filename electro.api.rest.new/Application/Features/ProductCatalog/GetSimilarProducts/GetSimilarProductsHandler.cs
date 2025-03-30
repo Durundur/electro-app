@@ -29,6 +29,7 @@ namespace Application.Features.ProductCatalog.GetSimilarProducts
                 .Include(p => p.Attributes)
                 .Where(p => p.Id != request.ProductId)
                 .Where(p => sourceProduct.GroupId.HasValue && p.GroupId == sourceProduct.GroupId)
+                .Where(p => p.Status == ProductStatus.Active && p.StockQuantity > 0)
                 .ToListAsync(cancellationToken);
 
             var productsWithScores = similarProductsQuery

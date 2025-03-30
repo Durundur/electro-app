@@ -1,4 +1,5 @@
-﻿using Domain.Reposiotories;
+﻿using Domain.Aggregates.ProductCatalogAggregate;
+using Domain.Reposiotories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,7 +17,10 @@ namespace Application.Features.ProductCatalog.GetSearchFilters
         public async Task<GetSearchFiltersResult> Handle(GetSearchFiltersQuery request, CancellationToken cancellationToken)
         {
 
-            var productsQuery = _unitOfWork.ProductRepository.GetProductsQuery().Include(p => p.Attributes).AsQueryable();
+            var productsQuery = _unitOfWork.ProductRepository.GetProductsQuery()
+                .Include(p => p.Attributes)
+                .Where(p => p.Status == ProductStatus.Active && p.StockQuantity > 0)
+                .AsQueryable();
 
             if (request.GroupId.HasValue)
             {

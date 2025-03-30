@@ -3,6 +3,7 @@ using Application.Services.UserContext;
 using Domain.Reposiotories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Features.Opinions.GetProductOpinions
 {
@@ -10,11 +11,13 @@ namespace Application.Features.Opinions.GetProductOpinions
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IUserContext _userContext;
+        private readonly ILogger<GetProductOpinionsHandler> _logger;
 
-        public GetProductOpinionsHandler(IUnitOfWork unitOfWork, IUserContext userContext)
+        public GetProductOpinionsHandler(IUnitOfWork unitOfWork, IUserContext userContext, ILogger<GetProductOpinionsHandler> logger)
         {
             _unitOfWork = unitOfWork;
             _userContext = userContext;
+            _logger = logger;
         }
 
         public async Task<GetProductOpinionsResult> Handle(GetProductOpinionsQuery request, CancellationToken cancellationToken)
@@ -48,6 +51,7 @@ namespace Application.Features.Opinions.GetProductOpinions
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "An error occurred while getting product opinions");
                 throw new BadRequestException(ex.Message);
             }
         }

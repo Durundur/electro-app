@@ -1,3 +1,4 @@
+using Domain.Aggregates.ProductCatalogAggregate;
 using Domain.Reposiotories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +20,7 @@ namespace Application.Features.ProductCatalog.GetFeaturedProducts
                 .Include(p => p.Opinions);
 
             var products = await productsQuery
-                .Where(p => p.StockQuantity > 0)
+                .Where(p => p.Status == ProductStatus.Active && p.StockQuantity > 0)
                 .OrderByDescending(p => p.Opinions.Any() ? p.Opinions.Average(o => o.Rating) : 0)
                 .ThenByDescending(p => p.Opinions.Count())
                 .Take(request.Limit)

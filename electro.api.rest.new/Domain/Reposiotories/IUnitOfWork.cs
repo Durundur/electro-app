@@ -1,4 +1,6 @@
-﻿namespace Domain.Reposiotories
+﻿using System.Data;
+
+namespace Domain.Reposiotories
 {
     public interface IUnitOfWork : IDisposable
     {
@@ -10,8 +12,8 @@
         IProductRepository ProductRepository { get; }
         IRecipientRepository RecipientRepository { get; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
-        Task BeginTransactionAsync(CancellationToken cancellationToken = default);
         Task CommitTransactionAsync(CancellationToken cancellationToken = default);
         Task RollbackTransactionAsync(CancellationToken cancellationToken = default);
+        Task BeginTransactionAsync(IsolationLevel isolationLevel = IsolationLevel.RepeatableRead, CancellationToken cancellationToken = default);
     }
 }

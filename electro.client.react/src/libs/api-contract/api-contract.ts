@@ -108,9 +108,8 @@ export interface CreateOrUpdateProductCommand {
     amount?: number;
     currency?: string | undefined;
     photos?: string[] | undefined;
-    active?: boolean;
-    stockQuantity?: number;
-    status?: string | undefined;
+    stockQuantityDelta?: number;
+    status?: ProductStatus;
     groupId?: number | undefined;
     categoryId?: number | undefined;
     subCategoryId?: number | undefined;
@@ -130,7 +129,7 @@ export interface CreateOrUpdateProductResult {
     amount?: number;
     currency?: string | undefined;
     photos?: string[] | undefined;
-    status?: string | undefined;
+    status?: ProductStatus;
     groupId?: number | undefined;
     categoryId?: number | undefined;
     subCategoryId?: number | undefined;
@@ -454,7 +453,6 @@ export interface GetProductResult {
     groupId?: number | undefined;
     categoryId?: number | undefined;
     subCategoryId?: number | undefined;
-    active?: boolean;
     stockQuantity?: number;
     averageOpinionRating?: number;
     opinionCount?: number;
@@ -678,7 +676,6 @@ export interface ProductAttributeResult {
 export enum ProductStatus {
     Draft = "Draft",
     Active = "Active",
-    Inactive = "Inactive",
     Discontinued = "Discontinued",
 }
 

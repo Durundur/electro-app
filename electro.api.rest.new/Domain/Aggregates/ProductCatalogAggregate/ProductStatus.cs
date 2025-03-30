@@ -4,7 +4,6 @@
     {
         Draft,
         Active,
-        Inactive,
         Discontinued
     }
 }

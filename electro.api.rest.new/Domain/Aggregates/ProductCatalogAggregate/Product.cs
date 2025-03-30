@@ -13,7 +13,6 @@ namespace Domain.Aggregates.ProductCatalogAggregate
         public int? GroupId { get; private set; }
         public int? CategoryId { get; private set; }
         public int? SubCategoryId { get; private set; }
-        public bool Active { get; private set; }
         public int StockQuantity { get; private set; }
         private readonly List<AttributeValue> _attributes = new List<AttributeValue>();
         public IReadOnlyCollection<AttributeValue> Attributes => _attributes.AsReadOnly();
@@ -29,37 +28,32 @@ namespace Domain.Aggregates.ProductCatalogAggregate
             _photos = new List<string>();
         }
 
-        public static Product Create(
-            string name, 
-            string description, 
-            Money price, 
-            bool active, 
-            int stockQuantity)
+        public static Product Create(string name, string description, Money price, int stockQuantity)
         {
             if (string.IsNullOrWhiteSpace(name))
+            {
                 throw new DomainException("Product name cannot be empty");
-                
+            }
+
             var product = new Product
             {
                 Id = Guid.NewGuid(),
                 Name = name,
                 Description = description,
                 Price = price,
-                Status = ProductStatus.Active,
-                Active = active,
+                Status = ProductStatus.Draft,
                 StockQuantity = stockQuantity
             };
 
             return product;
         }
 
-        public void Update(string name, string description, Money price, ProductStatus status, bool active, int stockQuantity)
+        public void Update(string name, string description, Money price, ProductStatus status, int stockQuantity)
         {
             Name = name;
             Description = description;
             Price = price;
             Status = status;
-            Active = active;
             StockQuantity = stockQuantity;
         }
 
@@ -69,7 +63,7 @@ namespace Domain.Aggregates.ProductCatalogAggregate
             {
                 throw new DomainException("User has already added an opinion to this product.");
             }
-            
+
             var opinion = Opinion.Create(userId, content, rating, authorDisplayName);
             _opinions.Add(opinion);
             return opinion;
@@ -77,7 +71,7 @@ namespace Domain.Aggregates.ProductCatalogAggregate
 
         public void AssignToGroup(int groupId)
         {
-            if(groupId == 0)
+            if (groupId == 0)
             {
                 GroupId = null;
             }
@@ -89,7 +83,7 @@ namespace Domain.Aggregates.ProductCatalogAggregate
 
         public void AssignToCategory(int categoryId)
         {
-            if(categoryId == 0)
+            if (categoryId == 0)
             {
                 CategoryId = null;
             }
@@ -97,7 +91,7 @@ namespace Domain.Aggregates.ProductCatalogAggregate
             {
                 CategoryId = categoryId;
             }
-            
+
         }
 
         public void AssignToSubCategory(int subCategoryId)
@@ -111,54 +105,42 @@ namespace Domain.Aggregates.ProductCatalogAggregate
                 SubCategoryId = subCategoryId;
             }
         }
-        public void UpdateStockQuantity(int newStockQuantity)
+        public void UpdateStockQuantity(int newQuantity)
         {
-            if (newStockQuantity < 0) throw new InvalidOperationException("Stock Quantity cannot be lower than 0.");
-            StockQuantity = newStockQuantity;
+            if (Status == ProductStatus.Discontinued)
+            {
+                throw new DomainException("Cannot update stock for discontinued product");
+
+            }
+
+            if (newQuantity < 0)
+            {
+                throw new DomainException("Stock quantity cannot be negative");
+            }
+
+            StockQuantity = newQuantity;
         }
 
-        public void ReplacePhotos(IEnumerable<string> photos)
+        public void UpdatePhotos(IEnumerable<string> photos)
         {
             if (photos == null)
-                throw new ArgumentNullException(nameof(photos), "Photos collection cannot be null.");
+            {
+                throw new DomainException("Photos collection cannot be null.");
+            }
 
             _photos.Clear();
             _photos.AddRange(photos.Where(p => !string.IsNullOrWhiteSpace(p)).Distinct());
         }
 
-        public void AddOrUpdateAttribute(AttributeValue attributeValue)
-        {
-            if (attributeValue == null)
-                throw new ArgumentNullException(nameof(attributeValue), "Attribute value cannot be null.");
-
-            var existingAttribute = _attributes.FirstOrDefault(a => a.AttributeDefinitionId == attributeValue.AttributeDefinitionId);
-            if (existingAttribute != null)
-            {
-                existingAttribute.Update(attributeValue.Value, attributeValue.IsPrimary);
-            }
-            else
-            {
-                _attributes.Add(attributeValue);
-            }
-        }
-
-        public void RemoveAttribute(Guid definitionId)
-        {
-            var attribute = _attributes.FirstOrDefault(a => a.AttributeDefinitionId == definitionId);
-            if (attribute == null)
-                throw new InvalidOperationException("Attribute not found.");
-
-            _attributes.Remove(attribute);
-        }
-
-        public void ReplaceAttributes(IEnumerable<AttributeValue> newAttributes)
+        public void UpdateAttributes(IEnumerable<AttributeValue> newAttributes)
         {
             if (newAttributes == null)
-                throw new ArgumentNullException(nameof(newAttributes), "Attributes collection cannot be null.");
+            {
+                throw new DomainException("Attributes collection cannot be null.");
+            }
 
             _attributes.Clear();
             _attributes.AddRange(newAttributes.Where(a => a != null));
         }
-
     }
 }

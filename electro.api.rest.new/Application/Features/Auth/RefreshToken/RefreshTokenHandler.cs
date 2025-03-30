@@ -3,6 +3,7 @@ using Application.Services.TokenService;
 using MediatR;
 using System.Security.Claims;
 using Application.Exceptions;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Features.Auth.RefreshToken
 {
@@ -10,11 +11,13 @@ namespace Application.Features.Auth.RefreshToken
     {
         private readonly IIdentityService _identityService;
         private readonly ITokenService _tokenService;
+        private readonly ILogger<RefreshTokenHandler> _logger;
 
-        public RefreshTokenHandler(IIdentityService identityService, ITokenService tokenService)
+        public RefreshTokenHandler(IIdentityService identityService, ITokenService tokenService, ILogger<RefreshTokenHandler> logger)
         {
             _identityService = identityService;
             _tokenService = tokenService;
+            _logger = logger;
         }
 
         public async Task<RefreshTokenResult> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
@@ -68,6 +71,7 @@ namespace Application.Features.Auth.RefreshToken
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "An error occurred while refreshing token");
                 throw new BadRequestException(ex.Message);
             }
         }

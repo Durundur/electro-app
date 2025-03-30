@@ -2,6 +2,7 @@
 using Application.Services.UserContext;
 using Domain.Reposiotories;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Features.Opinions.CreateOpinion
 {
@@ -9,11 +10,13 @@ namespace Application.Features.Opinions.CreateOpinion
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IUserContext _userContext;
+        private readonly ILogger<CreateOpinionHandler> _logger;
 
-        public CreateOpinionHandler(IUnitOfWork unitOfWork, IUserContext userContext)
+        public CreateOpinionHandler(IUnitOfWork unitOfWork, IUserContext userContext, ILogger<CreateOpinionHandler> logger)
         {
             _unitOfWork = unitOfWork;
             _userContext = userContext;
+            _logger = logger;
         }
 
         public async Task<CreateOpinionResult> Handle(CreateOpinionCommand command, CancellationToken cancellationToken)
@@ -44,6 +47,7 @@ namespace Application.Features.Opinions.CreateOpinion
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "An error occurred while creating opinion");
                 throw new BadRequestException(ex.Message);
             }
         }

@@ -1,4 +1,5 @@
-﻿using Domain.Reposiotories;
+﻿using Domain.Aggregates.ProductCatalogAggregate;
+using Domain.Reposiotories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +19,7 @@ namespace Application.Features.ProductCatalog.GetSearchProducts
             var productsQuery = _unitOfWork.ProductRepository.GetProductsQuery()
                 .Include(p => p.Attributes.Where(a => a.IsPrimary))
                 .Include(p => p.Opinions)
+                .Where(p => p.Status == ProductStatus.Active && p.StockQuantity > 0)
                 .AsQueryable();
 
             if (request.GroupId.HasValue)

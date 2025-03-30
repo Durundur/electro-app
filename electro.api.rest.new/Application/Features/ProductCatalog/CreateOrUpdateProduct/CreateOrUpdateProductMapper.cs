@@ -1,6 +1,5 @@
 ﻿using Application.Features.Shared.ProductAttribute;
 
-
 namespace Application.Features.ProductCatalog.CreateProduct
 {
     public static class CreateOrUpdateProductMapper
@@ -16,11 +15,10 @@ namespace Application.Features.ProductCatalog.CreateProduct
                 SubCategoryId = product.SubCategoryId,
                 Description = product.Description,
                 Photos = product.Photos.ToList(),
-                Status = product.Status.ToString(),
+                Status = product.Status,
                 Amount = product.Price.Amount,
                 Currency = product.Price.Currency,
                 Attributes = ProductAttributeMapper.MapToListOfProductAttributeResult(product.Attributes, attributeDefinitions)
-
             };
         }
     }

@@ -7,12 +7,12 @@ import QuantityInput from "@/components/Shared/QuantityInput/QuantityInput";
 
 interface ProductPageActionCardProps {
     product: GetProductResult;
-    onAddToCart: (quantity: number) => void;
+    onAddToCart: (quantity: number) => void;    
+    quantity: number;
+    setQuantity: (quantity: number) => void;
 }
 
-const ProductPageActionCard: FC<ProductPageActionCardProps> = ({ product, onAddToCart }) => {
-    const [quantity, setQuantity] = useState(1);
-
+const ProductPageActionCard: FC<ProductPageActionCardProps> = ({ product, onAddToCart, quantity, setQuantity }) => {
     return (
         <Card sx={{ padding: 2 }}>
             <Stack spacing={1}>

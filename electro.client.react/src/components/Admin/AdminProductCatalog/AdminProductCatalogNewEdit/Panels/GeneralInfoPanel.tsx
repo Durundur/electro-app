@@ -1,11 +1,29 @@
-import { Accordion, AccordionDetails, AccordionSummary, Checkbox, FormControl, FormControlLabel, FormHelperText, Grid2 as Grid, InputLabel, MenuItem, Select, Stack, TextField } from "@mui/material";
+import {
+	Accordion,
+	AccordionDetails,
+	AccordionSummary,
+	Checkbox,
+	FormControl,
+	FormControlLabel,
+	FormHelperText,
+	Grid2 as Grid,
+	InputLabel,
+	MenuItem,
+	Select,
+	Stack,
+	TextField,
+	Typography,
+} from "@mui/material";
 import { ExpandMoreRounded } from "@mui/icons-material";
 import { FormikProps } from "formik";
 import { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "@/libs/Store";
-import { CreateOrUpdateProductCommand } from "@/libs/api-contract/api-contract";
+import { CreateOrUpdateProductCommand, ProductStatus } from "@/libs/api-contract/api-contract";
 import { clearProductHierarchyState } from "@/libs/Admin/AdminProductCatalog/AdminProductCatalogNewEdit/slice";
 import { fetchProductHierarchy } from "@/libs/Admin/AdminProductCatalog/AdminProductCatalogNewEdit/thunk";
+import SelectInput from "@/components/Shared/SelectInput/SelectInput";
+import { translateProductStatus } from "@/libs/Helpers/Translations/ProductsTranslations";
+import TextInput from "@/components/Shared/TextInput/TextInput";
 
 interface GeneralInfoPanelProps {
 	formik: FormikProps<CreateOrUpdateProductCommand>;
@@ -14,6 +32,7 @@ interface GeneralInfoPanelProps {
 const GeneralInfoPanel: FC<GeneralInfoPanelProps> = ({ formik }) => {
 	const dispatch = useDispatch();
 	const productHierarchySelector = useSelector((store) => store.AdminProductCatalogNewEditPageStore.productHierarchy);
+	const productSelector = useSelector((store) => store.AdminProductCatalogNewEditPageStore.product.data);
 
 	const selectedGroupId = formik.values.groupId || 0;
 	const selectedCategoryId = formik.values.categoryId || 0;
@@ -50,164 +69,181 @@ const GeneralInfoPanel: FC<GeneralInfoPanelProps> = ({ formik }) => {
 				Informacje ogólne
 			</AccordionSummary>
 			<AccordionDetails>
-				<Stack direction="column" spacing={2}>
-					<TextField
-						size="small"
-						variant="outlined"
-						label="Nazwa"
-						type="text"
-						id="name"
-						value={formik.values["name"]}
-						onChange={formik.handleChange}
-						onBlur={formik.handleBlur}
-						error={formik.touched["name"] && Boolean(formik.errors["name"])}
-						helperText={formik.touched["name"] && <>{formik.errors["name"]}</>}
-						slotProps={{
-							input: {
-								startAdornment: <></>,
-							},
-						}}
-						fullWidth
-					/>
-					<Grid container spacing={2}>
+				<Grid container spacing={2}>
+					<Grid size={{ xs: 12 }}>
+						<TextInput
+							size="small"
+							variant="outlined"
+							label="Nazwa"
+							type="text"
+							id="name"
+							value={formik.values["name"]}
+							onChange={formik.handleChange}
+							onBlur={formik.handleBlur}
+							error={formik.touched["name"] && Boolean(formik.errors["name"])}
+							helperText={formik.touched["name"] && <>{formik.errors["name"]}</>}
+							fullWidth
+						></TextInput>
+					</Grid>
+
+					<Grid size={{ xs: 4 }}>
+						<TextInput
+							size="small"
+							variant="outlined"
+							label="Cena"
+							type="number"
+							id="amount"
+							value={formik.values["amount"]}
+							onChange={formik.handleChange}
+							onBlur={formik.handleBlur}
+							error={formik.touched["amount"] && Boolean(formik.errors["amount"])}
+							helperText={formik.touched["amount"] && <>{formik.errors["amount"]}</>}
+							fullWidth
+						></TextInput>
+					</Grid>
+
+					<Grid size={{ xs: 4 }}>
+						<SelectInput
+							fullWidth
+							size="small"
+							label="Waluta"
+							id={"currency"}
+							name={"currency"}
+							displayEmpty
+							value={formik.values["currency"]}
+							onChange={formik.handleChange}
+							onBlur={formik.handleBlur}
+							error={formik.touched["currency"] && Boolean(formik.errors["currency"])}
+							helperText={formik.errors["currency"]}
+						>
+							<MenuItem value={""}>Wybierz walutę</MenuItem>
+							<MenuItem value={"PLN"}>PLN</MenuItem>
+							<MenuItem value={"USD"}>USD</MenuItem>
+							<MenuItem value={"EUR"}>EUR</MenuItem>
+						</SelectInput>
+					</Grid>
+
+					<Grid size={{ xs: 4 }}></Grid>
+
+					<Grid size={{ xs: 4 }}>
+						<SelectInput
+							fullWidth
+							size="small"
+							label={"Status"}
+							id={"status"}
+							name={"status"}
+							displayEmpty
+							value={formik.values["status"]}
+							onChange={formik.handleChange}
+							onBlur={formik.handleBlur}
+							error={Boolean(formik.touched["status"] && formik.errors["status"])}
+							helperText={formik.errors["status"]}
+						>
+							{Object.values(ProductStatus).map((status) => (
+								<MenuItem key={`status-${status}`} value={status}>
+									{translateProductStatus(status)}
+								</MenuItem>
+							))}
+						</SelectInput>
+					</Grid>
+
+					<Grid size={{ xs: 12 }} container>
+						<Grid size={{ xs: 4 }} alignSelf={"center"}>
+							<Typography>Aktualny stan magazynowy: {productSelector?.stockQuantity}</Typography>
+						</Grid>
 						<Grid size={{ xs: 4 }}>
-							<TextField
+							<TextInput
 								size="small"
 								variant="outlined"
-								label="Cena"
+								label="Zmiana stanu magazynowego"
 								type="number"
-								id="amount"
-								value={formik.values["amount"]}
+								id="stockQuantityDelta"
+								value={formik.values["stockQuantityDelta"]}
 								onChange={formik.handleChange}
 								onBlur={formik.handleBlur}
-								error={formik.touched["amount"] && Boolean(formik.errors["amount"])}
-								helperText={formik.touched["amount"] && <>{formik.errors["amount"]}</>}
-								slotProps={{
-									input: {
-										startAdornment: <></>,
-									},
-								}}
+								error={formik.touched["stockQuantityDelta"] && Boolean(formik.errors["stockQuantityDelta"])}
+								helperText={formik.touched["stockQuantityDelta"] && <>{formik.errors["stockQuantityDelta"]}</>}
 								fullWidth
-							/>
+							></TextInput>
 						</Grid>
-						<Grid size={{ xs: 4 }}>
-							<FormControl size="small" fullWidth error={formik.touched["currency"] && Boolean(formik.errors["currency"])}>
-								<InputLabel id="priceCurrency-label">Waluta</InputLabel>
-								<Select
-									labelId="priceCurrency-label"
-									id="currency"
-									label="Waluta"
-									value={formik.values["currency"]}
-									onChange={(event) => formik.setFieldValue("currency", event.target.value)}
-									onBlur={formik.handleBlur}
-								>
-									<MenuItem value={""}>Wybierz walutę</MenuItem>
-									<MenuItem value={"PLN"}>PLN</MenuItem>
-									<MenuItem value={"USD"}>USD</MenuItem>
-									<MenuItem value={"EUR"}>EUR</MenuItem>
-								</Select>
-								{formik.touched["currency"] && formik.errors["currency"] && <FormHelperText>{formik.errors["currency"] as string}</FormHelperText>}
-							</FormControl>
+						<Grid size={{ xs: 4 }} alignSelf={"center"}>
+							<Typography>Stan po zmianie: {(productSelector?.stockQuantity || 0) + (Number(formik.values["stockQuantityDelta"]) || 0)}</Typography>
 						</Grid>
 					</Grid>
-					<Grid container spacing={2} size={{ xs: 6 }}>
-						<Grid>
-							<FormControlLabel
-								control={<Checkbox size="small" id="active" checked={formik.values["active"]} onChange={formik.handleChange} onBlur={formik.handleBlur} />}
-								label="Czy aktywny?"
-							/>
-						</Grid>
-						<Grid>
-							<TextField
-								size="small"
-								variant="outlined"
-								label="Dostępna ilość"
-								type="number"
-								id="stockQuantity"
-								value={formik.values["stockQuantity"]}
-								onChange={formik.handleChange}
-								onBlur={formik.handleBlur}
-								error={formik.touched["stockQuantity"] && Boolean(formik.errors["stockQuantity"])}
-								helperText={formik.touched["stockQuantity"] && <>{formik.errors["stockQuantity"]}</>}
-								slotProps={{
-									input: {
-										startAdornment: <></>,
-									},
-								}}
-								fullWidth
-							/>
-						</Grid>
+
+					<Grid size={{ xs: 4 }}>
+						<SelectInput
+							fullWidth
+							size="small"
+							label={"Grupa"}
+							id={"groupId"}
+							name={"groupId"}
+							displayEmpty
+							value={formik.values["groupId"]}
+							onChange={(event) => handleGroupChange(formik, event.target.value)}
+							onBlur={formik.handleBlur}
+							error={formik.touched["groupId"] && Boolean(formik.errors["groupId"])}
+							helperText={formik.errors["groupId"]}
+						>
+							<MenuItem value={0} defaultValue={0}>
+								Wybierz grupę
+							</MenuItem>
+							{groups?.map((group) => (
+								<MenuItem key={`group-select-${group.id}-${group.name}`} value={group.id}>
+									{group.name}
+								</MenuItem>
+							))}
+						</SelectInput>
 					</Grid>
-					<Grid container spacing={2}>
-						<Grid size={{ xs: 4 }}>
-							<FormControl size="small" fullWidth>
-								<InputLabel id="group-label">Grupa</InputLabel>
-								<Select
-									labelId="group-label"
-									id="groupId"
-									label="Grupa"
-									value={formik.values["groupId"]}
-									onChange={(event) => handleGroupChange(formik, event.target.value)}
-									error={formik.touched["groupId"] && Boolean(formik.errors["groupId"])}
-								>
-									<MenuItem value={0} defaultValue={0}>
-										Wybierz grupę
-									</MenuItem>
-									{groups?.map((group) => (
-										<MenuItem key={group.id} value={group.id}>
-											{group.name}
-										</MenuItem>
-									))}
-								</Select>
-							</FormControl>
-						</Grid>
-						<Grid size={{ xs: 4 }}>
-							<FormControl size="small" fullWidth>
-								<InputLabel id="category-label">Kategoria</InputLabel>
-								<Select
-									labelId="category-label"
-									id="categoryId"
-									label="Kategoria"
-									value={formik.values["categoryId"]}
-									onChange={(event) => handleCategoryChange(formik, event.target.value)}
-									error={formik.touched["categoryId"] && Boolean(formik.errors["categoryId"])}
-									fullWidth
-								>
-									<MenuItem value={0} defaultValue={0}>
-										Wybierz kategorię
-									</MenuItem>
-									{categories?.map((category) => (
-										<MenuItem key={category.id} value={category.id}>
-											{category.name}
-										</MenuItem>
-									))}
-								</Select>
-							</FormControl>
-						</Grid>
-						<Grid size={{ xs: 4 }}>
-							<FormControl size="small" fullWidth>
-								<InputLabel id="subCategory-label">Podkategoria</InputLabel>
-								<Select
-									labelId="subCategory-label"
-									id="subCategoryId"
-									label="Podkategoria"
-									value={formik.values["subCategoryId"]}
-									onChange={(event) => handleSubCategoryChange(formik, event.target.value)}
-									error={formik.touched["subCategoryId"] && Boolean(formik.errors["subCategoryId"])}
-								>
-									<MenuItem value={0} defaultValue={0}>
-										Wybierz podkategorię
-									</MenuItem>
-									{subCategories?.map((subCategory) => (
-										<MenuItem key={subCategory.id} value={subCategory.id}>
-											{subCategory.name}
-										</MenuItem>
-									))}
-								</Select>
-							</FormControl>
-						</Grid>
+					<Grid size={{ xs: 4 }}>
+						<SelectInput
+							fullWidth
+							size="small"
+							label={"Kategoria"}
+							id={"categoryId"}
+							name={"categoryId"}
+							displayEmpty
+							value={formik.values["categoryId"]}
+							onChange={(event) => handleCategoryChange(formik, event.target.value)}
+							onBlur={formik.handleBlur}
+							error={formik.touched["categoryId"] && Boolean(formik.errors["categoryId"])}
+							helperText={formik.errors["categoryId"]}
+						>
+							<MenuItem value={0} defaultValue={0}>
+								Wybierz kategorię
+							</MenuItem>
+							{categories?.map((category) => (
+								<MenuItem key={`category-select-${category.id}-${category.name}`} value={category.id}>
+									{category.name}
+								</MenuItem>
+							))}
+						</SelectInput>
 					</Grid>
-				</Stack>
+					<Grid size={{ xs: 4 }}>
+						<SelectInput
+							fullWidth
+							size="small"
+							label={"Podkategoria"}
+							id={"subCategoryId"}
+							name={"subCategoryId"}
+							displayEmpty
+							value={formik.values["subCategoryId"]}
+							onChange={(event) => handleSubCategoryChange(formik, event.target.value)}
+							onBlur={formik.handleBlur}
+							error={formik.touched["subCategoryId"] && Boolean(formik.errors["subCategoryId"])}
+							helperText={formik.errors["subCategoryId"]}
+						>
+							<MenuItem value={0} defaultValue={0}>
+								Wybierz podkategorię
+							</MenuItem>
+							{subCategories?.map((subCategory) => (
+								<MenuItem key={`subCategory-select-${subCategory.id}-${subCategory.name}`} value={subCategory.id}>
+									{subCategory.name}
+								</MenuItem>
+							))}
+						</SelectInput>
+					</Grid>
+				</Grid>
 			</AccordionDetails>
 		</Accordion>
 	);

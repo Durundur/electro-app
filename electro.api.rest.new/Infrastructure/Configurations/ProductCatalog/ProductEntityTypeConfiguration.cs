@@ -11,9 +11,13 @@ namespace Infrastructure.Configurations.ProductCatalog
         {
             builder.ToTable("Products");
             builder.HasKey(p => p.Id);
+
+            builder.Property(p => p.Status).HasConversion<string>();
+
             builder.Property(p => p.GroupId).IsRequired(false);
             builder.Property(p => p.CategoryId).IsRequired(false);
             builder.Property(p => p.SubCategoryId).IsRequired(false);
+
             builder.Property(p => p.Photos)
                 .HasColumnType("text[]")
                 .HasConversion(
@@ -36,6 +40,7 @@ namespace Infrastructure.Configurations.ProductCatalog
             builder.HasOne<Group>().WithMany().HasForeignKey(p => p.GroupId);
             builder.HasOne<Category>().WithMany().HasForeignKey(p => p.CategoryId);
             builder.HasOne<SubCategory>().WithMany().HasForeignKey(p => p.SubCategoryId);
+
         }
     }
 }

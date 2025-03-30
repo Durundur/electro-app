@@ -23,10 +23,10 @@ namespace Application.Features.Auth.RegisterUser
 
         public async Task<RegisterUserResult> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
-            await _unitOfWork.BeginTransactionAsync(cancellationToken);
-
             try
             {
+                await _unitOfWork.BeginTransactionAsync(cancellationToken: cancellationToken);
+
                 var existingUser = await _identityService.FindUserByEmailAsync(request.Email);
                 if (existingUser != null)
                 {

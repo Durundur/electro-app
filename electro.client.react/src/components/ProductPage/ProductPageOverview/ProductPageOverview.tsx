@@ -5,15 +5,16 @@ import ProductPageSlider from "./ProductPageSlider/ProductPageSlider";
 import ProductPageSpecificationPrimary from "../ProductPageSpecification/ProductPageSpecificationPrimary";
 import { GetProductResult } from "@/libs/api-contract/api-contract";
 import ProductPageActionCard from "./ProductPageActionCard/ProductPageActionCard";
-import Link from "next/link";
 import useScrollTo from "@/hooks/ScrollTo/useScrollTo";
 
 interface ProductPageOverviewProps {
 	product: GetProductResult;
 	onAddToCart: (quantity: number) => void;
+	quantity: number;
+	setQuantity: (quantity: number) => void;
 }
 
-const ProductPageOverview: FC<ProductPageOverviewProps> = ({ product, onAddToCart }) => {
+const ProductPageOverview: FC<ProductPageOverviewProps> = ({ product, onAddToCart, quantity, setQuantity }) => {
 	const scrollTo = useScrollTo();
 
 	return (
@@ -38,7 +39,7 @@ const ProductPageOverview: FC<ProductPageOverviewProps> = ({ product, onAddToCar
 							</Stack>
 						</Grid>
 						<Grid size={{ xs: 12, sm: 6 }} order={{ xs: 1, sm: 2 }}>
-							<ProductPageActionCard product={product} onAddToCart={onAddToCart} />
+							<ProductPageActionCard quantity={quantity} setQuantity={setQuantity} product={product} onAddToCart={onAddToCart} />
 						</Grid>
 					</Grid>
 				</Stack>

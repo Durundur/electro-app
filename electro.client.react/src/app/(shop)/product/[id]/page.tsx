@@ -72,7 +72,7 @@ const ProductPage: FC<ProductPageParams> = ({ params }) => {
 	return (
 		productSelector && (
 			<Stack spacing={2}>
-				<ProductPageOverview product={productSelector} onAddToCart={handleAddToCart}></ProductPageOverview>
+				<ProductPageOverview quantity={quantity} setQuantity={setQuantity} product={productSelector} onAddToCart={handleAddToCart}></ProductPageOverview>
 				<Stack component={Card} spacing={1} direction={"row"}>
 					<Button color="inherit" onClick={() => scrollTo("description")}>
 						Opis

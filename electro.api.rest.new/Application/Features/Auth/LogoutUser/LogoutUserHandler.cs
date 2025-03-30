@@ -37,7 +37,7 @@ namespace Application.Features.Auth.LogoutUser
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while logging out user {UserId}", _userContext.UserId);
+                _logger.LogError(ex, "An error occurred while logging out user");
                 throw new BadRequestException("An error occurred during logout.");
             }
         }

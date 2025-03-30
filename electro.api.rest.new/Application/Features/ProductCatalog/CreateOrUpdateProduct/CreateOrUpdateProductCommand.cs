@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Domain.Aggregates.ProductCatalogAggregate;
+using MediatR;
 
 namespace Application.Features.ProductCatalog.CreateProduct
 {
@@ -10,9 +11,8 @@ namespace Application.Features.ProductCatalog.CreateProduct
         public decimal Amount { get; set; }
         public string Currency { get; set; }
         public IList<string> Photos { get; set; }
-        public bool Active { get; set; }
-        public int StockQuantity { get; set; }
-        public string Status { get; set; }
+        public int StockQuantityDelta { get; set; }
+        public ProductStatus Status { get; set; }
         public int? GroupId { get; set; }
         public int? CategoryId { get; set; }
         public int? SubCategoryId { get; set; }

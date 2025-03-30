@@ -1,13 +1,12 @@
-import { CreateOrUpdateProductCommand } from "@/libs/api-contract/api-contract";
+import { CreateOrUpdateProductCommand, ProductStatus } from "@/libs/api-contract/api-contract";
 
 export const initialValues: CreateOrUpdateProductCommand = {
 	id: undefined,
 	name: "",
 	amount: undefined,
 	currency: "",
-	active: false,
-	status: "",
-	stockQuantity: 0,
+	status: ProductStatus.Draft,
+	stockQuantityDelta: 0,
 	groupId: 0,
 	categoryId: 0,
 	subCategoryId: 0,

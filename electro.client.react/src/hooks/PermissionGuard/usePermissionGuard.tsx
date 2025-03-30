@@ -27,6 +27,8 @@ export const usePermissionGuard = ({ requireAuth = false, denyAuth = false, allo
 
 	const isDenied = denyAuth && isAuthenticated;
 
+	//poprawic to zeby bylo sprawdzenie po tym jak dane beda juz zaladowane w store, bo kiedy przechodzimy do jakiejs route bezpordenio
+
 	useEffect(() => {
 		if (!isAllowed || isDenied) {
 			router.replace(redirectTo);

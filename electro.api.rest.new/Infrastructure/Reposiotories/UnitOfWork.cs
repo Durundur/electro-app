@@ -1,5 +1,6 @@
 ﻿using Domain.Reposiotories;
 using Infrastructure.Context;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Infrastructure.Reposiotories
@@ -48,9 +49,9 @@ namespace Infrastructure.Reposiotories
             return await _context.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task BeginTransactionAsync(CancellationToken cancellationToken = default)
+        public async Task BeginTransactionAsync(System.Data.IsolationLevel isolationLevel = System.Data.IsolationLevel.Serializable, CancellationToken cancellationToken = default)
         {
-            _transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+            _transaction = await _context.Database.BeginTransactionAsync(isolationLevel, cancellationToken);
         }
 
         public async Task CommitTransactionAsync(CancellationToken cancellationToken = default)

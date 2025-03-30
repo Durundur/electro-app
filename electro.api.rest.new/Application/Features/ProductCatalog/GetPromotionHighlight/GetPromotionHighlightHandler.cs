@@ -1,3 +1,4 @@
+using Domain.Aggregates.ProductCatalogAggregate;
 using Domain.Reposiotories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +18,7 @@ namespace Application.Features.ProductCatalog.GetPromotionHighlight
         {
             var bestPromotion = await _unitOfWork.ProductRepository.GetProductsQuery()
                 .Include(p => p.Opinions)
-                .Where(p => p.StockQuantity > 0)
+                .Where(p => p.Status == ProductStatus.Active && p.StockQuantity > 0)
                 .OrderByDescending(p => p.Opinions.Count())
                 .FirstOrDefaultAsync(cancellationToken);
 

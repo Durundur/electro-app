@@ -8,7 +8,7 @@ namespace Infrastructure.Reposiotories
     public class ProductRepository : IProductRepository
     {
         protected readonly ApplicationDbContext _context;
-        public ProductRepository(ApplicationDbContext context) 
+        public ProductRepository(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -28,10 +28,32 @@ namespace Infrastructure.Reposiotories
             return product;
         }
 
-        public async Task<IList<Product>> GetProductsByIdsAsync(IEnumerable<Guid> productsIds, CancellationToken cancellationToken)
+        public async Task<Product> GetByIdWithLockAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            var products = await _context.Products.Where(p => productsIds.Contains(p.Id)).ToListAsync();
+            return await _context.Products
+                .FromSqlInterpolated($@"SELECT * FROM ""Products"" WHERE ""Id"" = {id} FOR UPDATE")
+                .Include(p => p.Attributes)
+                .Include(p => p.Opinions)
+                .FirstOrDefaultAsync(cancellationToken);
+        }
+
+        public async Task<IList<Product>> GetProductsByIdsAsync(IEnumerable<Guid> productIds, CancellationToken cancellationToken)
+        {
+            var products = await _context.Products.Where(p => productIds.Contains(p.Id)).ToListAsync();
             return products;
+        }
+
+        public async Task<IList<Product>> GetProductsByIdsWithLockAsync(IEnumerable<Guid> productIds, CancellationToken cancellationToken = default)
+        {
+            var parameterList = string.Join(",", productIds.Select(id => $"'{id}'::uuid"));
+
+            return await _context.Products
+                .FromSqlRaw($@"
+                    SELECT * FROM ""Products"" 
+                    WHERE ""Id"" IN ({parameterList})
+                    ORDER BY ""Id"" 
+                    FOR UPDATE")
+                .ToListAsync(cancellationToken);
         }
 
         public IQueryable<Product> GetProductsQuery()

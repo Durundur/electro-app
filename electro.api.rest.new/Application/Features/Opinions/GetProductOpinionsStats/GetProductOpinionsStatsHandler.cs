@@ -2,16 +2,19 @@ using Application.Exceptions;
 using Domain.Reposiotories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Features.Opinions.GetProductOpinionsStats
 {
     public class GetProductOpinionsStatsHandler : IRequestHandler<GetProductOpinionsStatsQuery, GetProductOpinionsStatsResult>
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<GetProductOpinionsStatsHandler> _logger;
 
-        public GetProductOpinionsStatsHandler(IUnitOfWork unitOfWork)
+        public GetProductOpinionsStatsHandler(IUnitOfWork unitOfWork, ILogger<GetProductOpinionsStatsHandler> logger)
         {
             _unitOfWork = unitOfWork;
+            _logger = logger;
         }
 
         public async Task<GetProductOpinionsStatsResult> Handle(GetProductOpinionsStatsQuery request, CancellationToken cancellationToken)
@@ -41,6 +44,7 @@ namespace Application.Features.Opinions.GetProductOpinionsStats
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "An error occurred while getting product opinions stats");
                 throw new BadRequestException(ex.Message);
             }
         }

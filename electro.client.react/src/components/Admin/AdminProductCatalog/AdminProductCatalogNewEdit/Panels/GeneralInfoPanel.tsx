@@ -1,19 +1,4 @@
-import {
-	Accordion,
-	AccordionDetails,
-	AccordionSummary,
-	Checkbox,
-	FormControl,
-	FormControlLabel,
-	FormHelperText,
-	Grid2 as Grid,
-	InputLabel,
-	MenuItem,
-	Select,
-	Stack,
-	TextField,
-	Typography,
-} from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Grid2 as Grid, MenuItem, Typography } from "@mui/material";
 import { ExpandMoreRounded } from "@mui/icons-material";
 import { FormikProps } from "formik";
 import { FC, useEffect } from "react";
@@ -24,9 +9,10 @@ import { fetchProductHierarchy } from "@/libs/Admin/AdminProductCatalog/AdminPro
 import SelectInput from "@/components/Shared/SelectInput/SelectInput";
 import { translateProductStatus } from "@/libs/Helpers/Translations/ProductsTranslations";
 import TextInput from "@/components/Shared/TextInput/TextInput";
+import { IProductForm } from "@/libs/Admin/AdminProductCatalog/AdminProductCatalogNewEdit/interfaces";
 
 interface GeneralInfoPanelProps {
-	formik: FormikProps<CreateOrUpdateProductCommand>;
+	formik: FormikProps<IProductForm>;
 }
 
 const GeneralInfoPanel: FC<GeneralInfoPanelProps> = ({ formik }) => {
@@ -48,19 +34,19 @@ const GeneralInfoPanel: FC<GeneralInfoPanelProps> = ({ formik }) => {
 		};
 	}, []);
 
-	const handleGroupChange = (formik: FormikProps<CreateOrUpdateProductCommand>, newGroupId: number | string) => {
-		formik.setFieldValue("groupId", newGroupId);
-		formik.setFieldValue("categoryId", 0);
-		formik.setFieldValue("subCategoryId", 0);
+	const handleGroupChange = (formik: FormikProps<IProductForm>, newGroupId: number | string) => {
+		formik.setFieldValue("groupId", newGroupId || undefined);
+		formik.setFieldValue("categoryId", undefined);
+		formik.setFieldValue("subCategoryId", undefined);
 	};
 
-	const handleCategoryChange = (formik: FormikProps<CreateOrUpdateProductCommand>, newCategoryId: number | string) => {
-		formik.setFieldValue("categoryId", newCategoryId);
-		formik.setFieldValue("subCategoryId", 0);
+	const handleCategoryChange = (formik: FormikProps<IProductForm>, newCategoryId: number | string) => {
+		formik.setFieldValue("categoryId", newCategoryId || undefined);
+		formik.setFieldValue("subCategoryId", undefined);
 	};
 
-	const handleSubCategoryChange = (formik: FormikProps<CreateOrUpdateProductCommand>, newSubCategoryId: number | string) => {
-		formik.setFieldValue("subCategoryId", newSubCategoryId);
+	const handleSubCategoryChange = (formik: FormikProps<IProductForm>, newSubCategoryId: number | string) => {
+		formik.setFieldValue("subCategoryId", newSubCategoryId || undefined);
 	};
 
 	return (
@@ -114,7 +100,7 @@ const GeneralInfoPanel: FC<GeneralInfoPanelProps> = ({ formik }) => {
 							onChange={formik.handleChange}
 							onBlur={formik.handleBlur}
 							error={formik.touched["currency"] && Boolean(formik.errors["currency"])}
-							helperText={formik.errors["currency"]}
+							helperText={formik.touched["currency"] && formik.errors["currency"] ? formik.errors["currency"] : undefined}
 						>
 							<MenuItem value={""}>Wybierz walutę</MenuItem>
 							<MenuItem value={"PLN"}>PLN</MenuItem>
@@ -137,7 +123,7 @@ const GeneralInfoPanel: FC<GeneralInfoPanelProps> = ({ formik }) => {
 							onChange={formik.handleChange}
 							onBlur={formik.handleBlur}
 							error={Boolean(formik.touched["status"] && formik.errors["status"])}
-							helperText={formik.errors["status"]}
+							helperText={formik.touched["status"] && formik.errors["status"] ? formik.errors["status"] : undefined}
 						>
 							{Object.values(ProductStatus).map((status) => (
 								<MenuItem key={`status-${status}`} value={status}>
@@ -149,7 +135,7 @@ const GeneralInfoPanel: FC<GeneralInfoPanelProps> = ({ formik }) => {
 
 					<Grid size={{ xs: 12 }} container>
 						<Grid size={{ xs: 4 }} alignSelf={"center"}>
-							<Typography>Aktualny stan magazynowy: {productSelector?.stockQuantity}</Typography>
+							<Typography>Aktualny stan magazynowy: {productSelector?.stockQuantity ?? 0}</Typography>
 						</Grid>
 						<Grid size={{ xs: 4 }}>
 							<TextInput
@@ -167,7 +153,7 @@ const GeneralInfoPanel: FC<GeneralInfoPanelProps> = ({ formik }) => {
 							></TextInput>
 						</Grid>
 						<Grid size={{ xs: 4 }} alignSelf={"center"}>
-							<Typography>Stan po zmianie: {(productSelector?.stockQuantity || 0) + (Number(formik.values["stockQuantityDelta"]) || 0)}</Typography>
+							<Typography>Stan po zmianie: {(productSelector?.stockQuantity ?? 0) + (Number(formik.values["stockQuantityDelta"]) ?? 0)}</Typography>
 						</Grid>
 					</Grid>
 
@@ -183,9 +169,9 @@ const GeneralInfoPanel: FC<GeneralInfoPanelProps> = ({ formik }) => {
 							onChange={(event) => handleGroupChange(formik, event.target.value)}
 							onBlur={formik.handleBlur}
 							error={formik.touched["groupId"] && Boolean(formik.errors["groupId"])}
-							helperText={formik.errors["groupId"]}
+							helperText={formik.touched["groupId"] && formik.errors["groupId"] ? formik.errors["groupId"] : undefined}
 						>
-							<MenuItem value={0} defaultValue={0}>
+							<MenuItem value={undefined} defaultValue={undefined}>
 								Wybierz grupę
 							</MenuItem>
 							{groups?.map((group) => (
@@ -207,9 +193,9 @@ const GeneralInfoPanel: FC<GeneralInfoPanelProps> = ({ formik }) => {
 							onChange={(event) => handleCategoryChange(formik, event.target.value)}
 							onBlur={formik.handleBlur}
 							error={formik.touched["categoryId"] && Boolean(formik.errors["categoryId"])}
-							helperText={formik.errors["categoryId"]}
+							helperText={formik.touched["categoryId"] && formik.errors["categoryId"] ? formik.errors["categoryId"] : undefined}
 						>
-							<MenuItem value={0} defaultValue={0}>
+							<MenuItem value={undefined} defaultValue={undefined}>
 								Wybierz kategorię
 							</MenuItem>
 							{categories?.map((category) => (
@@ -231,9 +217,9 @@ const GeneralInfoPanel: FC<GeneralInfoPanelProps> = ({ formik }) => {
 							onChange={(event) => handleSubCategoryChange(formik, event.target.value)}
 							onBlur={formik.handleBlur}
 							error={formik.touched["subCategoryId"] && Boolean(formik.errors["subCategoryId"])}
-							helperText={formik.errors["subCategoryId"]}
+							helperText={formik.touched["subCategoryId"] && formik.errors["subCategoryId"] ? formik.errors["subCategoryId"] : undefined}
 						>
-							<MenuItem value={0} defaultValue={0}>
+							<MenuItem value={undefined} defaultValue={undefined}>
 								Wybierz podkategorię
 							</MenuItem>
 							{subCategories?.map((subCategory) => (

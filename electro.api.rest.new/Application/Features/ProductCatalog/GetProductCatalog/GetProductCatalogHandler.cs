@@ -15,7 +15,7 @@ namespace Application.Features.ProductCatalog.GetProductCatalog
 
         public async Task<GetProductCatalogResult> Handle(GetProductCatalogQuery request, CancellationToken cancellationToken)
         {
-            var productsQuery = _unitOfWork.ProductRepository.GetProductsQuery();
+            var productsQuery = _unitOfWork.ProductRepository.GetProductsQuery().OrderBy(p => p.Name);
 
             var totalProducts = await productsQuery.CountAsync();
 
@@ -24,15 +24,12 @@ namespace Application.Features.ProductCatalog.GetProductCatalog
                 .Take(request.PageSize)
                 .ToListAsync();
 
-            var pageCount = (int)Math.Ceiling(totalProducts / (double)request.PageSize);
-
-            var result = GetProductCatalogMapper.MapToGetProductCatalogResult(products);
-
-            result.PageCount = pageCount;
-            result.PageSize = request.PageSize;
-            result.Page = request.Page;
-
-            return result;
+            return new GetProductCatalogResult(
+                GetProductCatalogMapper.MapToGetProductCatalogResultProducts(products).ToList(),
+                totalProducts,
+                request.Page,
+                request.PageSize
+            );
         }
     }
 }

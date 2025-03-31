@@ -3,17 +3,17 @@ import { FC } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
 import { ExpandMoreRounded } from "@mui/icons-material";
-import { CreateOrUpdateProductCommand } from "@/libs/api-contract/api-contract";
+import { IProductForm } from "@/libs/Admin/AdminProductCatalog/AdminProductCatalogNewEdit/interfaces";
 
 interface DescriptionPanelProps {
-	formik: FormikProps<CreateOrUpdateProductCommand>;
+	formik: FormikProps<IProductForm>;
 }
 
 const DescriptionPanel: FC<DescriptionPanelProps> = ({ formik }) => {
 	const APIKEY = "l35njw6nq1d3nwxyruvhs7d4e27zko8e67be6gq2ue7g7v9m";
 
 	return (
-		<Accordion defaultExpanded={false}>
+		<Accordion defaultExpanded>
 			<AccordionSummary expandIcon={<ExpandMoreRounded />} aria-controls="panel1-content" id="panel1-header">
 				Opis
 			</AccordionSummary>

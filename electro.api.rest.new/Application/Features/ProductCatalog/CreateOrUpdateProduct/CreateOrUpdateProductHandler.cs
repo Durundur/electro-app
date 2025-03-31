@@ -47,19 +47,39 @@ namespace Application.Features.ProductCatalog.CreateProduct
 
                 product.UpdatePhotos(command.Photos);
 
-                if (command.GroupId.HasValue)
-                {
-                    product.AssignToGroup(command.GroupId.Value);
-                }
+                product.AssignToGroup(command.GroupId);
+                product.AssignToCategory(command.CategoryId);
+                product.AssignToSubCategory(command.SubCategoryId);
 
-                if (command.CategoryId.HasValue)
+                if (command.Promotion == null)
                 {
-                    product.AssignToCategory(command.CategoryId.Value);
+                    if (product.Promotion != null)
+                    {
+                        product.RemovePromotion();
+                    }
                 }
-
-                if (command.SubCategoryId.HasValue)
+                else
                 {
-                    product.AssignToSubCategory(command.SubCategoryId.Value);
+                    var promotionalPrice = new Domain.ValueObjects.Money(command.Promotion.PromotionAmount, command.Promotion.PromotionCurrency);
+
+                    if (product.Promotion == null)
+                    {
+                        product.CreatePromotion(
+                            promotionalPrice,
+                            command.Promotion.StartDate,
+                            command.Promotion.EndDate,
+                            command.Promotion.IsActive
+                        );
+                    }
+                    else
+                    {
+                        product.UpdatePromotion(
+                            promotionalPrice,
+                            command.Promotion.StartDate,
+                            command.Promotion.EndDate,
+                            command.Promotion.IsActive
+                        );
+                    }
                 }
 
                 if (command.Attributes != null && command.Attributes.Any())

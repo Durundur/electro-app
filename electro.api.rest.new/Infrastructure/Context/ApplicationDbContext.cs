@@ -30,6 +30,7 @@ namespace Infrastructure.Context
         public DbSet<Payment> OrderPayments { get; set; }
         public DbSet<Delivery> OrderDeliveries { get; set; }
         public DbSet<Opinion> Opinions { get; set; }
+        public DbSet<ProductPromotion> ProductPromotions { get; set; }
 
 
         public ApplicationDbContext()
@@ -50,6 +51,7 @@ namespace Infrastructure.Context
             builder.ApplyConfiguration(new OpinionEntityTypeConfiguration());
             builder.ApplyConfiguration(new OpinionReactionEntityTypeConfiguration());
             builder.ApplyConfiguration(new AttributeValueEntityTypeConfiguration());
+            builder.ApplyConfiguration(new ProductPromotionEntityTypeConfiguration());
 
             builder.ApplyConfiguration(new GroupEntityTypeConfiguration());
             builder.ApplyConfiguration(new CategoryEntityTypeConfiguration());

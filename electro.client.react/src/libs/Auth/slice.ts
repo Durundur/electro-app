@@ -6,6 +6,7 @@ interface AuthStore {
 	auth: AuthState;
 	user: UserState;
 	isLoading: boolean;
+	isHydrated: boolean;
 	error?: IError;
 }
 
@@ -38,6 +39,7 @@ const initialState: AuthStore = {
 	},
 	isLoading: false,
 	error: undefined,
+	isHydrated: false,
 };
 
 const AuthStore = createSlice({
@@ -98,10 +100,14 @@ const AuthStore = createSlice({
 		restoreAuth(state, action: PayloadAction<StoredAuthState>) {
 			state.auth = action.payload.auth;
 			state.user = action.payload.user;
+			state.isHydrated = true;
+		},
+		setHydrated(state) {
+			state.isHydrated = true;
 		},
 	},
 });
 
-export const { loginUserSuccess, refreshTokenSuccess, registerUserSuccess, authLoadingStart, authErrorSet, logout, restoreAuth } = AuthStore.actions;
+export const { loginUserSuccess, refreshTokenSuccess, registerUserSuccess, authLoadingStart, authErrorSet, logout, restoreAuth, setHydrated } = AuthStore.actions;
 
 export default AuthStore.reducer;

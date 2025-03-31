@@ -20,6 +20,7 @@ namespace Domain.Aggregates.ProductCatalogAggregate
         public IReadOnlyCollection<Opinion> Opinions => _opinions.AsReadOnly();
         private readonly List<string> _photos = new List<string>();
         public IReadOnlyCollection<string> Photos => _photos.AsReadOnly();
+        public ProductPromotion? Promotion { get; private set; }
 
         private Product()
         {
@@ -69,42 +70,52 @@ namespace Domain.Aggregates.ProductCatalogAggregate
             return opinion;
         }
 
-        public void AssignToGroup(int groupId)
+        public void AssignToGroup(int? groupId)
         {
-            if (groupId == 0)
+            if (!groupId.HasValue)
             {
                 GroupId = null;
+                CategoryId = null;
+                SubCategoryId = null;
+                return;
             }
-            else
-            {
-                GroupId = groupId;
-            }
+
+            GroupId = groupId.Value;
         }
 
-        public void AssignToCategory(int categoryId)
+        public void AssignToCategory(int? categoryId)
         {
-            if (categoryId == 0)
+            if (!categoryId.HasValue)
             {
                 CategoryId = null;
-            }
-            else
-            {
-                CategoryId = categoryId;
+                SubCategoryId = null;
+                return;
             }
 
+            if (!GroupId.HasValue)
+            {
+                throw new DomainException("Cannot assign category without assigning group first");
+            }
+
+            CategoryId = categoryId.Value;
         }
 
-        public void AssignToSubCategory(int subCategoryId)
+        public void AssignToSubCategory(int? subCategoryId)
         {
-            if (subCategoryId == 0)
+            if (!subCategoryId.HasValue)
             {
                 SubCategoryId = null;
+                return;
             }
-            else
+
+            if (!CategoryId.HasValue)
             {
-                SubCategoryId = subCategoryId;
+                throw new DomainException("Cannot assign subcategory without assigning category first");
             }
+
+            SubCategoryId = subCategoryId.Value;
         }
+
         public void UpdateStockQuantity(int newQuantity)
         {
             if (Status == ProductStatus.Discontinued)
@@ -141,6 +152,46 @@ namespace Domain.Aggregates.ProductCatalogAggregate
 
             _attributes.Clear();
             _attributes.AddRange(newAttributes.Where(a => a != null));
+        }
+
+        private void ValidatePromotionalPrice(Money promotionalPrice)
+        {
+            if (promotionalPrice.Currency != Price.Currency)
+            {
+                throw new DomainException("Promotional price currency must match product price currency");
+            }
+
+            if (promotionalPrice.Amount >= Price.Amount)
+            {
+                throw new DomainException("Promotional price must be lower than regular price");
+            }
+        }
+
+        public void CreatePromotion(Money promotionalPrice, DateTime startDate, DateTime endDate, bool isActive)
+        {
+            if (Promotion != null)
+            {
+                throw new DomainException("Product already has a promotion");
+            }
+
+            ValidatePromotionalPrice(promotionalPrice);
+            Promotion = ProductPromotion.Create(promotionalPrice, startDate, endDate, isActive);
+        }
+
+        public void UpdatePromotion(Money promotionalPrice, DateTime startDate, DateTime endDate, bool isActive)
+        {
+            if (Promotion == null)
+            {
+                throw new DomainException("Cannot update non-existing promotion");
+            }
+
+            ValidatePromotionalPrice(promotionalPrice);
+            Promotion.Update(promotionalPrice, startDate, endDate, isActive);
+        }
+
+        public void RemovePromotion()
+        {
+            Promotion = null;
         }
     }
 }

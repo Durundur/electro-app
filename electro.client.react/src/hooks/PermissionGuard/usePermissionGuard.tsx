@@ -17,23 +17,22 @@ interface IUsePermissionGuardProps {
 
 export const usePermissionGuard = ({ requireAuth = false, denyAuth = false, allowedRoles = [], redirectTo = "/auth/login", customCondition = () => true }: IUsePermissionGuardProps) => {
 	const router = useRouter();
-	const { user, auth } = useSelector((state) => state.AuthStore);
+	const { user, auth, isHydrated } = useSelector((state) => state.AuthStore);
 
 	const isAuthenticated = auth?.isAuthenticated ?? false;
 	const userRoles = user?.roles?.map((role) => role.toUpperCase()) ?? [];
-	const hasAccess = hasRequiredRole(userRoles, allowedRoles);
-
-	const isAllowed = requireAuth ? isAuthenticated && hasAccess && customCondition() : true;
-
-	const isDenied = denyAuth && isAuthenticated;
-
-	//poprawic to zeby bylo sprawdzenie po tym jak dane beda juz zaladowane w store, bo kiedy przechodzimy do jakiejs route bezpordenio
+	const hasAccess = hasRequiredRole(userRoles, allowedRoles.map((role) => role.toUpperCase()));
 
 	useEffect(() => {
+		if (!isHydrated) return;
+
+		const isAllowed = requireAuth ? isAuthenticated && hasAccess && customCondition() : true;
+		const isDenied = denyAuth && isAuthenticated;
+
 		if (!isAllowed || isDenied) {
 			router.replace(redirectTo);
 		}
-	}, [isAllowed, isDenied, router, redirectTo]);
+	}, [isAuthenticated, hasAccess, isHydrated]);
 
-	return { isAuthenticated, hasAccess, isAllowed };
+	return null;
 };

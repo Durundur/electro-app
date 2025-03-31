@@ -1,6 +1,6 @@
 import { FC, ReactNode, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "@/libs/Store";
-import { StoredAuthState, logout, restoreAuth } from "@/libs/Auth/slice";
+import { StoredAuthState, logout, restoreAuth, setHydrated } from "@/libs/Auth/slice";
 import { refreshToken } from "@/libs/Auth/thunks";
 
 interface AuthProviderProps {
@@ -14,8 +14,8 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 
 	const authState = useSelector((store) => store.AuthStore.auth);
 	const userState = useSelector((store) => store.AuthStore.user);
+	const isHydrated = useSelector((store) => store.AuthStore.isHydrated);
 
-	const [isHydrated, setIsHydrated] = useState(false);
 	const [refreshTimeout, setRefreshTimeout] = useState<NodeJS.Timeout | null>(null);
 
 	const isTokenExpired = (expiryDate?: string) => {
@@ -33,26 +33,25 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 					if (isTokenExpired(parsedStoredAuthState.auth.refreshTokenExpiry)) {
 						dispatch(logout());
 						localStorage.removeItem(localStorageKey);
-						return;
-					}
+					} else {
+						dispatch(restoreAuth(parsedStoredAuthState));
 
-					dispatch(restoreAuth(parsedStoredAuthState));
-
-					if (isTokenExpired(parsedStoredAuthState.auth.tokenExpiry)) {
-						dispatch(
-							refreshToken({
-								refreshToken: parsedStoredAuthState.auth.refreshToken,
-								token: parsedStoredAuthState.auth.token,
-							})
-						);
+						if (isTokenExpired(parsedStoredAuthState.auth.tokenExpiry)) {
+							dispatch(
+								refreshToken({
+									refreshToken: parsedStoredAuthState.auth.refreshToken,
+									token: parsedStoredAuthState.auth.token,
+								})
+							);
+						}
 					}
 				} catch (error) {
 					console.error("Error while parsing stored auth state", error);
 					localStorage.removeItem(localStorageKey);
 				}
 			}
+			dispatch(setHydrated());
 		}
-		setIsHydrated(true);
 	}, []);
 
 	useEffect(() => {

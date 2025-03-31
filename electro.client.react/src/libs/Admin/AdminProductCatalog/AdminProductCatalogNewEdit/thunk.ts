@@ -17,6 +17,7 @@ import { CreateOrUpdateProductCommand, CreateOrUpdateProductResult, GetAllProduc
 import { createError } from "@/libs/api-contract/Error";
 import { buildQueryString } from "@/libs/Helpers/QueryHelper";
 import ApiClient from "@/libs/api-contract/ApiClient";
+import { IGetAttributesDefinitionsQuery } from "./interfaces";
 
 export const fetchProduct = (productId: string) => async (dispatch: AppDispatch) => {
 	try {

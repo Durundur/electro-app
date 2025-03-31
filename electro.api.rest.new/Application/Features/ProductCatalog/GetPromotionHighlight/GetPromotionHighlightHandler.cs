@@ -16,10 +16,14 @@ namespace Application.Features.ProductCatalog.GetPromotionHighlight
 
         public async Task<GetPromotionHighlightResult> Handle(GetPromotionHighlightQuery request, CancellationToken cancellationToken)
         {
+            var now = DateTime.UtcNow;
+
             var bestPromotion = await _unitOfWork.ProductRepository.GetProductsQuery()
-                .Include(p => p.Opinions)
+                .Include(p => p.Promotion)
                 .Where(p => p.Status == ProductStatus.Active && p.StockQuantity > 0)
-                .OrderByDescending(p => p.Opinions.Count())
+                .Where(p => p.Promotion != null && p.Promotion.IsActive)
+                .Where(p => p.Promotion.StartDate <= now && p.Promotion.EndDate >= now)
+                .OrderByDescending(p => (p.Price.Amount - p.Promotion.PromotionalPrice.Amount) / p.Price.Amount)
                 .FirstOrDefaultAsync(cancellationToken);
 
             return GetPromotionHighlightMapper.MapToGetPromotionHighlightResult(bestPromotion);

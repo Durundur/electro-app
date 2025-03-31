@@ -39,4 +39,5 @@ export const componentsCustomizations: Components<Theme> = {
 			variant: "body1",
 		},
 	},
+	
 };

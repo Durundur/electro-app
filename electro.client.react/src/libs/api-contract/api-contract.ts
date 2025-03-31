@@ -114,12 +114,21 @@ export interface CreateOrUpdateProductCommand {
     categoryId?: number | undefined;
     subCategoryId?: number | undefined;
     attributes?: CreateOrUpdateProductCommandAttributeDefinitionValue[] | undefined;
+    promotion?: CreateOrUpdateProductCommandProductPromotion;
 }
 
 export interface CreateOrUpdateProductCommandAttributeDefinitionValue {
     id?: string;
     value?: string | undefined;
     isPrimary?: boolean;
+}
+
+export interface CreateOrUpdateProductCommandProductPromotion {
+    promotionAmount?: number;
+    promotionCurrency?: string | undefined;
+    startDate?: Date;
+    endDate?: Date;
+    isActive?: boolean;
 }
 
 export interface CreateOrUpdateProductResult {
@@ -405,10 +414,10 @@ export interface GetOrdersResultOrder {
 }
 
 export interface GetProductCatalogResult {
-    products?: GetProductCatalogResultProduct[] | undefined;
-    pageCount?: number;
-    pageSize?: number;
+    items?: GetProductCatalogResultProduct[] | undefined;
     page?: number;
+    pageSize?: number;
+    readonly totalPages?: number;
 }
 
 export interface GetProductCatalogResultProduct {
@@ -457,6 +466,7 @@ export interface GetProductResult {
     averageOpinionRating?: number;
     opinionCount?: number;
     attributes?: ProductAttributeResult[] | undefined;
+    promotion?: ProductPromotion;
 }
 
 export interface GetPromotionHighlightResult {
@@ -465,6 +475,8 @@ export interface GetPromotionHighlightResult {
     amount?: number;
     currency?: string | undefined;
     photo?: string | undefined;
+    promotionAmount?: number;
+    promotionCurrency?: string | undefined;
 }
 
 export interface GetRecipientsResult {
@@ -671,6 +683,15 @@ export interface ProductAttributeResult {
     type?: AttributeType;
     value?: string | undefined;
     isPrimary?: boolean;
+}
+
+export interface ProductPromotion {
+    readonly id?: string;
+    readonly productId?: string;
+    promotionalPrice?: Money;
+    readonly startDate?: Date;
+    readonly endDate?: Date;
+    readonly isActive?: boolean;
 }
 
 export enum ProductStatus {

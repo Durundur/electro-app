@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "@/libs/Store";
 import { useEffect } from "react";
 import { getPromotionHighlight } from "@/libs/ShopRootPage/thunk";
 import { clearPromotionHighlightState } from "@/libs/ShopRootPage/slice";
-import { Box, Card, CardActionArea, CardContent, CardMedia, Typography, Stack, CardHeader } from "@mui/material";
+import { Box, Card, CardActionArea, CardContent, CardMedia, Typography, Stack } from "@mui/material";
 import { formatAmount } from "@/libs/Helpers/Formatters";
 import Link from "next/link";
 
@@ -12,7 +12,7 @@ const ShopRootPromotionHighlight = () => {
 
 	const promotionHighlightSelector = useSelector((state) => state.ShopRootPageStore.promotionHighlight.data);
 	const product = promotionHighlightSelector;
-	const discountPercentage = Math.floor(Math.random() * 50);
+	const discountPercentage = product?.amount && product?.promotionAmount ? Math.floor(((product.amount - product.promotionAmount) / product.amount) * 100) : 0;
 
 	useEffect(() => {
 		dispatch(getPromotionHighlight());
@@ -85,7 +85,7 @@ const ShopRootPromotionHighlight = () => {
 							{product?.name}
 						</Typography>
 						<Stack direction="row" spacing={2} alignItems="baseline">
-							<Typography variant="h6">{formatAmount(product?.amount!, product?.currency!)}</Typography>
+							<Typography variant="h6">{formatAmount(product?.promotionAmount!, product?.promotionCurrency!)}</Typography>
 							<Typography sx={{ textDecoration: "line-through" }}>{formatAmount(product?.amount!, product?.currency!)}</Typography>
 						</Stack>
 					</CardContent>

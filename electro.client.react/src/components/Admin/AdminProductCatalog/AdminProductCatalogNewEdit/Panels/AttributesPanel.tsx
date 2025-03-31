@@ -4,13 +4,14 @@ import { Accordion, AccordionDetails, AccordionSummary, Checkbox, Typography } f
 import { ExpandMoreRounded } from "@mui/icons-material";
 import { useDispatch, useSelector } from "@/libs/Store";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { AttributeDefinitionResult, CreateOrUpdateProductCommand } from "@/libs/api-contract/api-contract";
+import { AttributeDefinitionResult } from "@/libs/api-contract/api-contract";
 import { fetchAttributesDefinitions } from "@/libs/Admin/AdminProductCatalog/AdminProductCatalogNewEdit/thunk";
 import { clearAttributesDefinitionsState } from "@/libs/Admin/AdminProductCatalog/AdminProductCatalogNewEdit/slice";
 import { translateAttributeType } from "@/libs/Helpers/Translations/AttributesTranslations";
+import { IProductForm } from "@/libs/Admin/AdminProductCatalog/AdminProductCatalogNewEdit/interfaces";
 
 interface AttributesPanelProps {
-	formik: FormikProps<CreateOrUpdateProductCommand>;
+	formik: FormikProps<IProductForm>;
 }
 
 interface AttributeDefinitionRow {

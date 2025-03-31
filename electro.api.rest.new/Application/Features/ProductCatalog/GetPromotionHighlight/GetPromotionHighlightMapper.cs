@@ -11,6 +11,8 @@ namespace Application.Features.ProductCatalog.GetPromotionHighlight
                 Amount = product.Price.Amount,
                 Currency = product.Price.Currency,
                 Photo = product.Photos.FirstOrDefault(),
+                PromotionAmount = product.Promotion.PromotionalPrice.Amount,
+                PromotionCurrency = product.Promotion.PromotionalPrice.Currency,
             };
         }
     }

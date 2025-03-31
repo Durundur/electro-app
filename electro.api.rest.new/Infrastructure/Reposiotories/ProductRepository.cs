@@ -24,6 +24,7 @@ namespace Infrastructure.Reposiotories
             var product = await _context.Products
                 .Include(p => p.Attributes)
                 .Include(p => p.Opinions)
+                .Include(p => p.Promotion)
                 .FirstOrDefaultAsync(p => p.Id == id);
             return product;
         }

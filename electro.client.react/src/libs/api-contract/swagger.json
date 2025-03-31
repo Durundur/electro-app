@@ -1652,7 +1652,7 @@
 		  ],
 		  "parameters": [
 			{
-			  "name": "PageSize",
+			  "name": "Page",
 			  "in": "query",
 			  "schema": {
 				"type": "integer",
@@ -1660,7 +1660,7 @@
 			  }
 			},
 			{
-			  "name": "Page",
+			  "name": "PageSize",
 			  "in": "query",
 			  "schema": {
 				"type": "integer",
@@ -2878,6 +2878,9 @@
 				"$ref": "#/components/schemas/CreateOrUpdateProductCommandAttributeDefinitionValue"
 			  },
 			  "nullable": true
+			},
+			"promotion": {
+			  "$ref": "#/components/schemas/CreateOrUpdateProductCommandProductPromotion"
 			}
 		  },
 		  "additionalProperties": false
@@ -2894,6 +2897,31 @@
 			  "nullable": true
 			},
 			"isPrimary": {
+			  "type": "boolean"
+			}
+		  },
+		  "additionalProperties": false
+		},
+		"CreateOrUpdateProductCommandProductPromotion": {
+		  "type": "object",
+		  "properties": {
+			"promotionAmount": {
+			  "type": "number",
+			  "format": "double"
+			},
+			"promotionCurrency": {
+			  "type": "string",
+			  "nullable": true
+			},
+			"startDate": {
+			  "type": "string",
+			  "format": "date-time"
+			},
+			"endDate": {
+			  "type": "string",
+			  "format": "date-time"
+			},
+			"isActive": {
 			  "type": "boolean"
 			}
 		  },
@@ -3839,14 +3867,14 @@
 		"GetProductCatalogResult": {
 		  "type": "object",
 		  "properties": {
-			"products": {
+			"items": {
 			  "type": "array",
 			  "items": {
 				"$ref": "#/components/schemas/GetProductCatalogResultProduct"
 			  },
 			  "nullable": true
 			},
-			"pageCount": {
+			"page": {
 			  "type": "integer",
 			  "format": "int32"
 			},
@@ -3854,9 +3882,10 @@
 			  "type": "integer",
 			  "format": "int32"
 			},
-			"page": {
+			"totalPages": {
 			  "type": "integer",
-			  "format": "int32"
+			  "format": "int32",
+			  "readOnly": true
 			}
 		  },
 		  "additionalProperties": false
@@ -4031,6 +4060,9 @@
 				"$ref": "#/components/schemas/ProductAttributeResult"
 			  },
 			  "nullable": true
+			},
+			"promotion": {
+			  "$ref": "#/components/schemas/ProductPromotion"
 			}
 		  },
 		  "additionalProperties": false
@@ -4055,6 +4087,14 @@
 			  "nullable": true
 			},
 			"photo": {
+			  "type": "string",
+			  "nullable": true
+			},
+			"promotionAmount": {
+			  "type": "number",
+			  "format": "double"
+			},
+			"promotionCurrency": {
 			  "type": "string",
 			  "nullable": true
 			}
@@ -4681,6 +4721,39 @@
 			},
 			"isPrimary": {
 			  "type": "boolean"
+			}
+		  },
+		  "additionalProperties": false
+		},
+		"ProductPromotion": {
+		  "type": "object",
+		  "properties": {
+			"id": {
+			  "type": "string",
+			  "format": "uuid",
+			  "readOnly": true
+			},
+			"productId": {
+			  "type": "string",
+			  "format": "uuid",
+			  "readOnly": true
+			},
+			"promotionalPrice": {
+			  "$ref": "#/components/schemas/Money"
+			},
+			"startDate": {
+			  "type": "string",
+			  "format": "date-time",
+			  "readOnly": true
+			},
+			"endDate": {
+			  "type": "string",
+			  "format": "date-time",
+			  "readOnly": true
+			},
+			"isActive": {
+			  "type": "boolean",
+			  "readOnly": true
 			}
 		  },
 		  "additionalProperties": false

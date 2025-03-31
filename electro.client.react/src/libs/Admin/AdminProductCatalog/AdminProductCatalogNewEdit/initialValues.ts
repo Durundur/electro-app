@@ -1,15 +1,16 @@
-import { CreateOrUpdateProductCommand, ProductStatus } from "@/libs/api-contract/api-contract";
+import { ProductStatus } from "@/libs/api-contract/api-contract";
+import { IProductForm } from "./interfaces";
 
-export const initialValues: CreateOrUpdateProductCommand = {
+export const initialValues: IProductForm = {
 	id: undefined,
 	name: "",
-	amount: undefined,
+	amount: 0,
 	currency: "",
 	status: ProductStatus.Draft,
 	stockQuantityDelta: 0,
-	groupId: 0,
-	categoryId: 0,
-	subCategoryId: 0,
+	groupId: undefined,
+	categoryId: undefined,
+	subCategoryId: undefined,
 	description: "",
 	photos: [],
 	attributes: [],

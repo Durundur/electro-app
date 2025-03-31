@@ -2,11 +2,11 @@ import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
 import { ExpandMoreRounded } from "@mui/icons-material";
 import { FormikProps } from "formik";
 import { FC } from "react";
-import { CreateOrUpdateProductCommand } from "@/libs/api-contract/api-contract";
 import PhotoUploader from "@/components/Shared/PhotoUploader/PhotoUploader";
+import { IProductForm } from "@/libs/Admin/AdminProductCatalog/AdminProductCatalogNewEdit/interfaces";
 
 interface PhotosPanelProps {
-	formik: FormikProps<CreateOrUpdateProductCommand>;
+	formik: FormikProps<IProductForm>;
 }
 
 const PhotosPanel: FC<PhotosPanelProps> = ({ formik }) => {

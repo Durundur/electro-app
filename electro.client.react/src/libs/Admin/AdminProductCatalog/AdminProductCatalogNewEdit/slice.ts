@@ -12,6 +12,7 @@ interface IProductCatalogNewEditState {
 interface IProductCatalogsaveActionState {
 	error?: IError;
 	isLoading: boolean;
+	success?: boolean;
 }
 
 interface IProductCatalogProductState {
@@ -51,6 +52,7 @@ const initialState: IProductCatalogNewEditState = {
 	saveAction: {
 		error: undefined,
 		isLoading: false,
+		success: undefined,
 	},
 };
 
@@ -112,14 +114,22 @@ const AdminProductCatalogNewEditPageStore = createSlice({
 		saveActionStart(state) {
 			state.saveAction.isLoading = true;
 			state.saveAction.error = undefined;
+			state.saveAction.success = undefined;
 		},
 		saveActionSuccess(state) {
-			state.saveAction.isLoading = true;
+			state.saveAction.isLoading = false;
 			state.saveAction.error = undefined;
+			state.saveAction.success = true;
 		},
 		saveActionError(state, action: PayloadAction<IError>) {
 			state.saveAction.isLoading = false;
 			state.saveAction.error = action.payload;
+			state.saveAction.success = false;
+		},
+		clearSaveActionState(state) {
+			state.saveAction.isLoading = false;
+			state.saveAction.error = undefined;
+			state.saveAction.success = undefined;
 		},
 	},
 });
@@ -140,6 +150,7 @@ export const {
 	saveActionError,
 	saveActionStart,
 	saveActionSuccess,
+	clearSaveActionState,
 } = AdminProductCatalogNewEditPageStore.actions;
 
 export default AdminProductCatalogNewEditPageStore.reducer;

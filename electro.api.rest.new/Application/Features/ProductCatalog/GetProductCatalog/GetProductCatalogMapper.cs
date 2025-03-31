@@ -2,12 +2,9 @@
 {
     public static class GetProductCatalogMapper
     {
-        public static GetProductCatalogResult MapToGetProductCatalogResult(IList<Domain.Aggregates.ProductCatalogAggregate.Product> products)
+        public static IEnumerable<GetProductCatalogResultProduct> MapToGetProductCatalogResultProducts(IList<Domain.Aggregates.ProductCatalogAggregate.Product> products)
         {
-            return new GetProductCatalogResult()
-            {
-                Products = products.Select(p => MapToGetProductCatalogResultProduct(p)).ToList(),
-            };
+            return products.Select(p => MapToGetProductCatalogResultProduct(p));
         }
 
         public static GetProductCatalogResultProduct MapToGetProductCatalogResultProduct(Domain.Aggregates.ProductCatalogAggregate.Product product)

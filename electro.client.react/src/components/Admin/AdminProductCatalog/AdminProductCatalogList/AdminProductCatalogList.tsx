@@ -12,8 +12,8 @@ interface AdminProductCatalogListProps {
 }
 
 const AdminProductCatalogList: FC<AdminProductCatalogListProps> = ({ productCatalogData, onPaginationChange }) => {
-	const { products, page, pageSize, pageCount } = productCatalogData;
-	const rowCount = (pageSize ?? 0) * (pageCount ?? 0);
+	const { items, page, pageSize, totalPages } = productCatalogData;
+	const rowCount = (pageSize ?? 0) * (totalPages ?? 0);
 	const router = useRouter();
 
 	const columns: GridColDef[] = [
@@ -54,12 +54,12 @@ const AdminProductCatalogList: FC<AdminProductCatalogListProps> = ({ productCata
 		});
 	};
 
-	if (!products) return <Typography align="center">Brak produktów</Typography>;
+	if (!items) return <Typography align="center">Brak produktów</Typography>;
 	return (
 		<DataGrid
 			onPaginationModelChange={handlePaginationChange}
 			paginationModel={{ page: page! - 1, pageSize: pageSize! }}
-			rows={products}
+			rows={items}
 			rowCount={rowCount}
 			paginationMode="server"
 			columns={columns}

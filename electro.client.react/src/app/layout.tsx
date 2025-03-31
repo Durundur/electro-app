@@ -7,6 +7,8 @@ import Theme from "./theme/Theme";
 import "./global.css";
 import { PageTransitionProvider } from "@/contexts/PageTransition/PageTransitionContext";
 import PageTransition from "@/components/Layout/PageTransition/PageTransition";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
 const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
 	return (
@@ -17,11 +19,11 @@ const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
 						<AuthProvider>
 							<CartProvider>
 								<Theme>
-									<PageTransitionProvider>
-										<PageTransition>
-											{children}
-										</PageTransition>
-									</PageTransitionProvider>
+									<LocalizationProvider dateAdapter={AdapterDayjs}>
+										<PageTransitionProvider>
+											<PageTransition>{children}</PageTransition>
+										</PageTransitionProvider>
+									</LocalizationProvider>
 								</Theme>
 							</CartProvider>
 						</AuthProvider>

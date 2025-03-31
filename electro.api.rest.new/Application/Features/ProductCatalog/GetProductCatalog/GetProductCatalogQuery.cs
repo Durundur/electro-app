@@ -1,10 +1,9 @@
-﻿using MediatR;
+﻿using Application.Features.Shared.Pagination;
+using MediatR;
 
 namespace Application.Features.ProductCatalog.GetProductCatalog
 {
-    public class GetProductCatalogQuery : IRequest<GetProductCatalogResult>
+    public class GetProductCatalogQuery : PaginationQuery, IRequest<GetProductCatalogResult>
     {
-        public int PageSize { get; set; }
-        public int Page { get; set; }
     }
 }

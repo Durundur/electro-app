@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useState } from "react";
+import React, { useEffect } from "react";
 import { Grid2 as Grid } from "@mui/material";
 import PhotoUploadInput from "./PhotoUploaderInput";
 import PhotoPreview from "./PhotoUploaderPhotoPreview";
@@ -6,7 +6,6 @@ import { DndContext, DragEndEvent, closestCenter } from "@dnd-kit/core";
 import { SortableContext, arrayMove, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { useDispatch, useSelector } from "@/libs/Store";
-import { deletePhoto, uploadPhotos } from "@/libs/PhotoUploader/thunk";
 import { photoUplaoderSetItems } from "@/libs/PhotoUploader/slice";
 
 interface PhotoUploaderProps {

@@ -1,14 +1,15 @@
-﻿using Domain.Aggregates.ProductCatalogAggregate;
+﻿using Application.Features.Shared.Pagination;
+using Domain.Aggregates.ProductCatalogAggregate;
 using Domain.ValueObjects;
 
 namespace Application.Features.ProductCatalog.GetProductCatalog
 {
-    public class GetProductCatalogResult
+    public class GetProductCatalogResult : PaginatedResult<GetProductCatalogResultProduct>
     {
-        public IList<GetProductCatalogResultProduct> Products { get; set; }
-        public int PageCount { get; set; }
-        public int PageSize { get; set; }
-        public int Page { get; set; }
+        public GetProductCatalogResult(IReadOnlyList<GetProductCatalogResultProduct> items, int count, int page, int pageSize) 
+            : base(items, count, page, pageSize)
+        {
+        }
     }
 
     public class GetProductCatalogResultProduct

@@ -19,5 +19,6 @@ namespace Application.Features.ProductCatalog.GetProduct
         public float AverageOpinionRating { get; set; }
         public int OpinionCount { get; set; }
         public IList<ProductAttributeResult> Attributes { get; set; }
+        public ProductPromotion? Promotion { get; set; }
     }
 }

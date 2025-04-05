@@ -11,6 +11,7 @@ namespace Domain.Reposiotories
         IProductHierarchyRepository ProductHierarchyRepository { get; }
         IProductRepository ProductRepository { get; }
         IRecipientRepository RecipientRepository { get; }
+        IProductPromotionRepository ProductPromotionRepository { get; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
         Task CommitTransactionAsync(CancellationToken cancellationToken = default);
         Task RollbackTransactionAsync(CancellationToken cancellationToken = default);

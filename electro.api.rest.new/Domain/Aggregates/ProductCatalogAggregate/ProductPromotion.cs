@@ -14,7 +14,7 @@ namespace Domain.Aggregates.ProductCatalogAggregate
 
         private ProductPromotion() { }
 
-        public static ProductPromotion Create(Money promotionalPrice, DateTime startDate, DateTime endDate, bool isActive)
+        public static ProductPromotion Create(Guid productId, Money promotionalPrice, DateTime startDate, DateTime endDate, bool isActive)
         {
             if (endDate <= startDate)
             {
@@ -24,6 +24,7 @@ namespace Domain.Aggregates.ProductCatalogAggregate
             return new ProductPromotion
             {
                 Id = Guid.NewGuid(),
+                ProductId = productId,
                 PromotionalPrice = promotionalPrice,
                 StartDate = startDate,
                 EndDate = endDate,

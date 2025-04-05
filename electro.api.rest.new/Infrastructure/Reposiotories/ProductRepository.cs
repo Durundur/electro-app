@@ -31,11 +31,19 @@ namespace Infrastructure.Reposiotories
 
         public async Task<Product> GetByIdWithLockAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            return await _context.Products
+            var product = await _context.Products
                 .FromSqlInterpolated($@"SELECT * FROM ""Products"" WHERE ""Id"" = {id} FOR UPDATE")
-                .Include(p => p.Attributes)
-                .Include(p => p.Opinions)
+                .AsTracking()
                 .FirstOrDefaultAsync(cancellationToken);
+
+            if (product == null)
+                return null;
+
+            await _context.Entry(product).Collection(p => p.Attributes).LoadAsync(cancellationToken);
+            await _context.Entry(product).Collection(p => p.Opinions).LoadAsync(cancellationToken);
+            await _context.Entry(product).Reference(p => p.Promotion).LoadAsync(cancellationToken);
+
+            return product;
         }
 
         public async Task<IList<Product>> GetProductsByIdsAsync(IEnumerable<Guid> productIds, CancellationToken cancellationToken)

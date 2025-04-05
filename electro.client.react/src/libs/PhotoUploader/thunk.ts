@@ -1,43 +1,45 @@
 import { AppDispatch, RootState } from "@/libs/Store";
 import axios from "axios";
 import { photoUplaoderEror, photoUplaoderStart, photoUplaoderSuccess } from "./slice";
-import { IError, createError } from "@/libs/api-contract/Error";
+import { createError } from "@/libs/api-contract/Error";
 import { IUploadPhotoResult } from "./interface";
+import { base64ToFile } from "./utils";
 
-export const uploadPhotos = () => async (dispatch: AppDispatch, getState: () => RootState): Promise<string[]> => {
-	const state = getState();
-	const { items } = state.PhotoUploaderStore;
+const UPLOAD_FILES_URL = `${process.env.NEXT_PUBLIC_API_FILES_URL}/upload`;
 
-	const filesToUpload = items.filter((item) => item.photo instanceof File).map((item) => item.photo as File);
-	const existingUrls = items.filter((item) => !(item.photo instanceof File)).map((item) => item.photo as string);
+export const uploadPhotos =
+	() =>
+	async (dispatch: AppDispatch, getState: () => RootState): Promise<string[]> => {
+		const state = getState();
+		const { items } = state.PhotoUploaderStore;
 
-	if (filesToUpload.length === 0) return existingUrls;
+		const base64Items = items.filter((item) => item.isBase64);
+		const existingUrls = items.filter((item) => !item.isBase64).map((item) => item.photo);
 
-	dispatch(photoUplaoderStart());
-	try {
-		const formData = new FormData();
-		filesToUpload.forEach((file) => formData.append("files", file));
-		const response = await axios.post<IUploadPhotoResult>(`https://files.durundur.online/upload`, formData, {
-			headers: { "Content-Type": "multipart/form-data" },
-		});
+		if (base64Items.length === 0) return existingUrls;
 
-		const uploadedUrls = response.data.files;
-		const allUrls = items.map((item, index) => (item.photo instanceof File ? uploadedUrls.shift()! : item.photo));
-		
-		dispatch(photoUplaoderSuccess({ files: allUrls }));
-		return allUrls;
-	} catch (error: any) {
-		dispatch(photoUplaoderEror(createError(error)));
-		throw error;
-	}
-};
+		dispatch(photoUplaoderStart());
+		try {
+			const formData = new FormData();
 
-export const deletePhoto = (id: string) => async (dispatch: AppDispatch) => {
-	// try {
-	// 	dispatch(photoUplaoderStart());
-	// 	const response = await axios.delete(`https://files.durundur.online/file/${id}`);
-	// 	dispatch(photoUplaoderSuccess([]));
-	// } catch (error: any) {
-	// 	dispatch(photoUplaoderEror(error as IError));
-	// }
-};
+			base64Items.forEach((item) => {
+				const file = base64ToFile(item.photo, item.fileName || `image-${item.id}.jpg`);
+				formData.append("files", file);
+			});
+
+			const response = await axios.post<IUploadPhotoResult>(UPLOAD_FILES_URL, formData, {
+				headers: { "Content-Type": "multipart/form-data" },
+			});
+
+			const uploadedUrls = response.data.files;
+			const allUrls = items.map((item) => (item.isBase64 ? uploadedUrls.shift()! : item.photo));
+
+			dispatch(photoUplaoderSuccess({ files: allUrls }));
+			return allUrls;
+		} catch (error: any) {
+			dispatch(photoUplaoderEror(createError(error)));
+			throw error;
+		}
+	};
+
+export const deletePhoto = (id: string) => async (dispatch: AppDispatch) => {};

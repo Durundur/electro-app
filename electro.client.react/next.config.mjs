@@ -2,12 +2,12 @@
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
-	reactStrictMode: false,
+	reactStrictMode: true,
 	images: {
 		remotePatterns: [
 			{
 				protocol: "https",
-				hostname: "files.durundur.online",
+				hostname: "files.durundur.xyz",
 				port: "",
 				pathname: "/file/**",
 			},

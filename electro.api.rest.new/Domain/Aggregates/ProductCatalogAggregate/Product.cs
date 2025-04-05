@@ -175,7 +175,7 @@ namespace Domain.Aggregates.ProductCatalogAggregate
             }
 
             ValidatePromotionalPrice(promotionalPrice);
-            Promotion = ProductPromotion.Create(promotionalPrice, startDate, endDate, isActive);
+            Promotion = ProductPromotion.Create(this.Id, promotionalPrice, startDate, endDate, isActive);
         }
 
         public void UpdatePromotion(Money promotionalPrice, DateTime startDate, DateTime endDate, bool isActive)

@@ -17,6 +17,7 @@ namespace Infrastructure.Reposiotories
         private IProductHierarchyRepository _productHierarchyRepository;
         private IProductRepository _productRepository;
         private IRecipientRepository _recipientRepository;
+        private IProductPromotionRepository _productPromotionRepository;
 
         public UnitOfWork(ApplicationDbContext context)
         {
@@ -43,6 +44,9 @@ namespace Infrastructure.Reposiotories
 
         public IRecipientRepository RecipientRepository =>
             _recipientRepository ??= new RecipientRepository(_context);
+
+        public IProductPromotionRepository ProductPromotionRepository =>
+            _productPromotionRepository ??= new ProductPromotionRepository(_context);
 
         public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {

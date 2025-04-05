@@ -70,6 +70,7 @@ namespace Application.Features.ProductCatalog.CreateProduct
                             command.Promotion.EndDate,
                             command.Promotion.IsActive
                         );
+                        await _unitOfWork.ProductPromotionRepository.AddProductPromotionAsync(product.Promotion, cancellationToken);
                     }
                     else
                     {

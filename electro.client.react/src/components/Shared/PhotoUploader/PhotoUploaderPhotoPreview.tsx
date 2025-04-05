@@ -1,21 +1,14 @@
-import React, { useMemo } from "react";
-import { Box, Button, Card, IconButton } from "@mui/material";
+import React from "react";
+import { Box, Card, IconButton } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 
 interface PhotoUploaderPhotoPreviewProps {
 	id: number;
-	photo: string | File;
+	photo: string;
 	onDelete: (id: number) => void;
 }
 
 const PhotoUploaderPhotoPreview: React.FC<PhotoUploaderPhotoPreviewProps> = ({ photo, id, onDelete }) => {
-	const photoSrc = useMemo(() => {
-		if (photo instanceof File) {
-			return URL.createObjectURL(photo);
-		}
-		return photo;
-	}, [photo]);
-
 	const handleDeleteFile = (event: React.MouseEvent) => {
 		event.stopPropagation();
 		onDelete(id);
@@ -28,7 +21,7 @@ const PhotoUploaderPhotoPreview: React.FC<PhotoUploaderPhotoPreviewProps> = ({ p
 				paddingBottom: "75%",
 				borderRadius: 1,
 				overflow: "hidden",
-				backgroundImage: `url(${photoSrc})`,
+				backgroundImage: `url(${photo})`,
 				backgroundSize: "contain",
 				backgroundPosition: "center",
 				backgroundRepeat: "no-repeat",

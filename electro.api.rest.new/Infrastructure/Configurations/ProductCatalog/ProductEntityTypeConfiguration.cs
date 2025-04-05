@@ -24,6 +24,7 @@ namespace Infrastructure.Configurations.ProductCatalog
                     photos => photos.ToArray(),
                     array => array.ToList()
                 );
+
             builder.OwnsOne(p => p.Price, priceBuilder =>
             {
                 priceBuilder.Property(m => m.Amount)
@@ -37,6 +38,7 @@ namespace Infrastructure.Configurations.ProductCatalog
                     .HasMaxLength(3)
                     .IsRequired();
             });
+
             builder.HasOne<Group>().WithMany().HasForeignKey(p => p.GroupId);
             builder.HasOne<Category>().WithMany().HasForeignKey(p => p.CategoryId);
             builder.HasOne<SubCategory>().WithMany().HasForeignKey(p => p.SubCategoryId);

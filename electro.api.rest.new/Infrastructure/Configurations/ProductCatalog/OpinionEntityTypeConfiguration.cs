@@ -12,6 +12,7 @@ namespace Infrastructure.Configurations.ProductCatalog
             builder.ToTable("ProductOpinions");
             builder.HasKey(o => o.Id);
             builder.HasOne<UserIdentity>().WithMany().HasForeignKey(o => o.UserId);
+            builder.HasOne<D.ProductCatalogAggregate.Product>().WithMany(p => p.Opinions).HasForeignKey("ProductId").OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

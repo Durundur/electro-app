@@ -29,15 +29,23 @@ const SelectInput = <T,>({ label, helperText, error, children, ...props }: Selec
 		>
 			<InputLabel id={labelId}>{label}</InputLabel>
 			<Select
-				labelId={labelId}
-				{...props}
 				MenuProps={{
+					id: `menu-${props.id}`,
+					disablePortal: true,
 					sx: {
 						"&.MuiPopover-root": {
 							position: "absolute",
+							"& .MuiPaper-root": {
+								maxWidth: "unset !important",
+								maxHeight: "unset !important",
+								top: "100% !important",
+								left: "0 !important",
+							},
 						},
 					},
 				}}
+				labelId={labelId}
+				{...props}
 			>
 				{children}
 			</Select>

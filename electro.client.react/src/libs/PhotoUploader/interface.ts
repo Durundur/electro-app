@@ -4,5 +4,7 @@ export interface IUploadPhotoResult {
 
 export interface IPhotoItem {
 	id: number;
-	photo: string | File;
+	fileName?: string;
+	photo: string;
+	isBase64?: boolean;
 }

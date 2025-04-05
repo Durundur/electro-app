@@ -29,15 +29,9 @@ export const componentsCustomizations: Components<Theme> = {
 			underline: "none",
 		},
 	},
-	MuiSelect: {
-		defaultProps: {
-			MenuProps: { disableScrollLock: true },
-		},
-	},
 	MuiTypography: {
 		defaultProps: {
 			variant: "body1",
 		},
 	},
-	
 };

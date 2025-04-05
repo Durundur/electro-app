@@ -7,6 +7,8 @@ import { SortableContext, arrayMove, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { useDispatch, useSelector } from "@/libs/Store";
 import { photoUplaoderSetItems } from "@/libs/PhotoUploader/slice";
+import { fileToBase64 } from "@/libs/PhotoUploader/utils";
+import { IPhotoItem } from "@/libs/PhotoUploader/interface";
 
 interface PhotoUploaderProps {
 	initialPhotos: string[];
@@ -33,11 +35,15 @@ const PhotoUploader: React.FC<PhotoUploaderProps> = ({ initialPhotos }) => {
 		}
 	};
 
-	const handleNewFile = (files: File[]) => {
-		const newItems = files.map((file, index) => ({
-			id: items.length + index,
-			photo: file,
-		}));
+	const handleNewFile = async (files: File[]) => {
+		const newItems: IPhotoItem[] = await Promise.all(
+			files.map(async (file, index) => ({
+				id: items.length + index,
+				photo: await fileToBase64(file),
+				fileName: file.name,
+				isBase64: true,
+			}))
+		);
 		dispatch(photoUplaoderSetItems([...items, ...newItems]));
 	};
 
@@ -68,7 +74,7 @@ export default PhotoUploader;
 
 interface SortablePhotoProps {
 	id: number;
-	photo: string | File;
+	photo: string;
 	onDelete: (id: number) => void;
 }
 

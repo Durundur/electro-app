@@ -9,9 +9,9 @@ namespace Infrastructure.Configurations.ProductCatalog
         public void Configure(EntityTypeBuilder<ProductPromotion> builder)
         {
             builder.ToTable("ProductPromotions");
-            builder.HasKey(p => p.Id);
+            builder.HasKey(pp => pp.Id);
 
-            builder.OwnsOne(p => p.PromotionalPrice, priceBuilder =>
+            builder.OwnsOne(pp => pp.PromotionalPrice, priceBuilder =>
             {
                 priceBuilder.Property(m => m.Amount)
                     .HasColumnName("Amount")
@@ -27,7 +27,7 @@ namespace Infrastructure.Configurations.ProductCatalog
 
             builder.HasOne<Product>()
                 .WithOne(p => p.Promotion)
-                .HasForeignKey<ProductPromotion>(p => p.ProductId)
+                .HasForeignKey<ProductPromotion>(pp => pp.ProductId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

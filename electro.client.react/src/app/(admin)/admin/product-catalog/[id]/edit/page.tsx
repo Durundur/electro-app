@@ -2,7 +2,6 @@
 import { Box, Button, Stack } from "@mui/material";
 import { Formik } from "formik";
 import { FC, useEffect } from "react";
-import * as yup from "yup";
 import { useDispatch, useSelector } from "@/libs/Store";
 import { uploadPhotos } from "@/libs/PhotoUploader/thunk";
 import GeneralInfoPanel from "@/components/Admin/AdminProductCatalog/AdminProductCatalogNewEdit/Panels/GeneralInfoPanel";
@@ -10,7 +9,7 @@ import PhotosPanel from "@/components/Admin/AdminProductCatalog/AdminProductCata
 import DescriptionPanel from "@/components/Admin/AdminProductCatalog/AdminProductCatalogNewEdit/Panels/DescriptionPanel";
 import AttributesPanel from "@/components/Admin/AdminProductCatalog/AdminProductCatalogNewEdit/Panels/AttributesPanel";
 import { createOrUpdateProduct, fetchProduct } from "@/libs/Admin/AdminProductCatalog/AdminProductCatalogNewEdit/thunk";
-import { initialValues as defaultInitialValues } from "@/libs/Admin/AdminProductCatalog/AdminProductCatalogNewEdit/initialValues";
+import { initialValues as defaultInitialValues, validationSchema } from "@/libs/Admin/AdminProductCatalog/AdminProductCatalogNewEdit/ProductForm";
 import { useBreadcrumbs } from "@/hooks/Breadcrumbs/useBreadcrumbs";
 import Error from "@/components/Layout/Error/Error";
 import { usePermissionGuard } from "@/hooks/PermissionGuard/usePermissionGuard";
@@ -41,10 +40,11 @@ const ProductCatalogEditPage: FC<ProductCatalogEditPageProps> = ({ params }) => 
 	const isLoadingProductHierarchySelector = useSelector((store) => store.AdminProductCatalogNewEditPageStore.productHierarchy.isLoading);
 	const isLoadingAttributesDefinitionsSelector = useSelector((store) => store.AdminProductCatalogNewEditPageStore.attributesDefinitions.isLoading);
 	const isLoadingSaveActionSelector = useSelector((store) => store.AdminProductCatalogNewEditPageStore.saveAction.isLoading);
+	const isLoadingPhotoUploaderSelector = useSelector((store) => store.PhotoUploaderStore.isLoading);
 	const productSelector = useSelector((store) => store.AdminProductCatalogNewEditPageStore.product.data);
 	const errorSelector = useSelector((store) => store.AdminProductCatalogNewEditPageStore.product.error);
 
-	usePageTransition([isLoadingProductSelector, isLoadingProductHierarchySelector, isLoadingAttributesDefinitionsSelector, isLoadingSaveActionSelector]);
+	usePageTransition([isLoadingProductSelector, isLoadingProductHierarchySelector, isLoadingAttributesDefinitionsSelector, isLoadingSaveActionSelector, isLoadingPhotoUploaderSelector]);
 
 	const successSaveActionSelector = useSelector((store) => store.AdminProductCatalogNewEditPageStore.saveAction.success);
 
@@ -73,36 +73,12 @@ const ProductCatalogEditPage: FC<ProductCatalogEditPageProps> = ({ params }) => 
 		dispatch(createOrUpdateProduct(command));
 	};
 
-	const validationSchema = yup.object<IProductForm>({
-		name: yup.string().required("Nazwa jest wymagana"),
-		amount: yup.number().required("Cena jest wymagana"),
-		currency: yup.string().required("Waluta jest wymagana"),
-		status: yup.string().required("Status jest wymagany"),
-		stockQuantityDelta: yup.number().required("Stan magazynowy jest wymagany"),
-		groupId: yup.number().optional(),
-		categoryId: yup.number().optional(),
-		subCategoryId: yup.number().optional(),
-		photos: yup.array().of(yup.string()).required("Zdjęcia są wymagane"),
-		description: yup.string().required("Opis jest wymagany"),
-		attributes: yup.array().of(
-			yup.object({
-				id: yup.string().required(),
-				value: yup.string().required("Wartość atrybutu jest wymagana"),
-				isPrimary: yup.boolean().required(),
-			})
-		),
-		promotionAmount: yup.number().optional(),
-		promotionCurrency: yup.string().when("promotionAmount", {
-			is: (val: number) => val !== undefined && val !== null,
-			then: (schema) => schema.required("Waluta promocji jest wymagana gdy podano cenę promocyjną"),
-		}),
-		promotionStartDate: yup.date().optional(),
-		promotionEndDate: yup.date().when("promotionStartDate", {
-			is: (val: Date) => val !== undefined && val !== null,
-			then: (schema) => schema.min(yup.ref("promotionStartDate"), "Data końca musi być późniejsza niż data początku"),
-		}),
-		promotionIsActive: yup.boolean().optional(),
-	});
+	const scrollToError = () => {
+		const firstErrorElement = document.querySelector(".Mui-error");
+		if (firstErrorElement) {
+			firstErrorElement.scrollIntoView({ behavior: "smooth", block: "center" });
+		}
+	};
 
 	const initialValues: IProductForm = productSelector ? mapGetProductResultToForm(productSelector) : defaultInitialValues;
 
@@ -114,7 +90,13 @@ const ProductCatalogEditPage: FC<ProductCatalogEditPageProps> = ({ params }) => 
 					{(formik) => (
 						<Stack spacing={2} direction={"column"}>
 							<Stack direction={"row"} alignItems={"center"} justifyContent={"end"} spacing={2}>
-								<Button variant="outlined" onClick={() => formik.handleSubmit()}>
+								<Button
+									variant="outlined"
+									onClick={() => {
+										formik.submitForm();
+										if (!formik.isValid) scrollToError();
+									}}
+								>
 									Zapisz
 								</Button>
 							</Stack>

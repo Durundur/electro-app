@@ -10,18 +10,22 @@
         public DateTime CreatedAt { get; private set; }
         public DateTime ModifiedAt { get; private set; }
         public int? CategoryId { get; private set; }
-        private readonly List<AttributeDefinition> _attributes;
+        private readonly List<AttributeDefinition> _attributes = new List<AttributeDefinition>();
         public IReadOnlyCollection<AttributeDefinition> Attributes => _attributes.AsReadOnly();
 
-        public SubCategory(string name, string description, bool active, int displayOrder)
+        private SubCategory() { }
+
+        public static SubCategory Create(string name, string description, bool active, int displayOrder)
         {
-            Name = name;
-            Description = description;
-            Active = active;
-            DisplayOrder = displayOrder;
-            CreatedAt = DateTime.UtcNow;
-            ModifiedAt = DateTime.UtcNow;
-            _attributes = new List<AttributeDefinition>();
+            return new SubCategory
+            {
+                Name = name,
+                Description = description,
+                Active = active,
+                DisplayOrder = displayOrder,
+                CreatedAt = DateTime.UtcNow,
+                ModifiedAt = DateTime.UtcNow,
+            };
         }
 
         public void Update(string name, string description, bool active, int displayOrder)
@@ -42,10 +46,13 @@
         public void AddAttribute(AttributeDefinition attribute)
         {
             if (_attributes.Any(a => a.Name == attribute.Name && a.Id == attribute.Id))
+            {
                 throw new Exception("Attribute with this name already exists");
+            }
 
             _attributes.Add(attribute);
         }
+
         public void RemoveAttribute(AttributeDefinition attribute)
         {
             if (_attributes.Contains(attribute))

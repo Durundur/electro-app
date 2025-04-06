@@ -1,6 +1,7 @@
 ﻿using Domain.Reposiotories;
 using Domain.Aggregates.ProductHierarchyAggregate;
 using MediatR;
+using Application.Exceptions;
 
 namespace Application.Features.ProductHierarchy.CreateOrUpdateSubCategory
 {
@@ -19,14 +20,16 @@ namespace Application.Features.ProductHierarchy.CreateOrUpdateSubCategory
 
             if (command.Id.HasValue)
             {
-                subCategory = await _unitOfWork.ProductHierarchyRepository.GetSubCategoryByIdAsync(command.Id.Value)
-                    ?? throw new Exception($"Category with ID {command.Id} not found");
-
+                subCategory = await _unitOfWork.ProductHierarchyRepository.GetSubCategoryByIdAsync(command.Id.Value);
+                if (subCategory == null)
+                {
+                    throw new NotFoundException($"Subcategory with ID {command.Id} not found");
+                }
                 subCategory.Update(command.Name, command.Description, command.Active, command.DisplayOrder);
             }
             else
             {
-                subCategory = new SubCategory(command.Name, command.Description, command.Active, command.DisplayOrder);
+                subCategory = SubCategory.Create(command.Name, command.Description, command.Active, command.DisplayOrder);
                 subCategory.AssignToCategory(command.CategoryId);
                 await _unitOfWork.ProductHierarchyRepository.AddSubCategoryAsync(subCategory, cancellationToken);
             }

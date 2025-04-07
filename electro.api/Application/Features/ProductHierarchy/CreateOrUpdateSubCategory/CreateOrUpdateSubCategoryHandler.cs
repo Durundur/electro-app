@@ -41,6 +41,7 @@ namespace Application.Features.ProductHierarchy.CreateOrUpdateSubCategory
             foreach (var attribute in attributesToRemove)
             {
                 subCategory.RemoveAttribute(attribute);
+                await _unitOfWork.AttributeDefinitionRepository.DeleteAttributeDefinitionAsync(attribute.Id, cancellationToken);
             }
 
             foreach (var receivedAttribute in command.Attributes)

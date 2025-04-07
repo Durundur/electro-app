@@ -45,8 +45,10 @@
         public void AddAttribute(AttributeDefinition attribute)
         {
             if (_attributes.Any(a => a.Name == attribute.Name && a.Id == attribute.Id))
+            {
                 throw new Exception("Attribute with this name already exists");
-
+            }
+                
             _attributes.Add(attribute);
         }
         public void RemoveAttribute(AttributeDefinition attribute)

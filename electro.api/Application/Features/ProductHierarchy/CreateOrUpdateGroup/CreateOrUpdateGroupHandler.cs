@@ -37,6 +37,7 @@ namespace Application.Features.ProductHierarchy.CreateOrUpdateGroup
             foreach (var attribute in attributesToRemove)
             {
                 group.RemoveAttribute(attribute);
+                await _unitOfWork.AttributeDefinitionRepository.DeleteAttributeDefinitionAsync(attribute.Id, cancellationToken);
             }
 
             foreach (var receivedAttribute in command.Attributes)

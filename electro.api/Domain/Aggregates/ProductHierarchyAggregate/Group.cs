@@ -32,26 +32,13 @@
             _attributes = new List<AttributeDefinition>();
         }
 
-/*        public void AddCategory(Category category)
-        {
-            if (_categories.Any(c => c.Name == category.Name && c.Id == category.Id))
-                throw new Exception("Category with this name already exists in this group");
-
-            _categories.Add(category);
-        }
-        public void RemoveCategory(Category category)
-        {
-            if (_categories.Contains(category))
-            {
-                _categories.Remove(category);
-            }
-        }*/
-
         public void AddAttribute(AttributeDefinition attribute)
         {
             if (_attributes.Any(a => a.Name == attribute.Name && a.Id == attribute.Id))
+            {
                 throw new Exception("Attribute with this name already exists");
-
+            }
+                
             _attributes.Add(attribute);
         }
 

@@ -86,7 +86,7 @@ const Editor: React.FC<EditorProps> = ({ value = "", onChange }) => {
 		}
 	}, [value]);
 
-	return <div ref={editorRef} style={{ height: "100%", width: "100%" }} />;
+	return <div ref={editorRef} style={{ height: "100%", width: "100%", maxHeight: "100vh" }} />;
 };
 
 export default Editor;

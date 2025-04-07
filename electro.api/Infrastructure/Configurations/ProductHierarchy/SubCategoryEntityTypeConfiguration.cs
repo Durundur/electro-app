@@ -11,6 +11,7 @@ namespace Infrastructure.Configurations.ProductHierarchy
             builder.ToTable("SubCategories");
 
             builder.HasKey(x => x.Id);
+            
             builder.Property(x => x.Id).UseIdentityAlwaysColumn();
 
             builder.Property(x => x.Name)

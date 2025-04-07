@@ -19,8 +19,12 @@ namespace Application.Features.ProductHierarchy.CreateOrUpdateCategory
 
             if (command.Id.HasValue)
             {
-                category = await _unitOfWork.ProductHierarchyRepository.GetCategoryByIdAsync(command.Id.Value)
-                    ?? throw new Exception($"Category with ID {command.Id} not found");
+                category = await _unitOfWork.ProductHierarchyRepository.GetCategoryByIdAsync(command.Id.Value);
+
+                if (category == null)
+                {
+                    throw new Exception($"Category with ID {command.Id} not found");
+                }
 
                 category.Update(command.Name, command.Description, command.Active, command.DisplayOrder);
             }
@@ -38,6 +42,7 @@ namespace Application.Features.ProductHierarchy.CreateOrUpdateCategory
             foreach (var attribute in attributesToRemove)
             {
                 category.RemoveAttribute(attribute);
+                await _unitOfWork.AttributeDefinitionRepository.DeleteAttributeDefinitionAsync(attribute.Id, cancellationToken);
             }
 
             foreach (var receivedAttribute in command.Attributes)

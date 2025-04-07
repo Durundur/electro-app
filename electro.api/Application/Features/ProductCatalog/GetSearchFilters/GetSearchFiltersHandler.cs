@@ -77,7 +77,7 @@ namespace Application.Features.ProductCatalog.GetSearchFilters
 
             if (hierarchyCondition != null)
             {
-                attributeDefinitionsQuery = attributeDefinitionsQuery.Where(hierarchyCondition);
+                attributeDefinitionsQuery = attributeDefinitionsQuery.Where(hierarchyCondition).OrderBy(ad => ad.Name);
             }
 
             var attributeDefinitions = await attributeDefinitionsQuery.ToListAsync(cancellationToken);

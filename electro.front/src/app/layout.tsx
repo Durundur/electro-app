@@ -13,6 +13,11 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
 	return (
 		<html lang="en">
+			<head>
+				<link rel="stylesheet" href="/richtexteditor/rte_theme_default.css" />
+				<script src="/richtexteditor/rte.js" defer></script>
+				<script src="/richtexteditor/plugins/all_plugins.js" defer></script>
+			</head>
 			<body>
 				<AppRouterCacheProvider>
 					<ReduxProvider>

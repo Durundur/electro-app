@@ -7,7 +7,8 @@ interface ProductPageSpecificationPrimaryProps {
 }
 
 const ProductPageSpecificationPrimary: FC<ProductPageSpecificationPrimaryProps> = ({ specification }) => {
-	const primarySpecification = specification.filter((s) => s.isPrimary) ?? [];
+	const primarySpecification = specification.filter((s) => s.isPrimary).sort() ?? [];
+
 	return (
 		<Stack spacing={0.5}>
 			{primarySpecification.map((item, i) => (

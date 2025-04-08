@@ -9,6 +9,8 @@ interface SearchProductsListItemProps {
 }
 
 const SearchProductsListItem: FC<SearchProductsListItemProps> = ({ product }) => {
+	const attributes = [...(product.attributes ?? [])].sort();
+	
 	return (
 		<Card>
 			<CardActionArea LinkComponent={Link} href={`/product/${product.id}`}>
@@ -37,7 +39,7 @@ const SearchProductsListItem: FC<SearchProductsListItemProps> = ({ product }) =>
 									</Typography>
 								</Stack>
 								<Stack spacing={0.5}>
-									{product.attributes?.map((item, i) => (
+									{attributes.map((item, i) => (
 										<Typography component={"p"} variant="caption" noWrap key={`small-specification-item-${i}`}>
 											{item.name}: {item.value}
 										</Typography>

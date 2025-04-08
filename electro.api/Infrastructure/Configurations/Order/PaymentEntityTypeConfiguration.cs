@@ -9,6 +9,7 @@ namespace Infrastructure.Configurations.Order
         public void Configure(EntityTypeBuilder<D.OrderAggregate.Payment> builder)
         {
             builder.ToTable("OrderPayments");
+
             builder.OwnsOne(c => c.Cost, priceBuilder =>
             {
                 priceBuilder.Property(m => m.Amount)
@@ -23,7 +24,13 @@ namespace Infrastructure.Configurations.Order
                     .IsRequired();
             });
             builder.Property<Guid>("Id");
+
             builder.HasKey("Id");
+
+            builder.Property(p => p.Status).HasConversion<string>();
+
+            builder.Property(p => p.Method).HasConversion<string>();
+
         }
     }
 }

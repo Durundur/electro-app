@@ -9,6 +9,7 @@ namespace Infrastructure.Configurations.Order
         public void Configure(EntityTypeBuilder<D.OrderAggregate.Delivery> builder)
         {
             builder.ToTable("OrderDeliveries");
+
             builder.OwnsOne(c => c.Cost, priceBuilder =>
             {
                 priceBuilder.Property(m => m.Amount)
@@ -22,8 +23,13 @@ namespace Infrastructure.Configurations.Order
                     .HasMaxLength(3)
                     .IsRequired();
             });
+
             builder.Property<Guid>("Id");
+
             builder.HasKey("Id");
+
+            builder.Property(d => d.Status).HasConversion<string>();
+            builder.Property(d => d.Method).HasConversion<string>();
         }
     }
 }

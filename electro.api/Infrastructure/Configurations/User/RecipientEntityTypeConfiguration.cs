@@ -10,7 +10,10 @@ namespace Infrastructure.Configurations.UserProfile
         public void Configure(EntityTypeBuilder<D.Recipient> builder)
         {
             builder.ToTable("Recipients");
+
             builder.HasOne<UserIdentity>().WithMany().HasForeignKey(r => r.UserId);
+
+            builder.Property(r => r.Type).HasConversion<string>();
         }
     }
 }

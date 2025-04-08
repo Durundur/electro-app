@@ -10,10 +10,16 @@ namespace Infrastructure.Configurations.Order
         public void Configure(EntityTypeBuilder<D.OrderAggregate.Order> builder)
         {
             builder.ToTable("Orders");
+
             builder.HasOne<UserIdentity>().WithMany().HasForeignKey(o => o.UserId);
+
             builder.HasMany<D.OrderAggregate.OrderProduct>(o => o.Products).WithOne();
+
             builder.Ignore(o => o.TotalPrice);
+
             builder.Property(o => o.Number).ValueGeneratedOnAdd();
+
+            builder.Property(o => o.Status).HasConversion<string>();
         }
     }
 }

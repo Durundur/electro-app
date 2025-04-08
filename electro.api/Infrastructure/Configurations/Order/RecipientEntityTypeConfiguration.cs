@@ -10,8 +10,12 @@ namespace Infrastructure.Configurations.Order
         public void Configure(EntityTypeBuilder<D.OrderAggregate.Recipient> builder)
         {
             builder.ToTable("OrderRecipients");
+
             builder.Property<Guid>("Id");
+
             builder.HasKey("Id");
+
+            builder.Property(r => r.Type).HasConversion<string>();
         }
     }
 }

@@ -12,5 +12,7 @@ namespace Application.Features.ProductCatalog.GetFeaturedProducts
         public decimal Amount { get; set; }
         public string Currency { get; set; }
         public string Photo { get; set; }
+        public decimal? PromotionAmount { get; set; }
+        public string? PromotionCurrency { get; set; }
     }
 }

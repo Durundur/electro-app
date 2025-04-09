@@ -32,6 +32,7 @@ namespace Application.Features.ProductCatalog.GetBestsellerProducts
             var productIds = bestsellers.Select(b => b.ProductId).ToList();
 
             var products = await _unitOfWork.ProductRepository.GetProductsQuery()
+                .Include(p => p.Promotion)
                 .Where(p => productIds.Contains(p.Id))
                 .Where(p => p.Status == ProductStatus.Active && p.StockQuantity > 0)
                 .ToListAsync(cancellationToken);

@@ -23,5 +23,7 @@ namespace Application.Features.ProductCatalog.GetSearchProducts
         public float AverageOpinionRating { get; set; }
         public int OpinionCount { get; set; }
         public IList<ProductAttributeResult> Attributes { get; set; }
+        public decimal? PromotionAmount { get; set; }
+        public string? PromotionCurrency { get; set; }
     }
 }

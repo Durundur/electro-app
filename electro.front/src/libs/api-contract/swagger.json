@@ -3444,6 +3444,15 @@
 			"photo": {
 			  "type": "string",
 			  "nullable": true
+			},
+			"promotionAmount": {
+			  "type": "number",
+			  "format": "double",
+			  "nullable": true
+			},
+			"promotionCurrency": {
+			  "type": "string",
+			  "nullable": true
 			}
 		  },
 		  "additionalProperties": false
@@ -3575,6 +3584,15 @@
 			  "nullable": true
 			},
 			"photo": {
+			  "type": "string",
+			  "nullable": true
+			},
+			"promotionAmount": {
+			  "type": "number",
+			  "format": "double",
+			  "nullable": true
+			},
+			"promotionCurrency": {
 			  "type": "string",
 			  "nullable": true
 			}
@@ -4266,6 +4284,15 @@
 				"$ref": "#/components/schemas/ProductAttributeResult"
 			  },
 			  "nullable": true
+			},
+			"promotionAmount": {
+			  "type": "number",
+			  "format": "double",
+			  "nullable": true
+			},
+			"promotionCurrency": {
+			  "type": "string",
+			  "nullable": true
 			}
 		  },
 		  "additionalProperties": false
@@ -4303,6 +4330,15 @@
 			  "nullable": true
 			},
 			"photo": {
+			  "type": "string",
+			  "nullable": true
+			},
+			"promotionAmount": {
+			  "type": "number",
+			  "format": "double",
+			  "nullable": true
+			},
+			"promotionCurrency": {
 			  "type": "string",
 			  "nullable": true
 			}

@@ -288,6 +288,8 @@ export interface GetBestsellerProductsResultProduct {
     amount?: number;
     currency?: string | undefined;
     photo?: string | undefined;
+    promotionAmount?: number | undefined;
+    promotionCurrency?: string | undefined;
 }
 
 export interface GetCartResult {
@@ -327,6 +329,8 @@ export interface GetFeaturedProductsResultProduct {
     amount?: number;
     currency?: string | undefined;
     photo?: string | undefined;
+    promotionAmount?: number | undefined;
+    promotionCurrency?: string | undefined;
 }
 
 export interface GetGroupResult {
@@ -525,6 +529,8 @@ export interface GetSearchProductsResultProduct {
     averageOpinionRating?: number;
     opinionCount?: number;
     attributes?: ProductAttributeResult[] | undefined;
+    promotionAmount?: number | undefined;
+    promotionCurrency?: string | undefined;
 }
 
 export interface GetSimilarProductsResult {
@@ -537,6 +543,8 @@ export interface GetSimilarProductsResultProduct {
     amount?: number;
     currency?: string | undefined;
     photo?: string | undefined;
+    promotionAmount?: number | undefined;
+    promotionCurrency?: string | undefined;
 }
 
 export interface GetSubCategoryResult {

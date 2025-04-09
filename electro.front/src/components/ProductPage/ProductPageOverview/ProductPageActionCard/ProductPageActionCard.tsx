@@ -92,9 +92,16 @@ const ProductPageActionCard: FC<ProductPageActionCardProps> = ({ product, onAddT
 					<>
 						<Stack direction="row" alignItems="center" justifyContent="space-between">
 							<QuantityInput value={quantity} id={product?.id!} onChange={(q) => setQuantity(q)} />
-							<Typography variant="h6" textAlign="end">
-								{formatAmount(product?.amount!, product?.currency!)}
-							</Typography>
+							<Stack>
+								{product.promotion && (
+									<Typography variant="h6" textAlign="end">
+										{formatAmount(product?.promotion?.promotionalPrice?.amount!, product?.promotion?.promotionalPrice?.currency!)}
+									</Typography>
+								)}
+								<Typography variant={product.promotion ? "body2" : "h6"} textAlign="end" sx={{ textDecoration: product.promotion ? "line-through" : "none" }}>
+									{formatAmount(product?.amount!, product?.currency!)}
+								</Typography>
+							</Stack>
 						</Stack>
 						<Button onClick={() => onAddToCart(quantity)} variant="contained" color="success" startIcon={<ShoppingCartOutlined />} disabled={quantity === 0}>
 							Dodaj do koszyka

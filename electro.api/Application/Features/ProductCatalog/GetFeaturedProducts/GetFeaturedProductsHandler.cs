@@ -17,6 +17,7 @@ namespace Application.Features.ProductCatalog.GetFeaturedProducts
         public async Task<GetFeaturedProductsResult> Handle(GetFeaturedProductsQuery request, CancellationToken cancellationToken)
         {
             var productsQuery = _unitOfWork.ProductRepository.GetProductsQuery()
+                .Include(p => p.Promotion)
                 .Include(p => p.Opinions);
 
             var products = await productsQuery

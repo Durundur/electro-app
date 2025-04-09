@@ -26,6 +26,7 @@ namespace Application.Features.ProductCatalog.GetSimilarProducts
             var sourceAttributes = sourceProduct.Attributes.ToList();
 
             var similarProductsQuery = await _unitOfWork.ProductRepository.GetProductsQuery()
+                .Include(p => p.Promotion)
                 .Include(p => p.Attributes)
                 .Where(p => p.Id != request.ProductId)
                 .Where(p => sourceProduct.GroupId.HasValue && p.GroupId == sourceProduct.GroupId)

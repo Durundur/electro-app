@@ -19,6 +19,7 @@ namespace Application.Features.ProductCatalog.GetSearchProducts
             var productsQuery = _unitOfWork.ProductRepository.GetProductsQuery()
                 .Include(p => p.Attributes.Where(a => a.IsPrimary))
                 .Include(p => p.Opinions)
+                .Include(p => p.Promotion)
                 .Where(p => p.Status == ProductStatus.Active && p.StockQuantity > 0)
                 .AsQueryable();
 

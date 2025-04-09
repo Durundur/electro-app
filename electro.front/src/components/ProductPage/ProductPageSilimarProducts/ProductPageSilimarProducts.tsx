@@ -19,7 +19,7 @@ const ProductPageSilimarProducts: React.FC<ProductPageSilimarProductsProps> = ({
 	}, [productId]);
 
 	const similarProducts = similarProductsSelector?.products?.map((product) => (
-		<ProductCard key={product.id} id={product.id!} name={product.name!} photo={product.photo!} amount={product.amount!} currency={product.currency!}></ProductCard>
+		<ProductCard key={product.id} id={product.id!} name={product.name!} photo={product.photo!} amount={product.amount!} currency={product.currency!} promotionAmount={product.promotionAmount} promotionCurrency={product.promotionCurrency}></ProductCard>
 	));
 
 	return (

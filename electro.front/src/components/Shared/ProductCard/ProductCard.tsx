@@ -9,9 +9,13 @@ interface ProductCardProps {
 	photo: string;
 	amount: number;
 	currency: string;
+	promotionAmount?: number;
+	promotionCurrency?: string;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ id, name, photo, amount, currency }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ id, name, photo, amount, currency, promotionAmount, promotionCurrency }) => {
+	const isPromoted = promotionAmount && promotionCurrency;
+
 	return (
 		<Card>
 			<CardActionArea component={Link} href={`/product/${id}`}>
@@ -38,7 +42,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ id, name, photo, amount, curr
 						>
 							{name}
 						</Typography>
-						<Typography fontWeight={500}>{formatAmount(amount, currency)}</Typography>
+						<Stack direction={"row"} spacing={1} alignItems="baseline">
+							{isPromoted && <Typography fontWeight={500}>{formatAmount(promotionAmount!, promotionCurrency!)}</Typography>}
+							<Typography variant={isPromoted ? "caption" : "body1"} fontWeight={isPromoted ? 400 : 500} sx={{ textDecoration: isPromoted ? "line-through" : "none" }}>
+								{formatAmount(amount, currency)}
+							</Typography>
+						</Stack>
 					</Stack>
 				</CardContent>
 			</CardActionArea>

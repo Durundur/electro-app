@@ -12,7 +12,7 @@ import ProductPageOverview from "@/components/ProductPage/ProductPageOverview/Pr
 import useScrollTo from "@/hooks/ScrollTo/useScrollTo";
 import { usePageTransition } from "@/hooks/PageTransition/usePageTransition";
 import ProductPageSpecificationTable from "@/components/ProductPage/ProductPageSpecification/ProductPageSpecificationTable";
-import ProductPageSilimarProducts from "@/components/ProductPage/ProductPageSilimarProducts/ProductPageSilimarProducts";
+import ProductPageSilimarProducts from "@/components/ProductPage/ProductPageSilimarProducts/ProductPageSimilarProducts";
 
 interface ProductPageParams {
 	params: { id: string };

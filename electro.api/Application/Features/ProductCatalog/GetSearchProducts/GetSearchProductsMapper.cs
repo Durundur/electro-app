@@ -4,7 +4,7 @@ namespace Application.Features.ProductCatalog.GetSearchProducts
 {
     public static class GetSearchProductsMapper
     {
-        public static GetSearchProductsResult MapToGetSearchProductsResult(IList<Domain.Aggregates.ProductCatalogAggregate.Product> products, 
+        public static GetSearchProductsResult MapToGetSearchProductsResult(IList<Domain.Aggregates.ProductCatalogAggregate.Product> products,
             IEnumerable<Domain.Aggregates.ProductHierarchyAggregate.AttributeDefinition> attributeDefinitions, int totalCount, int page, int pageSize)
         {
             var mappedProducts = products
@@ -27,8 +27,7 @@ namespace Application.Features.ProductCatalog.GetSearchProducts
                 AverageOpinionRating = product.Opinions.Any() ? (float)Math.Round(product.Opinions.Average(o => o.Rating), 1) : 0,
                 OpinionCount = product.Opinions.Count(),
                 Attributes = ProductAttributeMapper.MapToListOfProductAttributeResult(product.Attributes, attributeDefinitions),
-                PromotionAmount = product?.Promotion?.PromotionalPrice.Amount,
-                PromotionCurrency = product?.Promotion?.PromotionalPrice.Currency,
+                Promotion = product?.Promotion?.IsValid() == true ? product.Promotion.PromotionalPrice : null,
             };
         }
     }

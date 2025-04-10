@@ -20,7 +20,16 @@ const ShopRootFeaturedSection = () => {
 	}, []);
 
 	const productCards = featuredProductsSelector?.map((product) => (
-		<ProductCard key={product.id} id={product.id!} name={product.name!} photo={product.photo!} amount={product.amount!} currency={product.currency!} promotionAmount={product.promotionAmount} promotionCurrency={product.promotionCurrency}/>
+		<ProductCard
+			key={product.id}
+			id={product.id!}
+			name={product.name!}
+			photo={product.photo!}
+			amount={product.amount!}
+			currency={product.currency!}
+			promotionAmount={product.promotion?.amount}
+			promotionCurrency={product.promotion?.currency}
+		/>
 	));
 
 	return (

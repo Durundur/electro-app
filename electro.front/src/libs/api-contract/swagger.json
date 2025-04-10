@@ -3445,14 +3445,8 @@
 			  "type": "string",
 			  "nullable": true
 			},
-			"promotionAmount": {
-			  "type": "number",
-			  "format": "double",
-			  "nullable": true
-			},
-			"promotionCurrency": {
-			  "type": "string",
-			  "nullable": true
+			"promotion": {
+			  "$ref": "#/components/schemas/Money"
 			}
 		  },
 		  "additionalProperties": false
@@ -3587,14 +3581,8 @@
 			  "type": "string",
 			  "nullable": true
 			},
-			"promotionAmount": {
-			  "type": "number",
-			  "format": "double",
-			  "nullable": true
-			},
-			"promotionCurrency": {
-			  "type": "string",
-			  "nullable": true
+			"promotion": {
+			  "$ref": "#/components/schemas/Money"
 			}
 		  },
 		  "additionalProperties": false
@@ -4108,13 +4096,8 @@
 			  "type": "string",
 			  "nullable": true
 			},
-			"promotionAmount": {
-			  "type": "number",
-			  "format": "double"
-			},
-			"promotionCurrency": {
-			  "type": "string",
-			  "nullable": true
+			"promotion": {
+			  "$ref": "#/components/schemas/Money"
 			}
 		  },
 		  "additionalProperties": false
@@ -4285,14 +4268,8 @@
 			  },
 			  "nullable": true
 			},
-			"promotionAmount": {
-			  "type": "number",
-			  "format": "double",
-			  "nullable": true
-			},
-			"promotionCurrency": {
-			  "type": "string",
-			  "nullable": true
+			"promotion": {
+			  "$ref": "#/components/schemas/Money"
 			}
 		  },
 		  "additionalProperties": false
@@ -4333,14 +4310,8 @@
 			  "type": "string",
 			  "nullable": true
 			},
-			"promotionAmount": {
-			  "type": "number",
-			  "format": "double",
-			  "nullable": true
-			},
-			"promotionCurrency": {
-			  "type": "string",
-			  "nullable": true
+			"promotion": {
+			  "$ref": "#/components/schemas/Money"
 			}
 		  },
 		  "additionalProperties": false

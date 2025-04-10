@@ -21,8 +21,7 @@ namespace Application.Features.ProductCatalog.GetSimilarProducts
                 Amount = similarProduct.Price.Amount,
                 Currency = similarProduct.Price.Currency,
                 Photo = similarProduct.Photos.FirstOrDefault(),
-                PromotionAmount = similarProduct?.Promotion?.PromotionalPrice.Amount,
-                PromotionCurrency = similarProduct?.Promotion?.PromotionalPrice.Currency,
+                Promotion = similarProduct?.Promotion?.IsValid() == true ? similarProduct.Promotion.PromotionalPrice : null,
             };
         }
     }

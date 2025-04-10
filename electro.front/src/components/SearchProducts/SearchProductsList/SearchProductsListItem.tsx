@@ -10,7 +10,7 @@ interface SearchProductsListItemProps {
 
 const SearchProductsListItem: FC<SearchProductsListItemProps> = ({ product }) => {
 	const attributes = [...(product.attributes ?? [])].sort();
-	
+
 	return (
 		<Card>
 			<CardActionArea LinkComponent={Link} href={`/product/${product.id}`}>
@@ -50,9 +50,16 @@ const SearchProductsListItem: FC<SearchProductsListItemProps> = ({ product }) =>
 					</Grid2>
 					<Grid2 size={{ xs: 2 }}>
 						<CardContent>
-							<Typography variant="h6" align="right" sx={{ whiteSpace: "nowrap" }}>
-								{formatAmount(product.amount!, product.currency!)}
-							</Typography>
+							<Stack>
+								{product.promotion && (
+									<Typography variant="h6" align="right" sx={{ whiteSpace: "nowrap" }}>
+										{formatAmount(product.promotion.amount!, product.promotion.currency!)}
+									</Typography>
+								)}
+								<Typography variant={product.promotion ? "body2" : "h6"} align="right" sx={{ whiteSpace: "nowrap", textDecoration: product.promotion ? "line-through" : "none" }}>
+									{formatAmount(product.amount!, product.currency!)}
+								</Typography>
+							</Stack>
 						</CardContent>
 					</Grid2>
 				</Grid2>

@@ -12,7 +12,7 @@ const ShopRootPromotionHighlight = () => {
 
 	const promotionHighlightSelector = useSelector((state) => state.ShopRootPageStore.promotionHighlight.data);
 	const product = promotionHighlightSelector;
-	const discountPercentage = product?.amount && product?.promotionAmount ? Math.floor(((product.amount - product.promotionAmount) / product.amount) * 100) : 0;
+	const discountPercentage = product?.amount && product?.promotion?.amount ? Math.floor(((product.amount - product.promotion.amount) / product.amount) * 100) : 0;
 
 	useEffect(() => {
 		dispatch(getPromotionHighlight());
@@ -85,7 +85,7 @@ const ShopRootPromotionHighlight = () => {
 							{product?.name}
 						</Typography>
 						<Stack direction="row" spacing={2} alignItems="baseline">
-							<Typography variant="h6">{formatAmount(product?.promotionAmount!, product?.promotionCurrency!)}</Typography>
+							<Typography variant="h6">{formatAmount(product?.promotion?.amount!, product?.promotion?.currency!)}</Typography>
 							<Typography sx={{ textDecoration: "line-through" }}>{formatAmount(product?.amount!, product?.currency!)}</Typography>
 						</Stack>
 					</CardContent>

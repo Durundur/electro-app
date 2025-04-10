@@ -4,11 +4,11 @@ import { getSimilarProducts } from "@/libs/ProductPage/thunk";
 import { useDispatch, useSelector } from "@/libs/Store";
 import { useEffect } from "react";
 
-interface ProductPageSilimarProductsProps {
+interface ProductPageSimilarProductsProps {
 	productId: string;
 }
 
-const ProductPageSilimarProducts: React.FC<ProductPageSilimarProductsProps> = ({ productId }) => {
+const ProductPageSimilarProducts: React.FC<ProductPageSimilarProductsProps> = ({ productId }) => {
 	const dispatch = useDispatch();
 
 	const similarProductsSelector = useSelector((state) => state.ProductPageStore.similarProducts.data);
@@ -19,7 +19,16 @@ const ProductPageSilimarProducts: React.FC<ProductPageSilimarProductsProps> = ({
 	}, [productId]);
 
 	const similarProducts = similarProductsSelector?.products?.map((product) => (
-		<ProductCard key={product.id} id={product.id!} name={product.name!} photo={product.photo!} amount={product.amount!} currency={product.currency!} promotionAmount={product.promotionAmount} promotionCurrency={product.promotionCurrency}></ProductCard>
+		<ProductCard
+			key={product.id}
+			id={product.id!}
+			name={product.name!}
+			photo={product.photo!}
+			amount={product.amount!}
+			currency={product.currency!}
+			promotionAmount={product.promotion?.amount}
+			promotionCurrency={product.promotion?.currency}
+		></ProductCard>
 	));
 
 	return (
@@ -31,4 +40,4 @@ const ProductPageSilimarProducts: React.FC<ProductPageSilimarProductsProps> = ({
 	);
 };
 
-export default ProductPageSilimarProducts;
+export default ProductPageSimilarProducts;

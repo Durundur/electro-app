@@ -1,3 +1,5 @@
+using Domain.ValueObjects;
+
 namespace Application.Features.ProductCatalog.GetFeaturedProducts
 {
     public class GetFeaturedProductsResult
@@ -12,7 +14,6 @@ namespace Application.Features.ProductCatalog.GetFeaturedProducts
         public decimal Amount { get; set; }
         public string Currency { get; set; }
         public string Photo { get; set; }
-        public decimal? PromotionAmount { get; set; }
-        public string? PromotionCurrency { get; set; }
+        public Money? Promotion { get; set; }
     }
 }

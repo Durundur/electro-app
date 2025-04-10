@@ -19,8 +19,7 @@ namespace Application.Features.ProductCatalog.GetBestsellerProducts
                 Amount = product.Price.Amount,
                 Currency = product.Price.Currency,
                 Photo = product.Photos.FirstOrDefault(),
-                PromotionAmount = product?.Promotion?.PromotionalPrice.Amount,
-                PromotionCurrency = product?.Promotion?.PromotionalPrice.Currency,
+                Promotion = product?.Promotion?.IsValid() == true ? product.Promotion.PromotionalPrice : null,
             };
         }
     }

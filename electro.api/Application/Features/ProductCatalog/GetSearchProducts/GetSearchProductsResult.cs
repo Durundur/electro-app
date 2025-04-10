@@ -1,6 +1,7 @@
 ﻿using Application.Features.Shared.ProductAttribute;
 using Application.Features.Shared.Pagination;
 using Domain.Aggregates.ProductCatalogAggregate;
+using Domain.ValueObjects;
 
 namespace Application.Features.ProductCatalog.GetSearchProducts
 {
@@ -23,7 +24,6 @@ namespace Application.Features.ProductCatalog.GetSearchProducts
         public float AverageOpinionRating { get; set; }
         public int OpinionCount { get; set; }
         public IList<ProductAttributeResult> Attributes { get; set; }
-        public decimal? PromotionAmount { get; set; }
-        public string? PromotionCurrency { get; set; }
+        public Money? Promotion { get; set; }
     }
 }

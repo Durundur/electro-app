@@ -1,6 +1,6 @@
 "use client";
 import { formatAmount } from "@/libs/Helpers/Formatters";
-import { Box, CardMedia, Grid2, IconButton, Typography } from "@mui/material";
+import { Box, CardMedia, Grid2, IconButton, Stack, Typography } from "@mui/material";
 import { FC } from "react";
 import { DeleteOutlineOutlined } from "@mui/icons-material";
 import QuantityInput from "@/components/Shared/QuantityInput/QuantityInput";
@@ -17,6 +17,7 @@ interface CartProductListItemProps {
 const CartProductListItem: FC<CartProductListItemProps> = ({ product }) => {
 	const dispatch = useDispatch();
 	const cartSelector = useSelector((store) => store.CartStore.cart.data);
+	const productTotalPrice = product.quantity! * (product.promotion?.amount ?? product.price?.amount!);
 
 	const handleQuantityChange = (quantity: number, id: string) => {
 		const cart = {
@@ -61,9 +62,21 @@ const CartProductListItem: FC<CartProductListItemProps> = ({ product }) => {
 					</Link>
 				</Grid2>
 				<Grid2 size={{ xs: 4, md: 2 }}>
-					<Typography variant="body1" textAlign={"center"} fontWeight={500} sx={{ whiteSpace: "nowrap" }}>
-						{formatAmount(product.price?.amount!, product.price?.currency!)}
-					</Typography>
+					<Stack spacing={1}>
+						{product.promotion && (
+							<Typography variant="body1" textAlign={"center"} fontWeight={500} sx={{ whiteSpace: "nowrap" }}>
+								{formatAmount(product.promotion.amount!, product.promotion.currency!)}
+							</Typography>
+						)}
+						<Typography
+							variant={product.promotion ? "body2" : "body1"}
+							textAlign={"center"}
+							fontWeight={product.promotion ? 400 : 500}
+							sx={{ whiteSpace: "nowrap", textDecoration: product.promotion ? "line-through" : "none" }}
+						>
+							{formatAmount(product.price?.amount!, product.price?.currency!)}
+						</Typography>
+					</Stack>
 				</Grid2>
 				<Grid2 size={{ xs: "grow" }} alignSelf={"center"}>
 					<Box display={"flex"} justifyContent={"center"} alignItems={"center"}>
@@ -72,7 +85,7 @@ const CartProductListItem: FC<CartProductListItemProps> = ({ product }) => {
 				</Grid2>
 				<Grid2 size={{ xs: 4, md: 2 }}>
 					<Typography variant="body1" textAlign={"center"} fontWeight={500} sx={{ whiteSpace: "nowrap" }}>
-						{formatAmount(product.price?.amount!, product.price?.currency!)}
+						{formatAmount(productTotalPrice, product.price?.currency!)}
 					</Typography>
 				</Grid2>
 				<Grid2 size={{ xs: "auto" }} display={"flex"} justifyContent={"end"}>

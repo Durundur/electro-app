@@ -18,5 +18,6 @@ namespace Application.Features.Cart.ValidateAndSaveCart
         public Money Price { get; set; }
         public string Name { get; set; }
         public string Photo { get; set; }
+        public Money? Promotion { get; set; }
     }
 }

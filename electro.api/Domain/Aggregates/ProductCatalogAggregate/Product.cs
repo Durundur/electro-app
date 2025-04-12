@@ -21,6 +21,9 @@ namespace Domain.Aggregates.ProductCatalogAggregate
         private readonly List<string> _photos = new List<string>();
         public IReadOnlyCollection<string> Photos => _photos.AsReadOnly();
         public ProductPromotion? Promotion { get; private set; }
+        public bool IsVisible => Status == ProductStatus.Active;
+        public bool IsAvailableToBuy => IsVisible && StockQuantity > 0;
+        public Money EffectivePrice => Promotion?.IsValid() == true ? Promotion.PromotionalPrice : Price;
 
         private Product()
         {

@@ -58,19 +58,27 @@ namespace Application.Features.Cart.ValidateAndSaveCart
                     continue;
                 }
 
+                if (!product.IsAvailableToBuy)
+                {
+                    errors.Add($"Product {product.Name} is not available for purchase.");
+                    continue;
+                }
+
                 if (!resultProducts.Any(p => p.ProductId == product.Id))
                 {
                     resultProducts.Add(new ValidateCartResultProduct
                     {
                         ProductId = product.Id,
                         Quantity = productCommand.Quantity,
-                        Price = new Money(product.Price.Amount, product.Price.Currency),
+                        Price = product.Price,
                         Name = product.Name,
-                        Photo = product.Photos.FirstOrDefault()
+                        Photo = product.Photos.FirstOrDefault(),
+                        Promotion = product.Promotion?.IsValid() == true ? product.Promotion.PromotionalPrice : null
                     });
                 }
 
-                var productTotalPrice = productCommand.Quantity * product.Price.Amount;
+
+                var productTotalPrice = productCommand.Quantity * product.EffectivePrice.Amount;
                 totalPrice += productTotalPrice;
                 totalQuantity += productCommand.Quantity;
             }
@@ -109,14 +117,16 @@ namespace Application.Features.Cart.ValidateAndSaveCart
             foreach (var validatedProduct in validationResult.Products)
             {
                 var cartProduct = existingCart.Products.FirstOrDefault(p => p.ProductId == validatedProduct.ProductId);
+                var unitPrice = validatedProduct.Promotion != null ? validatedProduct.Promotion : validatedProduct.Price;
 
                 if (cartProduct != null)
                 {
                     cartProduct.UpdateQuantity(validatedProduct.Quantity);
+                    cartProduct.UpdateUnitPrice(unitPrice);
                 }
                 else
                 {
-                    existingCart.AddItem(validatedProduct.ProductId, validatedProduct.Quantity, validatedProduct.Price);
+                    existingCart.AddItem(validatedProduct.ProductId, validatedProduct.Quantity, unitPrice);
                 }
             }
 

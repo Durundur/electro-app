@@ -10,20 +10,27 @@ namespace Application.Features.Cart.GetCart
             var productLookup = products.ToDictionary(p => p.Id);
 
             var cartProducts = cart.Products
-                .Select(cp => new GetCartResultProduct
+                .Select(cp =>
                 {
-                    ProductId = cp.ProductId,
-                    Quantity = cp.Quantity,
-                    Price = cp.UnitPrice,
-                    Name = productLookup[cp.ProductId].Name,
-                    Photo = productLookup[cp.ProductId].Photos.FirstOrDefault()
+                    var product = productLookup[cp.ProductId];
+                    var currentPromotion = product.Promotion?.IsValid() == true ? product.Promotion.PromotionalPrice : null;
+
+                    return new GetCartResultProduct
+                    {
+                        ProductId = cp.ProductId,
+                        Quantity = cp.Quantity,
+                        Price = product.Price,
+                        Promotion = currentPromotion,
+                        Name = product.Name,
+                        Photo = product.Photos.FirstOrDefault()
+                    };
                 }).ToList();
 
             return new GetCartResult
             {
                 Id = cart.Id,
                 TotalQuantity = cartProducts.Sum(p => p.Quantity),
-                TotalPrice = new Money(cartProducts.Sum(p => p.Price.Amount * p.Quantity), "PLN"),
+                TotalPrice = new Money(cartProducts.Sum(p => ((p.Promotion ?? p.Price).Amount * p.Quantity)), "PLN"),
                 Products = cartProducts
             };
         }

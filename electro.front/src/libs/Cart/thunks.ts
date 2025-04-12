@@ -57,7 +57,7 @@ export const validateCart = (cartToValidate: ValidateCartCommand) => async (disp
 	}
 };
 
-export const addProductToCart = (productId: string, quantity: number, amount: number, currency: string) => async (dispatch: AppDispatch, getState: () => RootState) => {
+export const addProductToCart = (productId: string, quantity: number) => async (dispatch: AppDispatch, getState: () => RootState) => {
 	const currentCart = getState().CartStore.cart.data;
 	const currentCartValidationCommand = getValidateCartCommand(currentCart!);
 
@@ -73,10 +73,6 @@ export const addProductToCart = (productId: string, quantity: number, amount: nu
 		updatedProducts.push({
 			productId,
 			quantity,
-			price: {
-				amount,
-				currency,
-			},
 		});
 	}
 	const updatedCartValidationCommand = {

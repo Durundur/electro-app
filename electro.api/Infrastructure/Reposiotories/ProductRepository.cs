@@ -37,8 +37,10 @@ namespace Infrastructure.Reposiotories
                 .FirstOrDefaultAsync(cancellationToken);
 
             if (product == null)
+            {
                 return null;
-
+            }
+                
             await _context.Entry(product).Collection(p => p.Attributes).LoadAsync(cancellationToken);
             await _context.Entry(product).Collection(p => p.Opinions).LoadAsync(cancellationToken);
             await _context.Entry(product).Reference(p => p.Promotion).LoadAsync(cancellationToken);
@@ -48,7 +50,12 @@ namespace Infrastructure.Reposiotories
 
         public async Task<IList<Product>> GetProductsByIdsAsync(IEnumerable<Guid> productIds, CancellationToken cancellationToken)
         {
-            var products = await _context.Products.Where(p => productIds.Contains(p.Id)).ToListAsync();
+            var products = await _context.Products
+                .Where(p => productIds.Contains(p.Id))
+                .Include(p => p.Attributes)
+                .Include(p => p.Opinions)
+                .Include(p => p.Promotion)
+                .ToListAsync();
             return products;
         }
 
@@ -56,13 +63,28 @@ namespace Infrastructure.Reposiotories
         {
             var parameterList = string.Join(",", productIds.Select(id => $"'{id}'::uuid"));
 
-            return await _context.Products
+            var products = await _context.Products
                 .FromSqlRaw($@"
                     SELECT * FROM ""Products"" 
                     WHERE ""Id"" IN ({parameterList})
                     ORDER BY ""Id"" 
                     FOR UPDATE")
+                .AsTracking()
                 .ToListAsync(cancellationToken);
+
+            if (!products.Any())
+            {
+                return new List<Product>();
+            }
+
+            foreach (var product in products)
+            {
+                await _context.Entry(product).Collection(p => p.Attributes).LoadAsync(cancellationToken);
+                await _context.Entry(product).Collection(p => p.Opinions).LoadAsync(cancellationToken);
+                await _context.Entry(product).Reference(p => p.Promotion).LoadAsync(cancellationToken);
+            }
+
+            return products;
         }
 
         public IQueryable<Product> GetProductsQuery()

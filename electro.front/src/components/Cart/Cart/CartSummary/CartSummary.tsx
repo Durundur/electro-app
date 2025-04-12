@@ -13,11 +13,16 @@ const CartSummary: FC<CartSummaryProps> = () => {
 	const dispatch = useDispatch();
 	const router = useRouter();
 	const cartSelector = useSelector((store) => store.CartStore.cart.data);
+	const isAuthenticatedSelector = useSelector((store) => store.AuthStore.auth.isAuthenticated);
 
 	const handleNextStepClick = async () => {
 		if (!cartSelector) return;
 		const validationErrors = await dispatch(validateCart(getValidateCartCommand(cartSelector)));
 		if (Array.isArray(validationErrors) && validationErrors.length === 0) {
+			if (!isAuthenticatedSelector) {
+				router.replace("/auth/login");
+				return;
+			}
 			router.replace("/cart/checkout");
 		}
 	};

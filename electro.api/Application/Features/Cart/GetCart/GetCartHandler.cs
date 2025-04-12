@@ -26,6 +26,27 @@ namespace Application.Features.Cart.GetCart
             var productIds = userCart.Products.Select(p => p.ProductId).ToList();
             var products = await _unitOfWork.ProductRepository.GetProductsByIdsAsync(productIds, cancellationToken);
 
+            foreach (var cartProduct in userCart.Products)
+            {
+                var product = products.FirstOrDefault(p => p.Id == cartProduct.ProductId);
+                var unitPrice = product.EffectivePrice;
+
+                if (product == null)
+                {
+                    continue;
+                }
+
+                if (!product.IsAvailableToBuy)
+                {
+                    userCart.RemoveItem(product.Id);
+                }
+                else
+                {
+                    cartProduct.UpdateUnitPrice(unitPrice);
+                }
+            }
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+
             return GetCartMapper.MapToGetCartResult(userCart, products);
         }
     }

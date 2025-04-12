@@ -33,6 +33,11 @@ namespace Domain.Aggregates.CartAggregate
             Quantity = newQuantity;
         }
 
+        public void UpdateUnitPrice(Money newUnitPrice)
+        {
+            UnitPrice = newUnitPrice;
+        }
+
         public Money CalculateSubtotal()
         {
             return new Money(UnitPrice.Amount * Quantity, UnitPrice.Currency);

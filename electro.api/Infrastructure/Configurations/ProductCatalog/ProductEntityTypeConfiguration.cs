@@ -42,6 +42,10 @@ namespace Infrastructure.Configurations.ProductCatalog
             builder.HasOne<Group>().WithMany().HasForeignKey(p => p.GroupId);
             builder.HasOne<Category>().WithMany().HasForeignKey(p => p.CategoryId);
             builder.HasOne<SubCategory>().WithMany().HasForeignKey(p => p.SubCategoryId);
+
+            builder.Ignore(p => p.IsVisible);
+            builder.Ignore(p => p.IsAvailableToBuy);
+            builder.Ignore(p => p.EffectivePrice);
         }
     }
 }

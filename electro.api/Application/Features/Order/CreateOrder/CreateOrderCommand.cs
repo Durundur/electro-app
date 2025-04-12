@@ -1,6 +1,5 @@
 ﻿using Domain.Aggregates.OrderAggregate;
 using Domain.Aggregates.UserAggregate;
-using Domain.ValueObjects;
 using MediatR;
 
 namespace Application.Features.Order.CreateOrder
@@ -17,7 +16,6 @@ namespace Application.Features.Order.CreateOrder
     {
         public Guid ProductId { get; set; }
         public int Quantity { get; set; }
-        public Money Price { get; set; }
     }
 
     public class CreateOrderCommandRecipient

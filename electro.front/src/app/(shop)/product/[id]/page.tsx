@@ -39,7 +39,7 @@ const ProductPage: FC<ProductPageParams> = ({ params }) => {
 	}, []);
 
 	const handleAddToCart = () => {
-		dispatch(addProductToCart(productSelector?.id!, quantity, productSelector?.amount!, productSelector?.currency!));
+		dispatch(addProductToCart(productSelector?.id!, quantity));
 	};
 
 	const breadcrumbsItems = useMemo<Breadcrumb[]>(() => {

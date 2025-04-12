@@ -3198,9 +3198,6 @@
 			"quantity": {
 			  "type": "integer",
 			  "format": "int32"
-			},
-			"price": {
-			  "$ref": "#/components/schemas/Money"
 			}
 		  },
 		  "additionalProperties": false
@@ -3496,6 +3493,9 @@
 			"photo": {
 			  "type": "string",
 			  "nullable": true
+			},
+			"promotion": {
+			  "$ref": "#/components/schemas/Money"
 			}
 		  },
 		  "additionalProperties": false
@@ -5132,9 +5132,6 @@
 			"quantity": {
 			  "type": "integer",
 			  "format": "int32"
-			},
-			"price": {
-			  "$ref": "#/components/schemas/Money"
 			}
 		  },
 		  "additionalProperties": false
@@ -5192,6 +5189,9 @@
 			"photo": {
 			  "type": "string",
 			  "nullable": true
+			},
+			"promotion": {
+			  "$ref": "#/components/schemas/Money"
 			}
 		  },
 		  "additionalProperties": false

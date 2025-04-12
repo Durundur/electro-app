@@ -1,9 +1,8 @@
-﻿using Domain.ValueObjects;
-using MediatR;
+﻿using MediatR;
 
 namespace Application.Features.Cart.ValidateAndSaveCart
 {
-    public class ValidateCartCommand: IRequest<ValidateCartResult>
+    public class ValidateCartCommand : IRequest<ValidateCartResult>
     {
         public IList<ValidateCartCommandProduct> Products { get; set; }
     }
@@ -12,6 +11,5 @@ namespace Application.Features.Cart.ValidateAndSaveCart
     {
         public Guid ProductId { get; set; }
         public int Quantity { get; set; }
-        public Money Price { get; set; }
     }
 }

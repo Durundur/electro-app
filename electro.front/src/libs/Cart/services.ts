@@ -6,7 +6,6 @@ export const getValidateCartCommand = (cart: GetCartResult): ValidateCartCommand
 			cart?.products?.map((product) => ({
 				productId: product.productId,
 				quantity: product.quantity,
-				price: product.price,
 			})) || [],
 	};
 };
@@ -23,6 +22,7 @@ export const getGetCartResult = (validationResult: ValidateCartResult): GetCartR
 				price: product.price,
 				name: product.name,
 				photo: product.photo,
+				promotion: product.promotion,
 			})) || [],
 	};
 };
@@ -32,7 +32,6 @@ export const getCreateOrderCommand = (products: GetCartResultProduct[], paymentM
 		products: products.map((product) => ({
 			productId: product.productId,
 			quantity: product.quantity,
-			price: product.price,
 		})),
 		paymentMethod: paymentMethod,
 		deliveryMethod: deliveryMethod,

@@ -12,7 +12,7 @@ namespace Infrastructure.Configurations.Cart
             builder.ToTable("Carts");
             builder.HasKey(c => c.Id);
             builder.HasIndex(c => c.Id).IsUnique();
-            builder.HasMany<D.CartAggregate.CartProduct>(c => c.Products).WithOne();
+            builder.HasMany<D.CartAggregate.CartProduct>(c => c.Products).WithOne().OnDelete(DeleteBehavior.Cascade);
             builder.HasOne<UserIdentity>().WithOne().HasForeignKey<D.CartAggregate.Cart>(c => c.UserId);
         }
     }

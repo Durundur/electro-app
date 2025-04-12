@@ -205,7 +205,6 @@ export interface CreateOrderCommand {
 export interface CreateOrderCommandOrderProduct {
     productId?: string;
     quantity?: number;
-    price?: Money;
 }
 
 export interface CreateOrderCommandRecipient {
@@ -304,6 +303,7 @@ export interface GetCartResultProduct {
     price?: Money;
     name?: string | undefined;
     photo?: string | undefined;
+    promotion?: Money;
 }
 
 export interface GetCategoryResult {
@@ -813,7 +813,6 @@ export interface ValidateCartCommand {
 export interface ValidateCartCommandProduct {
     productId?: string;
     quantity?: number;
-    price?: Money;
 }
 
 export interface ValidateCartResult {
@@ -830,4 +829,5 @@ export interface ValidateCartResultProduct {
     price?: Money;
     name?: string | undefined;
     photo?: string | undefined;
+    promotion?: Money;
 }

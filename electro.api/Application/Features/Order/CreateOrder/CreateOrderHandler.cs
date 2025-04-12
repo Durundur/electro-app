@@ -46,20 +46,13 @@ namespace Application.Features.Order.CreateOrder
                         throw new InvalidOperationException($"Insufficient stock for product {product.Name}. Requested: {productCommand.Quantity}");
                     }
 
-                    if (product.Price.Amount != productCommand.Price.Amount || product.Price.Currency != productCommand.Price.Currency)
-                    {
-                        throw new InvalidOperationException($"Product price mismatch for product ID {productCommand.ProductId}.");
-                    }
-
                     product.UpdateStockQuantity(product.StockQuantity - productCommand.Quantity);
-
-                    var orderProductPrice = new Money(product.Price.Amount, product.Price.Currency);
 
                     var orderProduct = OrderProduct.Create(
                         productCommand.ProductId,
                         product.Name,
                         productCommand.Quantity,
-                        orderProductPrice
+                        product.EffectivePrice
                     );
                     orderProducts.Add(orderProduct);
                 }

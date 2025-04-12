@@ -9,6 +9,8 @@ interface CartCheckoutConfirmProduct {
 }
 
 const CartCheckoutConfirmProduct: FC<CartCheckoutConfirmProduct> = ({ product }) => {
+	const unitPrice = product.promotion ?? product.price;
+
 	return (
 		<Grid2 container spacing={2} alignItems={"center"}>
 			<Grid2 size={{ xs: 2 }}>
@@ -41,7 +43,7 @@ const CartCheckoutConfirmProduct: FC<CartCheckoutConfirmProduct> = ({ product })
 				<Typography>{product.quantity} szt.</Typography>
 			</Grid2>
 			<Grid2 size={{ xs: 2 }} textAlign={"center"}>
-				{product.price?.amount && product.price?.currency && <Typography>{formatAmount(product.price.amount, product.price.currency)}</Typography>}
+				<Typography>{formatAmount(unitPrice?.amount!, unitPrice?.currency!)}</Typography>
 			</Grid2>
 		</Grid2>
 	);

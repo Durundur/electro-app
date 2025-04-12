@@ -9,6 +9,8 @@ interface CheckoutProductProps {
 }
 
 const CartCheckoutSummaryProduct: FC<CheckoutProductProps> = ({ product }) => {
+	const unitPrice = product.promotion ?? product.price;
+
 	return (
 		<Grid2 container spacing={1} alignItems={"center"}>
 			<Grid2 size={{ xs: 3 }}>
@@ -40,7 +42,7 @@ const CartCheckoutSummaryProduct: FC<CheckoutProductProps> = ({ product }) => {
 
 					<Stack direction={"row"} justifyContent={"space-between"}>
 						<Typography>{product.quantity} szt.</Typography>
-						<Typography>{formatAmount(product.price?.amount!, product.price?.currency!)}</Typography>
+						<Typography>{formatAmount(unitPrice?.amount!, unitPrice?.currency!)}</Typography>
 					</Stack>
 				</Stack>
 			</Grid2>

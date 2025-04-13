@@ -1,3 +1,4 @@
+import { translateOrderStatus } from "@/libs/Helpers/Translations/OrdersTranslations";
 import { OrderStatus } from "@/libs/api-contract/api-contract";
 import { Step, StepLabel, Stepper } from "@mui/material";
 import { FC } from "react";
@@ -7,15 +8,7 @@ interface AccountOrderDetailsProgressProps {
 }
 
 const AccountOrderDetailsProgress: FC<AccountOrderDetailsProgressProps> = ({ status }) => {
-	const steps = [
-		{ status: OrderStatus.Created, label: "Utworzono" },
-		{ status: OrderStatus.Processing, label: "Przetwarzanie" },
-		{ status: OrderStatus.Paid, label: "Opłacono" },
-		{ status: OrderStatus.Shipped, label: "Wysłano" },
-		{ status: OrderStatus.Completed, label: "Zakończone" },
-		{ status: OrderStatus.Cancelled, label: "Anulowane" },
-	];
-
+	const steps = Object.values(OrderStatus).map((status) => ({ status, label: translateOrderStatus(status) }));
 	const activeStep = steps.findIndex((step) => step.status === status);
 
 	return (

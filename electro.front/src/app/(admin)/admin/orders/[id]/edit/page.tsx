@@ -1,16 +1,19 @@
 "use client";
 import AdminOrderEditDeliverySection from "@/components/Admin/AdminOrders/AdminOrderEdit/AdminOrderEditDeliverySection/AdminOrderEditDeliverySection";
 import AdminOrderEditGeneralSection from "@/components/Admin/AdminOrders/AdminOrderEdit/AdminOrderEditGeneralSection/AdminOrderEditGeneralSection";
+import AdminOrderEditPaymentSection from "@/components/Admin/AdminOrders/AdminOrderEdit/AdminOrderEditPaymentSection/AdminOrderEditPaymentSection";
 import AdminOrderEditRecipientSection from "@/components/Admin/AdminOrders/AdminOrderEdit/AdminOrderEditRecipientSection/AdminOrderEditRecipientSection";
 import Error from "@/components/Layout/Error/Error";
 import { useBreadcrumbs } from "@/hooks/Breadcrumbs/useBreadcrumbs";
 import { usePageTransition } from "@/hooks/PageTransition/usePageTransition";
 import { usePermissionGuard } from "@/hooks/PermissionGuard/usePermissionGuard";
+import { clearAdminOrderDetailsState, clearAdminOrderEditState } from "@/libs/Admin/AdminOrders/slice";
 import { getAdminOrderEdit, putAdminOrderEdit } from "@/libs/Admin/AdminOrders/thunk";
 import { useDispatch, useSelector } from "@/libs/Store";
 import { OrderStatus, RecipientType, UpdateOrderCommand } from "@/libs/api-contract/api-contract";
 import { Button, Stack } from "@mui/material";
 import { Formik } from "formik";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FC, useEffect } from "react";
 import * as Yup from "yup";
@@ -50,6 +53,8 @@ const AdminOrderEditPage: FC<AdminOrderEditPageProps> = ({ params }) => {
 	const router = useRouter();
 
 	usePageTransition([loadingSelector]);
+
+	const canEditRecipient = orderSelector?.status === OrderStatus.Created || orderSelector?.status === OrderStatus.Processing || orderSelector?.status === OrderStatus.Paid;
 
 	const validationSchema = Yup.object<UpdateOrderCommandFlat>().shape({
 		status: Yup.mixed<OrderStatus>().oneOf(Object.values(OrderStatus)).required("Status zamówienia jest wymagany"),
@@ -113,33 +118,42 @@ const AdminOrderEditPage: FC<AdminOrderEditPageProps> = ({ params }) => {
 		dispatch(getAdminOrderEdit(orderId));
 	}, [orderId]);
 
+	useEffect(() => {
+		if (loadingSelector) return;
+		if (!errorSelector && resultSelector) {
+			router.replace("/admin/orders");
+		}
+	}, [errorSelector, loadingSelector, resultSelector]);
+
+	useEffect(() => {
+		return () => {
+			dispatch(clearAdminOrderEditState());
+			dispatch(clearAdminOrderDetailsState());
+		};
+	}, []);
+
 	const handleSubmit = (values: UpdateOrderCommandFlat) => {
 		const command: UpdateOrderCommand = {
 			orderId: values.orderId,
 			status: values.status,
-			trackingNumber: values.trackingNumber,
-			recipient: {
-				type: values.recipientType,
-				companyName: values.recipientCompanyName,
-				taxIdentificationNumber: values.recipientTaxIdentificationNumber,
-				firstName: values.recipientFirstName,
-				surname: values.recipientSurname,
-				city: values.recipientCity,
-				houseNumber: values.recipientHouseNumber,
-				phoneNumber: values.recipientPhoneNumber,
-				postalCode: values.recipientPostalCode,
-				street: values.recipientStreet,
-			},
+			trackingNumber: orderSelector?.status === OrderStatus.Processing && values.status === OrderStatus.Shipped ? values.trackingNumber : undefined,
+			recipient: canEditRecipient
+				? {
+						type: values.recipientType,
+						companyName: values.recipientCompanyName,
+						taxIdentificationNumber: values.recipientTaxIdentificationNumber,
+						firstName: values.recipientFirstName,
+						surname: values.recipientSurname,
+						city: values.recipientCity,
+						houseNumber: values.recipientHouseNumber,
+						phoneNumber: values.recipientPhoneNumber,
+						postalCode: values.recipientPostalCode,
+						street: values.recipientStreet,
+					}
+				: undefined,
 		};
 		dispatch(putAdminOrderEdit(command));
 	};
-
-	useEffect(() => {
-		if (loadingSelector) return;
-		if (!errorSelector && resultSelector) {
-			router.replace("/admin/orders/");
-		}
-	}, [errorSelector, loadingSelector, resultSelector]);
 
 	if (errorSelector) return <Error message="Wystąpił błąd podczas pobierania szczegółów zamówienia."></Error>;
 	return (
@@ -149,11 +163,17 @@ const AdminOrderEditPage: FC<AdminOrderEditPageProps> = ({ params }) => {
 					<Stack spacing={2}>
 						<Stack spacing={2}>
 							<AdminOrderEditGeneralSection formik={formik}></AdminOrderEditGeneralSection>
-							<AdminOrderEditDeliverySection formik={formik}></AdminOrderEditDeliverySection>
-							<AdminOrderEditRecipientSection formik={formik}></AdminOrderEditRecipientSection>
+							<AdminOrderEditDeliverySection
+								formik={formik}
+								isTrackingNumberReadOnly={orderSelector.status === OrderStatus.Processing && formik.values.status === OrderStatus.Shipped}
+							></AdminOrderEditDeliverySection>
+							<AdminOrderEditRecipientSection formik={formik} isFormReadOnly={!canEditRecipient}></AdminOrderEditRecipientSection>
+							<AdminOrderEditPaymentSection></AdminOrderEditPaymentSection>
 						</Stack>
 						<Stack direction={"row"} justifyContent={"end"} spacing={2}>
-							<Button variant="outlined">Anuluj</Button>
+							<Button variant="outlined" href="/admin/orders" LinkComponent={Link}>
+								Anuluj
+							</Button>
 							<Button variant="contained" onClick={formik.submitForm}>
 								Zapisz
 							</Button>

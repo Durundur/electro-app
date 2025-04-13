@@ -1,4 +1,4 @@
-import { DeliveryMethod, OrderStatus, PaymentMethod, PaymentStatus } from "@/libs/api-contract/api-contract";
+import { DeliveryMethod, DeliveryStatus, OrderStatus, PaymentMethod, PaymentStatus } from "@/libs/api-contract/api-contract";
 
 export const translateOrderStatus = (orderStatus: OrderStatus): string => {
 	const orderStatusMap: { [key in OrderStatus]: string } = {
@@ -46,4 +46,15 @@ export const translateDeliveryMethod = (deliveryMethod: DeliveryMethod): string 
 	};
 
 	return deliveryMethodMap[deliveryMethod] || deliveryMethod;
+};
+
+export const translateDeliveryStatus = (deliveryStatus: DeliveryStatus): string => {
+	const deliveryStatusMap: { [key in DeliveryStatus]: string } = {
+		Pending: "Oczekujące",
+		Shipped: "Wysłane",
+		Delivered: "Dostarczone",
+		Cancelled: "Anulowane",
+	};
+
+	return deliveryStatusMap[deliveryStatus] || deliveryStatus;
 };

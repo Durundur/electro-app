@@ -17,8 +17,10 @@ namespace Domain.Aggregates.OrderAggregate
 
         public static Delivery Create(DeliveryMethod method, Money cost)
         {
-            if (cost.Amount < 0)
+            if (cost.Amount < 0) 
+            {
                 throw new DomainException("Delivery cost cannot be negative.");
+            }
 
             var delivery = new Delivery{
                 Id = Guid.NewGuid(),
@@ -32,22 +34,25 @@ namespace Domain.Aggregates.OrderAggregate
 
         public void SetTrackingNumber(string trackingNumber)
         {
-            if (string.IsNullOrWhiteSpace(trackingNumber))
+            if (string.IsNullOrWhiteSpace(trackingNumber)) 
+            {
                 throw new DomainException("Tracking number cannot be empty.");
+            }
 
-            if (trackingNumber.Length > 50)
+            if (trackingNumber.Length > 50) 
+            {
                 throw new DomainException("Tracking number cannot be longer than 50 characters.");
-
-            if (!trackingNumber.All(c => char.IsLetterOrDigit(c) || c == '-'))
-                throw new DomainException("Tracking number can only contain letters, numbers and hyphens.");
+            }
 
             TrackingNumber = trackingNumber;
         }
 
         public void MarkAsShipped()
         {
-            if (Status != DeliveryStatus.Pending)
+            if (Status != DeliveryStatus.Pending) 
+            {
                 throw new DomainException("Only pending deliveries can be marked as shipped.");
+            }
 
             Status = DeliveryStatus.Shipped;
             ShippedAt = DateTime.UtcNow;
@@ -55,13 +60,13 @@ namespace Domain.Aggregates.OrderAggregate
 
         public void MarkAsDelivered()
         {
-            if (Status != DeliveryStatus.Shipped)
+            if (Status != DeliveryStatus.Shipped) 
+            {
                 throw new DomainException("Only shipped deliveries can be marked as delivered.");
+            }
 
             Status = DeliveryStatus.Delivered;
             DeliveredAt = DateTime.UtcNow;
         }
-
-        public bool CanBeModified() => Status == DeliveryStatus.Pending;
     }
 }

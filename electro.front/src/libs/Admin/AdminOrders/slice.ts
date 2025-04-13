@@ -90,6 +90,15 @@ const AdminOrdersStore = createSlice({
 			state.edit.isLoading = false;
 			state.edit.error = action.payload;
 		},
+		clearAdminOrderEditState(state) {
+			state.edit = initialState.edit;
+		},
+		clearAdminOrderDetailsState(state) {
+			state.details = initialState.details;
+		},
+		clearAdminOrdersListState(state) {
+			state.list = initialState.list;
+		},
 	},
 });
 
@@ -104,6 +113,9 @@ export const {
 	adminOrderEditStart,
 	getAdminOrderEditSuccess,
 	putAdminOrderEditSuccess,
+	clearAdminOrderEditState,
+	clearAdminOrderDetailsState,
+	clearAdminOrdersListState,
 } = AdminOrdersStore.actions;
 
 export default AdminOrdersStore.reducer;

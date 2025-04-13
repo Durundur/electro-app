@@ -7,9 +7,9 @@ namespace Application.Features.Order.UpdateOrder
     public class UpdateOrderCommand : IRequest<UpdateOrderResult>
     {
         public Guid OrderId { get; set; }
-        public OrderStatus? Status { get; set; }
+        public OrderStatus Status { get; set; }
         public string? TrackingNumber { get; set; }
-        public UpdateOrderCommandRecipient Recipient { get; set; }
+        public UpdateOrderCommandRecipient? Recipient { get; set; }
     }
 
     public class UpdateOrderCommandRecipient

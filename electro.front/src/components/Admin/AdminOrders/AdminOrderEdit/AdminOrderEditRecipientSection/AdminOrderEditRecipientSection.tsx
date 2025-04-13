@@ -8,16 +8,17 @@ import { FC } from "react";
 
 interface AdminOrderEditRecipientSectionProps {
 	formik: FormikProps<UpdateOrderCommandFlat>;
+	isFormReadOnly?: boolean;
 }
 
-const AdminOrderEditRecipientSection: FC<AdminOrderEditRecipientSectionProps> = ({ formik }) => {
+const AdminOrderEditRecipientSection: FC<AdminOrderEditRecipientSectionProps> = ({ formik, isFormReadOnly = false }) => {
 	const receiverType = formik.values.recipientType;
 
 	return (
 		<EditSectionLayout title="Informacje o odbiorcy" subtitle="Edytuj informacje o odbiorcy">
 			<Grid2 container columnSpacing={2} rowSpacing={2}>
 				<Grid2 size={{ xs: 12 }}>
-					<FormControl size="small">
+					<FormControl size="small" disabled={isFormReadOnly}>
 						<FormLabel>
 							<Typography fontWeight={500}>Typ odbiorcy</Typography>
 						</FormLabel>
@@ -37,8 +38,8 @@ const AdminOrderEditRecipientSection: FC<AdminOrderEditRecipientSectionProps> = 
 						</RadioGroup>
 					</FormControl>
 				</Grid2>
-				{receiverType === RecipientType.Personal && <PersonalRecipientForm formik={formik}></PersonalRecipientForm>}
-				{receiverType === RecipientType.Company && <CompanyRecipientForm formik={formik}></CompanyRecipientForm>}
+				{receiverType === RecipientType.Personal && <PersonalRecipientForm formik={formik} isFormReadOnly={isFormReadOnly}></PersonalRecipientForm>}
+				{receiverType === RecipientType.Company && <CompanyRecipientForm formik={formik} isFormReadOnly={isFormReadOnly}></CompanyRecipientForm>}
 			</Grid2>
 		</EditSectionLayout>
 	);
@@ -48,9 +49,10 @@ export default AdminOrderEditRecipientSection;
 
 interface PersonalRecipientFormProps {
 	formik: FormikProps<UpdateOrderCommandFlat>;
+	isFormReadOnly?: boolean;
 }
 
-const PersonalRecipientForm: FC<PersonalRecipientFormProps> = ({ formik }) => {
+const PersonalRecipientForm: FC<PersonalRecipientFormProps> = ({ formik, isFormReadOnly = false }) => {
 	return (
 		<>
 			<Grid2 size={{ xs: 6 }}>
@@ -65,6 +67,7 @@ const PersonalRecipientForm: FC<PersonalRecipientFormProps> = ({ formik }) => {
 					error={Boolean(formik.touched.recipientFirstName && formik.errors.recipientFirstName)}
 					helperText={formik.touched.recipientFirstName && formik.errors.recipientFirstName}
 					fullWidth
+					disabled={isFormReadOnly}
 				/>
 			</Grid2>
 			<Grid2 size={{ xs: 6 }}>
@@ -79,18 +82,20 @@ const PersonalRecipientForm: FC<PersonalRecipientFormProps> = ({ formik }) => {
 					error={Boolean(formik.touched.recipientSurname && formik.errors.recipientSurname)}
 					helperText={formik.touched.recipientSurname && formik.errors.recipientSurname}
 					fullWidth
+					disabled={isFormReadOnly}
 				/>
 			</Grid2>
-			<SharedRecipientForm formik={formik} />
+			<SharedRecipientForm formik={formik} isFormReadOnly={isFormReadOnly} />
 		</>
 	);
 };
 
 interface CompanyRecipientFormProps {
 	formik: FormikProps<UpdateOrderCommandFlat>;
+	isFormReadOnly?: boolean;
 }
 
-const CompanyRecipientForm: FC<CompanyRecipientFormProps> = ({ formik }) => {
+const CompanyRecipientForm: FC<CompanyRecipientFormProps> = ({ formik, isFormReadOnly = false }) => {
 	return (
 		<>
 			<Grid2 size={{ xs: 6 }}>
@@ -105,6 +110,7 @@ const CompanyRecipientForm: FC<CompanyRecipientFormProps> = ({ formik }) => {
 					error={Boolean(formik.touched.recipientCompanyName && formik.errors.recipientCompanyName)}
 					helperText={formik.touched.recipientCompanyName && formik.errors.recipientCompanyName}
 					fullWidth
+					disabled={isFormReadOnly}
 				/>
 			</Grid2>
 			<Grid2 size={{ xs: 6 }}>
@@ -119,18 +125,20 @@ const CompanyRecipientForm: FC<CompanyRecipientFormProps> = ({ formik }) => {
 					error={Boolean(formik.touched.recipientTaxIdentificationNumber && formik.errors.recipientTaxIdentificationNumber)}
 					helperText={formik.touched.recipientTaxIdentificationNumber && formik.errors.recipientTaxIdentificationNumber}
 					fullWidth
+					disabled={isFormReadOnly}
 				/>
 			</Grid2>
-			<SharedRecipientForm formik={formik} />
+			<SharedRecipientForm formik={formik} isFormReadOnly={isFormReadOnly} />
 		</>
 	);
 };
 
 interface SharedRecipientFormProps {
 	formik: FormikProps<UpdateOrderCommandFlat>;
+	isFormReadOnly?: boolean;
 }
 
-const SharedRecipientForm: FC<SharedRecipientFormProps> = ({ formik }) => {
+const SharedRecipientForm: FC<SharedRecipientFormProps> = ({ formik, isFormReadOnly = false }) => {
 	return (
 		<>
 			<Grid2 size={{ xs: 6 }}>
@@ -145,6 +153,7 @@ const SharedRecipientForm: FC<SharedRecipientFormProps> = ({ formik }) => {
 					error={Boolean(formik.touched.recipientPhoneNumber && formik.errors.recipientPhoneNumber)}
 					helperText={formik.touched.recipientPhoneNumber && formik.errors.recipientPhoneNumber}
 					fullWidth
+					disabled={isFormReadOnly}
 				/>
 			</Grid2>
 			<Grid2 size={{ xs: 7 }}>
@@ -159,6 +168,7 @@ const SharedRecipientForm: FC<SharedRecipientFormProps> = ({ formik }) => {
 					error={Boolean(formik.touched.recipientStreet && formik.errors.recipientStreet)}
 					helperText={formik.touched.recipientStreet && formik.errors.recipientStreet}
 					fullWidth
+					disabled={isFormReadOnly}
 				/>
 			</Grid2>
 			<Grid2 size={{ xs: 5 }}>
@@ -173,6 +183,7 @@ const SharedRecipientForm: FC<SharedRecipientFormProps> = ({ formik }) => {
 					error={Boolean(formik.touched.recipientHouseNumber && formik.errors.recipientHouseNumber)}
 					helperText={formik.touched.recipientHouseNumber && formik.errors.recipientHouseNumber}
 					fullWidth
+					disabled={isFormReadOnly}
 				/>
 			</Grid2>
 			<Grid2 size={{ xs: 4 }}>
@@ -187,6 +198,7 @@ const SharedRecipientForm: FC<SharedRecipientFormProps> = ({ formik }) => {
 					error={Boolean(formik.touched.recipientPostalCode && formik.errors.recipientPostalCode)}
 					helperText={formik.touched.recipientPostalCode && formik.errors.recipientPostalCode}
 					fullWidth
+					disabled={isFormReadOnly}
 				/>
 			</Grid2>
 			<Grid2 size={{ xs: 8 }}>
@@ -201,6 +213,7 @@ const SharedRecipientForm: FC<SharedRecipientFormProps> = ({ formik }) => {
 					error={Boolean(formik.touched.recipientCity && formik.errors.recipientCity)}
 					helperText={formik.touched.recipientCity && formik.errors.recipientCity}
 					fullWidth
+					disabled={isFormReadOnly}
 				/>
 			</Grid2>
 		</>

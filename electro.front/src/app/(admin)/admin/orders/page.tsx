@@ -8,6 +8,7 @@ import { fetchAdminOrdersList } from "@/libs/Admin/AdminOrders/thunk";
 import { useDispatch, useSelector } from "@/libs/Store";
 import { Stack } from "@mui/material";
 import { FC, useEffect, useState } from "react";
+import { clearAdminOrdersListState } from "@/libs/Admin/AdminOrders/slice";
 
 const AdminOrdersPage: FC = () => {
 	useBreadcrumbs([
@@ -32,6 +33,9 @@ const AdminOrdersPage: FC = () => {
 
 	useEffect(() => {
 		dispatch(fetchAdminOrdersList({ page: pagination.page, pageSize: pagination.pageSize }));
+		return () => {
+			dispatch(clearAdminOrdersListState());
+		};
 	}, [pagination.page, pagination.pageSize]);
 
 	if (ordersListErrorSelector) return <Error message="Wystąpił bląd podczas pobierania listy zamówień"></Error>;

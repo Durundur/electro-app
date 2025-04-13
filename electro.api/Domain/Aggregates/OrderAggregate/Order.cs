@@ -28,10 +28,14 @@ namespace Domain.Aggregates.OrderAggregate
             Delivery delivery, Recipient recipient)
         {
             if (userId == Guid.Empty)
+            {
                 throw new DomainException("User ID cannot be empty");
-
+            }
+                
             if (!products.Any())
+            {
                 throw new DomainException("Order must contain at least one product");
+            }
 
             var order = new Order
             {
@@ -59,21 +63,18 @@ namespace Domain.Aggregates.OrderAggregate
 
         public void UpdateStatus(OrderStatus newStatus)
         {
-            if (newStatus == OrderStatus.Paid && Payment.Status != PaymentStatus.Paid)
-                throw new DomainException("Cannot mark order as Paid if payment is not completed.");
-
-            if (newStatus == OrderStatus.Cancelled && Payment.Status == PaymentStatus.Paid)
-                throw new DomainException("Cannot cancel order with completed payment. Consider refunding.");
-
             if (Status == OrderStatus.Cancelled)
+            {
                 throw new DomainException("Cannot update status of cancelled order.");
+            }
 
             if (Status == OrderStatus.Completed)
+            {
                 throw new DomainException("Cannot update status of completed order.");
+            }
 
             Status = newStatus;
             UpdatedAt = DateTime.UtcNow;
-
             HandleStatusSpecificActions(newStatus);
         }
 
@@ -86,11 +87,15 @@ namespace Domain.Aggregates.OrderAggregate
                     break;
                 case OrderStatus.Cancelled:
                     if (Payment.Status == PaymentStatus.Pending)
+                    {
                         Payment.Cancel();
+                    }
                     break;
                 case OrderStatus.Shipped:
                     if (string.IsNullOrEmpty(Delivery.TrackingNumber))
+                    {
                         throw new DomainException("Cannot mark order as shipped without tracking number.");
+                    }
                     break;
             }
         }
@@ -98,7 +103,9 @@ namespace Domain.Aggregates.OrderAggregate
         public void UpdateTrackingNumber(string trackingNumber)
         {
             if (Status == OrderStatus.Cancelled)
+            {
                 throw new DomainException("Cannot update tracking number of cancelled order.");
+            }
 
             Delivery.SetTrackingNumber(trackingNumber);
             UpdatedAt = DateTime.UtcNow;
@@ -108,11 +115,13 @@ namespace Domain.Aggregates.OrderAggregate
             string? companyName, string? taxIdentificationNumber, string phoneNumber,
             string street, string houseNumber, string postalCode, string city)
         {
-            if (Status != OrderStatus.Created)
+            var allowedStatuses = new[] { OrderStatus.Created, OrderStatus.Processing, OrderStatus.Paid };
+            if (!allowedStatuses.Contains(Status))
+            {
                 throw new DomainException("Can only update recipient for newly created orders.");
+            }
 
-            Recipient.Update(type, firstName, surname, companyName, taxIdentificationNumber,
-                phoneNumber, street, houseNumber, postalCode, city);
+            Recipient.Update(type, firstName, surname, companyName, taxIdentificationNumber, phoneNumber, street, houseNumber, postalCode, city);
             UpdatedAt = DateTime.UtcNow;
         }
 
@@ -125,20 +134,27 @@ namespace Domain.Aggregates.OrderAggregate
         public void UpdateProductQuantity(Guid productId, int newQuantity)
         {
             if (Status != OrderStatus.Created)
+            {
                 throw new DomainException("Cannot modify products after order is processed");
+            }
 
-            var existingProduct = _products.FirstOrDefault(p => p.ProductId == productId)
-                ?? throw new DomainException("Product not found in order");
+            var existingProduct = _products.FirstOrDefault(p => p.ProductId == productId);
+
+            if (existingProduct == null)
+            {
+                 throw new DomainException("Product not found in order");
+            }
 
             existingProduct.UpdatedQuantity(newQuantity);
-
             UpdatedAt = DateTime.UtcNow;
         }
 
         public void AddProduct(OrderProduct product)
         {
             if (Status != OrderStatus.Created)
+            {
                 throw new DomainException("Cannot modify products after order is processed");
+            }
 
             var existingProduct = _products.FirstOrDefault(p => p.ProductId == product.ProductId);
             if (existingProduct != null)
@@ -155,10 +171,16 @@ namespace Domain.Aggregates.OrderAggregate
         public void RemoveProduct(Guid productId)
         {
             if (Status != OrderStatus.Created)
+            {
                 throw new DomainException("Cannot modify products after order is processed");
+            }
 
-            var product = _products.FirstOrDefault(p => p.ProductId == productId)
-                ?? throw new DomainException("Product not found in order");
+            var product = _products.FirstOrDefault(p => p.ProductId == productId);
+
+            if (product == null)
+            {
+                throw new DomainException("Product not found in order");
+            }
 
             _products.Remove(product);
             UpdatedAt = DateTime.UtcNow;

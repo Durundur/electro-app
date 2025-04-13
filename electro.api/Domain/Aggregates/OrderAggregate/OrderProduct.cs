@@ -17,16 +17,24 @@ namespace Domain.Aggregates.OrderAggregate
         public static OrderProduct Create(Guid productId, string name, int quantity, Money price)
         {
             if (productId == Guid.Empty)
+            {
                 throw new DomainException("Product ID cannot be empty");
+            }
 
             if (string.IsNullOrWhiteSpace(name))
+            {
                 throw new DomainException("Product name cannot be empty");
+            }
 
             if (quantity <= 0)
+            {
                 throw new DomainException("Quantity must be positive");
+            }
 
             if (price.Amount <= 0)
+            {
                 throw new DomainException("Price must be positive");
+            }
 
             return new OrderProduct
             {
@@ -40,8 +48,10 @@ namespace Domain.Aggregates.OrderAggregate
 
         public void UpdatedQuantity(int newQuantity)
         {
-            if (newQuantity <= 0)
+            if (newQuantity <= 0) 
+            {
                 throw new DomainException("Quantity must be positive");
+            }
 
             Quantity = newQuantity;
         }

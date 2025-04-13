@@ -10,6 +10,7 @@ import Error from "@/components/Layout/Error/Error";
 import { useBreadcrumbs } from "@/hooks/Breadcrumbs/useBreadcrumbs";
 import { usePageTransition } from "@/hooks/PageTransition/usePageTransition";
 import { usePermissionGuard } from "@/hooks/PermissionGuard/usePermissionGuard";
+import { clearAdminOrderDetailsState } from "@/libs/Admin/AdminOrders/slice";
 import { fetchAdminOrderDetails } from "@/libs/Admin/AdminOrders/thunk";
 import { useDispatch, useSelector } from "@/libs/Store";
 import { Grid2, Stack } from "@mui/material";
@@ -34,6 +35,9 @@ const AdminOrderDetailsPage: FC<AdminOrderDetailsPageParams> = ({ params }) => {
 
 	useEffect(() => {
 		dispatch(fetchAdminOrderDetails(params.id));
+		return () => {
+			dispatch(clearAdminOrderDetailsState());
+		};
 	}, []);
 
 	const totalProductsCost = orderDetailsSelector?.products?.reduce((acc, product) => acc + product.price?.amount! * product.quantity!, 0);
@@ -42,7 +46,7 @@ const AdminOrderDetailsPage: FC<AdminOrderDetailsPageParams> = ({ params }) => {
 	return (
 		orderDetailsSelector && (
 			<Stack spacing={4}>
-				<AdminOrderDetailsHeader orderId={orderDetailsSelector.id!} />
+				<AdminOrderDetailsHeader orderNumber={orderDetailsSelector.number!} />
 				<AdminOrderDetailsProgress currentStatus={orderDetailsSelector.status!} />
 				<Grid2 container>
 					<Grid2 size={{ xs: 6 }}>

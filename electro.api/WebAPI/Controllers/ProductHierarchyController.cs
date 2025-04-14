@@ -1,18 +1,18 @@
-﻿using Application.Features.ProductHierarchy.CreateOrUpdateGroup;
-using Application.Features.ProductHierarchy.DeleteGroup;
-using Application.Features.ProductHierarchy.GetProductHierarchy;
-using Application.Features.ProductHierarchy.CreateOrUpdateCategory;
-using Application.Features.ProductHierarchy.DeleteCategory;
-using Application.Features.ProductHierarchy.CreateOrUpdateSubCategory;
-using Application.Features.ProductHierarchy.DeleteSubCategory;
-using Application.Features.ProductHierarchy.GetMenu;
-using Application.Features.ProductHierarchy.GetGroup;
-using Application.Features.ProductHierarchy.GetCategory;
-using Application.Features.ProductHierarchy.GetSubCategory;
-using Application.Features.ProductHierarchy.GetAttributesDefinitions;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Rest.Application.Features.ProductHierarchy.DeleteGroup;
+using Rest.Application.Features.ProductHierarchy.CreateOrUpdateSubCategory;
+using Rest.Application.Features.ProductHierarchy.DeleteCategory;
+using Rest.Application.Features.ProductHierarchy.GetGroup;
+using Rest.Application.Features.ProductHierarchy.DeleteSubCategory;
+using Rest.Application.Features.ProductHierarchy.GetSubCategory;
+using Rest.Application.Features.ProductHierarchy.GetCategory;
+using Rest.Application.Features.ProductHierarchy.CreateOrUpdateCategory;
+using Rest.Application.Features.ProductHierarchy.CreateOrUpdateGroup;
+using Rest.Application.Features.ProductHierarchy.GetMenu;
+using Rest.Application.Features.ProductHierarchy.GetAllProductHierarchy;
+using Rest.Application.Features.ProductHierarchy.GetAttributesDefinitions;
 
 
 namespace WebAPI.Controllers

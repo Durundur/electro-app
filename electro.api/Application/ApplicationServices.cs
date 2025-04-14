@@ -1,5 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
+﻿using Application.Services.ProductService;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Application
 {
@@ -7,13 +7,8 @@ namespace Application
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            services.AddMediator();
+            services.AddTransient<IProductService, ProductService>();
             return services;
-        }
-       
-        private static void AddMediator(this IServiceCollection services)
-        {
-            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
         }
     }
 }

@@ -1,12 +1,12 @@
-﻿using Application.Features.Cart.CreateOrUpdateRecipient;
-using Application.Features.Cart.DeleteRecipient;
-using Application.Features.Cart.GetCart;
-using Application.Features.Cart.GetRecipients;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using WebAPI.Attributes;
-using Application.Features.Order.GetUserOrders;
-using Application.Features.Order.GetUserOrderDetails;
+using Rest.Application.Features.Cart.GetRecipients;
+using Rest.Application.Features.Cart.DeleteRecipient;
+using Rest.Application.Features.Cart.CreateOrUpdateRecipient;
+using Rest.Application.Features.Cart.GetCart;
+using Rest.Application.Features.Order.GetUserOrderDetails;
+using Rest.Application.Features.Order.GetUserOrders;
 
 namespace WebAPI.Controllers
 {

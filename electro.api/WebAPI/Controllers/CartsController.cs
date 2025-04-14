@@ -1,6 +1,6 @@
-﻿using Application.Features.Cart.ValidateAndSaveCart;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MediatR;
+using Rest.Application.Features.Cart.ValidateCart;
 
 namespace WebAPI.Controllers
 {

@@ -1,7 +1,7 @@
-﻿using Application.Services.IdentityService;
-using Domain.Aggregates.UserAggregate;
+﻿using Domain.Aggregates.UserAggregate;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
+using Application.Services.IdentityServices;
 
 namespace Infrastructure.Services.IdentityServices
 {

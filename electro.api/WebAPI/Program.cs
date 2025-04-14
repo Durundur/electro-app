@@ -1,13 +1,18 @@
 using WebAPI.Extensions;
-using Application;
-using Microsoft.OpenApi.Models;
 using WebAPI.Middlewares;
+using Application;
+using Rest.Application;
+using Graphql.Application;
+using Infrastructure;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.ConfigureCorsPolicy();
 
-// Add services to the container.
+// Add services to the container
 builder.Services.AddApplicationServices();
+builder.Services.AddGraphQLServer().AddGraphqlApplicationServices();
+builder.Services.AddRestApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -55,5 +60,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapGraphQL();
 
 app.Run();

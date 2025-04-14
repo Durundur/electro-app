@@ -1,8 +1,6 @@
-﻿using Application.Exceptions;
-using Application.Services.UserContext;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
-
+using Application.Services.UserContext;
 
 namespace Infrastructure.Services.UserContext
 {
@@ -23,12 +21,12 @@ namespace Infrastructure.Services.UserContext
             get
             {
                 if (!IsAuthenticated)
-                    throw new UnauthorizedException("User is not authenticated.");
+                    throw new UnauthorizedAccessException("User is not authenticated.");
 
                 var userIdClaim = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var userId))
                 {
-                    throw new UnauthorizedException("UserId claim is missing or invalid.");
+                    throw new UnauthorizedAccessException("UserId claim is missing or invalid.");
                 }
 
                 return userId;
@@ -40,12 +38,12 @@ namespace Infrastructure.Services.UserContext
             get
             {
                 if (!IsAuthenticated)
-                    throw new UnauthorizedException("User is not authenticated.");
+                    throw new UnauthorizedAccessException("User is not authenticated.");
 
                 var emailClaim = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.Email)?.Value;
                 if (string.IsNullOrEmpty(emailClaim))
                 {
-                    throw new UnauthorizedException("Email claim is missing.");
+                    throw new UnauthorizedAccessException("Email claim is missing.");
                 }
 
                 return emailClaim;

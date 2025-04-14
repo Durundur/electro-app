@@ -2,7 +2,7 @@
 
 namespace Application.Exceptions
 {
-    public class ExceptionBase: Exception
+    public class ExceptionBase : Exception
     {
         public HttpStatusCode StatusCode { get; }
 

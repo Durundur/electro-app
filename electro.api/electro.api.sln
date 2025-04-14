@@ -3,13 +3,23 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\Application.csproj", "{CABB914C-F601-42DF-8896-DD8AA245B129}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{21F90A19-B78F-4785-BE1D-4038A2165E7A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{21C36BDB-EA20-4FEE-AC31-CB3B9D4D8A38}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAPI", "WebAPI\WebAPI.csproj", "{4AE75A28-7C99-4D1D-AFE4-E84861C91D60}"
+	ProjectSection(ProjectDependencies) = postProject
+		{759499ED-C6F0-4EFA-BFA2-AED18321FB07} = {759499ED-C6F0-4EFA-BFA2-AED18321FB07}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Graphql.Application", "Graphql.Application\Graphql.Application.csproj", "{759499ED-C6F0-4EFA-BFA2-AED18321FB07}"
+	ProjectSection(ProjectDependencies) = postProject
+		{21F90A19-B78F-4785-BE1D-4038A2165E7A} = {21F90A19-B78F-4785-BE1D-4038A2165E7A}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rest.Application", "Rest.Application\Rest.Application.csproj", "{0A81B616-5314-4D7F-801B-8F1D3F705D19}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{F437406F-6F33-4417-80CA-9E0F0965DC50}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +27,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{CABB914C-F601-42DF-8896-DD8AA245B129}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CABB914C-F601-42DF-8896-DD8AA245B129}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CABB914C-F601-42DF-8896-DD8AA245B129}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CABB914C-F601-42DF-8896-DD8AA245B129}.Release|Any CPU.Build.0 = Release|Any CPU
 		{21F90A19-B78F-4785-BE1D-4038A2165E7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{21F90A19-B78F-4785-BE1D-4038A2165E7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{21F90A19-B78F-4785-BE1D-4038A2165E7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -33,6 +39,18 @@ Global
 		{4AE75A28-7C99-4D1D-AFE4-E84861C91D60}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4AE75A28-7C99-4D1D-AFE4-E84861C91D60}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4AE75A28-7C99-4D1D-AFE4-E84861C91D60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{759499ED-C6F0-4EFA-BFA2-AED18321FB07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{759499ED-C6F0-4EFA-BFA2-AED18321FB07}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{759499ED-C6F0-4EFA-BFA2-AED18321FB07}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{759499ED-C6F0-4EFA-BFA2-AED18321FB07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A81B616-5314-4D7F-801B-8F1D3F705D19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A81B616-5314-4D7F-801B-8F1D3F705D19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A81B616-5314-4D7F-801B-8F1D3F705D19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A81B616-5314-4D7F-801B-8F1D3F705D19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F437406F-6F33-4417-80CA-9E0F0965DC50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F437406F-6F33-4417-80CA-9E0F0965DC50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F437406F-6F33-4417-80CA-9E0F0965DC50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F437406F-6F33-4417-80CA-9E0F0965DC50}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

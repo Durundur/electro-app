@@ -1,10 +1,10 @@
-﻿using Application.Features.Order.CreateOrder;
-using Application.Features.Order.GetOrderDetails;
-using Application.Features.Order.GetOrders;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using MediatR;
-using Application.Features.Order.UpdateOrder;
+using Rest.Application.Features.Order.GetOrderDetails;
+using Rest.Application.Features.Order.GetOrders;
+using Rest.Application.Features.Order.CreateOrder;
+using Rest.Application.Features.Order.UpdateOrder;
 
 namespace WebAPI.Controllers
 {

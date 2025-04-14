@@ -1,15 +1,15 @@
-﻿using Application.Features.ProductCatalog.GetProduct;
-using Application.Features.ProductCatalog.GetProductCatalog;
-using Application.Features.ProductCatalog.CreateProduct;
-using Application.Features.ProductCatalog.GetSearchProducts;
-using Application.Features.ProductCatalog.GetSearchFilters;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Application.Features.ProductCatalog.GetSimilarProducts;
-using Application.Features.ProductCatalog.GetBestsellerProducts;
-using Application.Features.ProductCatalog.GetFeaturedProducts;
-using Application.Features.ProductCatalog.GetPromotionHighlight;
+using Rest.Application.Features.ProductCatalog.GetBestsellerProducts;
+using Rest.Application.Features.ProductCatalog.GetProduct;
+using Rest.Application.Features.ProductCatalog.GetSimilarProducts;
+using Rest.Application.Features.ProductCatalog.GetFeaturedProducts;
+using Rest.Application.Features.ProductCatalog.GetPromotionHighlight;
+using Rest.Application.Features.ProductCatalog.CreateOrUpdateProduct;
+using Rest.Application.Features.ProductCatalog.GetSearchProducts;
+using Rest.Application.Features.ProductCatalog.GetProductCatalog;
+using Rest.Application.Features.ProductCatalog.GetSearchFilters;
 
 namespace WebAPI.Controllers
 {

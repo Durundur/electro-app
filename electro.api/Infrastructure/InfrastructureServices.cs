@@ -1,7 +1,5 @@
 ﻿using Domain.Reposiotories;
-using Application.Services.IdentityService;
 using Application.Services.TokenService;
-using Application.Services.UserContext;
 using Infrastructure.Context;
 using Infrastructure.Identity;
 using Infrastructure.Reposiotories;
@@ -14,8 +12,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Infrastructure.Services.TokenService;
+using Application.Services.IdentityServices;
+using Application.Services.UserContext;
 
-namespace Application
+namespace Infrastructure
 {
     public static class InfrastructureServices
     {

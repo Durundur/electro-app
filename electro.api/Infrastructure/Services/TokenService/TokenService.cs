@@ -3,10 +3,11 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Domain.Aggregates.UserAggregate;
+using Application.Services.TokenService;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Application.Services.TokenService
+namespace Infrastructure.Services.TokenService
 {
     public class TokenService : ITokenService
     {

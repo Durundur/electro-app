@@ -1,11 +1,11 @@
-﻿using Application.Features.Opinions.CreateOpinion;
-using Application.Features.Opinions.CreateOpinionReaction;
-using Application.Features.Opinions.GetOpinion;
-using Application.Features.Opinions.GetProductOpinions;
-using Application.Features.Opinions.GetProductOpinionsStats;
-using Domain.Aggregates.ProductCatalogAggregate;
+﻿using Domain.Aggregates.ProductCatalogAggregate;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Rest.Application.Features.Opinions.CreateOpinion;
+using Rest.Application.Features.Opinions.CreateOpinionReaction;
+using Rest.Application.Features.Opinions.GetOpinion;
+using Rest.Application.Features.Opinions.GetProductOpinions;
+using Rest.Application.Features.Opinions.GetProductOpinionsStats;
 
 namespace WebAPI.Controllers
 {

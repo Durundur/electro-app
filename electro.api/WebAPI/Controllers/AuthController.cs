@@ -1,10 +1,10 @@
-﻿using Application.Features.Auth.LoginUser;
-using Application.Features.Auth.RefreshToken;
-using Application.Features.Auth.RegisterUser;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Application.Features.Auth.LogoutUser;
+using Rest.Application.Features.Auth.LoginUser;
+using Rest.Application.Features.Auth.RefreshToken;
+using Rest.Application.Features.Auth.RegisterUser;
+using Rest.Application.Features.Auth.LogoutUser;
 
 namespace WebAPI.Controllers
 {

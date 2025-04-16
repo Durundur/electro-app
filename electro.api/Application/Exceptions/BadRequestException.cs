@@ -8,5 +8,10 @@ namespace Application.Exceptions
             : base(message, HttpStatusCode.BadRequest)
         {
         }
+
+        public BadRequestException(string message, Exception exception)
+            : base(message, HttpStatusCode.BadRequest, exception)
+        {
+        }
     }
 }

@@ -1,41 +1,23 @@
 using Application.Exceptions;
-using Domain.Reposiotories;
+using Application.Services.OpinionService;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace Rest.Application.Features.Opinions.GetProductOpinionsStats
 {
     public class GetProductOpinionsStatsHandler : IRequestHandler<GetProductOpinionsStatsQuery, GetProductOpinionsStatsResult>
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly ILogger<GetProductOpinionsStatsHandler> _logger;
+        private readonly IOpinionService _opinionService;
 
-        public GetProductOpinionsStatsHandler(IUnitOfWork unitOfWork, ILogger<GetProductOpinionsStatsHandler> logger)
+        public GetProductOpinionsStatsHandler(IOpinionService opinionService)
         {
-            _unitOfWork = unitOfWork;
-            _logger = logger;
+            _opinionService = opinionService;
         }
 
         public async Task<GetProductOpinionsStatsResult> Handle(GetProductOpinionsStatsQuery request, CancellationToken cancellationToken)
         {
             try
             {
-                var opinions = await _unitOfWork.OpinionRepository
-                    .GetProductOpinionsQuery(request.ProductId)
-                    .ToListAsync(cancellationToken);
-
-                var grouped = opinions
-                    .GroupBy(o => (int)Math.Ceiling(o.Rating))
-                    .ToDictionary(g => g.Key, g => g.Count());
-
-                var stats = Enumerable.Range(1, 5)
-                    .Select(rating => new OpinionsStatsItem
-                    {
-                        Rating = rating,
-                        Count = grouped.ContainsKey(rating) ? grouped[rating] : 0
-                    })
-                    .ToList();
+                var stats = await _opinionService.GetProductOpinionsStatsAsync(request.ProductId, cancellationToken);
 
                 return new GetProductOpinionsStatsResult
                 {
@@ -44,8 +26,7 @@ namespace Rest.Application.Features.Opinions.GetProductOpinionsStats
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while getting product opinions stats");
-                throw new BadRequestException(ex.Message);
+                throw new BadRequestException($"Failed to get product opinions stats", ex);
             }
         }
     }

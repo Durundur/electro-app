@@ -1,25 +1,22 @@
-﻿using Domain.Reposiotories;
+﻿using Application.Services.OrderService;
 using MediatR;
 
 namespace Rest.Application.Features.Order.GetUserOrderDetails
 {
     public class GetUserOrderDetailsHandler : IRequestHandler<GetUserOrderDetailsQuery, GetUserOrderDetailsResult>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IOrderService _orderService;
 
-        public GetUserOrderDetailsHandler(IUnitOfWork unitOfWork)
+        public GetUserOrderDetailsHandler(IOrderService orderService)
         {
-            _unitOfWork = unitOfWork;
+            _orderService = orderService;
         }
 
         public async Task<GetUserOrderDetailsResult> Handle(GetUserOrderDetailsQuery request, CancellationToken cancellationToken)
         {
-            var order = await _unitOfWork.OrderRepository.GetOrderByIdAsync(request.OrderId, cancellationToken);
+            var order = await _orderService.GetOrderByIdAsync(request.OrderId, cancellationToken);
 
-            var productsIds = order.Products.Select(x => x.ProductId);
-            var productCatalog = await _unitOfWork.ProductRepository.GetProductsByIdsAsync(productsIds);
-
-            return GetUserOrderDetailsMapper.MapToGetUserOrderDetailsResult(order, productCatalog);
+            return GetUserOrderDetailsMapper.MapToGetUserOrderDetailsResult(order);
         }
     }
 }

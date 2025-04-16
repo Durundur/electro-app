@@ -24,8 +24,7 @@ namespace Domain.Aggregates.OrderAggregate
             _products = new List<OrderProduct>();
         }
 
-        public static Order Create(Guid userId, IList<OrderProduct> products, Payment payment,
-            Delivery delivery, Recipient recipient)
+        public static Order Create(Guid userId, IList<OrderProduct> products, Payment payment, Delivery delivery, Recipient recipient)
         {
             if (userId == Guid.Empty)
             {
@@ -39,7 +38,6 @@ namespace Domain.Aggregates.OrderAggregate
 
             var order = new Order
             {
-                Id = Guid.NewGuid(),
                 UserId = userId,
                 Status = OrderStatus.Created,
                 CreatedAt = DateTime.UtcNow,
@@ -125,12 +123,6 @@ namespace Domain.Aggregates.OrderAggregate
             UpdatedAt = DateTime.UtcNow;
         }
 
-        public bool CanBeCancelled() => Status != OrderStatus.Completed
-            && Status != OrderStatus.Cancelled
-            && Payment.Status != PaymentStatus.Paid;
-
-        public bool CanBeModified() => Status == OrderStatus.Created;
-
         public void UpdateProductQuantity(Guid productId, int newQuantity)
         {
             if (Status != OrderStatus.Created)
@@ -138,7 +130,7 @@ namespace Domain.Aggregates.OrderAggregate
                 throw new DomainException("Cannot modify products after order is processed");
             }
 
-            var existingProduct = _products.FirstOrDefault(p => p.ProductId == productId);
+            var existingProduct = _products.FirstOrDefault(p => p.Product.Id == productId);
 
             if (existingProduct == null)
             {
@@ -146,43 +138,6 @@ namespace Domain.Aggregates.OrderAggregate
             }
 
             existingProduct.UpdatedQuantity(newQuantity);
-            UpdatedAt = DateTime.UtcNow;
-        }
-
-        public void AddProduct(OrderProduct product)
-        {
-            if (Status != OrderStatus.Created)
-            {
-                throw new DomainException("Cannot modify products after order is processed");
-            }
-
-            var existingProduct = _products.FirstOrDefault(p => p.ProductId == product.ProductId);
-            if (existingProduct != null)
-            {
-                var newQuantity = existingProduct.Quantity + product.Quantity;
-                UpdateProductQuantity(product.ProductId, newQuantity);
-                return;
-            }
-
-            _products.Add(product);
-            UpdatedAt = DateTime.UtcNow;
-        }
-
-        public void RemoveProduct(Guid productId)
-        {
-            if (Status != OrderStatus.Created)
-            {
-                throw new DomainException("Cannot modify products after order is processed");
-            }
-
-            var product = _products.FirstOrDefault(p => p.ProductId == productId);
-
-            if (product == null)
-            {
-                throw new DomainException("Product not found in order");
-            }
-
-            _products.Remove(product);
             UpdatedAt = DateTime.UtcNow;
         }
     }

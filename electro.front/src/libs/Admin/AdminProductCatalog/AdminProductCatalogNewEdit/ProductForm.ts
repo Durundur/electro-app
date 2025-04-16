@@ -56,7 +56,7 @@ export const validationSchema = yup.object<IProductForm>({
 	attributes: yup.array().of(
 		yup.object({
 			id: yup.string().required(),
-			value: yup.string().required("Wartość atrybutu jest wymagana"),
+			value: yup.string(),
 			isPrimary: yup.boolean().required(),
 		})
 	),

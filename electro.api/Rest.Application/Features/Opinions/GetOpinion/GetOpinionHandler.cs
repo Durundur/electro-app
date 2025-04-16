@@ -1,46 +1,34 @@
 using Application.Exceptions;
+using Application.Services.OpinionService;
 using Application.Services.UserContext;
-using Domain.Reposiotories;
 using MediatR;
-using Microsoft.Extensions.Logging;
 
 namespace Rest.Application.Features.Opinions.GetOpinion
 {
     public class GetOpinionHandler : IRequestHandler<GetOpinionQuery, GetOpinionResult>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IOpinionService _opinionService;
         private readonly IUserContext _userContext;
-        private readonly ILogger<GetOpinionHandler> _logger;
-
-        public GetOpinionHandler(IUnitOfWork unitOfWork, IUserContext userContext, ILogger<GetOpinionHandler> logger)
+        
+        public GetOpinionHandler(IOpinionService opinionService, IUserContext userContext)
         {
-            _unitOfWork = unitOfWork;
             _userContext = userContext;
-            _logger = logger;
+            _opinionService = opinionService;
         }
 
         public async Task<GetOpinionResult> Handle(GetOpinionQuery request, CancellationToken cancellationToken)
         {
             try
             {
-                var opinion = await _unitOfWork.OpinionRepository.GetByIdAsync(request.Id, cancellationToken);
-
-                if (opinion == null)
-                {
-                    throw new NotFoundException($"Opinion with Id '{request.Id}' was not found.");
-                }
+                var opinion = await _opinionService.GetOpinionByIdAsync(request.Id, cancellationToken);
 
                 Guid? userId = _userContext.IsAuthenticated ? _userContext.UserId : null;
+
                 return GetOpinionMapper.MapToGetOpinionResult(opinion, userId);
-            }
-            catch (NotFoundException)
-            {
-                throw;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while getting opinion");
-                throw new BadRequestException(ex.Message);
+                throw new BadRequestException($"Failed to get opinion", ex);
             }
         }
     }

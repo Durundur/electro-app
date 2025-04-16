@@ -2,20 +2,14 @@
 {
     public static class GetOrderDetailsMapper
     {
-        public static GetOrderDetailsResult MapToGetOrderDetailsResult(Domain.Aggregates.OrderAggregate.Order order, IList<Domain.Aggregates.ProductCatalogAggregate.Product> productCatalog)
+        public static GetOrderDetailsResult MapToGetOrderDetailsResult(Domain.Aggregates.OrderAggregate.Order order)
         {
             return new GetOrderDetailsResult
             {
                 Id = order.Id,
                 Number = order.Number,
                 Status = order.Status,
-                Products = order.Products
-                    .Select(orderProduct =>
-                    {
-                        var product = productCatalog.First(p => p.Id == orderProduct.ProductId);
-                        return MapToGetOrderDetailsResultProduct(orderProduct, product);
-                    })
-                    .ToList(),
+                Products = order.Products.Select(orderProduct => MapToGetOrderDetailsResultProduct(orderProduct)).ToList(),
                 Delivery = order.Delivery,
                 Payment = order.Payment,
                 Recipient = order.Recipient,
@@ -25,14 +19,14 @@
             };
         }
 
-        public static GetOrderDetailsResultProduct MapToGetOrderDetailsResultProduct(Domain.Aggregates.OrderAggregate.OrderProduct orderProduct, Domain.Aggregates.ProductCatalogAggregate.Product product)
+        public static GetOrderDetailsResultProduct MapToGetOrderDetailsResultProduct(Domain.Aggregates.OrderAggregate.OrderProduct orderProduct)
         {
             return new GetOrderDetailsResultProduct
             {
                 Id = orderProduct.Id,
-                ProductId = product.Id,
-                Name = product.Name,
-                Photo = product.Photos.FirstOrDefault(),
+                ProductId = orderProduct.Product.Id,
+                Name = orderProduct.Product.Name,
+                Photo = orderProduct.Product.Photos.FirstOrDefault(),
                 Quantity = orderProduct.Quantity,
                 Price = orderProduct.Price
             };

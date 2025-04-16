@@ -1,112 +1,51 @@
-﻿using Domain.Reposiotories;
-using Domain.Aggregates.ProductCatalogAggregate;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Application.Exceptions;
-using Microsoft.Extensions.Logging;
+﻿using MediatR;
+using Application.Services.ProductService;
+using Application.Services.Models;
 
 namespace Rest.Application.Features.ProductCatalog.CreateOrUpdateProduct
 {
     public class CreateOrUpdateProductHandler : IRequestHandler<CreateOrUpdateProductCommand, CreateOrUpdateProductResult>
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly ILogger<CreateOrUpdateProductHandler> _logger;
+        private readonly IProductService _productService;
 
-        public CreateOrUpdateProductHandler(IUnitOfWork unitOfWork, ILogger<CreateOrUpdateProductHandler> logger)
+        public CreateOrUpdateProductHandler(IProductService productService)
         {
-            _unitOfWork = unitOfWork;
-            _logger = logger;
+            _productService = productService;
         }
         public async Task<CreateOrUpdateProductResult> Handle(CreateOrUpdateProductCommand command, CancellationToken cancellationToken)
         {
-            try
+
+            var model = new ProductModel
             {
-                await _unitOfWork.BeginTransactionAsync(cancellationToken: cancellationToken);
-
-                Product product;
-
-                if (command.Id.HasValue)
+                Id = command.Id,
+                Name = command.Name,
+                Description = command.Description,
+                Amount = command.Amount,
+                Currency = command.Currency,
+                Photos = command.Photos,
+                StockQuantityDelta = command.StockQuantityDelta,
+                Status = command.Status,
+                GroupId = command.GroupId,
+                CategoryId = command.CategoryId,
+                SubCategoryId = command.SubCategoryId,
+                Attributes = command.Attributes.Select(a => new ProductAttributeModel
                 {
-                    product = await _unitOfWork.ProductRepository.GetByIdWithLockAsync(command.Id.Value);
-
-                    if (product == null)
-                    {
-                        throw new NotFoundException(nameof(Product), command.Id.Value);
-                    }
-
-                    var price = new Domain.ValueObjects.Money(command.Amount, command.Currency);
-                    product.Update(command.Name, command.Description, price, command.Status, product.StockQuantity + command.StockQuantityDelta);
-                }
-                else
+                    Id = a.Id,
+                    Value = a.Value,
+                    IsPrimary = a.IsPrimary
+                }).ToList(),
+                Promotion = command.Promotion == null ? null : new ProductPromotionModel
                 {
-                    var price = new Domain.ValueObjects.Money(command.Amount, command.Currency);
-                    product = Product.Create(command.Name, command.Description, price, command.StockQuantityDelta);
-
-                    await _unitOfWork.ProductRepository.AddProductAsync(product, cancellationToken);
+                    PromotionAmount = command.Promotion.PromotionAmount,
+                    PromotionCurrency = command.Promotion.PromotionCurrency,
+                    StartDate = command.Promotion.StartDate,
+                    EndDate = command.Promotion.EndDate,
+                    IsActive = command.Promotion.IsActive
                 }
+            };
 
-                product.UpdatePhotos(command.Photos);
-
-                product.AssignToGroup(command.GroupId);
-                product.AssignToCategory(command.CategoryId);
-                product.AssignToSubCategory(command.SubCategoryId);
-
-                if (command.Promotion == null)
-                {
-                    if (product.Promotion != null)
-                    {
-                        product.RemovePromotion();
-                    }
-                }
-                else
-                {
-                    var promotionalPrice = new Domain.ValueObjects.Money(command.Promotion.PromotionAmount, command.Promotion.PromotionCurrency);
-
-                    if (product.Promotion == null)
-                    {
-                        product.CreatePromotion(
-                            promotionalPrice,
-                            command.Promotion.StartDate,
-                            command.Promotion.EndDate,
-                            command.Promotion.IsActive
-                        );
-                        await _unitOfWork.ProductPromotionRepository.AddProductPromotionAsync(product.Promotion, cancellationToken);
-                    }
-                    else
-                    {
-                        product.UpdatePromotion(
-                            promotionalPrice,
-                            command.Promotion.StartDate,
-                            command.Promotion.EndDate,
-                            command.Promotion.IsActive
-                        );
-                    }
-                }
-
-                if (command.Attributes != null && command.Attributes.Any())
-                {
-                    var attributeValues = command.Attributes.Select(a => new AttributeValue(a.Id, a.Value, a.IsPrimary));
-                    product.UpdateAttributes(attributeValues);
-                }
-
-                await _unitOfWork.SaveChangesAsync();
-                await _unitOfWork.CommitTransactionAsync(cancellationToken);
-
-                var savedProduct = await _unitOfWork.ProductRepository.GetByIdAsync(product.Id, cancellationToken);
-
-                var attributeDefinitions = await _unitOfWork.AttributeDefinitionRepository.GetAttributesDefinitionsQuery()
-                    .Where(ad => savedProduct.Attributes.Select(a => a.AttributeDefinitionId).Contains(ad.Id))
-                    .ToListAsync(cancellationToken: cancellationToken);
-
-                return CreateOrUpdateProductMapper.MapToCreateOrUpdateProductResult(savedProduct, attributeDefinitions);
-
-            }
-            catch (Exception ex)
-            {
-                await _unitOfWork.RollbackTransactionAsync(cancellationToken);
-                _logger.LogError(ex, "An error occurred while creating or updating product");
-                throw new BadRequestException(ex.Message);
-            }
+            var resultProduct = await _productService.CreateOrUpdateProductAsync(model, cancellationToken);
+            return CreateOrUpdateProductMapper.MapToCreateOrUpdateProductResult(resultProduct);
         }
     }
 }

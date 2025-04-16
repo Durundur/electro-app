@@ -8,7 +8,7 @@ namespace Domain.Reposiotories
         Task<Product> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
         Task<IList<Product>> GetProductsByIdsAsync(IEnumerable<Guid> productsIds, CancellationToken cancellationToken = default);
         Task<IList<Product>> GetProductsByIdsWithLockAsync(IEnumerable<Guid> productsIds, CancellationToken cancellationToken = default);
-        IQueryable<Product> GetProductsQuery();
+        IQueryable<Product> GetProductsQuery(CancellationToken cancellationToken = default);
         Task<Product> AddProductAsync(Product product, CancellationToken cancellationToken = default);
     }
 }

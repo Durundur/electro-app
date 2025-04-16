@@ -1,4 +1,5 @@
-﻿using Domain.Exceptions;
+﻿using Domain.Aggregates.ProductCatalogAggregate;
+using Domain.Exceptions;
 using Domain.ValueObjects;
 
 namespace Domain.Aggregates.OrderAggregate
@@ -6,7 +7,7 @@ namespace Domain.Aggregates.OrderAggregate
     public class OrderProduct
     {
         public Guid Id { get; private set; }
-        public Guid ProductId { get; private set; }
+        public Product Product { get; private set; }
         public string Name { get; private set; }
         public int Quantity { get; private set; }
         public Money Price { get; private set; }
@@ -14,16 +15,11 @@ namespace Domain.Aggregates.OrderAggregate
 
         private OrderProduct() { }
 
-        public static OrderProduct Create(Guid productId, string name, int quantity, Money price)
+        public static OrderProduct Create(Product product, string name, int quantity, Money price)
         {
-            if (productId == Guid.Empty)
+            if (product == null)
             {
-                throw new DomainException("Product ID cannot be empty");
-            }
-
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                throw new DomainException("Product name cannot be empty");
+                throw new DomainException("Product cannot be null");
             }
 
             if (quantity <= 0)
@@ -38,8 +34,7 @@ namespace Domain.Aggregates.OrderAggregate
 
             return new OrderProduct
             {
-                Id = Guid.NewGuid(),
-                ProductId = productId,
+                Product = product,
                 Name = name,
                 Quantity = quantity,
                 Price = price

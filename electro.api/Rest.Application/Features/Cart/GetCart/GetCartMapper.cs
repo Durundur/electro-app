@@ -12,12 +12,12 @@ namespace Rest.Application.Features.Cart.GetCart
             var cartProducts = cart.Products
                 .Select(cp =>
                 {
-                    var product = productLookup[cp.ProductId];
+                    var product = productLookup[cp.Product.Id];
                     var currentPromotion = product.Promotion?.IsValid() == true ? product.Promotion.PromotionalPrice : null;
 
                     return new GetCartResultProduct
                     {
-                        ProductId = cp.ProductId,
+                        ProductId = cp.Product.Id,
                         Quantity = cp.Quantity,
                         Price = product.Price,
                         Promotion = currentPromotion,

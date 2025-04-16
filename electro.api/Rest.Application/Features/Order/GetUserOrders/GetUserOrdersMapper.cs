@@ -4,7 +4,7 @@ namespace Rest.Application.Features.Order.GetUserOrders
 {
     public class GetUserOrdersMapper
     {
-        public static IList<GetUserOrdersResultOrder> MapToGetUserOrders(IList<D.OrderAggregate.Order> orders, IList<D.ProductCatalogAggregate.Product> products)
+        public static IList<GetUserOrdersResultOrder> MapToGetUserOrders(IList<D.OrderAggregate.Order> orders)
         {
             return orders.Select(order => new GetUserOrdersResultOrder()
             {
@@ -16,11 +16,11 @@ namespace Rest.Application.Features.Order.GetUserOrders
                 Products = order.Products.Select(orderProduct => new GetUserOrdersResultOrderProduct()
                 {
                     Id = orderProduct.Id,
-                    ProductId = orderProduct.ProductId,
+                    ProductId = orderProduct.Product.Id,
                     Price = orderProduct.Price,
                     Quantity = orderProduct.Quantity,
                     Name = orderProduct.Name,
-                    Photo = products.FirstOrDefault(p => p.Id == orderProduct.ProductId)?.Photos.FirstOrDefault()
+                    Photo = orderProduct.Product.Photos.FirstOrDefault()
                 }).ToList(),
             }).ToList();
         }

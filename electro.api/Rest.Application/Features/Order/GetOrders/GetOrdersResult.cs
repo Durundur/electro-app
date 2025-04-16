@@ -1,14 +1,15 @@
 ﻿using Domain.Aggregates.OrderAggregate;
 using Domain.ValueObjects;
+using Rest.Application.Features.Shared.Pagination;
 
 namespace Rest.Application.Features.Order.GetOrders
 {
-    public class GetOrdersResult
+    public class GetOrdersResult : PaginatedResult<GetOrdersResultOrder>
     {
-        public IList<GetOrdersResultOrder> Orders { get; set; }
-        public int PageCount { get; set; }
-        public int PageSize { get; set; }
-        public int Page { get; set; }
+        public GetOrdersResult(IReadOnlyList<GetOrdersResultOrder> items, int count, int page, int pageSize)
+            : base(items, count, page, pageSize)
+        {
+        }
     }
 
     public class GetOrdersResultOrder

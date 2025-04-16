@@ -14,13 +14,10 @@
             };
         }
 
-        public static List<ProductAttributeResult> MapToListOfProductAttributeResult(IEnumerable<Domain.Aggregates.ProductCatalogAggregate.AttributeValue> attributeValues, IEnumerable<Domain.Aggregates.ProductHierarchyAggregate.AttributeDefinition> attributeDefinitions)
+        public static List<ProductAttributeResult> MapToListOfProductAttributeResult(IEnumerable<Domain.Aggregates.ProductCatalogAggregate.AttributeValue> attributeValues)
         {
-            var definitionDictionary = attributeDefinitions.ToDictionary(ad => ad.Id);
-
             return attributeValues
-                .Where(av => definitionDictionary.ContainsKey(av.AttributeDefinitionId))
-                .Select(av => MapToProductAttributeResult(av, definitionDictionary[av.AttributeDefinitionId]))
+                .Select(av => MapToProductAttributeResult(av, av.AttributeDefinition))
                 .ToList();
         }
     }

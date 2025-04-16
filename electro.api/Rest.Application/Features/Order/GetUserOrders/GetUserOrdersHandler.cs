@@ -1,42 +1,23 @@
-﻿using Domain.Reposiotories;
+﻿using Application.Services.OrderService;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Rest.Application.Features.Order.GetUserOrders
 {
     public class GetUserOrdersHandler : IRequestHandler<GetUserOrdersQuery, GetUserOrdersResult>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IOrderService _orderService;
 
-        public GetUserOrdersHandler(IUnitOfWork unitOfWork)
+        public GetUserOrdersHandler(IOrderService orderService)
         {
-            _unitOfWork = unitOfWork;
+            _orderService = orderService;
         }
 
         public async Task<GetUserOrdersResult> Handle(GetUserOrdersQuery query, CancellationToken cancellationToken)
         {
-            var ordersQuery = _unitOfWork.OrderRepository.GetOrdersQuery()
-                .Include(o => o.Products)
-                .Include(o => o.Delivery)
-                .Include(o => o.Recipient)
-                .Include(o => o.Payment)
-                .Where(o => o.UserId == query.UserId)
-                .OrderByDescending(o => o.CreatedAt);
-
-            var totalOrders = await ordersQuery.CountAsync(o => o.UserId == query.UserId);
-
-            var orders = await ordersQuery
-                .Skip((query.Page - 1) * query.PageSize)
-                .Take(query.PageSize)
-                .ToListAsync();
-
-            var pageCount = (int)Math.Ceiling(totalOrders / (double)query.PageSize);
-
-            var orderProductsIds = orders.SelectMany(o => o.Products.Select(p => p.ProductId)).Distinct().ToList();
-            var products = await _unitOfWork.ProductRepository.GetProductsByIdsAsync(orderProductsIds, cancellationToken);
+            var (orders, totalOrders) = await _orderService.GetUserOrdersAsync(query.UserId, query.Page, query.PageSize, cancellationToken);
 
             return new GetUserOrdersResult(
-                GetUserOrdersMapper.MapToGetUserOrders(orders, products).ToList(),
+                GetUserOrdersMapper.MapToGetUserOrders(orders).ToList(),
                 totalOrders,
                 query.Page,
                 query.PageSize

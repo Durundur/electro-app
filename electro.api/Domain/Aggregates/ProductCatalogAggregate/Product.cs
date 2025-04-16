@@ -1,4 +1,5 @@
-﻿using Domain.Exceptions;
+﻿using Domain.Aggregates.ProductHierarchyAggregate;
+using Domain.Exceptions;
 using Domain.ValueObjects;
 
 namespace Domain.Aggregates.ProductCatalogAggregate
@@ -10,9 +11,9 @@ namespace Domain.Aggregates.ProductCatalogAggregate
         public string Description { get; private set; }
         public Money Price { get; private set; }
         public ProductStatus Status { get; private set; }
-        public int? GroupId { get; private set; }
-        public int? CategoryId { get; private set; }
-        public int? SubCategoryId { get; private set; }
+        public Group? Group { get; private set; }
+        public Category? Category { get; private set; }
+        public SubCategory? SubCategory { get; private set; }
         public int StockQuantity { get; private set; }
         private readonly List<AttributeValue> _attributes = new List<AttributeValue>();
         public IReadOnlyCollection<AttributeValue> Attributes => _attributes.AsReadOnly();
@@ -73,50 +74,54 @@ namespace Domain.Aggregates.ProductCatalogAggregate
             return opinion;
         }
 
-        public void AssignToGroup(int? groupId)
+        public void AssignToGroup(Group group)
         {
-            if (!groupId.HasValue)
-            {
-                GroupId = null;
-                CategoryId = null;
-                SubCategoryId = null;
-                return;
-            }
-
-            GroupId = groupId.Value;
+            Group = group;
         }
 
-        public void AssignToCategory(int? categoryId)
+        public void AssignToCategory(Category category)
         {
-            if (!categoryId.HasValue)
-            {
-                CategoryId = null;
-                SubCategoryId = null;
-                return;
-            }
-
-            if (!GroupId.HasValue)
+            if (Group == null)
             {
                 throw new DomainException("Cannot assign category without assigning group first");
             }
 
-            CategoryId = categoryId.Value;
+            Category = category;
         }
 
-        public void AssignToSubCategory(int? subCategoryId)
+        public void AssignToSubCategory(SubCategory subCategory)
         {
-            if (!subCategoryId.HasValue)
+            if (Category == null || Group == null)
             {
-                SubCategoryId = null;
-                return;
+                throw new DomainException("Cannot assign subcategory without assigning category or group first");
             }
 
-            if (!CategoryId.HasValue)
+            SubCategory = subCategory;
+        }
+
+        public void UnassignFromGroup()
+        {
+            if (Category != null)
             {
-                throw new DomainException("Cannot assign subcategory without assigning category first");
+                throw new DomainException("Cannot unassign group while product has assigned category");
             }
 
-            SubCategoryId = subCategoryId.Value;
+            Group = null;
+        }
+
+        public void UnassignFromCategory()
+        {
+            if (SubCategory != null)
+            {
+                throw new DomainException("Cannot unassign category while product has assigned subcategory");
+            }
+
+            Category = null;
+        }
+
+        public void UnassignFromSubCategory()
+        {
+            SubCategory = null;
         }
 
         public void UpdateStockQuantity(int newQuantity)
@@ -153,8 +158,30 @@ namespace Domain.Aggregates.ProductCatalogAggregate
                 throw new DomainException("Attributes collection cannot be null.");
             }
 
-            _attributes.Clear();
-            _attributes.AddRange(newAttributes.Where(a => a != null));
+            var newAttributesList = newAttributes.Where(a => a != null).ToList();
+
+            var attributesToRemove = _attributes
+                .Where(existing => !newAttributesList
+                    .Any(newAttr => newAttr.AttributeDefinition.Id == existing.AttributeDefinition.Id))
+                .ToList();
+
+            foreach (var attributeToRemove in attributesToRemove)
+            {
+                _attributes.Remove(attributeToRemove);
+            }
+
+            foreach (var newAttribute in newAttributesList)
+            {
+                var existingAttribute = _attributes
+                    .FirstOrDefault(a => a.AttributeDefinition.Id == newAttribute.AttributeDefinition.Id);
+
+                if (existingAttribute == null)
+                {
+                    continue;
+                }
+
+                existingAttribute.Update(newAttribute.Value, newAttribute.IsPrimary);
+            }
         }
 
         private void ValidatePromotionalPrice(Money promotionalPrice)

@@ -19,11 +19,6 @@ namespace Infrastructure.Configurations.ProductHierarchy
 
             builder.Property(ad => ad.Type)
                 .HasConversion<string>();
-
-            builder.HasMany<AttributeValue>()
-                .WithOne()
-                .HasForeignKey(av => av.AttributeDefinitionId)
-                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

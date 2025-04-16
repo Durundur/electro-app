@@ -22,16 +22,19 @@ namespace Infrastructure.Reposiotories
 
         public IQueryable<Order> GetOrdersQuery()
         {
-            return _context.Orders.AsQueryable();
+            return _context.Orders
+                .Include(o => o.Products)
+                    .ThenInclude(op => op.Product)
+                    .ThenInclude(p => p.Promotion)
+                .Include(o => o.Delivery)
+                .Include(o => o.Recipient)
+                .Include(o => o.Payment)
+                .AsQueryable();
         }
 
         public async Task<Order> GetOrderByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            return await _context.Orders
-                .Include(o => o.Products)
-                .Include(o => o.Delivery)
-                .Include(o => o.Recipient)
-                .Include(o => o.Payment).FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
+            return await GetOrdersQuery().FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
         }
     }
 }

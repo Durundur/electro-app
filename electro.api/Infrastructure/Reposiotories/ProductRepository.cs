@@ -13,19 +13,17 @@ namespace Infrastructure.Reposiotories
             _context = context;
         }
 
-        public async Task<Product> AddProductAsync(Product product, CancellationToken cancellationToken)
+        public async Task<Product> AddProductAsync(Product product, CancellationToken cancellationToken = default)
         {
             var entry = await _context.Products.AddAsync(product);
             return entry.Entity;
         }
 
-        public async Task<Product> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+        public async Task<Product> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            var product = await _context.Products
-                .Include(p => p.Attributes)
-                .Include(p => p.Opinions)
-                .Include(p => p.Promotion)
+            var product = await this.GetProductsQuery()
                 .FirstOrDefaultAsync(p => p.Id == id);
+
             return product;
         }
 
@@ -40,22 +38,35 @@ namespace Infrastructure.Reposiotories
             {
                 return null;
             }
-                
+
+            await _context.Entry(product).Reference(p => p.Group).LoadAsync(cancellationToken);
+            await _context.Entry(product).Reference(p => p.Category).LoadAsync(cancellationToken);
+            await _context.Entry(product).Reference(p => p.SubCategory).LoadAsync(cancellationToken);
             await _context.Entry(product).Collection(p => p.Attributes).LoadAsync(cancellationToken);
+
+            foreach (var attribute in product.Attributes)
+            {
+                await _context.Entry(attribute).Reference(a => a.AttributeDefinition).LoadAsync(cancellationToken);
+            }
+
             await _context.Entry(product).Collection(p => p.Opinions).LoadAsync(cancellationToken);
+
+            foreach (var opinion in product.Opinions)
+            {
+                await _context.Entry(opinion).Collection(o => o.Reactions).LoadAsync(cancellationToken);
+            }
+
             await _context.Entry(product).Reference(p => p.Promotion).LoadAsync(cancellationToken);
 
             return product;
         }
 
-        public async Task<IList<Product>> GetProductsByIdsAsync(IEnumerable<Guid> productIds, CancellationToken cancellationToken)
+        public async Task<IList<Product>> GetProductsByIdsAsync(IEnumerable<Guid> productIds, CancellationToken cancellationToken = default)
         {
-            var products = await _context.Products
+            var products = await this.GetProductsQuery()
                 .Where(p => productIds.Contains(p.Id))
-                .Include(p => p.Attributes)
-                .Include(p => p.Opinions)
-                .Include(p => p.Promotion)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
+
             return products;
         }
 
@@ -79,17 +90,41 @@ namespace Infrastructure.Reposiotories
 
             foreach (var product in products)
             {
+                await _context.Entry(product).Reference(p => p.Group).LoadAsync(cancellationToken);
+                await _context.Entry(product).Reference(p => p.Category).LoadAsync(cancellationToken);
+                await _context.Entry(product).Reference(p => p.SubCategory).LoadAsync(cancellationToken);
                 await _context.Entry(product).Collection(p => p.Attributes).LoadAsync(cancellationToken);
+
+                foreach (var attribute in product.Attributes)
+                {
+                    await _context.Entry(attribute).Reference(a => a.AttributeDefinition).LoadAsync(cancellationToken);
+                }
+
                 await _context.Entry(product).Collection(p => p.Opinions).LoadAsync(cancellationToken);
+
+                foreach (var opinion in product.Opinions)
+                {
+                    await _context.Entry(opinion).Collection(o => o.Reactions).LoadAsync(cancellationToken);
+                }
+
                 await _context.Entry(product).Reference(p => p.Promotion).LoadAsync(cancellationToken);
             }
 
             return products;
         }
 
-        public IQueryable<Product> GetProductsQuery()
+        public IQueryable<Product> GetProductsQuery(CancellationToken cancellationToken = default)
         {
-            return _context.Products.AsQueryable();
+            return _context.Products
+                .Include(p => p.Group)
+                .Include(p => p.Category)
+                .Include(p => p.SubCategory)
+                .Include(p => p.Attributes)
+                    .ThenInclude(pa => pa.AttributeDefinition)
+                .Include(p => p.Opinions)
+                    .ThenInclude(po => po.Reactions)
+                .Include(p => p.Promotion)
+                .AsQueryable();
         }
     }
 }

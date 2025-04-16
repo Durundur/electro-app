@@ -11,7 +11,7 @@ namespace Rest.Application.Features.ProductCatalog.GetPromotionHighlight
                 Amount = product.Price.Amount,
                 Currency = product.Price.Currency,
                 Photo = product.Photos.FirstOrDefault(),
-                Promotion = product?.Promotion?.IsValid() == true ? product.Promotion.PromotionalPrice : null,
+                Promotion = product.EffectivePrice,
             };
         }
     }

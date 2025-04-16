@@ -1,30 +1,20 @@
-﻿using Application.Services.ProductService;
-using Domain.Aggregates.ProductCatalogAggregate;
-using Domain.Reposiotories;
-using HotChocolate;
+﻿using Graphql.Application.Types;
+using HotChocolate.Types;
 
 namespace Graphql.Application.Queries
 {
-    public class Query
+    public partial class Query
     {
-        public async Task<Product?> GetProduct([Service] IUnitOfWork unitOfWork, Guid id, CancellationToken cancellationToken)
-        {
-            return await unitOfWork.ProductRepository.GetByIdAsync(id, cancellationToken);
-        }
+        
+    }
 
-        public async Task<List<Product>> GetBestsellerProducts([Service] IProductService productService, int? limit = 10, CancellationToken cancellationToken = default)
+    public class QueryType : ObjectType<Query>
+    {
+        protected override void Configure(IObjectTypeDescriptor<Query> descriptor)
         {
-            return await productService.GetBestsellerProductsAsync(Math.Min(limit ?? 10, 50), cancellationToken);
-        }
-
-        public async Task<List<Product>> GetFeaturedProducts([Service] IProductService productService, int? limit = 10, CancellationToken cancellationToken = default)
-        {
-            return await productService.GetFeaturedProductsAsync(Math.Min(limit ?? 10, 50), cancellationToken);
-        }
-
-        public async Task<List<Product>> GetSimilarProducts([Service] IProductService productService, Guid productId, int? limit = 10, CancellationToken cancellationToken = default)
-        {
-            return await productService.GetSimilarProductsAsync(productId, Math.Min(limit ?? 10, 20), cancellationToken);
+            descriptor.Field(f => f.GetBestsellerProducts)
+                .Type<NonNullType<ListType<NonNullType<GetBestsellerProductsType>>>>()
+                .Description("Retrieve a list of bestseller products.");
         }
     }
 }

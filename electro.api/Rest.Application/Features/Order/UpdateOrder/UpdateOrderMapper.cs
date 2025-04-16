@@ -2,20 +2,14 @@
 {
     public static class UpdateOrderMapper
     {
-        public static UpdateOrderResult MapToUpdateOrderResult(Domain.Aggregates.OrderAggregate.Order order, IList<Domain.Aggregates.ProductCatalogAggregate.Product> productCatalog)
+        public static UpdateOrderResult MapToUpdateOrderResult(Domain.Aggregates.OrderAggregate.Order order)
         {
             return new UpdateOrderResult
             {
                 Id = order.Id,
                 Number = order.Number,
                 Status = order.Status,
-                Products = order.Products
-                    .Select(orderProduct =>
-                    {
-                        var product = productCatalog.First(p => p.Id == orderProduct.ProductId);
-                        return MapToUpdateOrderResultProduct(orderProduct, product);
-                    })
-                    .ToList(),
+                Products = order.Products.Select(orderProduct => MapToUpdateOrderResultProduct(orderProduct)).ToList(),
                 Delivery = order.Delivery,
                 Payment = order.Payment,
                 Recipient = order.Recipient,
@@ -25,14 +19,14 @@
             };
         }
 
-        public static UpdateOrderResultProduct MapToUpdateOrderResultProduct(Domain.Aggregates.OrderAggregate.OrderProduct orderProduct, Domain.Aggregates.ProductCatalogAggregate.Product product)
+        public static UpdateOrderResultProduct MapToUpdateOrderResultProduct(Domain.Aggregates.OrderAggregate.OrderProduct orderProduct)
         {
             return new UpdateOrderResultProduct
             {
                 Id = orderProduct.Id,
-                ProductId = product.Id,
-                Name = product.Name,
-                Photo = product.Photos.FirstOrDefault(),
+                ProductId = orderProduct.Product.Id,
+                Name = orderProduct.Product.Name,
+                Photo = orderProduct.Product.Photos.FirstOrDefault(),
                 Quantity = orderProduct.Quantity,
                 Price = orderProduct.Price
             };

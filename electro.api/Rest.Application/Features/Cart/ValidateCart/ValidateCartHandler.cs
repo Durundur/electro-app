@@ -3,6 +3,7 @@ using D = Domain.Aggregates.CartAggregate;
 using Domain.ValueObjects;
 using Application.Services.UserContext;
 using MediatR;
+using Domain.Aggregates.CartAggregate;
 
 
 namespace Rest.Application.Features.Cart.ValidateCart
@@ -103,20 +104,20 @@ namespace Rest.Application.Features.Cart.ValidateCart
                 await _unitOfWork.CartRepository.AddCartAsync(existingCart, cancellationToken);
             }
 
-            var existingProductIds = existingCart.Products.Select(p => p.ProductId).ToList();
+            var existingProductIds = existingCart.Products.Select(p => p.Product.Id).ToList();
             var validatedProductIds = validationResult.Products.Select(p => p.ProductId).ToList();
 
             foreach (var existingProduct in existingCart.Products.ToList())
             {
-                if (!validatedProductIds.Contains(existingProduct.ProductId))
+                if (!validatedProductIds.Contains(existingProduct.Product.Id))
                 {
-                    existingCart.RemoveItem(existingProduct.ProductId);
+                    existingCart.RemoveItem(existingProduct.Product.Id);
                 }
             }
 
             foreach (var validatedProduct in validationResult.Products)
             {
-                var cartProduct = existingCart.Products.FirstOrDefault(p => p.ProductId == validatedProduct.ProductId);
+                var cartProduct = existingCart.Products.FirstOrDefault(p => p.Product.Id == validatedProduct.ProductId);
                 var unitPrice = validatedProduct.Promotion != null ? validatedProduct.Promotion : validatedProduct.Price;
 
                 if (cartProduct != null)
@@ -126,7 +127,8 @@ namespace Rest.Application.Features.Cart.ValidateCart
                 }
                 else
                 {
-                    existingCart.AddItem(validatedProduct.ProductId, validatedProduct.Quantity, unitPrice);
+                    //var cartProduct = CartProduct.Create();
+                    //existingCart.AddItem(cartProduct);
                 }
             }
 

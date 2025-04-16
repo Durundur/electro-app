@@ -1,10 +1,9 @@
 ﻿using MediatR;
+using Rest.Application.Features.Shared.Pagination;
 
 namespace Rest.Application.Features.Order.GetOrders
 {
-    public class GetOrdersQuery : IRequest<GetOrdersResult>
+    public class GetOrdersQuery : PaginationQuery, IRequest<GetOrdersResult>
     {
-        public int PageSize { get; set; }
-        public int Page { get; set; }
     }
 }

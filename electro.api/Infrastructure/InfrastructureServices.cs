@@ -24,7 +24,6 @@ namespace Infrastructure
         {
             services.AddDbService(configuration);
             services.AddAuthentication(configuration);
-            services.AddRepositories();
             services.AddServices();
             return services;
         }
@@ -62,10 +61,12 @@ namespace Infrastructure
 
         private static void AddServices(this IServiceCollection services)
         {
+
+            services.AddHttpContextAccessor(); 
             services.AddScoped<IIdentityService, IdentityService>();
             services.AddScoped<ITokenService, TokenService>();
-            services.AddHttpContextAccessor();
             services.AddScoped<IUserContext, UserContext>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
 
         private static void AddDbService(this IServiceCollection services, IConfiguration configuration)
@@ -82,17 +83,6 @@ namespace Infrastructure
             using var scope = serviceProvider.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             dbContext.Database.Migrate();
-        }
-
-        private static void AddRepositories(this IServiceCollection services)
-        {
-            services.AddScoped<IProductRepository, ProductRepository>();
-            services.AddScoped<IProductHierarchyRepository, ProductHierarchyRepository>();
-            services.AddScoped<IAttributeDefinitionRepository, AttributeDefinitionRepository>();
-            services.AddScoped<ICartRepository, CartRepository>();
-            services.AddScoped<IRecipientRepository, RecipientRepository>();
-            services.AddScoped<IOrderRepository, OrderRepository>();
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
     }
 }

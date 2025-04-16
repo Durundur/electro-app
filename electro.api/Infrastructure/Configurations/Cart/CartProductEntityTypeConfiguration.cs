@@ -10,7 +10,9 @@ namespace Infrastructure.Configurations.Cart
         public void Configure(EntityTypeBuilder<D.CartProduct> builder)
         {
             builder.ToTable("CartProducts");
+
             builder.HasKey(c => c.Id);
+
             builder.OwnsOne(c => c.UnitPrice, priceBuilder =>
             {
                 priceBuilder.Property(m => m.Amount)
@@ -24,7 +26,8 @@ namespace Infrastructure.Configurations.Cart
                     .HasMaxLength(3)
                     .IsRequired();
             });
-            builder.HasOne<Product>().WithMany().HasForeignKey(c => c.ProductId);
+
+            builder.HasOne<Product>(c => c.Product).WithMany().HasForeignKey("ProductId");
         }
     }
 }

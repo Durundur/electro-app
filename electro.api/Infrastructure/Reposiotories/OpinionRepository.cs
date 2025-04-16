@@ -14,11 +14,10 @@ namespace Infrastructure.Reposiotories
             _context = context;
         }
 
-        public IQueryable<Opinion> GetProductOpinionsQuery(Guid productId)
+        public IQueryable<Opinion> GetOpinionsQuery()
         {
             return _context.Opinions
                 .Include(o => o.Reactions)
-                .Where(o => EF.Property<Guid>(o, "ProductId") == productId)
                 .AsQueryable();
         }
 
@@ -28,9 +27,10 @@ namespace Infrastructure.Reposiotories
             return entry.Entity;
         }
 
-        public Task<Opinion> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task<Opinion> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            return _context.Opinions.Include(o => o.Reactions).FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
+            var opinion = await GetOpinionsQuery().FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
+            return opinion;
         }
     }
 }

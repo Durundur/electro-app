@@ -1,58 +1,39 @@
 ﻿using Application.Exceptions;
+using Application.Services.OpinionService;
 using Application.Services.UserContext;
-using Domain.Reposiotories;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace Rest.Application.Features.Opinions.GetProductOpinions
 {
     public class GetProductOpinionsHandler : IRequestHandler<GetProductOpinionsQuery, GetProductOpinionsResult>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IOpinionService _opinionService;
         private readonly IUserContext _userContext;
-        private readonly ILogger<GetProductOpinionsHandler> _logger;
 
-        public GetProductOpinionsHandler(IUnitOfWork unitOfWork, IUserContext userContext, ILogger<GetProductOpinionsHandler> logger)
+        public GetProductOpinionsHandler(IOpinionService opinionService, IUserContext userContext)
         {
-            _unitOfWork = unitOfWork;
+            _opinionService = opinionService;
             _userContext = userContext;
-            _logger = logger;
         }
 
         public async Task<GetProductOpinionsResult> Handle(GetProductOpinionsQuery request, CancellationToken cancellationToken)
         {
             try
             {
-                var query = _unitOfWork.OpinionRepository.GetProductOpinionsQuery(request.ProductId);
-
-                if (request.Rating.HasValue)
-                {
-                    query = query.Where(o => (int)Math.Ceiling(o.Rating) == request.Rating.Value);
-                }
-
-                var totalCount = await query.CountAsync(cancellationToken);
-
-                query = query
-                    .OrderByDescending(o => o.CreatedAt)
-                    .Skip((request.Page - 1) * request.PageSize)
-                    .Take(request.PageSize);
-
-                var opinions = await query.ToListAsync(cancellationToken);
+                var (opinions, totalOpinions) = await _opinionService.GetProductOpinionsAsync(request.ProductId, request.Page, request.PageSize, request.Rating, cancellationToken);
 
                 Guid? userId = _userContext.IsAuthenticated ? _userContext.UserId : null;
 
                 return new GetProductOpinionsResult(
                     GetProductOpinionsMapper.MapToGetGetProductOpinionsResultOpinion(opinions, userId).ToList(),
-                    totalCount,
+                    totalOpinions,
                     request.Page,
                     request.PageSize
                 );
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while getting product opinions");
-                throw new BadRequestException(ex.Message);
+                throw new BadRequestException($"Failed to get product opinions", ex);
             }
         }
     }

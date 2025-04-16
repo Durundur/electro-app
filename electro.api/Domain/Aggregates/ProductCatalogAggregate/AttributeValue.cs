@@ -1,21 +1,25 @@
-﻿namespace Domain.Aggregates.ProductCatalogAggregate
+﻿using Domain.Aggregates.ProductHierarchyAggregate;
+
+namespace Domain.Aggregates.ProductCatalogAggregate
 {
     public class AttributeValue
     {
-        public Guid AttributeDefinitionId { get; private set; }
+        public AttributeDefinition AttributeDefinition { get; private set; }
         public string Value { get; private set; }
         public bool IsPrimary { get; private set; }
 
-        public AttributeValue(Guid attributeDefinitionId, string value, bool isPrimary)
+        private AttributeValue() { }
+
+        public AttributeValue(AttributeDefinition attributeDefinition, string value, bool isPrimary)
         {
-            AttributeDefinitionId = attributeDefinitionId;
+            AttributeDefinition = attributeDefinition;
             Value = value;
             IsPrimary = isPrimary;
         }
 
-        public void Update(string newValue, bool isPrimary)
+        public void Update(string value, bool isPrimary)
         {
-            Value = newValue;
+            Value = value;
             IsPrimary = isPrimary;
         }
     }

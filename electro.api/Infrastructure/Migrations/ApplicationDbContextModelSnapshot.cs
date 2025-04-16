@@ -249,7 +249,7 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("AttributeDefinitionId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("ProductId")
+                    b.Property<Guid>("ProductId")
                         .HasColumnType("uuid");
 
                     b.Property<bool>("IsPrimary")
@@ -831,7 +831,7 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("CartId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Domain.Aggregates.ProductCatalogAggregate.Product", null)
+                    b.HasOne("Domain.Aggregates.ProductCatalogAggregate.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -859,6 +859,8 @@ namespace Infrastructure.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("CartProductId");
                         });
+
+                    b.Navigation("Product");
 
                     b.Navigation("UnitPrice")
                         .IsRequired();
@@ -932,7 +934,7 @@ namespace Infrastructure.Migrations
                         .WithMany("Products")
                         .HasForeignKey("OrderId");
 
-                    b.HasOne("Domain.Aggregates.ProductCatalogAggregate.Product", null)
+                    b.HasOne("Domain.Aggregates.ProductCatalogAggregate.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -963,6 +965,8 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("Price")
                         .IsRequired();
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Domain.Aggregates.OrderAggregate.Payment", b =>
@@ -996,7 +1000,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Aggregates.ProductCatalogAggregate.AttributeValue", b =>
                 {
-                    b.HasOne("Domain.Aggregates.ProductHierarchyAggregate.AttributeDefinition", null)
+                    b.HasOne("Domain.Aggregates.ProductHierarchyAggregate.AttributeDefinition", "AttributeDefinition")
                         .WithMany()
                         .HasForeignKey("AttributeDefinitionId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1007,6 +1011,8 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("AttributeDefinition");
                 });
 
             modelBuilder.Entity("Domain.Aggregates.ProductCatalogAggregate.Opinion", b =>
@@ -1040,15 +1046,15 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Aggregates.ProductCatalogAggregate.Product", b =>
                 {
-                    b.HasOne("Domain.Aggregates.ProductHierarchyAggregate.Category", null)
+                    b.HasOne("Domain.Aggregates.ProductHierarchyAggregate.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId");
 
-                    b.HasOne("Domain.Aggregates.ProductHierarchyAggregate.Group", null)
+                    b.HasOne("Domain.Aggregates.ProductHierarchyAggregate.Group", "Group")
                         .WithMany()
                         .HasForeignKey("GroupId");
 
-                    b.HasOne("Domain.Aggregates.ProductHierarchyAggregate.SubCategory", null)
+                    b.HasOne("Domain.Aggregates.ProductHierarchyAggregate.SubCategory", "SubCategory")
                         .WithMany()
                         .HasForeignKey("SubCategoryId");
 
@@ -1075,8 +1081,14 @@ namespace Infrastructure.Migrations
                                 .HasForeignKey("ProductId");
                         });
 
+                    b.Navigation("Category");
+
+                    b.Navigation("Group");
+
                     b.Navigation("Price")
                         .IsRequired();
+
+                    b.Navigation("SubCategory");
                 });
 
             modelBuilder.Entity("Domain.Aggregates.ProductCatalogAggregate.ProductPromotion", b =>

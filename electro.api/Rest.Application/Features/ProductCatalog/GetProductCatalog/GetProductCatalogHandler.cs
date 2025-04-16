@@ -1,28 +1,20 @@
-﻿using Domain.Reposiotories;
+﻿using Application.Services.ProductService;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Rest.Application.Features.ProductCatalog.GetProductCatalog
 {
     public class GetProductCatalogHandler : IRequestHandler<GetProductCatalogQuery, GetProductCatalogResult>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IProductService _productService;
 
-        public GetProductCatalogHandler(IUnitOfWork unitOfWork)
+        public GetProductCatalogHandler(IProductService productService)
         {
-            _unitOfWork = unitOfWork;
+            _productService = productService;
         }
 
         public async Task<GetProductCatalogResult> Handle(GetProductCatalogQuery request, CancellationToken cancellationToken)
         {
-            var productsQuery = _unitOfWork.ProductRepository.GetProductsQuery().OrderBy(p => p.Name);
-
-            var totalProducts = await productsQuery.CountAsync();
-
-            var products = await productsQuery
-                .Skip((request.Page - 1) * request.PageSize)
-                .Take(request.PageSize)
-                .ToListAsync();
+            var (products, totalProducts) = await _productService.GetProductCatalog(request.Page, request.PageSize, cancellationToken);
 
             return new GetProductCatalogResult(
                 GetProductCatalogMapper.MapToGetProductCatalogResultProducts(products).ToList(),

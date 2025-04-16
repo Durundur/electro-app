@@ -10,5 +10,10 @@ namespace Application.Exceptions
         {
             StatusCode = statusCode;
         }
+
+        protected ExceptionBase(string message, HttpStatusCode statusCode, Exception exception) : base(message, exception)
+        {
+            StatusCode = statusCode;
+        }
     }
 }

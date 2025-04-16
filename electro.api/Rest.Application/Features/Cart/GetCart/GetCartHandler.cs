@@ -23,12 +23,12 @@ namespace Rest.Application.Features.Cart.GetCart
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
             }
 
-            var productIds = userCart.Products.Select(p => p.ProductId).ToList();
+            var productIds = userCart.Products.Select(p => p.Product.Id).ToList();
             var products = await _unitOfWork.ProductRepository.GetProductsByIdsAsync(productIds, cancellationToken);
 
             foreach (var cartProduct in userCart.Products)
             {
-                var product = products.FirstOrDefault(p => p.Id == cartProduct.ProductId);
+                var product = products.FirstOrDefault(p => p.Id == cartProduct.Product.Id);
                 var unitPrice = product.EffectivePrice;
 
                 if (product == null)

@@ -9,8 +9,11 @@ namespace Infrastructure.Configurations.Order
         public void Configure(EntityTypeBuilder<D.OrderAggregate.OrderProduct> builder)
         {
             builder.ToTable("OrderProducts");
+
             builder.HasKey(op => op.Id);
-            builder.HasOne<D.ProductCatalogAggregate.Product>().WithMany().HasForeignKey(op => op.ProductId);
+
+            builder.HasOne<D.ProductCatalogAggregate.Product>(op => op.Product).WithMany().HasForeignKey("ProductId");
+
             builder.OwnsOne(c => c.Price, priceBuilder =>
             {
                 priceBuilder.Property(m => m.Amount)

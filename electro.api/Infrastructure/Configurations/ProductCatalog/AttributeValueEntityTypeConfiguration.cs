@@ -14,7 +14,15 @@ namespace Infrastructure.Configurations.ProductCatalog
                 .IsRequired()
                 .HasMaxLength(255);
 
-            builder.HasKey(["AttributeDefinitionId", "ProductId"]);
+            builder.HasKey("AttributeDefinitionId", "ProductId");
+
+            builder.HasOne(av => av.AttributeDefinition)
+                .WithMany()
+                .HasForeignKey("AttributeDefinitionId")
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Property<Guid>("AttributeDefinitionId");
+            builder.Property<Guid>("ProductId");
         }
     }
 }

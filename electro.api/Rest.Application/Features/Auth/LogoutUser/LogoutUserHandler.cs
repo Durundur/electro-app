@@ -12,10 +12,7 @@ namespace Rest.Application.Features.Auth.LogoutUser
         private readonly IUserContext _userContext;
         private readonly ILogger<LogoutUserHandler> _logger;
 
-        public LogoutUserHandler(
-            IIdentityService identityService,
-            IUserContext userContext,
-            ILogger<LogoutUserHandler> logger)
+        public LogoutUserHandler(IIdentityService identityService, IUserContext userContext, ILogger<LogoutUserHandler> logger)
         {
             _identityService = identityService;
             _userContext = userContext;

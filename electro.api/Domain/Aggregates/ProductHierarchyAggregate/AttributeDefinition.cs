@@ -9,6 +9,8 @@
         public bool IsFilterable { get; private set; }
         public string Description { get; private set; }
 
+        private AttributeDefinition() { }
+
         public AttributeDefinition(string name, AttributeType type, bool isRequired, string description, bool isFilterable)
         {
             Name = name;

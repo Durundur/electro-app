@@ -8,7 +8,9 @@ namespace Graphql.Application
     {
         public static IRequestExecutorBuilder AddGraphqlApplicationServices(this IRequestExecutorBuilder builder)
         {
-            builder.AddQueryType<Query>();
+            builder
+                .AddQueryType<QueryType>();
+
             return builder;
         }
     }

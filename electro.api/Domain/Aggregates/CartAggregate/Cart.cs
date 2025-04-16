@@ -21,7 +21,6 @@ namespace Domain.Aggregates.CartAggregate
         {
             var cart = new Cart
             {
-                Id = Guid.NewGuid(),
                 UserId = userId,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
@@ -30,60 +29,36 @@ namespace Domain.Aggregates.CartAggregate
             return cart;
         }
 
-        public void AddItem(Guid productId, int quantity, Money unitPrice)
+        public void AddItem(CartProduct product)
         {
-
-            if (quantity <= 0)
+            if (product.Quantity < 0)
+            {
                 throw new DomainException("Quantity must be positive");
+            }
 
-            var existingItem = _products.FirstOrDefault(i => i.ProductId == productId);
+            var existingItem = _products.FirstOrDefault(i => i.Product.Id == product.Id);
             if (existingItem != null)
             {
-                existingItem.UpdateQuantity(existingItem.Quantity + quantity);
+                existingItem.UpdateQuantity(existingItem.Quantity + product.Quantity);
             }
             else
             {
-                var newItem = CartProduct.Create(productId, quantity, unitPrice);
-                _products.Add(newItem);
+                _products.Add(product);
             }
 
-            UpdatedAt = DateTime.UtcNow;
-        }
-
-        public void UpdateItemQuantity(Guid productId, int newQuantity)
-        {
-            if (newQuantity <= 0)
-                throw new DomainException("Quantity must be positive");
-
-            var item = _products.FirstOrDefault(i => i.ProductId == productId)
-                ?? throw new DomainException("Item not found in cart");
-
-            item.UpdateQuantity(newQuantity);
             UpdatedAt = DateTime.UtcNow;
         }
 
         public void RemoveItem(Guid productId)
         {
-            var item = _products.FirstOrDefault(i => i.ProductId == productId)
-                ?? throw new DomainException("Item not found in cart");
+            var item = _products.FirstOrDefault(i => i.Product.Id == productId);
+
+            if (item == null)
+            {
+                throw new DomainException("Item not found in cart");
+            }
 
             _products.Remove(item);
-            UpdatedAt = DateTime.UtcNow;
-        }
-
-        public Money CalculateTotal()
-        {
-            if (!_products.Any())
-                return Money.Zero("PLN");
-
-            var currency = _products.First().UnitPrice.Currency;
-            var total = _products.Sum(item => item.CalculateSubtotal().Amount);
-            return new Money(total, currency);
-        }
-
-        public void Clear()
-        {
-            _products.Clear();
             UpdatedAt = DateTime.UtcNow;
         }
     }

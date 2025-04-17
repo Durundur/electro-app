@@ -856,7 +856,7 @@
 		  ],
 		  "parameters": [
 			{
-			  "name": "PageSize",
+			  "name": "Page",
 			  "in": "query",
 			  "schema": {
 				"type": "integer",
@@ -864,7 +864,7 @@
 			  }
 			},
 			{
-			  "name": "Page",
+			  "name": "PageSize",
 			  "in": "query",
 			  "schema": {
 				"type": "integer",
@@ -3828,14 +3828,14 @@
 		"GetOrdersResult": {
 		  "type": "object",
 		  "properties": {
-			"orders": {
+			"items": {
 			  "type": "array",
 			  "items": {
 				"$ref": "#/components/schemas/GetOrdersResultOrder"
 			  },
 			  "nullable": true
 			},
-			"pageCount": {
+			"page": {
 			  "type": "integer",
 			  "format": "int32"
 			},
@@ -3843,9 +3843,10 @@
 			  "type": "integer",
 			  "format": "int32"
 			},
-			"page": {
+			"totalPages": {
 			  "type": "integer",
-			  "format": "int32"
+			  "format": "int32",
+			  "readOnly": true
 			}
 		  },
 		  "additionalProperties": false
@@ -3993,7 +3994,7 @@
 			"stats": {
 			  "type": "array",
 			  "items": {
-				"$ref": "#/components/schemas/OpinionsStatsItem"
+				"$ref": "#/components/schemas/OpinionsStats"
 			  },
 			  "nullable": true
 			}
@@ -4611,7 +4612,7 @@
 		  ],
 		  "type": "string"
 		},
-		"OpinionsStatsItem": {
+		"OpinionsStats": {
 		  "type": "object",
 		  "properties": {
 			"rating": {

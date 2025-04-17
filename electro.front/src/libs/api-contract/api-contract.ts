@@ -402,10 +402,10 @@ export interface GetOrderDetailsResultProduct {
 }
 
 export interface GetOrdersResult {
-    orders?: GetOrdersResultOrder[] | undefined;
-    pageCount?: number;
-    pageSize?: number;
+    items?: GetOrdersResultOrder[] | undefined;
     page?: number;
+    pageSize?: number;
+    readonly totalPages?: number;
 }
 
 export interface GetOrdersResultOrder {
@@ -450,7 +450,7 @@ export interface GetProductOpinionsResultOpinion {
 }
 
 export interface GetProductOpinionsStatsResult {
-    stats?: OpinionsStatsItem[] | undefined;
+    stats?: OpinionsStats[] | undefined;
 }
 
 export interface GetProductResult {
@@ -633,7 +633,7 @@ export enum OpinionReactionType {
     Dislike = "Dislike",
 }
 
-export interface OpinionsStatsItem {
+export interface OpinionsStats {
     rating?: number;
     count?: number;
 }

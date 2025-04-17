@@ -21,7 +21,13 @@ namespace Rest.Application.Features.ProductCatalog.GetSearchFilters
 
             return new GetSearchFiltersResult
             {
-                Filters = filters
+                Filters = filters.Select(f => new GetSearchFiltersResultElement
+                {
+                    AttributeDefinitionId = f.AttributeDefinitionId,
+                    Name = f.Name,
+                    Type = f.Type,
+                    Values = f.Values,
+                }).ToList(),
             };
         }
 

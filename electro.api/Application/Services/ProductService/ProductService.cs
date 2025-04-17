@@ -3,7 +3,7 @@ using Application.Services.Models;
 using Domain.Aggregates.ProductCatalogAggregate;
 using Domain.Reposiotories;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
+using System.Linq.Expressions;
 
 namespace Application.Services.ProductService
 {
@@ -215,6 +215,7 @@ namespace Application.Services.ProductService
         public async Task<List<SearchFilterModel>> GetSearchFiltersAsync(int? groupId, int? categoryId, int? subCategoryId, CancellationToken cancellationToken = default)
         {
             var productsQuery = _unitOfWork.ProductRepository.GetProductsQuery()
+                .AsNoTracking()
                 .Where(p => p.Status == ProductStatus.Active && p.StockQuantity > 0);
 
             if (groupId.HasValue)
@@ -230,9 +231,31 @@ namespace Application.Services.ProductService
                 productsQuery = productsQuery.Where(p => p.SubCategory != null && p.SubCategory.Id == subCategoryId);
             }
 
+            Expression<Func<AttributeValue, bool>> hierarchyCondition = null;
+            if (subCategoryId.HasValue)
+            {
+                hierarchyCondition = ad =>
+                    EF.Property<int?>(ad.AttributeDefinition, "SubCategoryId") == subCategoryId.Value ||
+                    EF.Property<int?>(ad.AttributeDefinition, "CategoryId") == categoryId.Value ||
+                    EF.Property<int?>(ad.AttributeDefinition, "GroupId") == groupId.Value;
+            }
+            else if (categoryId.HasValue)
+            {
+                hierarchyCondition = ad =>
+                    EF.Property<int?>(ad.AttributeDefinition, "CategoryId") == categoryId.Value ||
+                    EF.Property<int?>(ad.AttributeDefinition, "GroupId") == groupId.Value;
+            }
+            else if (groupId.HasValue)
+            {
+                hierarchyCondition = ad =>
+                    EF.Property<int?>(ad.AttributeDefinition, "GroupId") == groupId.Value;
+            }
+
             var productsAttributes = await productsQuery
                 .SelectMany(p => p.Attributes)
                 .Where(attr => attr.AttributeDefinition.IsFilterable)
+                .Where(hierarchyCondition)
+                .OrderBy(ad => ad.AttributeDefinition.Name)
                 .GroupBy(attr => attr.AttributeDefinition.Id)
                 .ToListAsync(cancellationToken);
 

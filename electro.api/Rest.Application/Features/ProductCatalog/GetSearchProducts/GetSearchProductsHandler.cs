@@ -16,6 +16,7 @@ namespace Rest.Application.Features.ProductCatalog.GetSearchProducts
         {
             var (products, totalProducts) = await _productService.GetSearchProductsAsync(
                 request.Filters, request.GroupId, request.CategoryId, request.SubCategoryId, request.Page, request.PageSize, cancellationToken);
+
             return GetSearchProductsMapper.MapToGetSearchProductsResult(products, totalProducts, request.Page, request.PageSize);
         }
     }

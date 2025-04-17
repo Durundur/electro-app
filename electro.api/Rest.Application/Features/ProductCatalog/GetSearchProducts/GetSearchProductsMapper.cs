@@ -25,7 +25,7 @@ namespace Rest.Application.Features.ProductCatalog.GetSearchProducts
                 Status = product.Status,
                 AverageOpinionRating = product.Opinions.Any() ? (float)Math.Round(product.Opinions.Average(o => o.Rating), 1) : 0,
                 OpinionCount = product.Opinions.Count(),
-                Attributes = ProductAttributeMapper.MapToListOfProductAttributeResult(product.Attributes),
+                Attributes = ProductAttributeMapper.MapToListOfProductAttributeResult(product.Attributes.Where(a => a.IsPrimary)),
                 Promotion = product?.Promotion?.IsValid() == true ? product.Promotion.PromotionalPrice : null,
             };
         }

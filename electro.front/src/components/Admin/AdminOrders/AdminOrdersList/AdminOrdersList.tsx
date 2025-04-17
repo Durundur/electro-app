@@ -14,7 +14,7 @@ interface AdminOrdersListProps {
 
 const AdminOrdersList: FC<AdminOrdersListProps> = ({ onPaginationChange, ordersListData }) => {
 	const router = useRouter();
-	const { orders, page, pageSize, pageCount } = ordersListData;
+	const { items: orders, page, pageSize, totalPages: pageCount } = ordersListData;
 	const rowCount = (pageSize ?? 0) * (pageCount ?? 0);
 
 	const columns: GridColDef[] = [

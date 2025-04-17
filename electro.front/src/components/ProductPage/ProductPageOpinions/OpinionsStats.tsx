@@ -1,9 +1,9 @@
 import React, { FC } from "react";
 import { Box, Typography, Rating, LinearProgress, Grid2 as Grid } from "@mui/material";
-import { OpinionsStatsItem } from "@/libs/api-contract/api-contract";
+import { OpinionsStats as IOpinionsStats } from "@/libs/api-contract/api-contract";
 
 interface OpinionsStatsProps {
-	opinionsStats: OpinionsStatsItem[];
+	opinionsStats: IOpinionsStats[];
 	avgOpinionsRating: number;
 	opinionsCount: number;
 	onRatingChnage: (rating: number | undefined) => void;

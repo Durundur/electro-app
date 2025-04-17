@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Application.Services.Models;
+using MediatR;
 
 namespace Rest.Application.Features.Auth.LoginUser
 {

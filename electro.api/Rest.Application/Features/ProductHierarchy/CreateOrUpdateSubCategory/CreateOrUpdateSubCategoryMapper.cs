@@ -4,7 +4,7 @@ namespace Rest.Application.Features.ProductHierarchy.CreateOrUpdateSubCategory
 {
     public static class CreateOrUpdateSubCategoryMapper
     {
-        public static CreateOrUpdateSubCategoryResult MapToCreateOrUpdateSubCategoryResult(this Domain.Aggregates.ProductHierarchyAggregate.SubCategory subCategory)
+        public static CreateOrUpdateSubCategoryResult MapToCreateOrUpdateSubCategoryResult(Domain.Aggregates.ProductHierarchyAggregate.SubCategory subCategory)
         {
             return new CreateOrUpdateSubCategoryResult
             {

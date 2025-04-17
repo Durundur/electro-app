@@ -40,17 +40,23 @@ namespace Infrastructure.Reposiotories
 
         public async Task<Group> GetGroupByIdAsync(int id, CancellationToken cancellationToken)
         {
-            return await _context.Groups.Include(g => g.Attributes).FirstOrDefaultAsync(g => g.Id == id, cancellationToken);
+            return await _context.Groups
+                .Include(g => g.Attributes)
+                .FirstOrDefaultAsync(g => g.Id == id, cancellationToken);
         }
 
         public async Task<Category> GetCategoryByIdAsync(int id, CancellationToken cancellationToken)
         {
-            return await _context.Categories.Include(g => g.Attributes).FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
+            return await _context.Categories
+                .Include(g => g.Attributes)
+                .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
         }
 
         public async Task<SubCategory> GetSubCategoryByIdAsync(int id, CancellationToken cancellationToken)
         {
-            return await _context.SubCategories.Include(sc => sc.Attributes).FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
+            return await _context.SubCategories
+                .Include(sc => sc.Attributes)
+                .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
         }
 
         public async Task DeleteGroupAsync(int groupId, CancellationToken cancellationToken)

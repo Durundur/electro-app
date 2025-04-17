@@ -1,30 +1,28 @@
-﻿using Domain.Reposiotories;
+﻿using Application.Exceptions;
+using Application.Services.ProductHierarchyService;
 using MediatR;
 
 namespace Rest.Application.Features.ProductHierarchy.DeleteSubCategory
 {
     public class DeleteSubCategoryHandler : IRequestHandler<DeleteSubCategoryCommand, bool>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IProductHierarchyService _productHierarchyService;
 
-        public DeleteSubCategoryHandler(IUnitOfWork unitOfWork)
+        public DeleteSubCategoryHandler(IProductHierarchyService productHierarchyService)
         {
-            _unitOfWork = unitOfWork;
+            _productHierarchyService = productHierarchyService;
         }
 
         public async Task<bool> Handle(DeleteSubCategoryCommand request, CancellationToken cancellationToken)
         {
-            var subCategory = await _unitOfWork.ProductHierarchyRepository.GetSubCategoryByIdAsync(request.Id);
-
-            if (subCategory == null)
+            try
             {
-                throw new Exception($"SubCategory with ID {request.Id} not found");
+                return await _productHierarchyService.DeleteSubCategoryAsync(request.Id, cancellationToken);
             }
-
-            await _unitOfWork.ProductHierarchyRepository.DeleteSubCategoryAsync(subCategory.Id, cancellationToken);
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-            return true;
+            catch (Exception ex)
+            {
+                throw new BadRequestException($"Failed to delete subcategory", ex);
+            }
         }
     }
 }

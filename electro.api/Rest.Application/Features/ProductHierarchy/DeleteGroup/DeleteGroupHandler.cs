@@ -1,30 +1,28 @@
-﻿using Domain.Reposiotories;
+﻿using Application.Exceptions;
+using Application.Services.ProductHierarchyService;
 using MediatR;
 
 namespace Rest.Application.Features.ProductHierarchy.DeleteGroup
 {
     public class DeleteGroupHandler : IRequestHandler<DeleteGroupCommand, bool>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IProductHierarchyService _productHierarchyService;
 
-        public DeleteGroupHandler(IUnitOfWork unitOfWork)
+        public DeleteGroupHandler(IProductHierarchyService productHierarchyService)
         {
-            _unitOfWork = unitOfWork;
+            _productHierarchyService = productHierarchyService;
         }
 
         public async Task<bool> Handle(DeleteGroupCommand request, CancellationToken cancellationToken)
         {
-            var group = await _unitOfWork.ProductHierarchyRepository.GetGroupByIdAsync(request.Id);
-
-            if (group == null)
+            try
             {
-                throw new Exception($"Group with ID {request.Id} not found");
+                return await _productHierarchyService.DeleteGroupAsync(request.Id, cancellationToken);
             }
-
-            await _unitOfWork.ProductHierarchyRepository.DeleteGroupAsync(group.Id, cancellationToken);
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-            return true;
+            catch (Exception ex)
+            {
+                throw new BadRequestException($"Failed to delete group", ex);
+            }
         }
     }
 }

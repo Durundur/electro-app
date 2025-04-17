@@ -1,62 +1,36 @@
-﻿using Application.Exceptions;
+﻿using Application.Services.CartService;
+using Application.Services.Models;
 using Domain.Aggregates.UserAggregate;
-using Domain.Reposiotories;
 using MediatR;
 
 namespace Rest.Application.Features.Cart.CreateOrUpdateRecipient
 {
     public class CreateOrUpdateRecipientHandler : IRequestHandler<CreateOrUpdateRecipientCommand, CreateOrUpdateRecipientResult>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly ICartService _cartService;
 
-        public CreateOrUpdateRecipientHandler(IUnitOfWork unitOfWork)
+        public CreateOrUpdateRecipientHandler(ICartService cartService)
         {
-            _unitOfWork = unitOfWork;
+            _cartService = cartService;
         }
 
         public async Task<CreateOrUpdateRecipientResult> Handle(CreateOrUpdateRecipientCommand command, CancellationToken cancellationToken)
         {
-            Recipient recipient = null;
-            if (command.Id.HasValue)
+            var recipientModel = new RecipientModel
             {
-                recipient = await _unitOfWork.RecipientRepository.GetByIdAsync(command.Id.Value, cancellationToken);
-                if (recipient == null)
-                {
-                    throw new NotFoundException(nameof(Recipient), command.Id.Value);
-                }
+                FirstName = command.FirstName,
+                Surname = command.Surname,
+                CompanyName = command.CompanyName,
+                TaxIdentificationNumber = command.TaxIdentificationNumber,
+                Type = command.Type,
+                PhoneNumber = command.PhoneNumber,
+                Street = command.Street,
+                HouseNumber = command.HouseNumber,
+                PostalCode = command.PostalCode,
+                City = command.City
+            };
 
-                recipient.Update(
-                    command.Type,
-                    command.FirstName,
-                    command.Surname,
-                    command.CompanyName,
-                    command.TaxIdentificationNumber,
-                    command.PhoneNumber,
-                    command.Street,
-                    command.HouseNumber,
-                    command.PostalCode,
-                    command.City
-                );
-            }
-            else
-            {
-                recipient = Recipient.Create(
-                    command.UserId,
-                    command.Type,
-                    command.FirstName,
-                    command.Surname,
-                    command.CompanyName,
-                    command.TaxIdentificationNumber,
-                    command.PhoneNumber,
-                    command.Street,
-                    command.HouseNumber,
-                    command.PostalCode,
-                    command.City
-                );
-
-                await _unitOfWork.RecipientRepository.AddRecipientAsync(recipient, cancellationToken);
-            }
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            var recipient = await _cartService.CreateOrUpdateRecipientAsync(recipientModel, command.Id, command.UserId,  cancellationToken);
 
             return CreateOrUpdateRecipientMapper.MapToCreateOrUpdateRecipientResult(recipient);
         }

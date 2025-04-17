@@ -1,20 +1,21 @@
-﻿using Domain.Reposiotories;
+﻿using Application.Services.CartService;
 using MediatR;
 
 namespace Rest.Application.Features.Cart.GetRecipients
 {
     public class GetRecipientsHandler : IRequestHandler<GetRecipientsQuery, GetRecipientsResult>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly ICartService _cartService;
 
-        public GetRecipientsHandler(IUnitOfWork unitOfWork)
+        public GetRecipientsHandler(ICartService cartService)
         {
-            _unitOfWork = unitOfWork;
+            _cartService = cartService;
         }
 
         public async Task<GetRecipientsResult> Handle(GetRecipientsQuery request, CancellationToken cancellationToken)
         {
-            var recipients = await _unitOfWork.RecipientRepository.GetUserRecipientsAsync(request.UserId, cancellationToken);
+            var recipients = await _cartService.GetUserRecipientsByUserIdAsync(request.UserId, cancellationToken);
+
             return GetRecipientsMapper.MapToGetRecipientsResult(recipients);
         }
     }

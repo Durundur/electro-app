@@ -1,67 +1,50 @@
-﻿using Domain.Reposiotories;
-using Domain.Aggregates.ProductHierarchyAggregate;
-using MediatR;
+﻿using MediatR;
+using Application.Services.ProductHierarchyService;
+using Application.Services.Models;
 using Application.Exceptions;
 
 namespace Rest.Application.Features.ProductHierarchy.CreateOrUpdateSubCategory
 {
     public class CreateOrUpdateSubCategoryHandler : IRequestHandler<CreateOrUpdateSubCategoryCommand, CreateOrUpdateSubCategoryResult>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IProductHierarchyService _productHierarchyService;
 
-        public CreateOrUpdateSubCategoryHandler(IUnitOfWork unitOfWork)
+        public CreateOrUpdateSubCategoryHandler(IProductHierarchyService productHierarchyService)
         {
-            _unitOfWork = unitOfWork;
+            _productHierarchyService = productHierarchyService;
         }
 
         public async Task<CreateOrUpdateSubCategoryResult> Handle(CreateOrUpdateSubCategoryCommand command, CancellationToken cancellationToken)
         {
-            SubCategory subCategory;
-
-            if (command.Id.HasValue)
+            try
             {
-                subCategory = await _unitOfWork.ProductHierarchyRepository.GetSubCategoryByIdAsync(command.Id.Value);
-                if (subCategory == null)
+                var model = new SubCategoryModel
                 {
-                    throw new NotFoundException($"Subcategory with ID {command.Id} not found");
-                }
-                subCategory.Update(command.Name, command.Description, command.Active, command.DisplayOrder);
+                    Id = command.Id,
+                    Name = command.Name,
+                    Description = command.Description,
+                    DisplayOrder = command.DisplayOrder,
+                    Active = command.Active,
+                    CategoryId = command.CategoryId,
+                    Attributes = command.Attributes.Select(a => new AttributeDefinitionModel
+                    {
+                        Id = a.Id,
+                        Name = a.Name,
+                        Description = a.Description,
+                        IsFilterable = a.IsFilterable,
+                        IsRequired = a.IsRequired,
+                        Type = a.Type,
+                    }).ToList(),
+                };
+
+                var subCategory = await _productHierarchyService.CreateOrUpdateSubCategoryAsync(model, cancellationToken);
+
+                return CreateOrUpdateSubCategoryMapper.MapToCreateOrUpdateSubCategoryResult(subCategory);
             }
-            else
+            catch (Exception ex)
             {
-                subCategory = SubCategory.Create(command.Name, command.Description, command.Active, command.DisplayOrder);
-                subCategory.AssignToCategory(command.CategoryId);
-                await _unitOfWork.ProductHierarchyRepository.AddSubCategoryAsync(subCategory, cancellationToken);
+                throw new BadRequestException($"Failed to create or update subcategory", ex);
             }
-
-            var attributesToRemove = subCategory.Attributes
-                .Where(a => !command.Attributes.Any(ac => ac.Id == a.Id && ac.Id.HasValue))
-                .ToList();
-
-            foreach (var attribute in attributesToRemove)
-            {
-                subCategory.RemoveAttribute(attribute);
-                await _unitOfWork.AttributeDefinitionRepository.DeleteAttributeDefinitionAsync(attribute.Id, cancellationToken);
-            }
-
-            foreach (var receivedAttribute in command.Attributes)
-            {
-                var existingAttribute = subCategory.Attributes.FirstOrDefault(a => a.Id == receivedAttribute.Id);
-
-                if (existingAttribute != null)
-                {
-                    existingAttribute.Update(receivedAttribute.Name, receivedAttribute.Type, receivedAttribute.IsRequired, receivedAttribute.Description, receivedAttribute.IsFilterable);
-                }
-                else
-                {
-                    var newAttribute = new AttributeDefinition(receivedAttribute.Name, receivedAttribute.Type, receivedAttribute.IsRequired, receivedAttribute.Description, receivedAttribute.IsFilterable);
-                    subCategory.AddAttribute(newAttribute);
-                }
-            }
-
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-            return subCategory.MapToCreateOrUpdateSubCategoryResult();
         }
     }
 }

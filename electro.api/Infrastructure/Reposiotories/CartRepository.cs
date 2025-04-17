@@ -22,7 +22,13 @@ namespace Infrastructure.Reposiotories
 
         public async Task<Cart> GetCartByUserIdAsync(Guid userId, CancellationToken cancellationToken)
         {
-            return await _context.Carts.Include(c => c.Products).FirstOrDefaultAsync(c => c.UserId == userId, cancellationToken);
+            var cart = await _context.Carts
+                .Include(c => c.Products)
+                    .ThenInclude(cp => cp.Product)
+                        .ThenInclude(p => p.Promotion)
+                .FirstOrDefaultAsync(c => c.UserId == userId, cancellationToken);
+
+            return cart;
         }
 
         public async Task DeleteUserCartAsync(Guid userId, CancellationToken cancellationToken)

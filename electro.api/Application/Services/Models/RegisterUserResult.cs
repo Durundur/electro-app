@@ -1,4 +1,4 @@
-﻿namespace Rest.Application.Features.Auth.RegisterUser
+﻿namespace Application.Services.Models
 {
     public abstract record RegisterUserResult(bool Success, string Message);
 

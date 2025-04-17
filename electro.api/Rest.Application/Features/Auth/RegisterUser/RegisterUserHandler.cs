@@ -1,67 +1,32 @@
-﻿using Domain.Reposiotories;
-using Application.Services.TokenService;
-using MediatR;
-using Microsoft.Extensions.Logging;
-using Application.Services.IdentityServices;
+﻿using MediatR;
+using Application.Services.Models;
+using Application.Services.AuthService;
 
 namespace Rest.Application.Features.Auth.RegisterUser
 {
     public class RegisterUserHandler : IRequestHandler<RegisterUserCommand, RegisterUserResult>
     {
-        private readonly IIdentityService _identityService;
-        private readonly ITokenService _tokenService;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly ILogger<RegisterUserHandler> _logger;
+        private readonly IAuthService _authService;
 
-        public RegisterUserHandler(IIdentityService identityService, ITokenService tokenService, IUnitOfWork unitOfWork, ILogger<RegisterUserHandler> logger)
+        public RegisterUserHandler(IAuthService authService)
         {
-            _identityService = identityService;
-            _tokenService = tokenService;
-            _unitOfWork = unitOfWork;
-            _logger = logger;
+            _authService = authService;
         }
 
         public async Task<RegisterUserResult> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
+            if (string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Password))
+            {
+                return new RegisterUserErrorResult("Email and password are required");
+            }
+
             try
             {
-                await _unitOfWork.BeginTransactionAsync(cancellationToken: cancellationToken);
-
-                var existingUser = await _identityService.FindUserByEmailAsync(request.Email);
-                if (existingUser != null)
-                {
-                    return new RegisterUserErrorResult("User with this email already exists.");
-                }
-
-                var user = await _identityService.CreateUserAsync(request.Email, request.Password, new List<string> { "User" });
-                if (user == null)
-                {
-                    return new RegisterUserErrorResult("Failed to create user.");
-                }
-
-                var roles = await _identityService.GetRolesAsync(user.Id);
-
-                var (token, tokenExpiry) = _tokenService.GenerateToken(user, roles);
-                var (refreshToken, refreshTokenExpiry) = _tokenService.GenerateRefreshToken();
-
-                await _identityService.UpdateRefreshTokenAsync(user.Id, refreshToken, refreshTokenExpiry);
-
-                await _unitOfWork.CommitTransactionAsync(cancellationToken);
-
-                return new RegisterUserSuccessResult(
-                    user.Id,
-                    token,
-                    tokenExpiry,
-                    refreshToken,
-                    refreshTokenExpiry,
-                    roles,
-                    "Registration successful.");
+                return await _authService.RegisterUserAsync(request.Email, request.Password, cancellationToken);
             }
             catch (Exception ex)
             {
-                await _unitOfWork.RollbackTransactionAsync(cancellationToken);
-                _logger.LogError(ex, "An error occurred during registration.");
-                return new RegisterUserErrorResult($"An error occurred during registration: {ex.Message}");
+                return new RegisterUserErrorResult($"An error occurred during registration");
             }
         }
     }

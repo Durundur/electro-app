@@ -1,23 +1,31 @@
-﻿using Domain.Reposiotories;
+﻿using Application.Exceptions;
+using Application.Services.ProductHierarchyService;
 using MediatR;
 
 namespace Rest.Application.Features.ProductHierarchy.GetSubCategory
 {
     public class GetSubCategoryHandler : IRequestHandler<GetSubCategoryQuery, GetSubCategoryResult>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IProductHierarchyService _productHierarchyService;
 
-        public GetSubCategoryHandler(IUnitOfWork unitOfWork)
+        public GetSubCategoryHandler(IProductHierarchyService productHierarchyService)
         {
-            _unitOfWork = unitOfWork;
+            _productHierarchyService = productHierarchyService;
         }
 
         public async Task<GetSubCategoryResult> Handle(GetSubCategoryQuery request, CancellationToken cancellationToken)
         {
-            var subCategory = await _unitOfWork.ProductHierarchyRepository.GetSubCategoryByIdAsync(request.Id, cancellationToken);
+            try
+            {
+                var subCategory = await _productHierarchyService.GetSubCategoryByIdAsync(request.Id, cancellationToken);
 
-            var result = GetSubCategoryMapper.MapToGetSubCategoryResult(subCategory);
-            return result;
+                var result = GetSubCategoryMapper.MapToGetSubCategoryResult(subCategory);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new BadRequestException($"Failed to get subcategory", ex);
+            }
         }
     }
 }

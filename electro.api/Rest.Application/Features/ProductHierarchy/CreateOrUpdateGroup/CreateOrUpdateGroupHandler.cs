@@ -1,63 +1,51 @@
-﻿using Domain.Reposiotories;
-using Domain.Aggregates.ProductHierarchyAggregate;
-using MediatR;
+﻿using MediatR;
+using Application.Services.ProductHierarchyService;
+using Application.Services.Models;
+using Application.Exceptions;
 
 namespace Rest.Application.Features.ProductHierarchy.CreateOrUpdateGroup
 {
     public class CreateOrUpdateGroupHandler : IRequestHandler<CreateOrUpdateGroupCommand, CreateOrUpdateGroupResult>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IProductHierarchyService _productHierarchyService;
 
-        public CreateOrUpdateGroupHandler(IUnitOfWork unitOfWork)
+        public CreateOrUpdateGroupHandler(IProductHierarchyService productHierarchyService)
         {
-            _unitOfWork = unitOfWork;
+            _productHierarchyService = productHierarchyService;
         }
 
         public async Task<CreateOrUpdateGroupResult> Handle(CreateOrUpdateGroupCommand command, CancellationToken cancellationToken)
         {
-            Group group;
-
-            if (command.Id.HasValue)
+            try
             {
-                group = await _unitOfWork.ProductHierarchyRepository.GetGroupByIdAsync(command.Id.Value)
-                    ?? throw new Exception($"Group with ID {command.Id} not found");
-
-                group.Update(command.Name, command.Photo, command.Icon, command.Description, command.Active, command.DisplayOrder);
-            }
-            else
-            {
-                group = new Group(command.Name, command.Photo, command.Icon, command.Description, command.Active, command.DisplayOrder);
-                await _unitOfWork.ProductHierarchyRepository.AddGroupAsync(group, cancellationToken);
-            }
-
-            var attributesToRemove = group.Attributes
-                .Where(a => !command.Attributes.Any(ac => ac.Id == a.Id && ac.Id.HasValue))
-                .ToList();
-
-            foreach (var attribute in attributesToRemove)
-            {
-                group.RemoveAttribute(attribute);
-                await _unitOfWork.AttributeDefinitionRepository.DeleteAttributeDefinitionAsync(attribute.Id, cancellationToken);
-            }
-
-            foreach (var receivedAttribute in command.Attributes)
-            {
-                var existingAttribute = group.Attributes.FirstOrDefault(a => a.Id == receivedAttribute.Id);
-
-                if (existingAttribute != null)
+                var model = new GroupModel
                 {
-                    existingAttribute.Update(receivedAttribute.Name, receivedAttribute.Type, receivedAttribute.IsRequired, receivedAttribute.Description, receivedAttribute.IsFilterable);
-                }
-                else
-                {
-                    var newAttribute = new AttributeDefinition(receivedAttribute.Name, receivedAttribute.Type, receivedAttribute.IsRequired, receivedAttribute.Description, receivedAttribute.IsFilterable);
-                    group.AddAttribute(newAttribute);
-                }
+                    Id = command.Id,
+                    Name = command.Name,
+                    Icon = command.Icon,
+                    Photo = command.Photo,
+                    Active = command.Active,
+                    Description = command.Description,
+                    DisplayOrder = command.DisplayOrder,
+                    Attributes = command.Attributes.Select(a => new AttributeDefinitionModel
+                    {
+                        Id = a.Id,
+                        Name = a.Name,
+                        Description = a.Description,
+                        IsFilterable = a.IsFilterable,
+                        IsRequired = a.IsRequired,
+                        Type = a.Type,
+                    }).ToList()
+                };
+
+                var group = await _productHierarchyService.CreateOrUpdateGroupAsync(model, cancellationToken);
+
+                return CreateOrUpdateGroupMapper.MapToCreateOrUpdateGroupResult(group);
             }
-
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-            return group.MapToCreateOrUpdateGroupResult();
+            catch (Exception ex)
+            {
+                throw new BadRequestException($"Failed to create or update group", ex);
+            }
         }
     }
 }

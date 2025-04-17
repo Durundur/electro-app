@@ -1,23 +1,31 @@
-﻿using Domain.Reposiotories;
+﻿using Application.Exceptions;
+using Application.Services.ProductHierarchyService;
 using MediatR;
 
 namespace Rest.Application.Features.ProductHierarchy.GetGroup
 {
     public class GetGroupHandler : IRequestHandler<GetGroupQuery, GetGroupResult>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IProductHierarchyService _productHierarchyService;
 
-        public GetGroupHandler(IUnitOfWork unitOfWork)
+        public GetGroupHandler(IProductHierarchyService productHierarchyService)
         {
-            _unitOfWork = unitOfWork;
+            _productHierarchyService = productHierarchyService;
         }
 
         public async Task<GetGroupResult> Handle(GetGroupQuery request, CancellationToken cancellationToken)
         {
-            var group = await _unitOfWork.ProductHierarchyRepository.GetGroupByIdAsync(request.Id, cancellationToken);
+            try
+            {
+                var group = await _productHierarchyService.GetGroupByIdAsync(request.Id, cancellationToken);
 
-            var result = GetGroupMapper.MapToGetGroupResult(group);
-            return result;
+                var result = GetGroupMapper.MapToGetGroupResult(group);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new BadRequestException($"Failed to get category", ex);
+            }
         }
     }
 }

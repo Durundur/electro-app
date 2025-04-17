@@ -4,7 +4,7 @@ namespace Rest.Application.Features.ProductHierarchy.CreateOrUpdateGroup
 {
     public static class CreateOrUpdateGroupMapper
     {
-        public static CreateOrUpdateGroupResult MapToCreateOrUpdateGroupResult(this Domain.Aggregates.ProductHierarchyAggregate.Group group)
+        public static CreateOrUpdateGroupResult MapToCreateOrUpdateGroupResult(Domain.Aggregates.ProductHierarchyAggregate.Group group)
         {
             return new CreateOrUpdateGroupResult
             {

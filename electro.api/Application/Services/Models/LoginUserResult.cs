@@ -1,4 +1,4 @@
-﻿namespace Rest.Application.Features.Auth.LoginUser
+﻿namespace Application.Services.Models
 {
     public abstract record LoginUserResult(bool Success, string Message);
 

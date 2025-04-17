@@ -1,5 +1,8 @@
-﻿using Application.Services.OpinionService;
+﻿using Application.Services.AuthService;
+using Application.Services.CartService;
+using Application.Services.OpinionService;
 using Application.Services.OrderService;
+using Application.Services.ProductHierarchyService;
 using Application.Services.ProductService;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,6 +15,9 @@ namespace Application
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IOpinionService, OpinionService>();
+            services.AddScoped<ICartService, CartService>();
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IProductHierarchyService, ProductHierarchyService>();
 
             return services;
         }

@@ -1,4 +1,4 @@
-﻿namespace Rest.Application.Features.Auth.RefreshToken
+﻿namespace Application.Services.Models
 {
     public abstract record RefreshTokenResult(bool Success, string Message);
 

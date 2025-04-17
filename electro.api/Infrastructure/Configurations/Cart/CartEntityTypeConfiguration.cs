@@ -16,6 +16,9 @@ namespace Infrastructure.Configurations.Cart
 
             builder.HasMany<D.CartAggregate.CartProduct>(c => c.Products).WithOne().OnDelete(DeleteBehavior.Cascade);
             builder.HasOne<UserIdentity>().WithOne().HasForeignKey<D.CartAggregate.Cart>(c => c.UserId);
+
+            builder.Ignore(c => c.TotalPrice);
+            builder.Ignore(c => c.TotalQuantity);
         }
     }
 }

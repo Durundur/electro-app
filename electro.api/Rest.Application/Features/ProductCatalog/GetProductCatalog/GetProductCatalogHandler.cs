@@ -14,7 +14,7 @@ namespace Rest.Application.Features.ProductCatalog.GetProductCatalog
 
         public async Task<GetProductCatalogResult> Handle(GetProductCatalogQuery request, CancellationToken cancellationToken)
         {
-            var (products, totalProducts) = await _productService.GetProductCatalog(request.Page, request.PageSize, cancellationToken);
+            var (products, totalProducts) = await _productService.GetProductCatalogAsync(request.Page, request.PageSize, cancellationToken);
 
             return new GetProductCatalogResult(
                 GetProductCatalogMapper.MapToGetProductCatalogResultProducts(products).ToList(),

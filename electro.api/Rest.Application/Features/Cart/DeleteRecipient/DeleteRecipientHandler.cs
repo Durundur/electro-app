@@ -1,29 +1,27 @@
-﻿using Domain.Reposiotories;
+﻿using Application.Exceptions;
+using Application.Services.CartService;
 using MediatR;
 
 namespace Rest.Application.Features.Cart.DeleteRecipient
 {
     public class DeleteRecipientHandler : IRequestHandler<DeleteRecipientCommand, bool>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly ICartService _cartService;
 
-        public DeleteRecipientHandler(IUnitOfWork unitOfWork)
+        public DeleteRecipientHandler(ICartService cartService)
         {
-            _unitOfWork = unitOfWork;
+            _cartService = cartService;
         }
         public async Task<bool> Handle(DeleteRecipientCommand command, CancellationToken cancellationToken)
         {
-            var recipient = await _unitOfWork.RecipientRepository.GetByIdAsync(command.Id, cancellationToken);
-
-            if (recipient == null)
+            try
             {
-                throw new Exception($"Recipient with ID {command.Id} not found");
+                return await _cartService.DeleteRecipientAsync(command.Id, command.UserId, cancellationToken);
             }
-
-            await _unitOfWork.RecipientRepository.DeleteRecipientAsync(recipient.Id, cancellationToken);
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-            return true;
+            catch (Exception ex)
+            {
+                throw new BadRequestException($"Failed to delete recipient", ex);
+            }
         }
     }
 }

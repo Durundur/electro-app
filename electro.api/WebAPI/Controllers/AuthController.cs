@@ -5,6 +5,7 @@ using Rest.Application.Features.Auth.LoginUser;
 using Rest.Application.Features.Auth.RefreshToken;
 using Rest.Application.Features.Auth.RegisterUser;
 using Rest.Application.Features.Auth.LogoutUser;
+using Application.Services.Models;
 
 namespace WebAPI.Controllers
 {

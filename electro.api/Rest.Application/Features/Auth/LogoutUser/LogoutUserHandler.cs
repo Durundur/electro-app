@@ -1,22 +1,19 @@
 using MediatR;
-using Application.Services.UserContext;
-using Microsoft.Extensions.Logging;
-using Application.Services.IdentityServices;
 using Application.Exceptions;
+using Application.Services.AuthService;
+using Application.Services.UserContext;
 
 namespace Rest.Application.Features.Auth.LogoutUser
 {
     public class LogoutUserHandler : IRequestHandler<LogoutUserCommand, bool>
     {
-        private readonly IIdentityService _identityService;
+        private readonly IAuthService _authService;
         private readonly IUserContext _userContext;
-        private readonly ILogger<LogoutUserHandler> _logger;
 
-        public LogoutUserHandler(IIdentityService identityService, IUserContext userContext, ILogger<LogoutUserHandler> logger)
+        public LogoutUserHandler(IAuthService authService, IUserContext userContext)
         {
-            _identityService = identityService;
+            _authService = authService;
             _userContext = userContext;
-            _logger = logger;
         }
 
         public async Task<bool> Handle(LogoutUserCommand request, CancellationToken cancellationToken)
@@ -28,14 +25,11 @@ namespace Rest.Application.Features.Auth.LogoutUser
                     throw new UnauthorizedException("User must be authenticated to logout.");
                 }
 
-                await _identityService.UpdateRefreshTokenAsync(_userContext.UserId, null, DateTime.MinValue);
-
-                return true;
+                return await _authService.LogoutUserAsync(_userContext.UserId, cancellationToken);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while logging out user");
-                throw new BadRequestException("An error occurred during logout.");
+                throw new BadRequestException("An error occurred during logout.", ex);
             }
         }
     }

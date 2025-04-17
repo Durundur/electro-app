@@ -11,6 +11,8 @@ namespace Domain.Aggregates.CartAggregate
         public IReadOnlyCollection<CartProduct> Products => _products.AsReadOnly();
         public DateTime CreatedAt { get; private set; }
         public DateTime UpdatedAt { get; private set; }
+        public Money TotalPrice => CalculateTotalPrice();
+        public int TotalQuantity => Products.Sum(p => p.Quantity);
 
         private Cart() 
         {
@@ -60,6 +62,11 @@ namespace Domain.Aggregates.CartAggregate
 
             _products.Remove(item);
             UpdatedAt = DateTime.UtcNow;
+        }
+
+        private Money CalculateTotalPrice()
+        {
+            return new Money(_products.Sum(p => p.CalculateSubtotal().Amount), "PLN");
         }
     }
 }

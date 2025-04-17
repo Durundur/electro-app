@@ -260,7 +260,7 @@ namespace Application.Services.ProductService
             return product;
         }
 
-        public async Task<(List<Product> Products, int TotalCount)> GetProductCatalog(int page = 1, int pageSize = 10, CancellationToken cancellationToken = default)
+        public async Task<(List<Product> Products, int TotalCount)> GetProductCatalogAsync(int page = 1, int pageSize = 10, CancellationToken cancellationToken = default)
         {
             var productsQuery = _unitOfWork.ProductRepository.GetProductsQuery().OrderBy(p => p.Name);
 

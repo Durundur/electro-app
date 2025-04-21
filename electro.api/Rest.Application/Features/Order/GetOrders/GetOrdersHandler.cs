@@ -1,4 +1,5 @@
-﻿using Application.Services.OrderService;
+﻿using Application.Exceptions;
+using Application.Services.OrderService;
 using MediatR;
 
 namespace Rest.Application.Features.Order.GetOrders
@@ -14,11 +15,18 @@ namespace Rest.Application.Features.Order.GetOrders
 
         public async Task<GetOrdersResult> Handle(GetOrdersQuery request, CancellationToken cancellationToken)
         {
-            var (orders, totalOrders) = await _orderService.GetOrdersAsync(request.Page, request.PageSize, cancellationToken);
+            try
+            {
+                var (orders, totalOrders) = await _orderService.GetOrdersAsync(request.Page, request.PageSize, cancellationToken);
 
-            var result = new GetOrdersResult(GetOrdersMapper.MapToGetOrdersResult(orders).ToList(), totalOrders, request.Page, request.PageSize);
+                var result = new GetOrdersResult(GetOrdersMapper.MapToGetOrdersResult(orders).ToList(), totalOrders, request.Page, request.PageSize);
 
-            return result;
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new BadRequestException($"Failed to get orders", ex);
+            }
         }
     }
 }

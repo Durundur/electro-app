@@ -1,4 +1,4 @@
-namespace Rest.Application.Features.Shared.Pagination
+namespace Application.Shared.Pagination
 {
     public class PaginatedResult<T>
     {

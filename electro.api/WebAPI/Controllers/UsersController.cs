@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MediatR;
-using WebAPI.Attributes;
 using Rest.Application.Features.Cart.GetRecipients;
 using Rest.Application.Features.Cart.DeleteRecipient;
 using Rest.Application.Features.Cart.CreateOrUpdateRecipient;
 using Rest.Application.Features.Cart.GetCart;
 using Rest.Application.Features.Order.GetUserOrderDetails;
 using Rest.Application.Features.Order.GetUserOrders;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebAPI.Controllers
 {
@@ -20,7 +20,7 @@ namespace WebAPI.Controllers
             _mediator = mediator;
         }
 
-        [AuthorizeOnlyForOwnerOrAdmin]
+        [Authorize]
         [HttpGet("{userId}/recipients")]
         [ProducesResponseType<GetRecipientsResult>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -30,7 +30,7 @@ namespace WebAPI.Controllers
             return Ok(response);
         }
 
-        [AuthorizeOnlyForOwnerOrAdmin]
+        [Authorize]
         [HttpPost("{userId}/recipients")]
         [ProducesResponseType<CreateOrUpdateRecipientResult>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -41,7 +41,7 @@ namespace WebAPI.Controllers
             return Ok(response);
         }
 
-        [AuthorizeOnlyForOwnerOrAdmin]
+        [Authorize]
         [HttpDelete("{userId}/recipients/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -51,7 +51,7 @@ namespace WebAPI.Controllers
             return Ok(response);
         }
 
-        [AuthorizeOnlyForOwnerOrAdmin]
+        [Authorize]
         [HttpGet("{userId}/cart")]
         [ProducesResponseType<GetCartResult>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -61,7 +61,7 @@ namespace WebAPI.Controllers
             return Ok(response);
         }
 
-        [AuthorizeOnlyForOwnerOrAdmin]
+        [Authorize]
         [HttpGet("{userId}/orders")]
         [ProducesResponseType<GetUserOrdersResult>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -77,7 +77,7 @@ namespace WebAPI.Controllers
             return Ok(response);
         }
 
-        [AuthorizeOnlyForOwnerOrAdmin]
+        [Authorize]
         [HttpGet("{userId}/orders/{orderId}")]
         [ProducesResponseType<GetUserOrderDetailsResult>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

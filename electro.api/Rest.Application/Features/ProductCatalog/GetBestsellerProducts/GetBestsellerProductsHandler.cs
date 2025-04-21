@@ -1,3 +1,4 @@
+using Application.Exceptions;
 using Application.Services.ProductService;
 using MediatR;
 
@@ -14,8 +15,15 @@ namespace Rest.Application.Features.ProductCatalog.GetBestsellerProducts
 
         public async Task<GetBestsellerProductsResult> Handle(GetBestsellerProductsQuery request, CancellationToken cancellationToken)
         {
-            var products = await _productService.GetBestsellerProductsAsync(request.Limit, cancellationToken);
-            return GetBestsellerProductsMapper.MapToGetBestsellerProductsResult(products);
+            try
+            {
+                var products = await _productService.GetBestsellerProductsAsync(request.Limit, cancellationToken);
+                return GetBestsellerProductsMapper.MapToGetBestsellerProductsResult(products);
+            }
+            catch (Exception ex)
+            {
+                throw new BadRequestException($"Failed to get bestseller products", ex);
+            }
         }
     }
 }

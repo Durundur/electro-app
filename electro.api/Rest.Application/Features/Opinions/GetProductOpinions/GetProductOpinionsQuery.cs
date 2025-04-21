@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using Rest.Application.Features.Shared.Pagination;
+using Application.Shared.Pagination;
 using System.Text.Json.Serialization;
 
 namespace Rest.Application.Features.Opinions.GetProductOpinions

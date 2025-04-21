@@ -15,20 +15,27 @@ namespace Rest.Application.Features.ProductCatalog.GetSearchFilters
 
         public async Task<GetSearchFiltersResult> Handle(GetSearchFiltersQuery request, CancellationToken cancellationToken)
         {
-            ValidateRequest(request);
-
-            var filters = await _productService.GetSearchFiltersAsync(request.GroupId, request.CategoryId, request.SubCategoryId);
-
-            return new GetSearchFiltersResult
+            try
             {
-                Filters = filters.Select(f => new GetSearchFiltersResultElement
+                ValidateRequest(request);
+
+                var filters = await _productService.GetSearchFiltersAsync(request.GroupId, request.CategoryId, request.SubCategoryId);
+
+                return new GetSearchFiltersResult
                 {
-                    AttributeDefinitionId = f.AttributeDefinitionId,
-                    Name = f.Name,
-                    Type = f.Type,
-                    Values = f.Values,
-                }).ToList(),
-            };
+                    Filters = filters.Select(f => new GetSearchFiltersResultElement
+                    {
+                        AttributeDefinitionId = f.AttributeDefinitionId,
+                        Name = f.Name,
+                        Type = f.Type,
+                        Values = f.Values,
+                    }).ToList(),
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new BadRequestException($"Failed to get search filters", ex);
+            }
         }
 
         private void ValidateRequest(GetSearchFiltersQuery request)

@@ -19,6 +19,12 @@ namespace Rest.Application.Features.Order.CreateOrder
 
         public async Task<CreateOrderResult> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
         {
+
+            if (!_userContext.IsAuthenticated)
+            {
+                throw new UnauthorizedException("User must be authenticated to create order.");
+            }
+
             try
             {
                 var orderModel = new OrderModel

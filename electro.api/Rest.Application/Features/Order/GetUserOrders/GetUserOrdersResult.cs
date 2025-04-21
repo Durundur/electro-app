@@ -1,6 +1,6 @@
 ﻿using Domain.Aggregates.OrderAggregate;
 using Domain.ValueObjects;
-using Rest.Application.Features.Shared.Pagination;
+using Application.Shared.Pagination;
 
 namespace Rest.Application.Features.Order.GetUserOrders
 {

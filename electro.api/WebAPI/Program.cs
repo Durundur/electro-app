@@ -11,9 +11,11 @@ builder.Services.ConfigureCorsPolicy();
 
 // Add services to the container
 builder.Services.AddApplicationServices();
-builder.Services.AddGraphQLServer().AddGraphqlApplicationServices();
+builder.Services.AddGraphqlApplicationServices();
 builder.Services.AddRestApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
+
+builder.Services.AddGraphQLServer();
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {

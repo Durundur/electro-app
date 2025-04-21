@@ -251,10 +251,16 @@ namespace Application.Services.ProductService
                     EF.Property<int?>(ad.AttributeDefinition, "GroupId") == groupId.Value;
             }
 
-            var productsAttributes = await productsQuery
+            var attrQuery = productsQuery
                 .SelectMany(p => p.Attributes)
-                .Where(attr => attr.AttributeDefinition.IsFilterable)
-                .Where(hierarchyCondition)
+                .Where(attr => attr.AttributeDefinition.IsFilterable);
+
+            if (hierarchyCondition is not null)
+            {
+                attrQuery = attrQuery.Where(hierarchyCondition);
+            }
+                
+            var productsAttributes = await attrQuery
                 .OrderBy(ad => ad.AttributeDefinition.Name)
                 .GroupBy(attr => attr.AttributeDefinition.Id)
                 .ToListAsync(cancellationToken);

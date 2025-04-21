@@ -1,3 +1,4 @@
+using Application.Exceptions;
 using Application.Services.ProductService;
 using MediatR;
 
@@ -14,8 +15,15 @@ namespace Rest.Application.Features.ProductCatalog.GetFeaturedProducts
 
         public async Task<GetFeaturedProductsResult> Handle(GetFeaturedProductsQuery request, CancellationToken cancellationToken)
         {
-            var products = await _productService.GetFeaturedProductsAsync(request.Limit, cancellationToken);
-            return GetFeaturedProductsMapper.MapToGetFeaturedProductsResult(products);
+            try
+            {
+                var products = await _productService.GetFeaturedProductsAsync(request.Limit, cancellationToken);
+                return GetFeaturedProductsMapper.MapToGetFeaturedProductsResult(products);
+            }
+            catch (Exception ex)
+            {
+                throw new BadRequestException($"Failed to get featured products", ex);
+            }
         }
     }
 }

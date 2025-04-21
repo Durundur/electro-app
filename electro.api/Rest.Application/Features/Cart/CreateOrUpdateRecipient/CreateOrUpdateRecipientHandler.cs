@@ -1,6 +1,7 @@
-﻿using Application.Services.CartService;
+﻿using Application.Exceptions;
+using Application.Services.CartService;
 using Application.Services.Models;
-using Domain.Aggregates.UserAggregate;
+using Application.Services.UserContext;
 using MediatR;
 
 namespace Rest.Application.Features.Cart.CreateOrUpdateRecipient
@@ -8,31 +9,45 @@ namespace Rest.Application.Features.Cart.CreateOrUpdateRecipient
     public class CreateOrUpdateRecipientHandler : IRequestHandler<CreateOrUpdateRecipientCommand, CreateOrUpdateRecipientResult>
     {
         private readonly ICartService _cartService;
+        private readonly IUserContext _userContext;
 
-        public CreateOrUpdateRecipientHandler(ICartService cartService)
+        public CreateOrUpdateRecipientHandler(ICartService cartService, IUserContext userContext)
         {
             _cartService = cartService;
+            _userContext = userContext;
         }
 
         public async Task<CreateOrUpdateRecipientResult> Handle(CreateOrUpdateRecipientCommand command, CancellationToken cancellationToken)
         {
-            var recipientModel = new RecipientModel
+            try
             {
-                FirstName = command.FirstName,
-                Surname = command.Surname,
-                CompanyName = command.CompanyName,
-                TaxIdentificationNumber = command.TaxIdentificationNumber,
-                Type = command.Type,
-                PhoneNumber = command.PhoneNumber,
-                Street = command.Street,
-                HouseNumber = command.HouseNumber,
-                PostalCode = command.PostalCode,
-                City = command.City
-            };
+                if (!_userContext.IsAdmin || _userContext.IsAuthenticated && command.UserId != _userContext.UserId)
+                {
+                    throw new UnauthorizedException("You do not have permission to access this recipients.");
+                }
 
-            var recipient = await _cartService.CreateOrUpdateRecipientAsync(recipientModel, command.Id, command.UserId,  cancellationToken);
+                var recipientModel = new RecipientModel
+                {
+                    FirstName = command.FirstName,
+                    Surname = command.Surname,
+                    CompanyName = command.CompanyName,
+                    TaxIdentificationNumber = command.TaxIdentificationNumber,
+                    Type = command.Type,
+                    PhoneNumber = command.PhoneNumber,
+                    Street = command.Street,
+                    HouseNumber = command.HouseNumber,
+                    PostalCode = command.PostalCode,
+                    City = command.City
+                };
 
-            return CreateOrUpdateRecipientMapper.MapToCreateOrUpdateRecipientResult(recipient);
+                var recipient = await _cartService.CreateOrUpdateRecipientAsync(recipientModel, command.Id, command.UserId, cancellationToken);
+
+                return CreateOrUpdateRecipientMapper.MapToCreateOrUpdateRecipientResult(recipient);
+            }
+            catch (Exception ex)
+            {
+                throw new BadRequestException($"Failed to create or update recipient", ex);
+            }
         }
     }
 }

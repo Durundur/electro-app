@@ -1,17 +1,25 @@
-﻿using Graphql.Application.Queries;
-using HotChocolate.Execution.Configuration;
+﻿using Graphql.Application.Mutations;
+using Graphql.Application.Mutations.Types;
+using Graphql.Application.Queries;
+using Graphql.Application.Queries.Types;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Graphql.Application
 {
     public static class GraphqlApplicationServices
     {
-        public static IRequestExecutorBuilder AddGraphqlApplicationServices(this IRequestExecutorBuilder builder)
+        public static IServiceCollection AddGraphqlApplicationServices(this IServiceCollection services)
         {
-            builder
-                .AddQueryType<QueryType>();
+            services
+                .AddGraphQL()
+                .AddAuthorization()
+                .AddQueryType<QueryType>()
+                .AddMutationType<MutationType>()
+                .AddMutationTypes()
+                .AddQueriesTypes();
 
-            return builder;
+
+            return services;
         }
     }
 }

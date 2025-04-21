@@ -1,4 +1,5 @@
-﻿using Application.Services.ProductService;
+﻿using Application.Exceptions;
+using Application.Services.ProductService;
 using MediatR;
 
 namespace Rest.Application.Features.ProductCatalog.GetProductCatalog
@@ -14,14 +15,21 @@ namespace Rest.Application.Features.ProductCatalog.GetProductCatalog
 
         public async Task<GetProductCatalogResult> Handle(GetProductCatalogQuery request, CancellationToken cancellationToken)
         {
-            var (products, totalProducts) = await _productService.GetProductCatalogAsync(request.Page, request.PageSize, cancellationToken);
+            try
+            {
+                var (products, totalProducts) = await _productService.GetProductCatalogAsync(request.Page, request.PageSize, cancellationToken);
 
-            return new GetProductCatalogResult(
-                GetProductCatalogMapper.MapToGetProductCatalogResultProducts(products).ToList(),
-                totalProducts,
-                request.Page,
-                request.PageSize
-            );
+                return new GetProductCatalogResult(
+                    GetProductCatalogMapper.MapToGetProductCatalogResultProducts(products).ToList(),
+                    totalProducts,
+                    request.Page,
+                    request.PageSize
+                );
+            }
+            catch (Exception ex)
+            {
+                throw new BadRequestException($"Failed to get product catalog", ex);
+            }
         }
     }
 }

@@ -4,7 +4,6 @@ using Application.Services.Models;
 using Application.Services.TokenService;
 using Domain.Reposiotories;
 using System.Security.Claims;
-using System.Threading;
 
 namespace Application.Services.AuthService
 {
@@ -20,7 +19,6 @@ namespace Application.Services.AuthService
             _tokenService = tokenService;
             _unitOfWork = unitOfWork;
         }
-
 
         public async Task<LoginUserResult> LoginUserAsync(string email, string password, CancellationToken cancellationToken)
         {

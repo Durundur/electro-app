@@ -1,6 +1,6 @@
 ﻿using Domain.Aggregates.ProductCatalogAggregate;
 using Domain.ValueObjects;
-using Rest.Application.Features.Shared.Pagination;
+using Application.Shared.Pagination;
 using Rest.Application.Features.Shared.ProductAttribute;
 
 namespace Rest.Application.Features.ProductCatalog.GetSearchProducts

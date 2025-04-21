@@ -1,5 +1,5 @@
-﻿using MediatR;
-using Rest.Application.Features.Shared.Pagination;
+﻿using Application.Shared.Pagination;
+using MediatR;
 
 namespace Rest.Application.Features.ProductCatalog.GetProductCatalog
 {

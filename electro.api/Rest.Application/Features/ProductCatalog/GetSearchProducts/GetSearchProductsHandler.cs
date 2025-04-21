@@ -1,4 +1,5 @@
-﻿using Application.Services.ProductService;
+﻿using Application.Exceptions;
+using Application.Services.ProductService;
 using MediatR;
 
 namespace Rest.Application.Features.ProductCatalog.GetSearchProducts
@@ -14,10 +15,16 @@ namespace Rest.Application.Features.ProductCatalog.GetSearchProducts
 
         public async Task<GetSearchProductsResult> Handle(GetSearchProductsQuery request, CancellationToken cancellationToken)
         {
-            var (products, totalProducts) = await _productService.GetSearchProductsAsync(
-                request.Filters, request.GroupId, request.CategoryId, request.SubCategoryId, request.Page, request.PageSize, cancellationToken);
+            try
+            {
+                var (products, totalProducts) = await _productService.GetSearchProductsAsync(request.Filters, request.GroupId, request.CategoryId, request.SubCategoryId, request.Page, request.PageSize, cancellationToken);
 
-            return GetSearchProductsMapper.MapToGetSearchProductsResult(products, totalProducts, request.Page, request.PageSize);
+                return GetSearchProductsMapper.MapToGetSearchProductsResult(products, totalProducts, request.Page, request.PageSize);
+            }
+            catch (Exception ex)
+            {
+                throw new BadRequestException($"Failed to get search products", ex);
+            }
         }
     }
 }

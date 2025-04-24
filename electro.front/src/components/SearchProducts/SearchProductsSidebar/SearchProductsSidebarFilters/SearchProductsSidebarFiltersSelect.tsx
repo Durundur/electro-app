@@ -1,4 +1,4 @@
-import { GetSearchFiltersResultElement } from "@/libs/api-contract/api-contract";
+import { GetSearchFiltersResultElement } from "@/libs/api-contract/rest-api-contract";
 import { Box, Checkbox, Collapse, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Stack, Typography, Button } from "@mui/material";
 import { FC, useState } from "react";
 import { AddOutlined, RemoveOutlined } from "@mui/icons-material";

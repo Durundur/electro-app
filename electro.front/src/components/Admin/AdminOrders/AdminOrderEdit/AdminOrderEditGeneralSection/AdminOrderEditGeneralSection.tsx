@@ -1,7 +1,7 @@
 import { UpdateOrderCommandFlat } from "@/app/(admin)/admin/orders/[id]/edit/page";
 import EditSectionLayout from "@/components/Layout/EditSectionLayout/EditSectionLayout";
 import { translateOrderStatus } from "@/libs/Helpers/Translations/OrdersTranslations";
-import { OrderStatus } from "@/libs/api-contract/api-contract";
+import { OrderStatus } from "@/libs/api-contract/rest-api-contract";
 import { FormControl, FormLabel, Grid2, MenuItem, Select, Typography } from "@mui/material";
 import { FormikProps } from "formik";
 import { FC } from "react";

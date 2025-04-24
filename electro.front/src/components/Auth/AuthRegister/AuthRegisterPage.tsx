@@ -6,7 +6,7 @@ import Link from "next/link";
 import AuthAccountBenefits from "@/components/Shared/Auth/AuthAccountBenefits";
 import { Formik, FormikHelpers } from "formik";
 import { useDispatch, useSelector } from "@/libs/Store";
-import { RegisterUserCommand } from "@/libs/api-contract/api-contract";
+import { RegisterUserCommand } from "@/libs/api-contract/rest-api-contract";
 import { registerUser } from "@/libs/Auth/thunks";
 import * as Yup from "yup";
 import { useRouter } from "next/navigation";

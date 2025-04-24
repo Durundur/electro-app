@@ -1,4 +1,4 @@
-import { CreateOrUpdateProductCommandAttributeDefinitionValue, ProductStatus } from "@/libs/api-contract/api-contract";
+import { CreateOrUpdateProductCommandAttributeDefinitionValue, ProductStatus } from "@/libs/api-contract/rest-api-contract";
 
 export interface IGetAttributesDefinitionsQuery {
 	groupId?: number;

@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { Masonry } from "@mui/lab";
 import OpinionCard from "./OpinionCard";
-import { GetProductOpinionsResultOpinion } from "@/libs/api-contract/api-contract";
+import { GetProductOpinionsResultOpinion } from "@/libs/api-contract/rest-api-contract";
 import { Pagination, Stack } from "@mui/material";
 
 interface OpinionsWallProps {

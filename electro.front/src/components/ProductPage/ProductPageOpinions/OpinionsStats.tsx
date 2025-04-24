@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { Box, Typography, Rating, LinearProgress, Grid2 as Grid } from "@mui/material";
-import { OpinionsStats as IOpinionsStats } from "@/libs/api-contract/api-contract";
+import { OpinionsStats as IOpinionsStats } from "@/libs/api-contract/rest-api-contract";
 
 interface OpinionsStatsProps {
 	opinionsStats: IOpinionsStats[];
@@ -11,7 +11,6 @@ interface OpinionsStatsProps {
 }
 
 const OpinionsStats: FC<OpinionsStatsProps> = ({ opinionsStats, avgOpinionsRating, opinionsCount, onRatingChnage, selectedRating }) => {
-
 	const toggleRatingFilter = (rating: number) => {
 		if (selectedRating === rating) {
 			onRatingChnage(undefined);

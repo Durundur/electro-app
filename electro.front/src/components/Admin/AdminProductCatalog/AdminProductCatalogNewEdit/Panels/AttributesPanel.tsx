@@ -4,7 +4,7 @@ import { Accordion, AccordionDetails, AccordionSummary, Checkbox, Typography } f
 import { ExpandMoreRounded } from "@mui/icons-material";
 import { useDispatch, useSelector } from "@/libs/Store";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { AttributeDefinitionResult } from "@/libs/api-contract/api-contract";
+import { AttributeDefinitionResult } from "@/libs/api-contract/rest-api-contract";
 import { fetchAttributesDefinitions } from "@/libs/Admin/AdminProductCatalog/AdminProductCatalogNewEdit/thunk";
 import { clearAttributesDefinitionsState } from "@/libs/Admin/AdminProductCatalog/AdminProductCatalogNewEdit/slice";
 import { translateAttributeType } from "@/libs/Helpers/Translations/AttributesTranslations";

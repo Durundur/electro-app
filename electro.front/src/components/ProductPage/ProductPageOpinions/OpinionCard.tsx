@@ -1,6 +1,6 @@
 import { createOpinionReaction } from "@/libs/ProductPage/thunk";
 import { useDispatch, useSelector } from "@/libs/Store";
-import { GetProductOpinionsResultOpinion, OpinionReactionType } from "@/libs/api-contract/api-contract";
+import { GetProductOpinionsResultOpinion, OpinionReactionType } from "@/libs/api-contract/rest-api-contract";
 import { PersonOutlineRounded, CheckCircle, ThumbDown, ThumbUp } from "@mui/icons-material";
 import { Box, Card, CardHeader, Rating, Typography, CardContent, Stack, Button } from "@mui/material";
 import { FC } from "react";

@@ -6,7 +6,7 @@ import * as yup from "yup";
 import CategoryGeneralInfoPanel from "./CategoryGeneralInfoPanel";
 import { useDispatch, useSelector } from "@/libs/Store";
 
-import { AttributeDefinitionCommand, CreateOrUpdateCategoryCommand, GetCategoryResult } from "@/libs/api-contract/api-contract";
+import { AttributeDefinitionCommand, CreateOrUpdateCategoryCommand, GetCategoryResult } from "@/libs/api-contract/rest-api-contract";
 import AttributeDefinitionPanel from "../AttributeDefinition/AttributeDefinitionPanel";
 import { createOrUpdateCategory, deleteCategory, fetchCategory } from "@/libs/Admin/AdminProductHierarchy/thunk";
 import { addCategoryAttribute, clearCategory, deleteCategoryAttribute, setSelectedItem, updateCategoryAttribute } from "@/libs/Admin/AdminProductHierarchy/slice";

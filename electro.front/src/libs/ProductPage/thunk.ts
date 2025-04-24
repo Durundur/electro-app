@@ -20,7 +20,16 @@ import {
 	getSimilarProductsSuccess,
 	updateOpinionReaction,
 } from "./slice";
-import { CreateOpinionCommand, CreateOpinionReactionResult, CreateOpinionResult, GetProductOpinionsResult, GetProductOpinionsStatsResult, GetProductResult, GetSimilarProductsResult, OpinionReactionType } from "@/libs/api-contract/api-contract";
+import {
+	CreateOpinionCommand,
+	CreateOpinionReactionResult,
+	CreateOpinionResult,
+	GetProductOpinionsResult,
+	GetProductOpinionsStatsResult,
+	GetProductResult,
+	GetSimilarProductsResult,
+	OpinionReactionType,
+} from "@/libs/api-contract/rest-api-contract";
 import { createError } from "@/libs/api-contract/Error";
 import ApiClient from "../api-contract/ApiClient";
 import { buildQueryString } from "../Helpers/QueryHelper";

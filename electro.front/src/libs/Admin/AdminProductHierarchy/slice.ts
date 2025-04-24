@@ -8,7 +8,7 @@ import {
 	GetCategoryResult,
 	GetGroupResult,
 	GetSubCategoryResult,
-} from "@/libs/api-contract/api-contract";
+} from "@/libs/api-contract/rest-api-contract";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface IProductHierarchyState {

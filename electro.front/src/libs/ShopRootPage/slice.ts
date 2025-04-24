@@ -1,6 +1,6 @@
 import { IError } from "@/libs/api-contract/Error";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { GetBestsellerProductsResult, GetFeaturedProductsResult, GetPromotionHighlightResult } from "../api-contract/api-contract";
+import { GetBestsellerProductsResult, GetFeaturedProductsResult, GetPromotionHighlightResult } from "../api-contract/rest-api-contract";
 
 interface IShopRootPageState {
 	bestsellers: IShopRootPageBestsellersState;
@@ -21,9 +21,9 @@ interface IShopRootPageFeaturedState {
 }
 
 interface IShopRootPagePromotionHighlightState {
-    data?: GetPromotionHighlightResult;
-    error?: IError;
-    isLoading: boolean;
+	data?: GetPromotionHighlightResult;
+	error?: IError;
+	isLoading: boolean;
 }
 
 const initialState: IShopRootPageState = {

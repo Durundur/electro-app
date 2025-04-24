@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IError } from "../api-contract/Error";
-import { LoginUserSuccessResult, RefreshTokenSuccessResult, RegisterUserSuccessResult } from "../api-contract/api-contract";
+import { LoginUserSuccessResult, RefreshTokenSuccessResult, RegisterUserSuccessResult } from "../api-contract/rest-api-contract";
 
 interface AuthStore {
 	auth: AuthState;

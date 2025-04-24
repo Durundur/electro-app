@@ -1,4 +1,4 @@
-import { Recipient, RecipientType } from "@/libs/api-contract/api-contract";
+import { Recipient, RecipientType } from "@/libs/api-contract/rest-api-contract";
 import { Stack, Typography } from "@mui/material";
 import { FC } from "react";
 

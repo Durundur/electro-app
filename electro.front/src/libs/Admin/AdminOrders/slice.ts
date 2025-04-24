@@ -1,5 +1,5 @@
 import { IError } from "@/libs/api-contract/Error";
-import { GetOrderDetailsResult, GetOrdersResult, UpdateOrderResult } from "@/libs/api-contract/api-contract";
+import { GetOrderDetailsResult, GetOrdersResult, UpdateOrderResult } from "@/libs/api-contract/rest-api-contract";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface IAdminOrdersState {

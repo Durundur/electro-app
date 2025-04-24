@@ -1,5 +1,5 @@
 import { translateOrderStatus } from "@/libs/Helpers/Translations/OrdersTranslations";
-import { OrderStatus } from "@/libs/api-contract/api-contract";
+import { OrderStatus } from "@/libs/api-contract/rest-api-contract";
 import { Button, Chip, Stack, Typography } from "@mui/material";
 import { FC } from "react";
 

@@ -1,5 +1,5 @@
 import { formatAmount } from "@/libs/Helpers/Formatters";
-import { Money } from "@/libs/api-contract/api-contract";
+import { Money } from "@/libs/api-contract/rest-api-contract";
 import { Stack, Typography } from "@mui/material";
 import { FC } from "react";
 

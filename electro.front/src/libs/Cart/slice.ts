@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { CreateOrderResult, CreateOrUpdateRecipientResult, GetCartResult, GetRecipientsResult, GetRecipientsResultItem } from "../api-contract/api-contract";
+import { CreateOrderResult, CreateOrUpdateRecipientResult, GetCartResult, GetRecipientsResult, GetRecipientsResultItem } from "../api-contract/rest-api-contract";
 import { DeliveryOption, PaymentOption } from "./interfaces";
 import { IError } from "../api-contract/Error";
 

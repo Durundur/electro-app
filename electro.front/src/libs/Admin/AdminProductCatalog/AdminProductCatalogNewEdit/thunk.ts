@@ -13,7 +13,7 @@ import {
 	saveActionStart,
 	saveActionSuccess,
 } from "./slice";
-import { CreateOrUpdateProductCommand, CreateOrUpdateProductResult, GetAllProductHierarchyResult, GetAttributesDefinitionsResult, GetProductResult } from "@/libs/api-contract/api-contract";
+import { CreateOrUpdateProductCommand, CreateOrUpdateProductResult, GetAllProductHierarchyResult, GetAttributesDefinitionsResult, GetProductResult } from "@/libs/api-contract/rest-api-contract";
 import { createError } from "@/libs/api-contract/Error";
 import { buildQueryString } from "@/libs/Helpers/QueryHelper";
 import ApiClient from "@/libs/api-contract/ApiClient";

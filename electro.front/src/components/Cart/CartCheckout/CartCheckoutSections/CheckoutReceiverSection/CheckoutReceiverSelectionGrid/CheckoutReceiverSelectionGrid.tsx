@@ -1,7 +1,7 @@
 import { Box, Button, FormHelperText, Grid2, Stack } from "@mui/material";
 import { FC } from "react";
 import CheckoutReceiverSectionGridItem from "./CheckoutReceiverSectionGridItem/CheckoutReceiverSectionCard";
-import { GetRecipientsResultItem } from "@/libs/api-contract/api-contract";
+import { GetRecipientsResultItem } from "@/libs/api-contract/rest-api-contract";
 import { useSelector } from "@/libs/Store";
 
 interface CheckoutReceiverSelectionGridProps {

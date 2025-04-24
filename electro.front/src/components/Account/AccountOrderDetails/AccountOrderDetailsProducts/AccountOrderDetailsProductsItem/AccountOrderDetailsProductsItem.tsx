@@ -1,5 +1,5 @@
 import { formatAmount } from "@/libs/Helpers/Formatters";
-import { GetUserOrderDetailsResultProduct } from "@/libs/api-contract/api-contract";
+import { GetUserOrderDetailsResultProduct } from "@/libs/api-contract/rest-api-contract";
 import { Box, Card, CardActionArea, CardContent, CardMedia, Grid2, Stack, Typography } from "@mui/material";
 import Link from "next/link";
 import { FC } from "react";

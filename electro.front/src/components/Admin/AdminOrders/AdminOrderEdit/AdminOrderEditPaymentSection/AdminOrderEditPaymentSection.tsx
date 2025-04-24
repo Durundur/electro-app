@@ -2,7 +2,7 @@ import EditSectionLayout from "@/components/Layout/EditSectionLayout/EditSection
 import SelectInput from "@/components/Shared/SelectInput/SelectInput";
 import { translatePaymentMethod, translatePaymentStatus } from "@/libs/Helpers/Translations/OrdersTranslations";
 import { useSelector } from "@/libs/Store";
-import { PaymentMethod, PaymentStatus } from "@/libs/api-contract/api-contract";
+import { PaymentMethod, PaymentStatus } from "@/libs/api-contract/rest-api-contract";
 import { Grid2, MenuItem } from "@mui/material";
 import { FC } from "react";
 

@@ -1,7 +1,7 @@
 import { AppDispatch } from "../Store";
 import ApiClient from "../api-contract/ApiClient";
 import { IError, createError } from "../api-contract/Error";
-import { LoginUserCommand, LoginUserSuccessResult, RefreshTokenCommand, RefreshTokenSuccessResult, RegisterUserCommand, RegisterUserSuccessResult } from "../api-contract/api-contract";
+import { LoginUserCommand, LoginUserSuccessResult, RefreshTokenCommand, RefreshTokenSuccessResult, RegisterUserCommand, RegisterUserSuccessResult } from "../api-contract/rest-api-contract";
 import { authErrorSet, authLoadingStart, loginUserSuccess, logout, refreshTokenSuccess, registerUserSuccess } from "./slice";
 
 export const registerUser = (command: RegisterUserCommand) => async (dispatch: AppDispatch) => {

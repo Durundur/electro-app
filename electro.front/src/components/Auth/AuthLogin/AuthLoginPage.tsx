@@ -5,7 +5,7 @@ import { EmailOutlined, LockOutlined, Visibility, VisibilityOff } from "@mui/ico
 import Link from "next/link";
 import AuthAccountBenefits from "@/components/Shared/Auth/AuthAccountBenefits";
 import { useDispatch, useSelector } from "@/libs/Store";
-import { LoginUserCommand } from "@/libs/api-contract/api-contract";
+import { LoginUserCommand } from "@/libs/api-contract/rest-api-contract";
 import { loginUser } from "@/libs/Auth/thunks";
 import { Formik, FormikHelpers } from "formik";
 import * as Yup from "yup";

@@ -2,7 +2,7 @@ import { Button, FormControlLabel, Grid2, Radio, RadioGroup, Stack, TextField } 
 import { Formik, FormikProps } from "formik";
 import * as Yup from "yup";
 import { FC, useState } from "react";
-import { CreateOrUpdateRecipientCommand, GetRecipientsResultItem, RecipientType } from "@/libs/api-contract/api-contract";
+import { CreateOrUpdateRecipientCommand, GetRecipientsResultItem, RecipientType } from "@/libs/api-contract/rest-api-contract";
 import { useDispatch, useSelector } from "@/libs/Store";
 import { createOrUpdateRecipient } from "@/libs/Cart/thunks";
 import TextInput from "@/components/Shared/TextInput/TextInput";

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { GetMenuResult } from "../api-contract/api-contract";
+import { GetMenuResult } from "../api-contract/rest-api-contract";
 import { IError } from "../api-contract/Error";
 import { Breadcrumb } from "@/hooks/Breadcrumbs/useBreadcrumbs";
 

@@ -1,4 +1,4 @@
-import { ProductAttributeResult } from "@/libs/api-contract/api-contract";
+import { ProductAttributeResult } from "@/libs/api-contract/rest-api-contract";
 import { Table, TableBody, TableCell, TableContainer, TableRow } from "@mui/material";
 import { FC } from "react";
 

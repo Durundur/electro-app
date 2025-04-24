@@ -10,7 +10,7 @@ import { usePermissionGuard } from "@/hooks/PermissionGuard/usePermissionGuard";
 import { clearAdminOrderDetailsState, clearAdminOrderEditState } from "@/libs/Admin/AdminOrders/slice";
 import { getAdminOrderEdit, putAdminOrderEdit } from "@/libs/Admin/AdminOrders/thunk";
 import { useDispatch, useSelector } from "@/libs/Store";
-import { OrderStatus, RecipientType, UpdateOrderCommand } from "@/libs/api-contract/api-contract";
+import { OrderStatus, RecipientType, UpdateOrderCommand } from "@/libs/api-contract/rest-api-contract";
 import { Button, Stack } from "@mui/material";
 import { Formik } from "formik";
 import Link from "next/link";

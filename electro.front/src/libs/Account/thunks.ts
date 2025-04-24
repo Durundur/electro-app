@@ -2,7 +2,7 @@ import { buildQueryString } from "../Helpers/QueryHelper";
 import { AppDispatch } from "../Store";
 import ApiClient from "../api-contract/ApiClient";
 import { IError, createError } from "../api-contract/Error";
-import { GetUserOrderDetailsResult, GetUserOrdersResult } from "../api-contract/api-contract";
+import { GetUserOrderDetailsResult, GetUserOrdersResult } from "../api-contract/rest-api-contract";
 import { getAccountOrderDetailsError, getAccountOrderDetailsStart, getAccountOrderDetailsSuccess, getAccountOrdersError, getAccountOrdersStart, getAccountOrdersSuccess } from "./slice";
 
 export interface IGetAccountOrdersQueryParams {

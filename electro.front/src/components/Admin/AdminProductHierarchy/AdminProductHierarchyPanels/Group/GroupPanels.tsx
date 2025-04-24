@@ -6,7 +6,7 @@ import { FC, useEffect } from "react";
 import GroupGeneralInfoPanel from "./GroupGeneralInfoPanel";
 import { useDispatch, useSelector } from "@/libs/Store";
 
-import { AttributeDefinitionCommand, CreateOrUpdateGroupCommand, GetGroupResult } from "@/libs/api-contract/api-contract";
+import { AttributeDefinitionCommand, CreateOrUpdateGroupCommand, GetGroupResult } from "@/libs/api-contract/rest-api-contract";
 import AttributeDefinitionPanel from "../AttributeDefinition/AttributeDefinitionPanel";
 import { createOrUpdateGroup, deleteGroup, fetchGroup } from "@/libs/Admin/AdminProductHierarchy/thunk";
 import { addGroupAttribute, clearGroup, deleteGroupAttribute, setSelectedItem, updateGroupAttribute } from "@/libs/Admin/AdminProductHierarchy/slice";

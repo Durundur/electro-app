@@ -1,4 +1,4 @@
-import { DeliveryMethod, DeliveryStatus, OrderStatus, PaymentMethod, PaymentStatus } from "@/libs/api-contract/api-contract";
+import { DeliveryMethod, DeliveryStatus, OrderStatus, PaymentMethod, PaymentStatus } from "@/libs/api-contract/rest-api-contract";
 
 export const translateOrderStatus = (orderStatus: OrderStatus): string => {
 	const orderStatusMap: { [key in OrderStatus]: string } = {

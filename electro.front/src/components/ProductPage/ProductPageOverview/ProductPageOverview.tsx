@@ -3,7 +3,7 @@ import { Grid2 as Grid, Stack, Typography, Rating, Button } from "@mui/material"
 import { KeyboardDoubleArrowDownRounded, StarBorderRounded } from "@mui/icons-material";
 import ProductPageSlider from "./ProductPageSlider/ProductPageSlider";
 import ProductPageSpecificationPrimary from "../ProductPageSpecification/ProductPageSpecificationPrimary";
-import { GetProductResult } from "@/libs/api-contract/api-contract";
+import { GetProductResult } from "@/libs/api-contract/rest-api-contract";
 import ProductPageActionCard from "./ProductPageActionCard/ProductPageActionCard";
 import useScrollTo from "@/hooks/ScrollTo/useScrollTo";
 

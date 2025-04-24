@@ -1,4 +1,4 @@
-import { GetProductCatalogResult } from "@/libs/api-contract/api-contract";
+import { GetProductCatalogResult } from "@/libs/api-contract/rest-api-contract";
 import { IconButton, Typography } from "@mui/material";
 import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid";
 import { FC } from "react";

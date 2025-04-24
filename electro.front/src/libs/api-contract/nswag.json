@@ -3,9 +3,9 @@
   "defaultVariables": null,
   "documentGenerator": {
     "fromDocument": {
-      "json": "swagger.json",
+      "json": "src/libs/api-contract/swagger.json",
       "url": "http://redocly.github.io/redoc/openapi.yaml",
-      "output": "api-contract.ts",
+      "output": "rest-api-contract.ts",
       "newLineBehavior": "Auto"
     }
   },
@@ -65,7 +65,7 @@
       "templateDirectory": null,
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": "api-contract.ts",
+      "output": "rest-api-contract.ts",
       "newLineBehavior": "Auto"
     }
   }

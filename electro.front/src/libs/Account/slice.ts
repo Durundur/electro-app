@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IError } from "../api-contract/Error";
-import { GetUserOrderDetailsResult, GetUserOrdersResult } from "../api-contract/api-contract";
+import { GetUserOrderDetailsResult, GetUserOrdersResult } from "../api-contract/rest-api-contract";
 
 interface AccountStore {
 	list: AccountOrderListState;

@@ -9,6 +9,7 @@ import { PageTransitionProvider } from "@/contexts/PageTransition/PageTransition
 import PageTransition from "@/components/Layout/PageTransition/PageTransition";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { ApiTypeProvider } from "@/contexts/ApiType/ApiTypeContext";
 
 const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
 	return (
@@ -21,17 +22,19 @@ const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
 			<body>
 				<AppRouterCacheProvider>
 					<ReduxProvider>
-						<AuthProvider>
-							<CartProvider>
-								<Theme>
-									<LocalizationProvider dateAdapter={AdapterDayjs}>
-										<PageTransitionProvider>
-											<PageTransition>{children}</PageTransition>
-										</PageTransitionProvider>
-									</LocalizationProvider>
-								</Theme>
-							</CartProvider>
-						</AuthProvider>
+						<ApiTypeProvider>
+							<AuthProvider>
+								<CartProvider>
+									<Theme>
+										<LocalizationProvider dateAdapter={AdapterDayjs}>
+											<PageTransitionProvider>
+												<PageTransition>{children}</PageTransition>
+											</PageTransitionProvider>
+										</LocalizationProvider>
+									</Theme>
+								</CartProvider>
+							</AuthProvider>
+						</ApiTypeProvider>
 					</ReduxProvider>
 				</AppRouterCacheProvider>
 			</body>

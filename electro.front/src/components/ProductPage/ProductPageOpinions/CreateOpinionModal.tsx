@@ -2,7 +2,7 @@ import { FC, useEffect } from "react";
 import { Dialog, DialogTitle, DialogContent, Button, Rating, Box, Typography, IconButton, Stack } from "@mui/material";
 import { Close } from "@mui/icons-material";
 import * as yup from "yup";
-import { CreateOpinionCommand } from "@/libs/api-contract/api-contract";
+import { CreateOpinionCommand } from "@/libs/api-contract/rest-api-contract";
 import { useDispatch, useSelector } from "@/libs/Store";
 import { Formik } from "formik";
 import TextInput from "@/components/Shared/TextInput/TextInput";
@@ -55,13 +55,13 @@ const CreateOpinionModal: FC<CreateOpinionModalProps> = ({ open, onClose, produc
 		}
 	}, [createOpinionSelector, createOpinionIsLoadingSelector, createOpinionErrorSelector]);
 
-    useEffect(() => {
-        if (!isLoggedIn) onClose();
-        
-        return () => {
-            dispatch(clearCreateOpinionState());
-        };
-    }, [open, isLoggedIn]);
+	useEffect(() => {
+		if (!isLoggedIn) onClose();
+
+		return () => {
+			dispatch(clearCreateOpinionState());
+		};
+	}, [open, isLoggedIn]);
 
 	return (
 		<Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>

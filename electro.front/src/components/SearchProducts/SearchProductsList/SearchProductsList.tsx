@@ -7,7 +7,7 @@ import SearchProductsListFilters from "./SearchProductsListFilters";
 import SearchProductsListPagination from "./SearchProductsListPagination";
 import SearchProductsListNoRecords from "./SearchProductsListNoRecords/SearchProductsListNoRecords";
 import { ISearchProductsStateUrlParamsFilters } from "@/libs/SearchProducts/interfaces";
-import { GetSearchFiltersResultElement } from "@/libs/api-contract/api-contract";
+import { GetSearchFiltersResultElement } from "@/libs/api-contract/rest-api-contract";
 
 const SearchProductsList: FC = () => {
 	const dispatch = useDispatch();

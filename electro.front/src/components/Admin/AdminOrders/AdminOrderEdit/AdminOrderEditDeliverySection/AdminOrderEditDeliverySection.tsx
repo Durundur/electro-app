@@ -4,7 +4,7 @@ import SelectInput from "@/components/Shared/SelectInput/SelectInput";
 import TextInput from "@/components/Shared/TextInput/TextInput";
 import { translateDeliveryMethod, translateDeliveryStatus } from "@/libs/Helpers/Translations/OrdersTranslations";
 import { useSelector } from "@/libs/Store";
-import { DeliveryMethod, DeliveryStatus } from "@/libs/api-contract/api-contract";
+import { DeliveryMethod, DeliveryStatus } from "@/libs/api-contract/rest-api-contract";
 import { Grid2, MenuItem } from "@mui/material";
 import { FormikProps } from "formik";
 import { FC } from "react";

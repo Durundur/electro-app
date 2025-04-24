@@ -1,13 +1,13 @@
 import { IError } from "@/libs/api-contract/Error";
-import { CreateOpinionResult, GetProductOpinionsResult, GetProductOpinionsStatsResult, GetProductResult, GetSimilarProductsResult, OpinionReactionType } from "@/libs/api-contract/api-contract";
+import { CreateOpinionResult, GetProductOpinionsResult, GetProductOpinionsStatsResult, GetProductResult, GetSimilarProductsResult, OpinionReactionType } from "@/libs/api-contract/rest-api-contract";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 interface IProductPageState {
 	product: IProductState;
 	opinions: IOpinionsState;
 	opinionsStats: IOpinionsStatsState;
-    createOpinion: ICreateOpinionState;
-    createOpinionReaction: ICreateOpinionReactionState;
+	createOpinion: ICreateOpinionState;
+	createOpinionReaction: ICreateOpinionReactionState;
 	similarProducts: ISimilarProductsState;
 }
 
@@ -152,18 +152,16 @@ const ProductPageStore = createSlice({
 			state.createOpinionReaction.error = undefined;
 			state.createOpinionReaction.isLoading = false;
 		},
-		updateOpinionReaction(state, action: PayloadAction<{ opinionId: string, reactionType: OpinionReactionType, likesCount: number, dislikesCount: number }>) {
-            if (state.opinions.data?.items) {
-                const opinion = state.opinions.data.items.find(
-                    o => o.id === action.payload.opinionId
-                );
-                if (opinion) {
-                    opinion.reactionType = action.payload.reactionType;
-                    opinion.likesCount = action.payload.likesCount;
-                    opinion.dislikesCount = action.payload.dislikesCount;
-                }
-            }
-        },
+		updateOpinionReaction(state, action: PayloadAction<{ opinionId: string; reactionType: OpinionReactionType; likesCount: number; dislikesCount: number }>) {
+			if (state.opinions.data?.items) {
+				const opinion = state.opinions.data.items.find((o) => o.id === action.payload.opinionId);
+				if (opinion) {
+					opinion.reactionType = action.payload.reactionType;
+					opinion.likesCount = action.payload.likesCount;
+					opinion.dislikesCount = action.payload.dislikesCount;
+				}
+			}
+		},
 		createOpinionStart(state) {
 			state.createOpinion.isLoading = true;
 			state.createOpinion.error = undefined;

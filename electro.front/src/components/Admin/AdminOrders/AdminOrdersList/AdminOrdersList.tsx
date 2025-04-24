@@ -1,6 +1,6 @@
 import { translateOrderStatus } from "@/libs/Helpers/Translations/OrdersTranslations";
 import { formatAmount } from "@/libs/Helpers/Formatters";
-import { GetOrdersResult, OrderStatus } from "@/libs/api-contract/api-contract";
+import { GetOrdersResult, OrderStatus } from "@/libs/api-contract/rest-api-contract";
 import { OpenInNewRounded, EditRounded } from "@mui/icons-material";
 import { Button, IconButton } from "@mui/material";
 import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid";

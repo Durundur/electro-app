@@ -1,5 +1,5 @@
 import { translateDeliveryMethod } from "@/libs/Helpers/Translations/OrdersTranslations";
-import { Delivery } from "@/libs/api-contract/api-contract";
+import { Delivery } from "@/libs/api-contract/rest-api-contract";
 import { OpenInNewRounded } from "@mui/icons-material";
 import { Button, Stack, Typography } from "@mui/material";
 import { FC } from "react";

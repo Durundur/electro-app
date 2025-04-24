@@ -2,7 +2,7 @@ import { PaymentOption } from "@/libs/Cart/interfaces";
 import { setPaymentOption } from "@/libs/Cart/slice";
 import { formatAmount } from "@/libs/Helpers/Formatters";
 import { useDispatch, useSelector } from "@/libs/Store";
-import { PaymentMethod } from "@/libs/api-contract/api-contract";
+import { PaymentMethod } from "@/libs/api-contract/rest-api-contract";
 import { Card, CardContent, Divider, FormControl, FormControlLabel, FormHelperText, Radio, RadioGroup, Stack, Typography } from "@mui/material";
 import { FC } from "react";
 

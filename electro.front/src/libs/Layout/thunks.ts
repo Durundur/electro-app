@@ -1,7 +1,7 @@
 import { AppDispatch } from "../Store";
 import ApiClient from "../api-contract/ApiClient";
 import { createError } from "../api-contract/Error";
-import { GetMenuResult } from "../api-contract/api-contract";
+import { GetMenuResult } from "../api-contract/rest-api-contract";
 import { fetchProductHierarchyError, fetchProductHierarchySuccess, fetchProductHierarchyStart } from "./slice";
 
 export const fetchProductHierarchy = () => async (dispatch: AppDispatch) => {

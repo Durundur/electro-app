@@ -3,7 +3,7 @@ import { ExpandMoreRounded } from "@mui/icons-material";
 import { FormikProps } from "formik";
 import { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "@/libs/Store";
-import { ProductStatus } from "@/libs/api-contract/api-contract";
+import { ProductStatus } from "@/libs/api-contract/rest-api-contract";
 import { clearProductHierarchyState } from "@/libs/Admin/AdminProductCatalog/AdminProductCatalogNewEdit/slice";
 import { fetchProductHierarchy } from "@/libs/Admin/AdminProductCatalog/AdminProductCatalogNewEdit/thunk";
 import SelectInput from "@/components/Shared/SelectInput/SelectInput";

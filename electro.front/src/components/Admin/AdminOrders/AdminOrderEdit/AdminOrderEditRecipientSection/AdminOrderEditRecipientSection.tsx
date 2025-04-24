@@ -1,7 +1,7 @@
 import { UpdateOrderCommandFlat } from "@/app/(admin)/admin/orders/[id]/edit/page";
 import EditSectionLayout from "@/components/Layout/EditSectionLayout/EditSectionLayout";
 import TextInput from "@/components/Shared/TextInput/TextInput";
-import { RecipientType } from "@/libs/api-contract/api-contract";
+import { RecipientType } from "@/libs/api-contract/rest-api-contract";
 import { FormControl, FormControlLabel, FormLabel, Grid2, Radio, RadioGroup, Typography } from "@mui/material";
 import { FormikProps } from "formik";
 import { FC } from "react";

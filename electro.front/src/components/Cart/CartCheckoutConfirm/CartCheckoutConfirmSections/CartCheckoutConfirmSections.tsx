@@ -2,7 +2,7 @@ import { Card, CardContent, Grid2, Stack, Typography } from "@mui/material";
 import { FC } from "react";
 import CartCheckoutConfirmProduct from "./CartCheckoutConfirmProduct";
 import { useSelector } from "@/libs/Store";
-import { GetRecipientsResultItem, RecipientType } from "@/libs/api-contract/api-contract";
+import { GetRecipientsResultItem, RecipientType } from "@/libs/api-contract/rest-api-contract";
 
 const CartCheckoutConfirmSections: FC = () => {
 	const deliveryOptionSelecor = useSelector((store) => store.CartStore.checkout.deliveryOption);

@@ -1,4 +1,13 @@
-import { CreateOrderCommand, DeliveryMethod, GetCartResult, GetCartResultProduct, GetRecipientsResultItem, PaymentMethod, ValidateCartCommand, ValidateCartResult } from "../api-contract/api-contract";
+import {
+	CreateOrderCommand,
+	DeliveryMethod,
+	GetCartResult,
+	GetCartResultProduct,
+	GetRecipientsResultItem,
+	PaymentMethod,
+	ValidateCartCommand,
+	ValidateCartResult,
+} from "../api-contract/rest-api-contract";
 
 export const getValidateCartCommand = (cart: GetCartResult): ValidateCartCommand => {
 	return {

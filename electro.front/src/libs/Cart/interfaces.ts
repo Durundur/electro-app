@@ -1,4 +1,4 @@
-import { DeliveryMethod, PaymentMethod } from "../api-contract/api-contract";
+import { DeliveryMethod, PaymentMethod } from "../api-contract/rest-api-contract";
 
 export interface PaymentOption {
 	name: string;

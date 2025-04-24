@@ -10,7 +10,7 @@ import {
 	fetchProductsStart,
 	fetchProductsSuccess,
 } from "./slice";
-import { GetMenuResult, GetSearchProductsResult } from "@/libs/api-contract/api-contract";
+import { GetMenuResult, GetSearchProductsResult } from "@/libs/api-contract/rest-api-contract";
 import { buildQueryString, buildQueryStringWithDuplicatedKey } from "@/libs/Helpers/QueryHelper";
 import { createError } from "@/libs/api-contract/Error";
 import ApiClient from "../api-contract/ApiClient";

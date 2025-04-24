@@ -1,5 +1,5 @@
 import { IError } from "@/libs/api-contract/Error";
-import { GetMenuResult, GetSearchFiltersResult, GetSearchProductsResult } from "@/libs/api-contract/api-contract";
+import { GetMenuResult, GetSearchFiltersResult, GetSearchProductsResult } from "@/libs/api-contract/rest-api-contract";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { ISearchProductsStateUrlParamsFilters, ISearchProductsStateUrlParamsHierarchy, ISearchProductsStateUrlParamsPagination } from "./interfaces";
 

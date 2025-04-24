@@ -10,7 +10,7 @@ import {
 	GetRecipientsResult,
 	ValidateCartCommand,
 	ValidateCartResult,
-} from "../api-contract/api-contract";
+} from "../api-contract/rest-api-contract";
 import { getGetCartResult, getValidateCartCommand } from "./services";
 import {
 	createOrUpdateRecipientError,

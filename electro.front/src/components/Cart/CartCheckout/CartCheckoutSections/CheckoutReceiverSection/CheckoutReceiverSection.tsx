@@ -4,7 +4,7 @@ import CheckoutReceiverForm from "./CheckoutReceiverForm/CheckoutReceiverForm";
 import CheckoutReceiverSelectionGrid from "./CheckoutReceiverSelectionGrid/CheckoutReceiverSelectionGrid";
 import { fetchRecipients } from "@/libs/Cart/thunks";
 import { useDispatch, useSelector } from "@/libs/Store";
-import { GetRecipientsResultItem } from "@/libs/api-contract/api-contract";
+import { GetRecipientsResultItem } from "@/libs/api-contract/rest-api-contract";
 
 const CheckoutReceiverSection: FC = () => {
 	const dispatch = useDispatch();

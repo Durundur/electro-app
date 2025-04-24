@@ -7,7 +7,7 @@ import {
 	GetAllProductHierarchyResult,
 	GetCategoryResult,
 	GetGroupResult,
-} from "@/libs/api-contract/api-contract";
+} from "@/libs/api-contract/rest-api-contract";
 import {
 	createOrUpdateCategoryError,
 	createOrUpdateCategoryStart,

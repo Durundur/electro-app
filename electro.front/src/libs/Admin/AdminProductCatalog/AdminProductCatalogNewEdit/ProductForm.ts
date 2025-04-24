@@ -1,4 +1,4 @@
-import { ProductStatus } from "@/libs/api-contract/api-contract";
+import { ProductStatus } from "@/libs/api-contract/rest-api-contract";
 import { IProductForm } from "./interfaces";
 import * as yup from "yup";
 

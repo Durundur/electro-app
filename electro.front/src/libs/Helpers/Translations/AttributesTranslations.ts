@@ -1,4 +1,4 @@
-import { AttributeType } from "@/libs/api-contract/api-contract";
+import { AttributeType } from "@/libs/api-contract/rest-api-contract";
 
 export const translateAttributeType = (attributeType: AttributeType): string => {
 	const attributeTypeMap: { [key in AttributeType]: string } = {

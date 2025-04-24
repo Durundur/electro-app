@@ -1,5 +1,5 @@
 import { IError } from "@/libs/api-contract/Error";
-import { GetProductCatalogResult } from "@/libs/api-contract/api-contract";
+import { GetProductCatalogResult } from "@/libs/api-contract/rest-api-contract";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 interface IProductCatalogListState {

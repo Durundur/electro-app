@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { Card, Stack, Typography, Button } from "@mui/material";
 import { ShoppingCartOutlined, CheckCircleOutlineRounded, AccessTimeRounded, LocalShippingOutlined, ErrorOutline } from "@mui/icons-material";
-import { GetProductResult, ProductStatus } from "@/libs/api-contract/api-contract";
+import { GetProductResult, ProductStatus } from "@/libs/api-contract/rest-api-contract";
 import { formatAmount } from "@/libs/Helpers/Formatters";
 import QuantityInput from "@/components/Shared/QuantityInput/QuantityInput";
 import Link from "next/link";

@@ -12,7 +12,7 @@ import {
 	putAdminOrderEditSuccess,
 } from "./slice";
 import { createError } from "@/libs/api-contract/Error";
-import { GetOrderDetailsResult, GetOrdersResult, UpdateOrderCommand, UpdateOrderResult } from "@/libs/api-contract/api-contract";
+import { GetOrderDetailsResult, GetOrdersResult, UpdateOrderCommand, UpdateOrderResult } from "@/libs/api-contract/rest-api-contract";
 import { GetAdminOrdersListQuery } from "./interfaces";
 import { buildQueryString } from "@/libs/Helpers/QueryHelper";
 import ApiClient from "@/libs/api-contract/ApiClient";

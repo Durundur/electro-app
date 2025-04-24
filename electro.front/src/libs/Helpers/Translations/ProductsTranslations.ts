@@ -1,4 +1,4 @@
-import { ProductStatus } from "@/libs/api-contract/api-contract";
+import { ProductStatus } from "@/libs/api-contract/rest-api-contract";
 
 export const translateProductStatus = (productStatus: ProductStatus): string => {
 	const productStatusMap: { [key in ProductStatus]: string } = {

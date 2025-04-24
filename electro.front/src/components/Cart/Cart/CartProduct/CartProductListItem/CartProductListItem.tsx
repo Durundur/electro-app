@@ -4,7 +4,7 @@ import { Box, CardMedia, Grid2, IconButton, Stack, Typography } from "@mui/mater
 import { FC } from "react";
 import { DeleteOutlineOutlined } from "@mui/icons-material";
 import QuantityInput from "@/components/Shared/QuantityInput/QuantityInput";
-import { GetCartResultProduct } from "@/libs/api-contract/api-contract";
+import { GetCartResultProduct } from "@/libs/api-contract/rest-api-contract";
 import { useDispatch, useSelector } from "@/libs/Store";
 import { validateCart } from "@/libs/Cart/thunks";
 import { getValidateCartCommand } from "@/libs/Cart/services";

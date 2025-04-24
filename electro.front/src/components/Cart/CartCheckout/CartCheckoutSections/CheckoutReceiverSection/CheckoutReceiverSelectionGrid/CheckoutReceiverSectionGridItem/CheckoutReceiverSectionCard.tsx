@@ -1,7 +1,7 @@
 import { setRecipientOption } from "@/libs/Cart/slice";
 import { deleteRecipient } from "@/libs/Cart/thunks";
 import { useDispatch, useSelector } from "@/libs/Store";
-import { GetRecipientsResultItem, RecipientType } from "@/libs/api-contract/api-contract";
+import { GetRecipientsResultItem, RecipientType } from "@/libs/api-contract/rest-api-contract";
 import { Box, Card, CardActionArea, CardContent, Grid2, Stack, Typography } from "@mui/material";
 import { FC } from "react";
 

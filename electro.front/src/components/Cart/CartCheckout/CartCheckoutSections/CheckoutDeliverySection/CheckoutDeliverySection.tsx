@@ -4,7 +4,7 @@ import { formatAmount } from "@/libs/Helpers/Formatters";
 import { DeliveryOption } from "@/libs/Cart/interfaces";
 import { useDispatch, useSelector } from "@/libs/Store";
 import { setDeliveryOption } from "@/libs/Cart/slice";
-import { DeliveryMethod } from "@/libs/api-contract/api-contract";
+import { DeliveryMethod } from "@/libs/api-contract/rest-api-contract";
 
 const CheckoutDeliverySection: FC = () => {
 	const deliveryOptions: DeliveryOption[] = [

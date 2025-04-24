@@ -1,4 +1,4 @@
-import { CreateOrUpdateProductCommand, GetProductResult, ProductStatus } from "@/libs/api-contract/api-contract";
+import { CreateOrUpdateProductCommand, GetProductResult, ProductStatus } from "@/libs/api-contract/rest-api-contract";
 import { IProductForm } from "./interfaces";
 
 export const mapGetProductResultToForm = (product: GetProductResult): IProductForm => {

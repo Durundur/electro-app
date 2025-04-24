@@ -5,7 +5,7 @@ import { FC, useState } from "react";
 import { DataGrid, GridColDef, GridRowSelectionModel } from "@mui/x-data-grid";
 import { AddOutlined, DeleteOutlined, EditOutlined } from "@mui/icons-material";
 import AttributeDefinitionDialog from "./AttributeDefinitionDialog";
-import { AttributeDefinitionCommand, AttributeDefinitionResult } from "@/libs/api-contract/api-contract";
+import { AttributeDefinitionCommand, AttributeDefinitionResult } from "@/libs/api-contract/rest-api-contract";
 import { translateAttributeType } from "@/libs/Helpers/Translations/AttributesTranslations";
 
 interface AttributeDefinitionRow {

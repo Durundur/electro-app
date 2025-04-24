@@ -1,4 +1,4 @@
-import { GetUserOrdersResultOrder } from "@/libs/api-contract/api-contract";
+import { GetUserOrdersResultOrder } from "@/libs/api-contract/rest-api-contract";
 import { Card, CardContent, Stack } from "@mui/material";
 import { FC } from "react";
 import AccountOrdersListItemHeader from "./AccountOrdersListItemHeader/AccountOrdersListItemHeader";

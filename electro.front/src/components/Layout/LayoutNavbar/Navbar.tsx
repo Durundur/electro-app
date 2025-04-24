@@ -8,6 +8,7 @@ import AuthButtons from "./AuthButtons";
 import ProductHierarchy from "./NavbarProductHierarchy/NavbarProductHierarchy";
 import { useSelector } from "@/libs/Store";
 import CartIcon from "./CartIcon";
+import ApiTypeSwitch from "./ApiTypeSwitch";
 
 const Navbar: FC = () => {
 	const isLoggedIn = useSelector((store) => store.AuthStore.auth.isAuthenticated);
@@ -25,6 +26,7 @@ const Navbar: FC = () => {
 					<Logo href="/" />
 					<SearchInput></SearchInput>
 					<Stack direction={"row"} spacing={2} alignItems={"center"}>
+						<ApiTypeSwitch />
 						{isLoggedIn ? <ProfileIcons></ProfileIcons> : <AuthButtons></AuthButtons>}
 						<CartIcon />
 					</Stack>

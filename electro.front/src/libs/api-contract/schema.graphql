@@ -1,0 +1,656 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type AttributeDefinition {
+  id: UUID!
+  name: String!
+  type: AttributeType!
+  isRequired: Boolean!
+  isFilterable: Boolean!
+  description: String!
+}
+
+type AttributeValue {
+  attributeDefinition: AttributeDefinition!
+  value: String!
+  isPrimary: Boolean!
+}
+
+type Cart {
+  id: UUID!
+  userId: UUID!
+  products: [CartProduct!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  totalPrice: Money!
+  totalQuantity: Int!
+}
+
+type CartProduct {
+  calculateSubtotal: Money!
+  id: UUID!
+  product: Product!
+  quantity: Int!
+  unitPrice: Money!
+}
+
+type Category {
+  id: Int!
+  name: String!
+  description: String!
+  active: Boolean!
+  displayOrder: Int!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  groupId: Int
+  subCategories: [SubCategory!]!
+  attributes: [AttributeDefinition!]!
+}
+
+type Delivery {
+  id: UUID!
+  method: DeliveryMethod!
+  cost: Money!
+  trackingNumber: String
+  status: DeliveryStatus!
+  shippedAt: DateTime
+  deliveredAt: DateTime
+}
+
+type Group {
+  id: Int!
+  name: String!
+  photo: String!
+  icon: String!
+  description: String!
+  active: Boolean!
+  displayOrder: Int!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  categories: [Category!]!
+  attributes: [AttributeDefinition!]!
+}
+
+type LoginUserResult {
+  userId: UUID
+  token: String
+  tokenExpiry: DateTime
+  refreshToken: String
+  refreshTokenExpiry: DateTime
+  roles: [String!]
+  success: Boolean!
+  message: String!
+}
+
+type Money {
+  amount: Decimal!
+  currency: String!
+}
+
+type Mutation {
+  loginUser(input: LoginInput!): LoginUserResult! @cost(weight: "10")
+  registerUser(input: RegisterInput!): RegisterUserResult! @cost(weight: "10")
+  refreshToken(input: RefreshTokenInput!): RefreshTokenResult!
+    @cost(weight: "10")
+  logoutUser: Boolean! @authorize @cost(weight: "10")
+  deleteRecipient(userId: UUID!, recipientId: UUID!): Boolean!
+    @authorize
+    @cost(weight: "10")
+  createOrUpdateRecipient(input: CreateOrUpdateRecipientInput!): UserRecipient!
+    @authorize
+    @cost(weight: "10")
+  validateCart(input: ValidateCartInput!): ValidateCartType! @cost(weight: "10")
+  createOpinion(input: CreateOpinionInput!): Opinion!
+    @authorize
+    @cost(weight: "10")
+  createOpinionReaction(input: CreateOpinionReactionInput!): Opinion!
+    @authorize
+    @cost(weight: "10")
+  createOrder(input: CreateOrderInput!): Order! @authorize @cost(weight: "10")
+  updateOrder(input: UpdateOrderInput!): Order!
+    @authorize(roles: ["Admin"])
+    @cost(weight: "10")
+  deleteSubCategory(id: Int!): Boolean!
+    @authorize(roles: ["Admin"])
+    @cost(weight: "10")
+  deleteCategory(id: Int!): Boolean!
+    @authorize(roles: ["Admin"])
+    @cost(weight: "10")
+  deleteGroup(id: Int!): Boolean!
+    @authorize(roles: ["Admin"])
+    @cost(weight: "10")
+  createOrUpdateGroup(input: CreateOrUpdateGroupInput!): Group!
+    @authorize(roles: ["Admin"])
+    @cost(weight: "10")
+  createOrUpdateCategory(input: CreateOrUpdateCategoryInput!): Category!
+    @authorize(roles: ["Admin"])
+    @cost(weight: "10")
+  createOrUpdateSubCategory(
+    input: CreateOrUpdateSubCategoryInput!
+  ): SubCategory! @authorize(roles: ["Admin"]) @cost(weight: "10")
+  createOrUpdateProduct(input: CreateOrUpdateProductInput!): Product!
+    @authorize(roles: ["Admin"])
+    @cost(weight: "10")
+}
+
+type Opinion {
+  userReaction: OpinionReactionType @cost(weight: "10")
+  addReaction(
+    userId: UUID!
+    reactionType: OpinionReactionType!
+  ): OpinionReaction!
+  likesCount: Int!
+  dislikesCount: Int!
+  id: UUID!
+  userId: UUID!
+  content: String!
+  rating: Float!
+  createdAt: DateTime!
+  reactions: [OpinionReaction!]!
+  authorDisplayName: String!
+}
+
+type OpinionReaction {
+  opinionId: UUID!
+  userId: UUID!
+  reaction: OpinionReactionType!
+  createdAt: DateTime!
+}
+
+type OpinionsStats {
+  rating: Int!
+  count: Int!
+}
+
+type Order {
+  id: UUID!
+  userId: UUID!
+  number: Int!
+  status: OrderStatus!
+  products: [OrderProduct!]!
+  payment: Payment!
+  delivery: Delivery!
+  recipient: Recipient!
+  totalPrice: Money!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type OrderProduct {
+  id: UUID!
+  product: Product!
+  name: String!
+  quantity: Int!
+  price: Money!
+  totalPrice: Money!
+}
+
+type PaginatedResultOfOpinion {
+  items: [Opinion!]!
+  page: Int!
+  pageSize: Int!
+  totalPages: Int!
+}
+
+type PaginatedResultOfOrder {
+  items: [Order!]!
+  page: Int!
+  pageSize: Int!
+  totalPages: Int!
+}
+
+type PaginatedResultOfProduct {
+  items: [Product!]!
+  page: Int!
+  pageSize: Int!
+  totalPages: Int!
+}
+
+type Payment {
+  id: UUID!
+  method: PaymentMethod!
+  cost: Money!
+  status: PaymentStatus!
+  paidAt: DateTime
+}
+
+type Product {
+  addOpinion(
+    userId: UUID!
+    content: String!
+    rating: Float!
+    authorDisplayName: String!
+  ): Opinion!
+  id: UUID!
+  name: String!
+  description: String!
+  price: Money!
+  status: ProductStatus!
+  group: Group
+  category: Category
+  subCategory: SubCategory
+  stockQuantity: Int!
+  attributes: [AttributeValue!]!
+  opinions: [Opinion!]!
+  photos: [String!]!
+  promotion: ProductPromotion
+  isVisible: Boolean!
+  isAvailableToBuy: Boolean!
+  effectivePrice: Money!
+}
+
+type ProductPromotion {
+  isValid: Boolean!
+  id: UUID!
+  productId: UUID!
+  promotionalPrice: Money!
+  startDate: DateTime!
+  endDate: DateTime!
+  isActive: Boolean!
+}
+
+type Query {
+  recipients(userId: UUID!): [UserRecipient!]! @authorize @cost(weight: "10")
+  cart(userId: UUID!): Cart! @authorize @cost(weight: "10")
+  productOpinions(
+    productId: UUID!
+    rating: Int
+    page: Int! = 1
+    pageSize: Int! = 10
+  ): PaginatedResultOfOpinion! @cost(weight: "10")
+  productOpinionsStats(productId: UUID!): [OpinionsStats!]! @cost(weight: "10")
+  order(id: UUID!): Order! @authorize(roles: ["Admin"]) @cost(weight: "10")
+  orders(page: Int! = 1, pageSize: Int! = 10): PaginatedResultOfOrder!
+    @authorize(roles: ["Admin"])
+    @cost(weight: "10")
+  userOrders(page: Int! = 1, pageSize: Int! = 10): PaginatedResultOfOrder!
+    @authorize
+    @cost(weight: "10")
+  userOrder(orderId: UUID!): Order! @authorize @cost(weight: "10")
+  subCategory(id: Int!): SubCategory!
+    @authorize(roles: ["Admin"])
+    @cost(weight: "10")
+  category(id: Int!): Category! @authorize(roles: ["Admin"]) @cost(weight: "10")
+  group(id: Int!): Group! @authorize(roles: ["Admin"]) @cost(weight: "10")
+  menu: [Group!]! @cost(weight: "10")
+  attributesDefinitions(
+    groupId: Int
+    categoryId: Int
+    subCategoryId: Int
+  ): [AttributeDefinition!]! @authorize(roles: ["Admin"]) @cost(weight: "10")
+  productHierarchy: [Group!]! @authorize(roles: ["Admin"]) @cost(weight: "10")
+  product(id: UUID!): Product @cost(weight: "10")
+  bestsellerProducts(limit: Int = 10): [Product!]! @cost(weight: "10")
+  featuredProducts(limit: Int = 10): [Product!]! @cost(weight: "10")
+  similarProducts(productId: UUID!, limit: Int = 10): [Product!]!
+    @cost(weight: "10")
+  catalogProducts(
+    page: Int! = 1
+    pageSize: Int! = 10
+  ): PaginatedResultOfProduct! @cost(weight: "10")
+  searchProducts(input: GetSearchProductsInput!): PaginatedResultOfProduct!
+    @cost(weight: "10")
+  productFilters(
+    groupId: Int
+    categoryId: Int
+    subCategoryId: Int
+  ): [SearchFilterModel!]! @cost(weight: "10")
+  promotionHighlightProduct: Product! @cost(weight: "10")
+}
+
+type Recipient {
+  firstName: String
+  surname: String
+  companyName: String
+  taxIdentificationNumber: String
+  type: RecipientType!
+  phoneNumber: String!
+  street: String!
+  houseNumber: String!
+  postalCode: String!
+  city: String!
+}
+
+type RefreshTokenResult {
+  userId: UUID
+  token: String
+  tokenExpiry: DateTime
+  refreshToken: String
+  refreshTokenExpiry: DateTime
+  roles: [String!]
+  success: Boolean!
+  message: String!
+}
+
+type RegisterUserResult {
+  userId: UUID
+  token: String
+  tokenExpiry: DateTime
+  refreshToken: String
+  refreshTokenExpiry: DateTime
+  roles: [String!]
+  success: Boolean!
+  message: String!
+}
+
+type SearchFilterModel {
+  attributeDefinitionId: UUID!
+  type: AttributeType!
+  name: String!
+  values: [String!]!
+}
+
+type SubCategory {
+  id: Int!
+  name: String!
+  description: String!
+  active: Boolean!
+  displayOrder: Int!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  categoryId: Int
+  attributes: [AttributeDefinition!]!
+}
+
+type UserRecipient {
+  id: UUID!
+  userId: UUID!
+  firstName: String
+  surname: String
+  companyName: String
+  taxIdentificationNumber: String
+  type: RecipientType!
+  phoneNumber: String!
+  street: String!
+  houseNumber: String!
+  postalCode: String!
+  city: String!
+}
+
+type ValidateCartType {
+  cart: Cart!
+  errors: [String!]!
+}
+
+input AttributeDefinitionInput {
+  id: UUID
+  name: String!
+  description: String!
+  isFilterable: Boolean!
+  isRequired: Boolean!
+  type: AttributeType!
+}
+
+input CreateOpinionInput {
+  productId: UUID!
+  content: String!
+  rating: Float!
+  authorDisplayName: String!
+}
+
+input CreateOpinionReactionInput {
+  opinionId: UUID!
+  reactionType: OpinionReactionType!
+}
+
+input CreateOrUpdateCategoryInput {
+  id: Int
+  name: String!
+  description: String!
+  active: Boolean!
+  displayOrder: Int!
+  groupId: Int!
+  attributes: [AttributeDefinitionInput!]!
+}
+
+input CreateOrUpdateGroupInput {
+  id: Int
+  name: String!
+  icon: String!
+  photo: String!
+  description: String!
+  active: Boolean!
+  displayOrder: Int!
+  attributes: [AttributeDefinitionInput!]!
+}
+
+input CreateOrUpdateProductAttributeInput {
+  id: UUID!
+  value: String!
+  isPrimary: Boolean!
+}
+
+input CreateOrUpdateProductInput {
+  id: UUID
+  name: String!
+  description: String!
+  amount: Decimal!
+  currency: String!
+  photos: [String!]!
+  stockQuantityDelta: Int!
+  status: ProductStatus!
+  groupId: Int
+  categoryId: Int
+  subCategoryId: Int
+  attributes: [CreateOrUpdateProductAttributeInput!]!
+  promotion: CreateOrUpdateProductPromotionInput
+}
+
+input CreateOrUpdateProductPromotionInput {
+  promotionAmount: Decimal!
+  promotionCurrency: String!
+  startDate: DateTime!
+  endDate: DateTime!
+  isActive: Boolean!
+}
+
+input CreateOrUpdateRecipientInput {
+  id: UUID
+  userId: UUID!
+  firstName: String
+  surname: String
+  companyName: String
+  taxIdentificationNumber: String
+  type: RecipientType!
+  phoneNumber: String!
+  street: String!
+  houseNumber: String!
+  postalCode: String!
+  city: String!
+}
+
+input CreateOrUpdateSubCategoryInput {
+  id: Int
+  name: String!
+  description: String!
+  active: Boolean!
+  displayOrder: Int!
+  categoryId: Int!
+  attributes: [AttributeDefinitionInput!]!
+}
+
+input CreateOrderInput {
+  products: [CreateOrderProductInput!]!
+  paymentMethod: PaymentMethod!
+  deliveryMethod: DeliveryMethod!
+  recipient: CreateOrderRecipientInput!
+}
+
+input CreateOrderProductInput {
+  productId: UUID!
+  quantity: Int!
+}
+
+input CreateOrderRecipientInput {
+  type: RecipientType!
+  firstName: String!
+  surname: String!
+  companyName: String
+  taxIdentificationNumber: String
+  phoneNumber: String!
+  street: String!
+  houseNumber: String!
+  postalCode: String!
+  city: String!
+}
+
+input GetSearchProductsInput {
+  groupId: Int
+  categoryId: Int
+  subCategoryId: Int
+  filters: [KeyValuePairOfStringAndString__Input!]!
+  page: Int!
+  pageSize: Int!
+}
+
+input KeyValuePairOfStringAndString__Input {
+  key: String!
+  value: [String!]!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+input RefreshTokenInput {
+  refreshToken: String!
+  token: String!
+}
+
+input RegisterInput {
+  email: String!
+  password: String!
+}
+
+input UpdateOrderInput {
+  orderId: UUID!
+  status: OrderStatus!
+  trackingNumber: String
+  recipient: UpdateOrderRecipientInput
+}
+
+input UpdateOrderRecipientInput {
+  type: RecipientType!
+  firstName: String
+  surname: String
+  companyName: String
+  taxIdentificationNumber: String
+  phoneNumber: String!
+  street: String!
+  houseNumber: String!
+  postalCode: String!
+  city: String!
+}
+
+input ValidateCartInput {
+  products: [ValidateCartProductInput!]!
+}
+
+input ValidateCartProductInput {
+  productId: UUID!
+  quantity: Int!
+}
+
+"Defines when a policy shall be executed."
+enum ApplyPolicy {
+  "Before the resolver was executed."
+  BEFORE_RESOLVER
+  "After the resolver was executed."
+  AFTER_RESOLVER
+  "The policy is applied in the validation step before the execution."
+  VALIDATION
+}
+
+enum AttributeType {
+  TEXT
+  LIST
+  BOOLEAN
+}
+
+enum DeliveryMethod {
+  COURIER_EXPRESS
+  COURIER_STANDARD
+  COURIER_CASH_ON_DELIVERY
+  LOCKER
+  PICKUP_ZABKA
+}
+
+enum DeliveryStatus {
+  PENDING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum OpinionReactionType {
+  LIKE
+  DISLIKE
+}
+
+enum OrderStatus {
+  CREATED
+  PAID
+  PROCESSING
+  SHIPPED
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CREDIT_CARD
+  INSTANT_TRANSFER
+  BANK_TRANSFER
+  GOOGLE_PAY
+  BLIK
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum ProductStatus {
+  DRAFT
+  ACTIVE
+  DISCONTINUED
+}
+
+enum RecipientType {
+  PERSONAL
+  COMPANY
+}
+
+"The authorize directive."
+directive @authorize(
+  "The name of the authorization policy that determines access to the annotated resource."
+  policy: String
+  "Roles that are allowed to access the annotated resource."
+  roles: [String!]
+  "Defines when when the authorize directive shall be applied.By default the authorize directives are applied during the validation phase."
+  apply: ApplyPolicy! = BEFORE_RESOLVER
+) repeatable on OBJECT | FIELD_DEFINITION
+
+"The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
+directive @cost(
+  "The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc."
+  weight: String!
+) on SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM | INPUT_FIELD_DEFINITION
+
+"The `@specifiedBy` directive is used within the type system definition language to provide a URL for specifying the behavior of custom scalar definitions."
+directive @specifiedBy(
+  "The specifiedBy URL points to a human-readable specification. This field will only read a result for scalar types."
+  url: String!
+) on SCALAR
+
+"The `DateTime` scalar represents an ISO-8601 compliant date time type."
+scalar DateTime @specifiedBy(url: "https://www.graphql-scalars.com/date-time")
+
+"The `Decimal` scalar type represents a decimal floating-point number."
+scalar Decimal
+
+scalar UUID @specifiedBy(url: "https://tools.ietf.org/html/rfc4122")

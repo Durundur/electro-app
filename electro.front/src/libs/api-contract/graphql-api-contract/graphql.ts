@@ -1,3 +1,5 @@
+/* eslint-disable */
+import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -520,6 +522,7 @@ export type Product = {
   __typename?: 'Product';
   addOpinion: Opinion;
   attributes: Array<AttributeValue>;
+  averageOpinionRating?: Maybe<Scalars['Float']['output']>;
   category?: Maybe<Category>;
   description: Scalars['String']['output'];
   effectivePrice: Money;
@@ -528,6 +531,7 @@ export type Product = {
   isAvailableToBuy: Scalars['Boolean']['output'];
   isVisible: Scalars['Boolean']['output'];
   name: Scalars['String']['output'];
+  opinionCount?: Maybe<Scalars['Int']['output']>;
   opinions: Array<Opinion>;
   photos: Array<Scalars['String']['output']>;
   price: Money;
@@ -818,3 +822,188 @@ export type ValidateCartType = {
   cart: Cart;
   errors: Array<Scalars['String']['output']>;
 };
+
+export type ProductPageProductQueryVariables = Exact<{
+  id: Scalars['UUID']['input'];
+}>;
+
+
+export type ProductPageProductQuery = { __typename?: 'Query', product?: { __typename?: 'Product', id: any, name: string, description: string, photos: Array<string>, status: ProductStatus, stockQuantity: number, averageOpinionRating?: number | null, opinionCount?: number | null, price: { __typename?: 'Money', amount: any, currency: string }, group?: { __typename?: 'Group', id: number } | null, category?: { __typename?: 'Category', id: number } | null, subCategory?: { __typename?: 'SubCategory', id: number } | null, promotion?: { __typename?: 'ProductPromotion', id: any, productId: any, startDate: any, endDate: any, isActive: boolean, isValid: boolean, promotionalPrice: { __typename?: 'Money', amount: any, currency: string } } | null, attributes: Array<{ __typename?: 'AttributeValue', value: string, isPrimary: boolean, attributeDefinition: { __typename?: 'AttributeDefinition', id: any, name: string, type: AttributeType } }> } | null };
+
+export type ProductPageOpinionsQueryVariables = Exact<{
+  productId: Scalars['UUID']['input'];
+  page: Scalars['Int']['input'];
+  pageSize: Scalars['Int']['input'];
+  rating?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type ProductPageOpinionsQuery = { __typename?: 'Query', productOpinions: { __typename?: 'PaginatedResultOfOpinion', page: number, pageSize: number, totalPages: number, items: Array<{ __typename?: 'Opinion', id: any, content: string, rating: number, createdAt: any, authorDisplayName: string, userReaction?: OpinionReactionType | null, likesCount: number, dislikesCount: number }> } };
+
+export type ProductPageOpinionsStatsQueryVariables = Exact<{
+  productId: Scalars['UUID']['input'];
+}>;
+
+
+export type ProductPageOpinionsStatsQuery = { __typename?: 'Query', productOpinionsStats: Array<{ __typename?: 'OpinionsStats', rating: number, count: number }> };
+
+export type ProductPageCreateOpinionReactionMutationVariables = Exact<{
+  input: CreateOpinionReactionInput;
+}>;
+
+
+export type ProductPageCreateOpinionReactionMutation = { __typename?: 'Mutation', createOpinionReaction: { __typename?: 'Opinion', userReaction?: OpinionReactionType | null, likesCount: number, dislikesCount: number } };
+
+export type ProductPageCreateOpinionMutationVariables = Exact<{
+  input: CreateOpinionInput;
+}>;
+
+
+export type ProductPageCreateOpinionMutation = { __typename?: 'Mutation', createOpinion: { __typename?: 'Opinion', id: any, content: string, rating: number, createdAt: any, authorDisplayName: string } };
+
+export type ProductPageSimilarProductsQueryVariables = Exact<{
+  productId: Scalars['UUID']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type ProductPageSimilarProductsQuery = { __typename?: 'Query', similarProducts: Array<{ __typename?: 'Product', id: any, name: string, photos: Array<string>, price: { __typename?: 'Money', amount: any, currency: string }, promotion?: { __typename?: 'ProductPromotion', promotionalPrice: { __typename?: 'Money', amount: any, currency: string } } | null }> };
+
+export class TypedDocumentString<TResult, TVariables>
+  extends String
+  implements DocumentTypeDecoration<TResult, TVariables>
+{
+  __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
+  private value: string;
+  public __meta__?: Record<string, any> | undefined;
+
+  constructor(value: string, __meta__?: Record<string, any> | undefined) {
+    super(value);
+    this.value = value;
+    this.__meta__ = __meta__;
+  }
+
+  toString(): string & DocumentTypeDecoration<TResult, TVariables> {
+    return this.value;
+  }
+}
+
+export const ProductPageProductDocument = new TypedDocumentString(`
+    query ProductPageProduct($id: UUID!) {
+  product(id: $id) {
+    id
+    name
+    description
+    price {
+      amount
+      currency
+    }
+    photos
+    status
+    group {
+      id
+    }
+    category {
+      id
+    }
+    subCategory {
+      id
+    }
+    stockQuantity
+    averageOpinionRating
+    opinionCount
+    promotion {
+      id
+      productId
+      startDate
+      endDate
+      promotionalPrice {
+        amount
+        currency
+      }
+      isActive
+      isValid
+    }
+    attributes {
+      value
+      isPrimary
+      attributeDefinition {
+        id
+        name
+        type
+      }
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<ProductPageProductQuery, ProductPageProductQueryVariables>;
+export const ProductPageOpinionsDocument = new TypedDocumentString(`
+    query ProductPageOpinions($productId: UUID!, $page: Int!, $pageSize: Int!, $rating: Int) {
+  productOpinions(
+    productId: $productId
+    page: $page
+    pageSize: $pageSize
+    rating: $rating
+  ) {
+    items {
+      id
+      content
+      rating
+      createdAt
+      authorDisplayName
+      userReaction
+      likesCount
+      dislikesCount
+    }
+    page
+    pageSize
+    totalPages
+  }
+}
+    `) as unknown as TypedDocumentString<ProductPageOpinionsQuery, ProductPageOpinionsQueryVariables>;
+export const ProductPageOpinionsStatsDocument = new TypedDocumentString(`
+    query ProductPageOpinionsStats($productId: UUID!) {
+  productOpinionsStats(productId: $productId) {
+    rating
+    count
+  }
+}
+    `) as unknown as TypedDocumentString<ProductPageOpinionsStatsQuery, ProductPageOpinionsStatsQueryVariables>;
+export const ProductPageCreateOpinionReactionDocument = new TypedDocumentString(`
+    mutation ProductPageCreateOpinionReaction($input: CreateOpinionReactionInput!) {
+  createOpinionReaction(input: $input) {
+    userReaction
+    likesCount
+    dislikesCount
+  }
+}
+    `) as unknown as TypedDocumentString<ProductPageCreateOpinionReactionMutation, ProductPageCreateOpinionReactionMutationVariables>;
+export const ProductPageCreateOpinionDocument = new TypedDocumentString(`
+    mutation ProductPageCreateOpinion($input: CreateOpinionInput!) {
+  createOpinion(input: $input) {
+    id
+    content
+    rating
+    createdAt
+    authorDisplayName
+  }
+}
+    `) as unknown as TypedDocumentString<ProductPageCreateOpinionMutation, ProductPageCreateOpinionMutationVariables>;
+export const ProductPageSimilarProductsDocument = new TypedDocumentString(`
+    query ProductPageSimilarProducts($productId: UUID!, $limit: Int) {
+  similarProducts(productId: $productId, limit: $limit) {
+    id
+    name
+    price {
+      amount
+      currency
+    }
+    photos
+    promotion {
+      promotionalPrice {
+        amount
+        currency
+      }
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<ProductPageSimilarProductsQuery, ProductPageSimilarProductsQueryVariables>;

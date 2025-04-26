@@ -9,7 +9,8 @@ namespace Graphql.Application.Queries.Types
         {
             builder
                 .AddType<RecipientType>()
-                .AddType<OpinionType>();
+                .AddType<OpinionType>()
+                .AddType<ProductType>();
 
             return builder;
         }

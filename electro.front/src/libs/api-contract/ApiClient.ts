@@ -1,9 +1,13 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import store from "../Store";
+import { TypedDocumentString } from "./graphql-api-contract/graphql";
 
 class ApiClient {
 	private axiosInstance: AxiosInstance;
-	public apiType: "rest" | "graphql" = "rest";
+	public apiType = () => {
+		const state = store.getState().ApiClientStore;
+		return state.apiType;
+	};
 
 	constructor() {
 		this.axiosInstance = axios.create({
@@ -33,13 +37,17 @@ class ApiClient {
 		return this.axiosInstance.post<T>(url, data, config);
 	}
 
-	public requestGraphQL<T>(query: string, variables?: Record<string, any>, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
+	public postGraphql<TResult, TVariables>(
+		document: TypedDocumentString<TResult, TVariables>,
+		variables: TVariables extends Record<string, never> ? never : TVariables,
+		config?: AxiosRequestConfig
+	): Promise<AxiosResponse<{ data: TResult; errors?: Array<{ message: string }> }>> {
 		const gqlRequest = {
-			query,
+			query: document.toString(),
 			variables,
 		};
-		const gqlUrl = process.env.NEXT_PUBLIC_GRAPHQL_API_URL || "/graphql";
-		return this.axiosInstance.post<T>(gqlUrl, gqlRequest, config);
+		const gqlUrl = "/graphql";
+		return this.axiosInstance.post(gqlUrl, gqlRequest, config);
 	}
 
 	public put<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {

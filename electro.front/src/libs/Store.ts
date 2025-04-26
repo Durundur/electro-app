@@ -11,10 +11,12 @@ import AuthReducer from "@/libs/Auth/slice";
 import CartStoreReducer from "@/libs/Cart/slice";
 import AccountReducer from "@/libs/Account/slice";
 import ShopRootPageStoreReducer from "./ShopRootPage/slice";
+import ApiClientStoreReducer from "./ApiClient/slice";
 import { TypedUseSelectorHook, useDispatch as useReduxDispatch, useSelector as useReduxSelector } from "react-redux";
 
 const store = configureStore({
 	reducer: {
+		ApiClientStore: ApiClientStoreReducer,
 		LayoutStore: LayoutStoreReducer,
 		CartStore: CartStoreReducer,
 		AdminProductHierarchyPageStore: AdminProductHierarchyPageStoreReducer,

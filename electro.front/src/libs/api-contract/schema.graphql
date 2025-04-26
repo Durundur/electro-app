@@ -217,6 +217,8 @@ type Payment {
 }
 
 type Product {
+  averageOpinionRating: Float @cost(weight: "10")
+  opinionCount: Int @cost(weight: "10")
   addOpinion(
     userId: UUID!
     content: String!

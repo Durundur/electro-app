@@ -19,14 +19,7 @@ namespace Graphql.Application.Mutations
 
             try
             {
-                var result = await authService.LoginUserAsync(input.Email, input.Password, cancellationToken);
-
-                if (!result.Success)
-                {
-                    throw new UnauthorizedException(result.Message);
-                }
-
-                return result;
+                return await authService.LoginUserAsync(input.Email, input.Password, cancellationToken);
             }
             catch (Exception ex)
             {

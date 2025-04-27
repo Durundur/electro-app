@@ -14,6 +14,7 @@ import { translateErrorMessage } from "@/libs/api-contract/Error";
 import TextInput from "@/components/Shared/TextInput/TextInput";
 import { usePermissionGuard } from "@/hooks/PermissionGuard/usePermissionGuard";
 import { usePageTransition } from "@/hooks/PageTransition/usePageTransition";
+import { clearError } from "@/libs/Auth/slice";
 
 const AuthLoginPage = () => {
 	usePermissionGuard({ denyAuth: true, redirectTo: "/" });
@@ -54,6 +55,12 @@ const AuthLoginPage = () => {
 		email: "",
 		password: "",
 	};
+
+	useEffect(() => {
+		return () => {
+			dispatch(clearError());
+		}
+	}, []);
 
 	return (
 		<Grid container spacing={2}>

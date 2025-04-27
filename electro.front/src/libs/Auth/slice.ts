@@ -105,9 +105,12 @@ const AuthStore = createSlice({
 		setHydrated(state) {
 			state.isHydrated = true;
 		},
+		clearError(state) {
+			state.error = undefined;
+		},
 	},
 });
 
-export const { loginUserSuccess, refreshTokenSuccess, registerUserSuccess, authLoadingStart, authErrorSet, logout, restoreAuth, setHydrated } = AuthStore.actions;
+export const { loginUserSuccess, refreshTokenSuccess, registerUserSuccess, authLoadingStart, authErrorSet, logout, restoreAuth, setHydrated, clearError } = AuthStore.actions;
 
 export default AuthStore.reducer;

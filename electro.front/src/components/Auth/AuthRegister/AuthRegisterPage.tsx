@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Grid2 as Grid, Card, CardContent, Button, TextField, IconButton, InputAdornment, CardHeader, Stack, Checkbox, FormControlLabel, FormControl, FormHelperText } from "@mui/material";
+import { Grid2 as Grid, Card, CardContent, Button, IconButton, InputAdornment, CardHeader, Stack, Checkbox, FormControlLabel, FormControl, FormHelperText } from "@mui/material";
 import { EmailOutlined, LockOutlined, PersonOutlineRounded, Visibility, VisibilityOff } from "@mui/icons-material";
 import Link from "next/link";
 import AuthAccountBenefits from "@/components/Shared/Auth/AuthAccountBenefits";
@@ -14,6 +14,7 @@ import { translateErrorMessage } from "@/libs/api-contract/Error";
 import TextInput from "@/components/Shared/TextInput/TextInput";
 import { usePermissionGuard } from "@/hooks/PermissionGuard/usePermissionGuard";
 import { usePageTransition } from "@/hooks/PageTransition/usePageTransition";
+import { clearError } from "@/libs/Auth/slice";
 
 interface RegisterUserForm extends RegisterUserCommand {
 	firstName: string;
@@ -45,6 +46,12 @@ const AuthRegisterPage = () => {
 		};
 		dispatch(registerUser(registerUserCommand));
 	};
+
+	useEffect(() => {
+		return () => {
+			dispatch(clearError());
+		};
+	}, []);
 
 	useEffect(() => {
 		if (isAuthenticatedSelector && !authLoadingSelector) router.replace("/");

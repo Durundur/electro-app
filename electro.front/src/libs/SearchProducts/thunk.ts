@@ -33,7 +33,7 @@ export interface IFetchProductsBaseParams {
 }
 
 export type IFetchProductsParams = IFetchProductsBaseParams & {
-	[key: string]: string[] | undefined;
+	[key: string]: string[] | undefined | number;
 };
 
 export const fetchProducts = (params: IFetchProductsParams) => async (dispatch: AppDispatch) => {

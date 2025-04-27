@@ -135,6 +135,15 @@ namespace Application.Services.CartService
 
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
             }
+            else
+            {
+                cart = Cart.Create(Guid.Empty);
+
+                foreach (var validatedProduct in resultProducts)
+                {
+                    cart.AddItem(validatedProduct);
+                }
+            }
 
             return (cart, errors);
         }

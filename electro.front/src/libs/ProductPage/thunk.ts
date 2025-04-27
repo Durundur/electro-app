@@ -35,7 +35,7 @@ import ApiClient from "../api-contract/ApiClient";
 import { buildQueryString } from "../Helpers/QueryHelper";
 import { IGetOpinionsQueryParams } from "./interfaces";
 import { graphql } from "../api-contract/graphql-api-contract";
-import { mapAttributeType, mapOpinionReactionTypeFromGraphQL, mapOpinionReactionTypeToGraphQL, mapProductStatus } from "../api-contract/Mappers/EnumMappers";
+import { mapAttributeTypeFromGraphQL, mapOpinionReactionTypeFromGraphQL, mapOpinionReactionTypeToGraphQL, mapProductStatusFromGraphQL } from "../api-contract/Mappers/EnumMappers";
 import {
 	ProductPageCreateOpinionMutation,
 	ProductPageCreateOpinionMutationVariables,
@@ -124,7 +124,7 @@ const mapGraphQLResponseToGetProductResult = (data: ProductPageProductQuery): Ge
 		amount: data.product?.price?.amount,
 		currency: data.product?.price?.currency,
 		photos: data.product?.photos,
-		status: data.product?.status ? mapProductStatus(data.product.status) : undefined,
+		status: data.product?.status ? mapProductStatusFromGraphQL(data.product.status) : undefined,
 		groupId: data.product?.group?.id,
 		categoryId: data.product?.category?.id,
 		subCategoryId: data.product?.subCategory?.id,
@@ -138,7 +138,7 @@ const mapGraphQLResponseToGetProductResult = (data: ProductPageProductQuery): Ge
 				name: a.attributeDefinition.name,
 				isPrimary: a.isPrimary,
 				value: a.value,
-				type: mapAttributeType(a.attributeDefinition.type),
+				type: mapAttributeTypeFromGraphQL(a.attributeDefinition.type),
 			};
 		}),
 	};

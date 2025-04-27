@@ -823,6 +823,95 @@ export type ValidateCartType = {
   errors: Array<Scalars['String']['output']>;
 };
 
+export type AccountOrdersPageOrdersQueryVariables = Exact<{
+  page: Scalars['Int']['input'];
+  pageSize: Scalars['Int']['input'];
+}>;
+
+
+export type AccountOrdersPageOrdersQuery = { __typename?: 'Query', userOrders: { __typename?: 'PaginatedResultOfOrder', page: number, pageSize: number, totalPages: number, items: Array<{ __typename?: 'Order', id: any, status: OrderStatus, createdAt: any, totalPrice: { __typename?: 'Money', amount: any, currency: string } }> } };
+
+export type AccountOrdersPageOrderQueryVariables = Exact<{
+  orderId: Scalars['UUID']['input'];
+}>;
+
+
+export type AccountOrdersPageOrderQuery = { __typename?: 'Query', userOrder: { __typename?: 'Order', id: any, number: number, status: OrderStatus, createdAt: any, products: Array<{ __typename?: 'OrderProduct', id: any, quantity: number, totalPrice: { __typename?: 'Money', amount: any, currency: string }, product: { __typename?: 'Product', id: any, name: string, photos: Array<string>, price: { __typename?: 'Money', amount: any, currency: string } } }>, payment: { __typename?: 'Payment', id: any, method: PaymentMethod, status: PaymentStatus, paidAt?: any | null, cost: { __typename?: 'Money', amount: any, currency: string } }, delivery: { __typename?: 'Delivery', id: any, method: DeliveryMethod, status: DeliveryStatus, trackingNumber?: string | null, shippedAt?: any | null, deliveredAt?: any | null, cost: { __typename?: 'Money', amount: any, currency: string } }, recipient: { __typename?: 'Recipient', type: RecipientType, firstName?: string | null, surname?: string | null, companyName?: string | null, taxIdentificationNumber?: string | null, phoneNumber: string, street: string, houseNumber: string, postalCode: string, city: string } } };
+
+export type AuthPageRegisterMutationVariables = Exact<{
+  input: RegisterInput;
+}>;
+
+
+export type AuthPageRegisterMutation = { __typename?: 'Mutation', registerUser: { __typename?: 'RegisterUserResult', success: boolean, message: string, userId?: any | null, token?: string | null, tokenExpiry?: any | null, refreshToken?: string | null, refreshTokenExpiry?: any | null, roles?: Array<string> | null } };
+
+export type AuthPageLoginMutationVariables = Exact<{
+  input: LoginInput;
+}>;
+
+
+export type AuthPageLoginMutation = { __typename?: 'Mutation', loginUser: { __typename?: 'LoginUserResult', success: boolean, message: string, userId?: any | null, token?: string | null, tokenExpiry?: any | null, refreshToken?: string | null, refreshTokenExpiry?: any | null, roles?: Array<string> | null } };
+
+export type AuthPageRefreshTokenMutationVariables = Exact<{
+  input: RefreshTokenInput;
+}>;
+
+
+export type AuthPageRefreshTokenMutation = { __typename?: 'Mutation', refreshToken: { __typename?: 'RefreshTokenResult', success: boolean, message: string, userId?: any | null, token?: string | null, tokenExpiry?: any | null, refreshToken?: string | null, refreshTokenExpiry?: any | null, roles?: Array<string> | null } };
+
+export type AuthPageLogoutMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AuthPageLogoutMutation = { __typename?: 'Mutation', logoutUser: boolean };
+
+export type CartPageCartQueryVariables = Exact<{
+  userId: Scalars['UUID']['input'];
+}>;
+
+
+export type CartPageCartQuery = { __typename?: 'Query', cart: { __typename?: 'Cart', id: any, totalQuantity: number, totalPrice: { __typename?: 'Money', amount: any, currency: string }, products: Array<{ __typename?: 'CartProduct', quantity: number, product: { __typename?: 'Product', id: any, photos: Array<string>, name: string, promotion?: { __typename?: 'ProductPromotion', promotionalPrice: { __typename?: 'Money', amount: any, currency: string } } | null, price: { __typename?: 'Money', amount: any, currency: string } } }> } };
+
+export type CartPageValidateCartMutationVariables = Exact<{
+  input: ValidateCartInput;
+}>;
+
+
+export type CartPageValidateCartMutation = { __typename?: 'Mutation', validateCart: { __typename?: 'ValidateCartType', errors: Array<string>, cart: { __typename?: 'Cart', id: any, totalQuantity: number, totalPrice: { __typename?: 'Money', amount: any, currency: string }, products: Array<{ __typename?: 'CartProduct', quantity: number, product: { __typename?: 'Product', id: any, photos: Array<string>, name: string, promotion?: { __typename?: 'ProductPromotion', promotionalPrice: { __typename?: 'Money', amount: any, currency: string } } | null, price: { __typename?: 'Money', amount: any, currency: string } } }> } } };
+
+export type CartPageRecipientsQueryVariables = Exact<{
+  userId: Scalars['UUID']['input'];
+}>;
+
+
+export type CartPageRecipientsQuery = { __typename?: 'Query', recipients: Array<{ __typename?: 'UserRecipient', id: any, firstName?: string | null, surname?: string | null, companyName?: string | null, taxIdentificationNumber?: string | null, type: RecipientType, phoneNumber: string, street: string, houseNumber: string, postalCode: string, city: string }> };
+
+export type CartPageCreateOrUpdateRecipientMutationVariables = Exact<{
+  input: CreateOrUpdateRecipientInput;
+}>;
+
+
+export type CartPageCreateOrUpdateRecipientMutation = { __typename?: 'Mutation', createOrUpdateRecipient: { __typename?: 'UserRecipient', id: any, firstName?: string | null, surname?: string | null, companyName?: string | null, taxIdentificationNumber?: string | null, type: RecipientType, phoneNumber: string, street: string, houseNumber: string, postalCode: string, city: string } };
+
+export type CartPageDeleteRecipientMutationVariables = Exact<{
+  recipientId: Scalars['UUID']['input'];
+  userId: Scalars['UUID']['input'];
+}>;
+
+
+export type CartPageDeleteRecipientMutation = { __typename?: 'Mutation', deleteRecipient: boolean };
+
+export type CartPageCreateOrderMutationVariables = Exact<{
+  input: CreateOrderInput;
+}>;
+
+
+export type CartPageCreateOrderMutation = { __typename?: 'Mutation', createOrder: { __typename?: 'Order', id: any, status: OrderStatus } };
+
+export type LayoutMenuQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LayoutMenuQuery = { __typename?: 'Query', menu: Array<{ __typename?: 'Group', id: number, name: string, photo: string, icon: string, categories: Array<{ __typename?: 'Category', id: number, name: string, subCategories: Array<{ __typename?: 'SubCategory', id: number, name: string }> }> }> };
+
 export type ProductPageProductQueryVariables = Exact<{
   id: Scalars['UUID']['input'];
 }>;
@@ -869,6 +958,46 @@ export type ProductPageSimilarProductsQueryVariables = Exact<{
 
 export type ProductPageSimilarProductsQuery = { __typename?: 'Query', similarProducts: Array<{ __typename?: 'Product', id: any, name: string, photos: Array<string>, price: { __typename?: 'Money', amount: any, currency: string }, promotion?: { __typename?: 'ProductPromotion', promotionalPrice: { __typename?: 'Money', amount: any, currency: string } } | null }> };
 
+export type SearchPageProductsQueryVariables = Exact<{
+  input: GetSearchProductsInput;
+}>;
+
+
+export type SearchPageProductsQuery = { __typename?: 'Query', searchProducts: { __typename?: 'PaginatedResultOfProduct', page: number, pageSize: number, totalPages: number, items: Array<{ __typename?: 'Product', id: any, name: string, photos: Array<string>, status: ProductStatus, averageOpinionRating?: number | null, opinionCount?: number | null, price: { __typename?: 'Money', amount: any, currency: string }, attributes: Array<{ __typename?: 'AttributeValue', value: string, isPrimary: boolean, attributeDefinition: { __typename?: 'AttributeDefinition', id: any, name: string, type: AttributeType } }>, promotion?: { __typename?: 'ProductPromotion', promotionalPrice: { __typename?: 'Money', amount: any, currency: string } } | null }> } };
+
+export type SeachPageFiltersQueryVariables = Exact<{
+  groupId?: InputMaybe<Scalars['Int']['input']>;
+  categoryId?: InputMaybe<Scalars['Int']['input']>;
+  subCategoryId?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type SeachPageFiltersQuery = { __typename?: 'Query', productFilters: Array<{ __typename?: 'SearchFilterModel', attributeDefinitionId: any, type: AttributeType, name: string, values: Array<string> }> };
+
+export type SeachPageProductHierarchyQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SeachPageProductHierarchyQuery = { __typename?: 'Query', menu: Array<{ __typename?: 'Group', id: number, name: string, photo: string, icon: string, categories: Array<{ __typename?: 'Category', id: number, name: string, subCategories: Array<{ __typename?: 'SubCategory', id: number, name: string }> }> }> };
+
+export type RootPageBestsellerProductsQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type RootPageBestsellerProductsQuery = { __typename?: 'Query', bestsellerProducts: Array<{ __typename?: 'Product', id: any, name: string, photos: Array<string>, price: { __typename?: 'Money', amount: any, currency: string }, promotion?: { __typename?: 'ProductPromotion', promotionalPrice: { __typename?: 'Money', amount: any, currency: string } } | null }> };
+
+export type RootPageFeaturedProductsQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type RootPageFeaturedProductsQuery = { __typename?: 'Query', featuredProducts: Array<{ __typename?: 'Product', id: any, name: string, photos: Array<string>, price: { __typename?: 'Money', amount: any, currency: string }, promotion?: { __typename?: 'ProductPromotion', promotionalPrice: { __typename?: 'Money', amount: any, currency: string } } | null }> };
+
+export type RootPagePromotionHightlightQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type RootPagePromotionHightlightQuery = { __typename?: 'Query', promotionHighlightProduct: { __typename?: 'Product', id: any, name: string, photos: Array<string>, price: { __typename?: 'Money', amount: any, currency: string }, promotion?: { __typename?: 'ProductPromotion', promotionalPrice: { __typename?: 'Money', amount: any, currency: string } } | null } };
+
 export class TypedDocumentString<TResult, TVariables>
   extends String
   implements DocumentTypeDecoration<TResult, TVariables>
@@ -888,6 +1017,260 @@ export class TypedDocumentString<TResult, TVariables>
   }
 }
 
+export const AccountOrdersPageOrdersDocument = new TypedDocumentString(`
+    query AccountOrdersPageOrders($page: Int!, $pageSize: Int!) {
+  userOrders(page: $page, pageSize: $pageSize) {
+    items {
+      id
+      status
+      totalPrice {
+        amount
+        currency
+      }
+      createdAt
+    }
+    page
+    pageSize
+    totalPages
+  }
+}
+    `) as unknown as TypedDocumentString<AccountOrdersPageOrdersQuery, AccountOrdersPageOrdersQueryVariables>;
+export const AccountOrdersPageOrderDocument = new TypedDocumentString(`
+    query AccountOrdersPageOrder($orderId: UUID!) {
+  userOrder(orderId: $orderId) {
+    id
+    number
+    status
+    createdAt
+    products {
+      id
+      quantity
+      totalPrice {
+        amount
+        currency
+      }
+      product {
+        id
+        name
+        photos
+        price {
+          amount
+          currency
+        }
+      }
+    }
+    payment {
+      id
+      method
+      cost {
+        amount
+        currency
+      }
+      status
+      paidAt
+    }
+    delivery {
+      id
+      method
+      cost {
+        amount
+        currency
+      }
+      status
+      trackingNumber
+      shippedAt
+      deliveredAt
+    }
+    recipient {
+      type
+      firstName
+      surname
+      companyName
+      taxIdentificationNumber
+      phoneNumber
+      street
+      houseNumber
+      postalCode
+      city
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<AccountOrdersPageOrderQuery, AccountOrdersPageOrderQueryVariables>;
+export const AuthPageRegisterDocument = new TypedDocumentString(`
+    mutation AuthPageRegister($input: RegisterInput!) {
+  registerUser(input: $input) {
+    success
+    message
+    userId
+    token
+    tokenExpiry
+    refreshToken
+    refreshTokenExpiry
+    roles
+  }
+}
+    `) as unknown as TypedDocumentString<AuthPageRegisterMutation, AuthPageRegisterMutationVariables>;
+export const AuthPageLoginDocument = new TypedDocumentString(`
+    mutation AuthPageLogin($input: LoginInput!) {
+  loginUser(input: $input) {
+    success
+    message
+    userId
+    token
+    tokenExpiry
+    refreshToken
+    refreshTokenExpiry
+    roles
+  }
+}
+    `) as unknown as TypedDocumentString<AuthPageLoginMutation, AuthPageLoginMutationVariables>;
+export const AuthPageRefreshTokenDocument = new TypedDocumentString(`
+    mutation AuthPageRefreshToken($input: RefreshTokenInput!) {
+  refreshToken(input: $input) {
+    success
+    message
+    userId
+    token
+    tokenExpiry
+    refreshToken
+    refreshTokenExpiry
+    roles
+  }
+}
+    `) as unknown as TypedDocumentString<AuthPageRefreshTokenMutation, AuthPageRefreshTokenMutationVariables>;
+export const AuthPageLogoutDocument = new TypedDocumentString(`
+    mutation AuthPageLogout {
+  logoutUser
+}
+    `) as unknown as TypedDocumentString<AuthPageLogoutMutation, AuthPageLogoutMutationVariables>;
+export const CartPageCartDocument = new TypedDocumentString(`
+    query CartPageCart($userId: UUID!) {
+  cart(userId: $userId) {
+    id
+    totalQuantity
+    totalPrice {
+      amount
+      currency
+    }
+    products {
+      quantity
+      product {
+        id
+        promotion {
+          promotionalPrice {
+            amount
+            currency
+          }
+        }
+        price {
+          amount
+          currency
+        }
+        photos
+        name
+      }
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<CartPageCartQuery, CartPageCartQueryVariables>;
+export const CartPageValidateCartDocument = new TypedDocumentString(`
+    mutation CartPageValidateCart($input: ValidateCartInput!) {
+  validateCart(input: $input) {
+    cart {
+      id
+      totalQuantity
+      totalPrice {
+        amount
+        currency
+      }
+      products {
+        quantity
+        product {
+          id
+          promotion {
+            promotionalPrice {
+              amount
+              currency
+            }
+          }
+          price {
+            amount
+            currency
+          }
+          photos
+          name
+        }
+      }
+    }
+    errors
+  }
+}
+    `) as unknown as TypedDocumentString<CartPageValidateCartMutation, CartPageValidateCartMutationVariables>;
+export const CartPageRecipientsDocument = new TypedDocumentString(`
+    query CartPageRecipients($userId: UUID!) {
+  recipients(userId: $userId) {
+    id
+    firstName
+    surname
+    companyName
+    taxIdentificationNumber
+    type
+    phoneNumber
+    street
+    houseNumber
+    postalCode
+    city
+  }
+}
+    `) as unknown as TypedDocumentString<CartPageRecipientsQuery, CartPageRecipientsQueryVariables>;
+export const CartPageCreateOrUpdateRecipientDocument = new TypedDocumentString(`
+    mutation CartPageCreateOrUpdateRecipient($input: CreateOrUpdateRecipientInput!) {
+  createOrUpdateRecipient(input: $input) {
+    id
+    firstName
+    surname
+    companyName
+    taxIdentificationNumber
+    type
+    phoneNumber
+    street
+    houseNumber
+    postalCode
+    city
+  }
+}
+    `) as unknown as TypedDocumentString<CartPageCreateOrUpdateRecipientMutation, CartPageCreateOrUpdateRecipientMutationVariables>;
+export const CartPageDeleteRecipientDocument = new TypedDocumentString(`
+    mutation CartPageDeleteRecipient($recipientId: UUID!, $userId: UUID!) {
+  deleteRecipient(recipientId: $recipientId, userId: $userId)
+}
+    `) as unknown as TypedDocumentString<CartPageDeleteRecipientMutation, CartPageDeleteRecipientMutationVariables>;
+export const CartPageCreateOrderDocument = new TypedDocumentString(`
+    mutation CartPageCreateOrder($input: CreateOrderInput!) {
+  createOrder(input: $input) {
+    id
+    status
+  }
+}
+    `) as unknown as TypedDocumentString<CartPageCreateOrderMutation, CartPageCreateOrderMutationVariables>;
+export const LayoutMenuDocument = new TypedDocumentString(`
+    query LayoutMenu {
+  menu {
+    id
+    name
+    photo
+    icon
+    categories {
+      id
+      name
+      subCategories {
+        id
+        name
+      }
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<LayoutMenuQuery, LayoutMenuQueryVariables>;
 export const ProductPageProductDocument = new TypedDocumentString(`
     query ProductPageProduct($id: UUID!) {
   product(id: $id) {
@@ -1007,3 +1390,128 @@ export const ProductPageSimilarProductsDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<ProductPageSimilarProductsQuery, ProductPageSimilarProductsQueryVariables>;
+export const SearchPageProductsDocument = new TypedDocumentString(`
+    query SearchPageProducts($input: GetSearchProductsInput!) {
+  searchProducts(input: $input) {
+    items {
+      id
+      name
+      price {
+        amount
+        currency
+      }
+      photos
+      status
+      averageOpinionRating
+      opinionCount
+      attributes {
+        value
+        isPrimary
+        attributeDefinition {
+          id
+          name
+          type
+        }
+      }
+      promotion {
+        promotionalPrice {
+          amount
+          currency
+        }
+      }
+    }
+    page
+    pageSize
+    totalPages
+  }
+}
+    `) as unknown as TypedDocumentString<SearchPageProductsQuery, SearchPageProductsQueryVariables>;
+export const SeachPageFiltersDocument = new TypedDocumentString(`
+    query SeachPageFilters($groupId: Int, $categoryId: Int, $subCategoryId: Int) {
+  productFilters(
+    groupId: $groupId
+    categoryId: $categoryId
+    subCategoryId: $subCategoryId
+  ) {
+    attributeDefinitionId
+    type
+    name
+    values
+  }
+}
+    `) as unknown as TypedDocumentString<SeachPageFiltersQuery, SeachPageFiltersQueryVariables>;
+export const SeachPageProductHierarchyDocument = new TypedDocumentString(`
+    query SeachPageProductHierarchy {
+  menu {
+    id
+    name
+    photo
+    icon
+    categories {
+      id
+      name
+      subCategories {
+        id
+        name
+      }
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<SeachPageProductHierarchyQuery, SeachPageProductHierarchyQueryVariables>;
+export const RootPageBestsellerProductsDocument = new TypedDocumentString(`
+    query RootPageBestsellerProducts($limit: Int) {
+  bestsellerProducts(limit: $limit) {
+    id
+    name
+    price {
+      amount
+      currency
+    }
+    photos
+    promotion {
+      promotionalPrice {
+        amount
+        currency
+      }
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<RootPageBestsellerProductsQuery, RootPageBestsellerProductsQueryVariables>;
+export const RootPageFeaturedProductsDocument = new TypedDocumentString(`
+    query RootPageFeaturedProducts($limit: Int) {
+  featuredProducts(limit: $limit) {
+    id
+    name
+    price {
+      amount
+      currency
+    }
+    photos
+    promotion {
+      promotionalPrice {
+        amount
+        currency
+      }
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<RootPageFeaturedProductsQuery, RootPageFeaturedProductsQueryVariables>;
+export const RootPagePromotionHightlightDocument = new TypedDocumentString(`
+    query RootPagePromotionHightlight {
+  promotionHighlightProduct {
+    id
+    name
+    price {
+      amount
+      currency
+    }
+    photos
+    promotion {
+      promotionalPrice {
+        amount
+        currency
+      }
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<RootPagePromotionHightlightQuery, RootPagePromotionHightlightQueryVariables>;

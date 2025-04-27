@@ -39,7 +39,7 @@ class ApiClient {
 
 	public postGraphql<TResult, TVariables>(
 		document: TypedDocumentString<TResult, TVariables>,
-		variables: TVariables extends Record<string, never> ? never : TVariables,
+		variables?: TVariables extends Record<string, never> ? never : TVariables,
 		config?: AxiosRequestConfig
 	): Promise<AxiosResponse<{ data: TResult; errors?: Array<{ message: string }> }>> {
 		const gqlRequest = {

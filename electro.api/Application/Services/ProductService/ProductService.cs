@@ -4,6 +4,7 @@ using Domain.Aggregates.ProductCatalogAggregate;
 using Domain.Reposiotories;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace Application.Services.ProductService
 {
@@ -98,6 +99,17 @@ namespace Application.Services.ProductService
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync(cancellationToken);
+
+            foreach (var product in products)
+            {
+                var primaryAttributes = product.Attributes.Where(a => a.IsPrimary).ToList();
+
+                var field = typeof(Product).GetField("_attributes", BindingFlags.NonPublic | BindingFlags.Instance);
+                if (field != null)
+                {
+                    field.SetValue(product, primaryAttributes);
+                }
+            }
 
             return (products, totalProducts);
         }

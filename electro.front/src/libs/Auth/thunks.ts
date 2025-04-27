@@ -2,7 +2,13 @@ import { AppDispatch } from "../Store";
 import ApiClient from "../api-contract/ApiClient";
 import { IError, createError } from "../api-contract/Error";
 import { graphql } from "../api-contract/graphql-api-contract";
-import { AuthPageLoginMutation, AuthPageRefreshTokenMutation, AuthPageRefreshTokenMutationVariables, AuthPageRegisterMutation, AuthPageRegisterMutationVariables } from "../api-contract/graphql-api-contract/graphql";
+import {
+	AuthPageLoginMutation,
+	AuthPageRefreshTokenMutation,
+	AuthPageRefreshTokenMutationVariables,
+	AuthPageRegisterMutation,
+	AuthPageRegisterMutationVariables,
+} from "../api-contract/graphql-api-contract/graphql";
 import { LoginUserCommand, LoginUserSuccessResult, RefreshTokenCommand, RefreshTokenSuccessResult, RegisterUserCommand, RegisterUserSuccessResult } from "../api-contract/rest-api-contract";
 import { authErrorSet, authLoadingStart, loginUserSuccess, logout, refreshTokenSuccess, registerUserSuccess } from "./slice";
 
@@ -32,6 +38,11 @@ export const registerUser = (command: RegisterUserCommand) => async (dispatch: A
 			};
 			const response = await ApiClient.postGraphql(AuthPageRegisterMutation, variables);
 			const mappedResponse = mapGraphQLResponseToRegisterUserResult(response.data.data);
+
+			if (!mappedResponse.success && mappedResponse.message) {
+				throw new Error(mappedResponse.message);
+			}
+
 			dispatch(registerUserSuccess(mappedResponse));
 		} else {
 			const response = await ApiClient.post<RegisterUserSuccessResult>("/api/auth/register", command);
@@ -82,6 +93,11 @@ export const loginUser = (command: LoginUserCommand) => async (dispatch: AppDisp
 			};
 			const response = await ApiClient.postGraphql(AuthPageLoginMutation, variables);
 			const mappedResponse = mapGraphQLResponseToLoginUserResult(response.data.data);
+
+			if (!mappedResponse.success && mappedResponse.message) {
+				throw new Error(mappedResponse.message);
+			}
+
 			dispatch(loginUserSuccess(mappedResponse));
 		} else {
 			const response = await ApiClient.post<LoginUserSuccessResult>("/api/auth/login", command);
@@ -132,6 +148,11 @@ export const refreshToken = (command: RefreshTokenCommand) => async (dispatch: A
 			};
 			const response = await ApiClient.postGraphql(AuthPageRefreshTokenMutation, variables);
 			const mappedResponse = mapGraphQLResponseToRefreshTokenResult(response.data.data);
+
+			if (!mappedResponse.success && mappedResponse.message) {
+				throw new Error(mappedResponse.message);
+			}
+
 			dispatch(refreshTokenSuccess(mappedResponse));
 			return mappedResponse;
 		} else {
@@ -160,15 +181,14 @@ const mapGraphQLResponseToRefreshTokenResult = (data: AuthPageRefreshTokenMutati
 export const logoutUser = () => async (dispatch: AppDispatch) => {
 	try {
 		dispatch(authLoadingStart());
-		if(ApiClient.apiType() == "graphql") {
+		if (ApiClient.apiType() == "graphql") {
 			const AuthPageLogoutMutation = graphql(`
 				mutation AuthPageLogout {
 					logoutUser
 				}
 			`);
 			const response = await ApiClient.postGraphql(AuthPageLogoutMutation);
-		}
-		else{
+		} else {
 			const response = await ApiClient.post("/api/auth/logout");
 		}
 		dispatch(logout());

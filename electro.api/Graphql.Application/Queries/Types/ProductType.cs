@@ -13,7 +13,7 @@ namespace Graphql.Application.Queries.Types
                 .Resolve(context =>
                 {
                     var product = context.Parent<Product>();
-                    return product.Opinions.Any() ? (float)Math.Round(product.Opinions.Average(o => o.Rating), 1) : 0;
+                    return product.Opinions.Any() ? (double)Math.Round(product.Opinions.Average(o => o.Rating), 1) : 0;
                 });
 
             descriptor

@@ -25,6 +25,7 @@ export const fetchProductCatalogList = (query: GetProductCatalogQuery) => async 
 							}
 							photos
 							status
+							stockQuantity
 						}
 						page
 						pageSize
@@ -58,6 +59,7 @@ const mapGraphQLResponseToGetProductCatalogResult = (data: AdminProductCatalogPa
 				currency: p.price.currency,
 				photo: p.photos.length ? p.photos[0] : "",
 				status: mapProductStatusFromGraphQL(p.status),
+				stockQuantity: p.stockQuantity,
 			};
 		}),
 		page: data.catalogProducts.page,

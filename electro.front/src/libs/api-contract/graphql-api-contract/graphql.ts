@@ -866,7 +866,7 @@ export type AdminProductCatalogPageProductsQueryVariables = Exact<{
 }>;
 
 
-export type AdminProductCatalogPageProductsQuery = { __typename?: 'Query', catalogProducts: { __typename?: 'PaginatedResultOfProduct', page: number, pageSize: number, totalPages: number, items: Array<{ __typename?: 'Product', id: any, name: string, photos: Array<string>, status: ProductStatus, price: { __typename?: 'Money', amount: any, currency: string } }> } };
+export type AdminProductCatalogPageProductsQuery = { __typename?: 'Query', catalogProducts: { __typename?: 'PaginatedResultOfProduct', page: number, pageSize: number, totalPages: number, items: Array<{ __typename?: 'Product', id: any, name: string, photos: Array<string>, status: ProductStatus, stockQuantity: number, price: { __typename?: 'Money', amount: any, currency: string } }> } };
 
 export type AdminProductPageProductQueryVariables = Exact<{
   id: Scalars['UUID']['input'];
@@ -1403,6 +1403,7 @@ export const AdminProductCatalogPageProductsDocument = new TypedDocumentString(`
       }
       photos
       status
+      stockQuantity
     }
     page
     pageSize

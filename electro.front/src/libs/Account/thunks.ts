@@ -24,11 +24,25 @@ export const getAccountOrders = (queryParams: IGetAccountOrdersQueryParams) => a
 						items {
 							id
 							status
+							number
+							createdAt
 							totalPrice {
 								amount
 								currency
 							}
-							createdAt
+							products {
+								id
+								quantity
+								name
+								product {
+									id
+									photos
+								}
+								price {
+									amount
+									currency
+								}
+							}
 						}
 						page
 						pageSize
@@ -60,6 +74,17 @@ const mapGraphQLResponseToGetUserOrdersResult = (data: AccountOrdersPageOrdersQu
 				status: mapOrderStatusFromGraphQL(i.status),
 				totalPrice: i.totalPrice,
 				createdAt: i.createdAt,
+				number: i.number,
+				products: i.products.map((p) => {
+					return {
+						id: p.id,
+						productId: p.product.id,
+						name: p.name,
+						photo: p.product.photos.length ? p.product.photos[0] : "",
+						quantity: p.quantity,
+						price: p.price,
+					};
+				}),
 			};
 		}),
 		page: data.userOrders.page,

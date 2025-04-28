@@ -829,7 +829,7 @@ export type AccountOrdersPageOrdersQueryVariables = Exact<{
 }>;
 
 
-export type AccountOrdersPageOrdersQuery = { __typename?: 'Query', userOrders: { __typename?: 'PaginatedResultOfOrder', page: number, pageSize: number, totalPages: number, items: Array<{ __typename?: 'Order', id: any, status: OrderStatus, createdAt: any, totalPrice: { __typename?: 'Money', amount: any, currency: string } }> } };
+export type AccountOrdersPageOrdersQuery = { __typename?: 'Query', userOrders: { __typename?: 'PaginatedResultOfOrder', page: number, pageSize: number, totalPages: number, items: Array<{ __typename?: 'Order', id: any, status: OrderStatus, number: number, createdAt: any, totalPrice: { __typename?: 'Money', amount: any, currency: string }, products: Array<{ __typename?: 'OrderProduct', id: any, quantity: number, name: string, product: { __typename?: 'Product', id: any, photos: Array<string> }, price: { __typename?: 'Money', amount: any, currency: string } }> }> } };
 
 export type AccountOrdersPageOrderQueryVariables = Exact<{
   orderId: Scalars['UUID']['input'];
@@ -1149,11 +1149,25 @@ export const AccountOrdersPageOrdersDocument = new TypedDocumentString(`
     items {
       id
       status
+      number
+      createdAt
       totalPrice {
         amount
         currency
       }
-      createdAt
+      products {
+        id
+        quantity
+        name
+        product {
+          id
+          photos
+        }
+        price {
+          amount
+          currency
+        }
+      }
     }
     page
     pageSize

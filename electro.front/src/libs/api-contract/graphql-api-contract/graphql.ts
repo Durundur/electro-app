@@ -838,6 +838,132 @@ export type AccountOrdersPageOrderQueryVariables = Exact<{
 
 export type AccountOrdersPageOrderQuery = { __typename?: 'Query', userOrder: { __typename?: 'Order', id: any, number: number, status: OrderStatus, createdAt: any, products: Array<{ __typename?: 'OrderProduct', id: any, quantity: number, totalPrice: { __typename?: 'Money', amount: any, currency: string }, product: { __typename?: 'Product', id: any, name: string, photos: Array<string>, price: { __typename?: 'Money', amount: any, currency: string } } }>, payment: { __typename?: 'Payment', id: any, method: PaymentMethod, status: PaymentStatus, paidAt?: any | null, cost: { __typename?: 'Money', amount: any, currency: string } }, delivery: { __typename?: 'Delivery', id: any, method: DeliveryMethod, status: DeliveryStatus, trackingNumber?: string | null, shippedAt?: any | null, deliveredAt?: any | null, cost: { __typename?: 'Money', amount: any, currency: string } }, recipient: { __typename?: 'Recipient', type: RecipientType, firstName?: string | null, surname?: string | null, companyName?: string | null, taxIdentificationNumber?: string | null, phoneNumber: string, street: string, houseNumber: string, postalCode: string, city: string } } };
 
+export type AdminOrdersPageOrdersQueryVariables = Exact<{
+  page: Scalars['Int']['input'];
+  pageSize: Scalars['Int']['input'];
+}>;
+
+
+export type AdminOrdersPageOrdersQuery = { __typename?: 'Query', orders: { __typename?: 'PaginatedResultOfOrder', page: number, pageSize: number, totalPages: number, items: Array<{ __typename?: 'Order', id: any, status: OrderStatus, createdAt: any, totalPrice: { __typename?: 'Money', amount: any, currency: string } }> } };
+
+export type AdminOrdersPageOrderQueryVariables = Exact<{
+  orderId: Scalars['UUID']['input'];
+}>;
+
+
+export type AdminOrdersPageOrderQuery = { __typename?: 'Query', order: { __typename?: 'Order', id: any, number: number, status: OrderStatus, createdAt: any, updatedAt: any, totalPrice: { __typename?: 'Money', amount: any, currency: string }, products: Array<{ __typename?: 'OrderProduct', id: any, quantity: number, name: string, price: { __typename?: 'Money', amount: any, currency: string }, totalPrice: { __typename?: 'Money', amount: any, currency: string }, product: { __typename?: 'Product', id: any, photos: Array<string> } }>, payment: { __typename?: 'Payment', id: any, method: PaymentMethod, status: PaymentStatus, paidAt?: any | null, cost: { __typename?: 'Money', amount: any, currency: string } }, delivery: { __typename?: 'Delivery', id: any, method: DeliveryMethod, status: DeliveryStatus, trackingNumber?: string | null, shippedAt?: any | null, deliveredAt?: any | null, cost: { __typename?: 'Money', amount: any, currency: string } }, recipient: { __typename?: 'Recipient', type: RecipientType, firstName?: string | null, surname?: string | null, companyName?: string | null, taxIdentificationNumber?: string | null, phoneNumber: string, street: string, houseNumber: string, postalCode: string, city: string } } };
+
+export type AdminOrdersPageUpdateOrderMutationVariables = Exact<{
+  input: UpdateOrderInput;
+}>;
+
+
+export type AdminOrdersPageUpdateOrderMutation = { __typename?: 'Mutation', updateOrder: { __typename?: 'Order', id: any, number: number, status: OrderStatus, createdAt: any, updatedAt: any, totalPrice: { __typename?: 'Money', amount: any, currency: string }, products: Array<{ __typename?: 'OrderProduct', id: any, quantity: number, name: string, price: { __typename?: 'Money', amount: any, currency: string }, totalPrice: { __typename?: 'Money', amount: any, currency: string }, product: { __typename?: 'Product', id: any, photos: Array<string> } }>, payment: { __typename?: 'Payment', id: any, method: PaymentMethod, status: PaymentStatus, paidAt?: any | null, cost: { __typename?: 'Money', amount: any, currency: string } }, delivery: { __typename?: 'Delivery', id: any, method: DeliveryMethod, status: DeliveryStatus, trackingNumber?: string | null, shippedAt?: any | null, deliveredAt?: any | null, cost: { __typename?: 'Money', amount: any, currency: string } }, recipient: { __typename?: 'Recipient', type: RecipientType, firstName?: string | null, surname?: string | null, companyName?: string | null, taxIdentificationNumber?: string | null, phoneNumber: string, street: string, houseNumber: string, postalCode: string, city: string } } };
+
+export type AdminProductCatalogPageProductsQueryVariables = Exact<{
+  page: Scalars['Int']['input'];
+  pageSize: Scalars['Int']['input'];
+}>;
+
+
+export type AdminProductCatalogPageProductsQuery = { __typename?: 'Query', catalogProducts: { __typename?: 'PaginatedResultOfProduct', page: number, pageSize: number, totalPages: number, items: Array<{ __typename?: 'Product', id: any, name: string, photos: Array<string>, status: ProductStatus, price: { __typename?: 'Money', amount: any, currency: string } }> } };
+
+export type AdminProductPageProductQueryVariables = Exact<{
+  id: Scalars['UUID']['input'];
+}>;
+
+
+export type AdminProductPageProductQuery = { __typename?: 'Query', product?: { __typename?: 'Product', id: any, name: string, description: string, photos: Array<string>, status: ProductStatus, stockQuantity: number, averageOpinionRating?: number | null, opinionCount?: number | null, price: { __typename?: 'Money', amount: any, currency: string }, group?: { __typename?: 'Group', id: number } | null, category?: { __typename?: 'Category', id: number } | null, subCategory?: { __typename?: 'SubCategory', id: number } | null, promotion?: { __typename?: 'ProductPromotion', id: any, productId: any, startDate: any, endDate: any, isActive: boolean, promotionalPrice: { __typename?: 'Money', amount: any, currency: string } } | null, attributes: Array<{ __typename?: 'AttributeValue', value: string, isPrimary: boolean, attributeDefinition: { __typename?: 'AttributeDefinition', id: any, name: string, type: AttributeType } }> } | null };
+
+export type AdminProductPageProductHierarchyQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AdminProductPageProductHierarchyQuery = { __typename?: 'Query', productHierarchy: Array<{ __typename?: 'Group', id: number, name: string, photo: string, icon: string, categories: Array<{ __typename?: 'Category', id: number, name: string, subCategories: Array<{ __typename?: 'SubCategory', id: number, name: string }> }> }> };
+
+export type AdminProductPageAttributesDefinitionsQueryVariables = Exact<{
+  groupId?: InputMaybe<Scalars['Int']['input']>;
+  categoryId?: InputMaybe<Scalars['Int']['input']>;
+  subCategoryId?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type AdminProductPageAttributesDefinitionsQuery = { __typename?: 'Query', attributesDefinitions: Array<{ __typename?: 'AttributeDefinition', id: any, name: string, type: AttributeType, isRequired: boolean, description: string, isFilterable: boolean }> };
+
+export type AdminProductPageCreateOrUpdateProductMutationVariables = Exact<{
+  input: CreateOrUpdateProductInput;
+}>;
+
+
+export type AdminProductPageCreateOrUpdateProductMutation = { __typename?: 'Mutation', createOrUpdateProduct: { __typename?: 'Product', id: any } };
+
+export type AdminProductHierarchyPageProductHierarchyQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AdminProductHierarchyPageProductHierarchyQuery = { __typename?: 'Query', productHierarchy: Array<{ __typename?: 'Group', id: number, name: string, photo: string, icon: string, categories: Array<{ __typename?: 'Category', id: number, name: string, subCategories: Array<{ __typename?: 'SubCategory', id: number, name: string }> }> }> };
+
+export type AdminProductHierarchyPageGroupQueryVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type AdminProductHierarchyPageGroupQuery = { __typename?: 'Query', group: { __typename?: 'Group', id: number, name: string, photo: string, icon: string, description: string, active: boolean, displayOrder: number, createdAt: any, modifiedAt: any, attributes: Array<{ __typename?: 'AttributeDefinition', id: any, name: string, type: AttributeType, isRequired: boolean, isFilterable: boolean, description: string }> } };
+
+export type AdminProductHierarchyPageCategoryQueryVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type AdminProductHierarchyPageCategoryQuery = { __typename?: 'Query', category: { __typename?: 'Category', id: number, name: string, description: string, active: boolean, displayOrder: number, createdAt: any, modifiedAt: any, groupId?: number | null, attributes: Array<{ __typename?: 'AttributeDefinition', id: any, name: string, type: AttributeType, isRequired: boolean, isFilterable: boolean, description: string }> } };
+
+export type AdminProductHierarchyPageSubCategoryQueryVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type AdminProductHierarchyPageSubCategoryQuery = { __typename?: 'Query', subCategory: { __typename?: 'SubCategory', id: number, name: string, description: string, active: boolean, displayOrder: number, createdAt: any, modifiedAt: any, categoryId?: number | null, attributes: Array<{ __typename?: 'AttributeDefinition', id: any, name: string, type: AttributeType, isRequired: boolean, isFilterable: boolean, description: string }> } };
+
+export type AdminProductHierarchyPageCreateOrUpdateGroupMutationVariables = Exact<{
+  input: CreateOrUpdateGroupInput;
+}>;
+
+
+export type AdminProductHierarchyPageCreateOrUpdateGroupMutation = { __typename?: 'Mutation', createOrUpdateGroup: { __typename?: 'Group', id: number, name: string, icon: string, photo: string, description: string, active: boolean, displayOrder: number, createdAt: any, modifiedAt: any, attributes: Array<{ __typename?: 'AttributeDefinition', id: any, name: string, type: AttributeType, isRequired: boolean, description: string, isFilterable: boolean }> } };
+
+export type AdminProductHierarchyPageDeleteGroupMutationVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type AdminProductHierarchyPageDeleteGroupMutation = { __typename?: 'Mutation', deleteGroup: boolean };
+
+export type AdminProductHierarchyPageCreateOrUpdateCategoryMutationVariables = Exact<{
+  input: CreateOrUpdateCategoryInput;
+}>;
+
+
+export type AdminProductHierarchyPageCreateOrUpdateCategoryMutation = { __typename?: 'Mutation', createOrUpdateCategory: { __typename?: 'Category', id: number, name: string, description: string, active: boolean, displayOrder: number, createdAt: any, modifiedAt: any, attributes: Array<{ __typename?: 'AttributeDefinition', id: any, name: string, type: AttributeType, isRequired: boolean, isFilterable: boolean, description: string }> } };
+
+export type AdminProductHierarchyPageDeleteCategoryMutationVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type AdminProductHierarchyPageDeleteCategoryMutation = { __typename?: 'Mutation', deleteCategory: boolean };
+
+export type AdminProductHierarchyPageCreateOrUpdateSubCategoryMutationVariables = Exact<{
+  input: CreateOrUpdateSubCategoryInput;
+}>;
+
+
+export type AdminProductHierarchyPageCreateOrUpdateSubCategoryMutation = { __typename?: 'Mutation', createOrUpdateSubCategory: { __typename?: 'SubCategory', id: number, name: string, description: string, active: boolean, displayOrder: number, createdAt: any, modifiedAt: any, categoryId?: number | null, attributes: Array<{ __typename?: 'AttributeDefinition', id: any, name: string, type: AttributeType, isRequired: boolean, isFilterable: boolean, description: string }> } };
+
+export type AdminProductHierarchyPageDeleteSubCategoryMutationVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type AdminProductHierarchyPageDeleteSubCategoryMutation = { __typename?: 'Mutation', deleteSubCategory: boolean };
+
 export type AuthPageRegisterMutationVariables = Exact<{
   input: RegisterInput;
 }>;
@@ -1096,6 +1222,429 @@ export const AccountOrdersPageOrderDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<AccountOrdersPageOrderQuery, AccountOrdersPageOrderQueryVariables>;
+export const AdminOrdersPageOrdersDocument = new TypedDocumentString(`
+    query AdminOrdersPageOrders($page: Int!, $pageSize: Int!) {
+  orders(page: $page, pageSize: $pageSize) {
+    items {
+      id
+      status
+      totalPrice {
+        amount
+        currency
+      }
+      createdAt
+    }
+    page
+    pageSize
+    totalPages
+  }
+}
+    `) as unknown as TypedDocumentString<AdminOrdersPageOrdersQuery, AdminOrdersPageOrdersQueryVariables>;
+export const AdminOrdersPageOrderDocument = new TypedDocumentString(`
+    query AdminOrdersPageOrder($orderId: UUID!) {
+  order(id: $orderId) {
+    id
+    number
+    status
+    totalPrice {
+      amount
+      currency
+    }
+    createdAt
+    updatedAt
+    products {
+      id
+      quantity
+      name
+      price {
+        amount
+        currency
+      }
+      totalPrice {
+        amount
+        currency
+      }
+      product {
+        id
+        photos
+      }
+    }
+    payment {
+      id
+      method
+      cost {
+        amount
+        currency
+      }
+      status
+      paidAt
+    }
+    delivery {
+      id
+      method
+      cost {
+        amount
+        currency
+      }
+      status
+      trackingNumber
+      shippedAt
+      deliveredAt
+    }
+    recipient {
+      type
+      firstName
+      surname
+      companyName
+      taxIdentificationNumber
+      phoneNumber
+      street
+      houseNumber
+      postalCode
+      city
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<AdminOrdersPageOrderQuery, AdminOrdersPageOrderQueryVariables>;
+export const AdminOrdersPageUpdateOrderDocument = new TypedDocumentString(`
+    mutation AdminOrdersPageUpdateOrder($input: UpdateOrderInput!) {
+  updateOrder(input: $input) {
+    id
+    number
+    status
+    totalPrice {
+      amount
+      currency
+    }
+    createdAt
+    updatedAt
+    products {
+      id
+      quantity
+      name
+      price {
+        amount
+        currency
+      }
+      totalPrice {
+        amount
+        currency
+      }
+      product {
+        id
+        photos
+      }
+    }
+    payment {
+      id
+      method
+      cost {
+        amount
+        currency
+      }
+      status
+      paidAt
+    }
+    delivery {
+      id
+      method
+      cost {
+        amount
+        currency
+      }
+      status
+      trackingNumber
+      shippedAt
+      deliveredAt
+    }
+    recipient {
+      type
+      firstName
+      surname
+      companyName
+      taxIdentificationNumber
+      phoneNumber
+      street
+      houseNumber
+      postalCode
+      city
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<AdminOrdersPageUpdateOrderMutation, AdminOrdersPageUpdateOrderMutationVariables>;
+export const AdminProductCatalogPageProductsDocument = new TypedDocumentString(`
+    query AdminProductCatalogPageProducts($page: Int!, $pageSize: Int!) {
+  catalogProducts(page: $page, pageSize: $pageSize) {
+    items {
+      id
+      name
+      price {
+        amount
+        currency
+      }
+      photos
+      status
+    }
+    page
+    pageSize
+    totalPages
+  }
+}
+    `) as unknown as TypedDocumentString<AdminProductCatalogPageProductsQuery, AdminProductCatalogPageProductsQueryVariables>;
+export const AdminProductPageProductDocument = new TypedDocumentString(`
+    query AdminProductPageProduct($id: UUID!) {
+  product(id: $id) {
+    id
+    name
+    description
+    price {
+      amount
+      currency
+    }
+    photos
+    status
+    group {
+      id
+    }
+    category {
+      id
+    }
+    subCategory {
+      id
+    }
+    stockQuantity
+    averageOpinionRating
+    opinionCount
+    promotion {
+      id
+      productId
+      startDate
+      endDate
+      promotionalPrice {
+        amount
+        currency
+      }
+      isActive
+    }
+    attributes {
+      value
+      isPrimary
+      attributeDefinition {
+        id
+        name
+        type
+      }
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<AdminProductPageProductQuery, AdminProductPageProductQueryVariables>;
+export const AdminProductPageProductHierarchyDocument = new TypedDocumentString(`
+    query AdminProductPageProductHierarchy {
+  productHierarchy {
+    id
+    name
+    photo
+    icon
+    categories {
+      id
+      name
+      subCategories {
+        id
+        name
+      }
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<AdminProductPageProductHierarchyQuery, AdminProductPageProductHierarchyQueryVariables>;
+export const AdminProductPageAttributesDefinitionsDocument = new TypedDocumentString(`
+    query AdminProductPageAttributesDefinitions($groupId: Int, $categoryId: Int, $subCategoryId: Int) {
+  attributesDefinitions(
+    groupId: $groupId
+    categoryId: $categoryId
+    subCategoryId: $subCategoryId
+  ) {
+    id
+    name
+    type
+    isRequired
+    description
+    isFilterable
+  }
+}
+    `) as unknown as TypedDocumentString<AdminProductPageAttributesDefinitionsQuery, AdminProductPageAttributesDefinitionsQueryVariables>;
+export const AdminProductPageCreateOrUpdateProductDocument = new TypedDocumentString(`
+    mutation AdminProductPageCreateOrUpdateProduct($input: CreateOrUpdateProductInput!) {
+  createOrUpdateProduct(input: $input) {
+    id
+  }
+}
+    `) as unknown as TypedDocumentString<AdminProductPageCreateOrUpdateProductMutation, AdminProductPageCreateOrUpdateProductMutationVariables>;
+export const AdminProductHierarchyPageProductHierarchyDocument = new TypedDocumentString(`
+    query AdminProductHierarchyPageProductHierarchy {
+  productHierarchy {
+    id
+    name
+    photo
+    icon
+    categories {
+      id
+      name
+      subCategories {
+        id
+        name
+      }
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<AdminProductHierarchyPageProductHierarchyQuery, AdminProductHierarchyPageProductHierarchyQueryVariables>;
+export const AdminProductHierarchyPageGroupDocument = new TypedDocumentString(`
+    query AdminProductHierarchyPageGroup($id: Int!) {
+  group(id: $id) {
+    id
+    name
+    photo
+    icon
+    description
+    active
+    displayOrder
+    createdAt
+    modifiedAt
+    attributes {
+      id
+      name
+      type
+      isRequired
+      isFilterable
+      description
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<AdminProductHierarchyPageGroupQuery, AdminProductHierarchyPageGroupQueryVariables>;
+export const AdminProductHierarchyPageCategoryDocument = new TypedDocumentString(`
+    query AdminProductHierarchyPageCategory($id: Int!) {
+  category(id: $id) {
+    id
+    name
+    description
+    active
+    displayOrder
+    createdAt
+    modifiedAt
+    groupId
+    attributes {
+      id
+      name
+      type
+      isRequired
+      isFilterable
+      description
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<AdminProductHierarchyPageCategoryQuery, AdminProductHierarchyPageCategoryQueryVariables>;
+export const AdminProductHierarchyPageSubCategoryDocument = new TypedDocumentString(`
+    query AdminProductHierarchyPageSubCategory($id: Int!) {
+  subCategory(id: $id) {
+    id
+    name
+    description
+    active
+    displayOrder
+    createdAt
+    modifiedAt
+    categoryId
+    attributes {
+      id
+      name
+      type
+      isRequired
+      isFilterable
+      description
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<AdminProductHierarchyPageSubCategoryQuery, AdminProductHierarchyPageSubCategoryQueryVariables>;
+export const AdminProductHierarchyPageCreateOrUpdateGroupDocument = new TypedDocumentString(`
+    mutation AdminProductHierarchyPageCreateOrUpdateGroup($input: CreateOrUpdateGroupInput!) {
+  createOrUpdateGroup(input: $input) {
+    id
+    name
+    icon
+    photo
+    description
+    active
+    displayOrder
+    createdAt
+    modifiedAt
+    attributes {
+      id
+      name
+      type
+      isRequired
+      description
+      isFilterable
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<AdminProductHierarchyPageCreateOrUpdateGroupMutation, AdminProductHierarchyPageCreateOrUpdateGroupMutationVariables>;
+export const AdminProductHierarchyPageDeleteGroupDocument = new TypedDocumentString(`
+    mutation AdminProductHierarchyPageDeleteGroup($id: Int!) {
+  deleteGroup(id: $id)
+}
+    `) as unknown as TypedDocumentString<AdminProductHierarchyPageDeleteGroupMutation, AdminProductHierarchyPageDeleteGroupMutationVariables>;
+export const AdminProductHierarchyPageCreateOrUpdateCategoryDocument = new TypedDocumentString(`
+    mutation AdminProductHierarchyPageCreateOrUpdateCategory($input: CreateOrUpdateCategoryInput!) {
+  createOrUpdateCategory(input: $input) {
+    id
+    name
+    description
+    active
+    displayOrder
+    createdAt
+    modifiedAt
+    attributes {
+      id
+      name
+      type
+      isRequired
+      isFilterable
+      description
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<AdminProductHierarchyPageCreateOrUpdateCategoryMutation, AdminProductHierarchyPageCreateOrUpdateCategoryMutationVariables>;
+export const AdminProductHierarchyPageDeleteCategoryDocument = new TypedDocumentString(`
+    mutation AdminProductHierarchyPageDeleteCategory($id: Int!) {
+  deleteCategory(id: $id)
+}
+    `) as unknown as TypedDocumentString<AdminProductHierarchyPageDeleteCategoryMutation, AdminProductHierarchyPageDeleteCategoryMutationVariables>;
+export const AdminProductHierarchyPageCreateOrUpdateSubCategoryDocument = new TypedDocumentString(`
+    mutation AdminProductHierarchyPageCreateOrUpdateSubCategory($input: CreateOrUpdateSubCategoryInput!) {
+  createOrUpdateSubCategory(input: $input) {
+    id
+    name
+    description
+    active
+    displayOrder
+    createdAt
+    modifiedAt
+    categoryId
+    attributes {
+      id
+      name
+      type
+      isRequired
+      isFilterable
+      description
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<AdminProductHierarchyPageCreateOrUpdateSubCategoryMutation, AdminProductHierarchyPageCreateOrUpdateSubCategoryMutationVariables>;
+export const AdminProductHierarchyPageDeleteSubCategoryDocument = new TypedDocumentString(`
+    mutation AdminProductHierarchyPageDeleteSubCategory($id: Int!) {
+  deleteSubCategory(id: $id)
+}
+    `) as unknown as TypedDocumentString<AdminProductHierarchyPageDeleteSubCategoryMutation, AdminProductHierarchyPageDeleteSubCategoryMutationVariables>;
 export const AuthPageRegisterDocument = new TypedDocumentString(`
     mutation AuthPageRegister($input: RegisterInput!) {
   registerUser(input: $input) {

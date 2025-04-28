@@ -8,7 +8,6 @@ import {
 	AttributeType as RestAttributeType,
 	OpinionReactionType as RestOpinionReactionType,
 	RecipientType as RestRecipientType,
-
 } from "@/libs/api-contract/rest-api-contract";
 
 import {
@@ -129,6 +128,15 @@ export const mapPaymentStatusFromGraphQL = (status: GraphQLPaymentStatus): RestP
 	return statusMap[status];
 };
 
+export const mapAttributeTypeToGraphQL = (type: RestAttributeType): GraphQLAttributeType => {
+	const typeMap: Record<RestAttributeType, GraphQLAttributeType> = {
+		[RestAttributeType.Text]: GraphQLAttributeType.Text,
+		[RestAttributeType.List]: GraphQLAttributeType.List,
+		[RestAttributeType.Boolean]: GraphQLAttributeType.Boolean,
+	};
+	return typeMap[type];
+};
+
 export const mapAttributeTypeFromGraphQL = (type: GraphQLAttributeType): RestAttributeType => {
 	const typeMap: Record<GraphQLAttributeType, RestAttributeType> = {
 		[GraphQLAttributeType.Text]: RestAttributeType.Text,
@@ -139,19 +147,19 @@ export const mapAttributeTypeFromGraphQL = (type: GraphQLAttributeType): RestAtt
 };
 
 export const mapOpinionReactionTypeToGraphQL = (type: RestOpinionReactionType): GraphQLOpinionReactionType => {
-    const typeMap: Record<RestOpinionReactionType, GraphQLOpinionReactionType> = {
-        [RestOpinionReactionType.Like]: GraphQLOpinionReactionType.Like,
-        [RestOpinionReactionType.Dislike]: GraphQLOpinionReactionType.Dislike,
-    };
-    return typeMap[type];
+	const typeMap: Record<RestOpinionReactionType, GraphQLOpinionReactionType> = {
+		[RestOpinionReactionType.Like]: GraphQLOpinionReactionType.Like,
+		[RestOpinionReactionType.Dislike]: GraphQLOpinionReactionType.Dislike,
+	};
+	return typeMap[type];
 };
 
 export const mapOpinionReactionTypeFromGraphQL = (type: GraphQLOpinionReactionType): RestOpinionReactionType => {
-    const typeMap: Record<GraphQLOpinionReactionType, RestOpinionReactionType> = {
-        [GraphQLOpinionReactionType.Like]: RestOpinionReactionType.Like,
-        [GraphQLOpinionReactionType.Dislike]: RestOpinionReactionType.Dislike,
-    };
-    return typeMap[type];
+	const typeMap: Record<GraphQLOpinionReactionType, RestOpinionReactionType> = {
+		[GraphQLOpinionReactionType.Like]: RestOpinionReactionType.Like,
+		[GraphQLOpinionReactionType.Dislike]: RestOpinionReactionType.Dislike,
+	};
+	return typeMap[type];
 };
 
 export const mapRecipientTypeFromGraphQL = (type: GraphQLRecipientType): RestRecipientType => {

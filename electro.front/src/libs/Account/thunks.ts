@@ -2,7 +2,14 @@ import { buildQueryString } from "../Helpers/QueryHelper";
 import { AppDispatch } from "../Store";
 import ApiClient from "../api-contract/ApiClient";
 import { IError, createError } from "../api-contract/Error";
-import { mapOrderStatusFromGraphQL } from "../api-contract/Mappers/EnumMappers";
+import {
+	mapDeliveryMethodFromGraphQL,
+	mapDeliveryStatusFromGraphQL,
+	mapOrderStatusFromGraphQL,
+	mapPaymentMethodFromGraphQL,
+	mapPaymentStatusFromGraphQL,
+	mapRecipientTypeFromGraphQL,
+} from "../api-contract/Mappers/EnumMappers";
 import { graphql } from "../api-contract/graphql-api-contract";
 import { AccountOrdersPageOrderQuery, AccountOrdersPageOrderQueryVariables, AccountOrdersPageOrdersQuery, AccountOrdersPageOrdersQueryVariables } from "../api-contract/graphql-api-contract/graphql";
 import { GetUserOrderDetailsResult, GetUserOrdersResult } from "../api-contract/rest-api-contract";
@@ -109,6 +116,11 @@ export const getAccountOrderDetails = (queryParams: IGetAccountOrderDetailsQuery
 						number
 						status
 						createdAt
+						updatedAt
+						totalPrice {
+							amount
+							currency
+						}
 						products {
 							id
 							quantity
@@ -181,7 +193,49 @@ export const getAccountOrderDetails = (queryParams: IGetAccountOrderDetailsQuery
 const mapGraphQLResponseToGetUserOrderDetailsResult = (data: AccountOrdersPageOrderQuery): GetUserOrderDetailsResult => {
 	return {
 		id: data.userOrder.id,
+		number: data.userOrder.number,
 		status: mapOrderStatusFromGraphQL(data.userOrder.status),
+		totalPrice: data.userOrder.totalPrice,
 		createdAt: data.userOrder.createdAt,
+		updatedAt: new Date(data.userOrder.updatedAt),
+		products: data.userOrder.products.map((p) => {
+			return {
+				id: p.id,
+				productId: p.product.id,
+				name: p.product.name,
+				photo: p.product.photos.length ? p.product.photos[0] : "",
+				quantity: p.quantity,
+				price: p.product.price,
+				totalPrice: p.totalPrice,
+			};
+		}),
+		payment: {
+			id: data.userOrder.payment.id,
+			method: mapPaymentMethodFromGraphQL(data.userOrder.payment.method),
+			cost: data.userOrder.payment.cost,
+			status: mapPaymentStatusFromGraphQL(data.userOrder.payment.status),
+			paidAt: data.userOrder.payment.paidAt,
+		},
+		delivery: {
+			id: data.userOrder.delivery.id,
+			method: mapDeliveryMethodFromGraphQL(data.userOrder.delivery.method),
+			cost: data.userOrder.delivery.cost,
+			status: mapDeliveryStatusFromGraphQL(data.userOrder.delivery.status),
+			trackingNumber: data.userOrder.delivery.trackingNumber ?? undefined,
+			shippedAt: data.userOrder.delivery.shippedAt,
+			deliveredAt: data.userOrder.delivery.deliveredAt,
+		},
+		recipient: {
+			type: mapRecipientTypeFromGraphQL(data.userOrder.recipient.type),
+			firstName: data.userOrder.recipient.firstName ?? undefined,
+			surname: data.userOrder.recipient.surname ?? undefined,
+			companyName: data.userOrder.recipient.companyName ?? undefined,
+			taxIdentificationNumber: data.userOrder.recipient.taxIdentificationNumber ?? undefined,
+			phoneNumber: data.userOrder.recipient.phoneNumber,
+			street: data.userOrder.recipient.street,
+			houseNumber: data.userOrder.recipient.houseNumber,
+			postalCode: data.userOrder.recipient.postalCode,
+			city: data.userOrder.recipient.city,
+		},
 	};
 };

@@ -836,7 +836,7 @@ export type AccountOrdersPageOrderQueryVariables = Exact<{
 }>;
 
 
-export type AccountOrdersPageOrderQuery = { __typename?: 'Query', userOrder: { __typename?: 'Order', id: any, number: number, status: OrderStatus, createdAt: any, products: Array<{ __typename?: 'OrderProduct', id: any, quantity: number, totalPrice: { __typename?: 'Money', amount: any, currency: string }, product: { __typename?: 'Product', id: any, name: string, photos: Array<string>, price: { __typename?: 'Money', amount: any, currency: string } } }>, payment: { __typename?: 'Payment', id: any, method: PaymentMethod, status: PaymentStatus, paidAt?: any | null, cost: { __typename?: 'Money', amount: any, currency: string } }, delivery: { __typename?: 'Delivery', id: any, method: DeliveryMethod, status: DeliveryStatus, trackingNumber?: string | null, shippedAt?: any | null, deliveredAt?: any | null, cost: { __typename?: 'Money', amount: any, currency: string } }, recipient: { __typename?: 'Recipient', type: RecipientType, firstName?: string | null, surname?: string | null, companyName?: string | null, taxIdentificationNumber?: string | null, phoneNumber: string, street: string, houseNumber: string, postalCode: string, city: string } } };
+export type AccountOrdersPageOrderQuery = { __typename?: 'Query', userOrder: { __typename?: 'Order', id: any, number: number, status: OrderStatus, createdAt: any, updatedAt: any, totalPrice: { __typename?: 'Money', amount: any, currency: string }, products: Array<{ __typename?: 'OrderProduct', id: any, quantity: number, totalPrice: { __typename?: 'Money', amount: any, currency: string }, product: { __typename?: 'Product', id: any, name: string, photos: Array<string>, price: { __typename?: 'Money', amount: any, currency: string } } }>, payment: { __typename?: 'Payment', id: any, method: PaymentMethod, status: PaymentStatus, paidAt?: any | null, cost: { __typename?: 'Money', amount: any, currency: string } }, delivery: { __typename?: 'Delivery', id: any, method: DeliveryMethod, status: DeliveryStatus, trackingNumber?: string | null, shippedAt?: any | null, deliveredAt?: any | null, cost: { __typename?: 'Money', amount: any, currency: string } }, recipient: { __typename?: 'Recipient', type: RecipientType, firstName?: string | null, surname?: string | null, companyName?: string | null, taxIdentificationNumber?: string | null, phoneNumber: string, street: string, houseNumber: string, postalCode: string, city: string } } };
 
 export type AdminOrdersPageOrdersQueryVariables = Exact<{
   page: Scalars['Int']['input'];
@@ -1182,6 +1182,11 @@ export const AccountOrdersPageOrderDocument = new TypedDocumentString(`
     number
     status
     createdAt
+    updatedAt
+    totalPrice {
+      amount
+      currency
+    }
     products {
       id
       quantity

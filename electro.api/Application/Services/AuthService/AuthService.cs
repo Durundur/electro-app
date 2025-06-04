@@ -91,9 +91,9 @@ namespace Application.Services.AuthService
                 var (newToken, tokenExpiry) = _tokenService.GenerateToken(user, roles);
                 var (newRefreshToken, refreshTokenExpiry) = _tokenService.GenerateRefreshToken();
 
-                await _identityService.UpdateRefreshTokenAsync(user.Id, refreshToken, refreshTokenExpiry);
+                await _identityService.UpdateRefreshTokenAsync(user.Id, newRefreshToken, refreshTokenExpiry);
 
-                return new RefreshTokenSuccessResult(user.Id, token, tokenExpiry, refreshToken, refreshTokenExpiry, roles, "Token refreshed successfully.");
+                return new RefreshTokenSuccessResult(user.Id, newToken, tokenExpiry, newRefreshToken, refreshTokenExpiry, roles, "Token refreshed successfully.");
             }
             catch (Exception ex)
             {

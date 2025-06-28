@@ -294,7 +294,7 @@ namespace Application.Services.ProductService
 
             var product = await _unitOfWork.ProductRepository.GetProductsQuery()
                 .Where(p => p.Status == ProductStatus.Active && p.StockQuantity > 0)
-                .Where(p => p.Promotion != null && p.Promotion.IsActive && p.Promotion.StartDate <= now && p.Promotion.EndDate >= now)
+                .Where(p => p.Promotion != null && p.Promotion.IsEnabled && DateTime.UtcNow >= p.Promotion.StartDate && DateTime.UtcNow <= p.Promotion.EndDate)
                 .OrderByDescending(p => (p.Price.Amount - p.Promotion.PromotionalPrice.Amount) / p.Price.Amount)
                 .FirstOrDefaultAsync(cancellationToken);
 
@@ -443,7 +443,7 @@ namespace Application.Services.ProductService
                 .Select(att =>
                 {
                     var attributeVal = product.Attributes.FirstOrDefault(a => a.AttributeDefinition.Id == att.Id);
-                    return attributeVal == null ? null : new AttributeValue(attributeVal.AttributeDefinition, att.Value, att.IsPrimary);
+                    return attributeVal == null ? null : AttributeValue.Create(attributeVal.AttributeDefinition, att.Value, att.IsPrimary);
                 })
                 .Where(attr => attr != null)
                 .ToList();

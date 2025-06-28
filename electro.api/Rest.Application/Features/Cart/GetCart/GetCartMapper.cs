@@ -15,10 +15,10 @@ namespace Rest.Application.Features.Cart.GetCart
                 {
                     Name = cp.Product.Name,
                     ProductId = cp.Product.Id,
-                    Photo = cp.Product.Photos.FirstOrDefault(),
+                    Photo = cp?.Product.Photos.FirstOrDefault(),
                     Price = cp.Product.Price,
                     Quantity = cp.Quantity,
-                    Promotion = cp.Product.Promotion?.IsValid() == true ? cp.Product.Promotion.PromotionalPrice : null,
+                    Promotion = cp?.Product?.Promotion?.IsCurrentlyActive == true ? cp.Product.Promotion.PromotionalPrice : null,
                 }).ToList()
             };
         }

@@ -1,4 +1,6 @@
-﻿namespace Domain.Aggregates.ProductHierarchyAggregate
+﻿using Domain.Exceptions;
+
+namespace Domain.Aggregates.ProductHierarchyAggregate
 {
     public class SubCategory
     {
@@ -17,6 +19,10 @@
 
         public static SubCategory Create(string name, string description, bool active, int displayOrder)
         {
+            ValidateName(name);
+            ValidateDescription(description);
+            ValidateDisplayOrder(displayOrder);
+
             return new SubCategory
             {
                 Name = name,
@@ -30,6 +36,10 @@
 
         public void Update(string name, string description, bool active, int displayOrder)
         {
+            ValidateName(name);
+            ValidateDescription(description);
+            ValidateDisplayOrder(displayOrder);
+
             Name = name;
             Description = description;
             Active = active;
@@ -37,7 +47,7 @@
             ModifiedAt = DateTime.UtcNow;
         }
 
-        public void AssignToCategory(int categoryId)
+        public void AssignToCategory(int? categoryId)
         {
             CategoryId = categoryId;
             ModifiedAt = DateTime.UtcNow;
@@ -47,7 +57,7 @@
         {
             if (_attributes.Any(a => a.Name == attribute.Name && a.Id == attribute.Id))
             {
-                throw new Exception("Attribute with this name already exists");
+                throw new DomainException("Attribute with this name already exists.");
             }
 
             _attributes.Add(attribute);
@@ -58,6 +68,40 @@
             if (_attributes.Contains(attribute))
             {
                 _attributes.Remove(attribute);
+            }
+        }
+
+        private static void ValidateName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new DomainException("Name cannot be empty.");
+            }
+
+            if (name.Length > 100)
+            {
+                throw new DomainException("Name cannot exceed 100 characters.");
+            }
+        }
+
+        private static void ValidateDescription(string description)
+        {
+            if (description.Length > 500)
+            {
+                throw new DomainException("Description cannot exceed 500 characters.");
+            }
+        }
+
+        private static void ValidateDisplayOrder(int displayOrder)
+        {
+            if (displayOrder < 0)
+            {
+                throw new DomainException("DisplayOrder cannot be negative.");
+            }
+
+            if (displayOrder > 100)
+            {
+                throw new DomainException("DisplayOrder cannot exceed 100.");
             }
         }
     }

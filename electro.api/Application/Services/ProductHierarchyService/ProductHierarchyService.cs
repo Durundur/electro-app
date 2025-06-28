@@ -2,8 +2,6 @@
 using Domain.Aggregates.ProductHierarchyAggregate;
 using Domain.Reposiotories;
 using Microsoft.EntityFrameworkCore;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
-using System.Threading;
 using Application.Services.Models;
 
 namespace Application.Services.ProductHierarchyService
@@ -11,6 +9,7 @@ namespace Application.Services.ProductHierarchyService
     public class ProductHierarchyService : IProductHierarchyService
     {
         private readonly IUnitOfWork _unitOfWork;
+
         public ProductHierarchyService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
@@ -155,7 +154,7 @@ namespace Application.Services.ProductHierarchyService
                 }
                 else
                 {
-                    var newAttribute = new AttributeDefinition(receivedAttribute.Name, receivedAttribute.Type, receivedAttribute.IsRequired, receivedAttribute.Description, receivedAttribute.IsFilterable);
+                    var newAttribute = AttributeDefinition.Create(receivedAttribute.Name, receivedAttribute.Type, receivedAttribute.IsRequired, receivedAttribute.Description, receivedAttribute.IsFilterable);
                     subCategory.AddAttribute(newAttribute);
                 }
             }
@@ -181,8 +180,10 @@ namespace Application.Services.ProductHierarchyService
             }
             else
             {
-                category = new Category(model.Name, model.Description, model.Active, model.DisplayOrder);
+                category = Category.Create(model.Name, model.Description, model.Active, model.DisplayOrder);
+
                 category.AssignToGroup(model.GroupId);
+
                 await _unitOfWork.ProductHierarchyRepository.AddCategoryAsync(category, cancellationToken);
             }
 
@@ -206,7 +207,7 @@ namespace Application.Services.ProductHierarchyService
                 }
                 else
                 {
-                    var newAttribute = new AttributeDefinition(receivedAttribute.Name, receivedAttribute.Type, receivedAttribute.IsRequired, receivedAttribute.Description, receivedAttribute.IsFilterable);
+                    var newAttribute = AttributeDefinition.Create(receivedAttribute.Name, receivedAttribute.Type, receivedAttribute.IsRequired, receivedAttribute.Description, receivedAttribute.IsFilterable);
                     category.AddAttribute(newAttribute);
                 }
             }
@@ -233,7 +234,8 @@ namespace Application.Services.ProductHierarchyService
             }
             else
             {
-                group = new Group(model.Name, model.Photo, model.Icon, model.Description, model.Active, model.DisplayOrder);
+                group = Group.Create(model.Name, model.Photo, model.Icon, model.Description, model.Active, model.DisplayOrder);
+                
                 await _unitOfWork.ProductHierarchyRepository.AddGroupAsync(group, cancellationToken);
             }
 
@@ -257,7 +259,7 @@ namespace Application.Services.ProductHierarchyService
                 }
                 else
                 {
-                    var newAttribute = new AttributeDefinition(receivedAttribute.Name, receivedAttribute.Type, receivedAttribute.IsRequired, receivedAttribute.Description, receivedAttribute.IsFilterable);
+                    var newAttribute = AttributeDefinition.Create(receivedAttribute.Name, receivedAttribute.Type, receivedAttribute.IsRequired, receivedAttribute.Description, receivedAttribute.IsFilterable);
                     group.AddAttribute(newAttribute);
                 }
             }

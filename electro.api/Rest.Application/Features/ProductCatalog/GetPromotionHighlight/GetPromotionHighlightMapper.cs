@@ -4,6 +4,7 @@ namespace Rest.Application.Features.ProductCatalog.GetPromotionHighlight
     {
         public static GetPromotionHighlightResult MapToGetPromotionHighlightResult(Domain.Aggregates.ProductCatalogAggregate.Product product)
         {
+
             return new GetPromotionHighlightResult()
             {
                 Id = product.Id,

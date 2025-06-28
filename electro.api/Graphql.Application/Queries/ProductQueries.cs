@@ -103,7 +103,14 @@ namespace Graphql.Application.Queries
         {
             try
             {
-                return await productService.GetPromotionHighlightAsync(cancellationToken);
+                var product = await productService.GetPromotionHighlightAsync(cancellationToken);
+
+                if (product == null)
+                {
+                    throw new NotFoundException("Promotion was not found");
+                }
+
+                return product;
             }
             catch (Exception ex)
             {

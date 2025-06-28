@@ -49,7 +49,7 @@ namespace Graphql.Application.Mutations
 
             try
             {
-                var opinion = await opinionService.CreateOpinionReactionAsync(userContext.UserId, input.OpinionId, input.ReactionType, cancellationToken);
+                var opinion = await opinionService.CreateOpinionReactionAsync(userContext.UserId, input.ProductId, input.OpinionId, input.ReactionType, cancellationToken);
 
                 return opinion;
             }

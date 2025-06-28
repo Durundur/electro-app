@@ -22,7 +22,7 @@ namespace Rest.Application.Features.ProductCatalog.GetProduct
                 AverageOpinionRating = product.Opinions.Any() ? (float)Math.Round(product.Opinions.Average(o => o.Rating), 1) : 0,
                 OpinionCount = product.Opinions.Count(),
                 Attributes = ProductAttributeMapper.MapToListOfProductAttributeResult(product.Attributes),
-                Promotion = product.Promotion?.IsValid() == true ? product.Promotion : null
+                Promotion = product.Promotion?.IsCurrentlyActive == true ? product.Promotion : null
             };
         }
     }

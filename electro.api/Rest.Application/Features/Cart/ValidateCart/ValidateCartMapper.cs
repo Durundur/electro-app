@@ -18,7 +18,7 @@ namespace Rest.Application.Features.Cart.ValidateCart
                     Price = p.Product.Price,
                     Name = p.Product.Name,
                     Photo = p.Product.Photos.FirstOrDefault(),
-                    Promotion = p.Product.Promotion?.IsValid() == true ? p.Product.Promotion.PromotionalPrice : null
+                    Promotion = p.Product.Promotion?.IsCurrentlyActive == true ? p.Product.Promotion.PromotionalPrice : null
                 }).ToList() ?? [],
                 Errors = errors
             };

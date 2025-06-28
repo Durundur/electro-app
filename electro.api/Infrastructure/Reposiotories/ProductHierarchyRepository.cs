@@ -42,6 +42,8 @@ namespace Infrastructure.Reposiotories
         {
             return await _context.Groups
                 .Include(g => g.Attributes)
+                .Include(g => g.Categories)
+                    .ThenInclude(c => c.SubCategories)
                 .FirstOrDefaultAsync(g => g.Id == id, cancellationToken);
         }
 
@@ -49,6 +51,7 @@ namespace Infrastructure.Reposiotories
         {
             return await _context.Categories
                 .Include(g => g.Attributes)
+                .Include(g => g.SubCategories)
                 .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
         }
 

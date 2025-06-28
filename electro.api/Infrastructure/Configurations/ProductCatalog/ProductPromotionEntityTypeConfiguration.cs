@@ -27,8 +27,10 @@ namespace Infrastructure.Configurations.ProductCatalog
 
             builder.HasOne<Product>()
                 .WithOne(p => p.Promotion)
-                .HasForeignKey<ProductPromotion>(pp => pp.ProductId)
+                .HasForeignKey<ProductPromotion>("ProductId")
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Ignore(pp => pp.IsCurrentlyActive);
         }
     }
 }

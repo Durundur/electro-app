@@ -1,4 +1,6 @@
-﻿namespace Domain.Aggregates.ProductHierarchyAggregate
+﻿using Domain.Exceptions;
+
+namespace Domain.Aggregates.ProductHierarchyAggregate
 {
     public class Group
     {
@@ -12,31 +14,53 @@
         public DateTime CreatedAt { get; private set; }
         public DateTime ModifiedAt { get; private set; }
 
-        private readonly List<Category> _categories;
+        private readonly List<Category> _categories = new List<Category>();
         public IReadOnlyCollection<Category> Categories => _categories.AsReadOnly();
 
-        private readonly List<AttributeDefinition> _attributes;
+        private readonly List<AttributeDefinition> _attributes = new List<AttributeDefinition>();
         public IReadOnlyCollection<AttributeDefinition> Attributes => _attributes.AsReadOnly();
 
-        public Group(string name, string photo, string icon, string description, bool active, int displayOrder)
+        private Group() { }
+
+        public static Group Create(string name, string photo, string icon, string description, bool active, int displayOrder)
         {
+            ValidateName(name);
+            ValidateDescription(description);
+            ValidateDisplayOrder(displayOrder);
+
+            return new Group
+            {
+                Name = name,
+                Photo = photo,
+                Icon = icon,
+                Description = description,
+                Active = active,
+                DisplayOrder = displayOrder,
+                CreatedAt = DateTime.UtcNow,
+                ModifiedAt = DateTime.UtcNow,
+            };
+        }
+
+        public void Update(string name, string photo, string icon, string description, bool active, int displayOrder)
+        {
+            ValidateName(name);
+            ValidateDescription(description);
+            ValidateDisplayOrder(displayOrder);
+
             Name = name;
             Photo = photo;
             Icon = icon;
             Description = description;
             Active = active;
             DisplayOrder = displayOrder;
-            CreatedAt = DateTime.UtcNow;
             ModifiedAt = DateTime.UtcNow;
-            _categories = new List<Category>();
-            _attributes = new List<AttributeDefinition>();
         }
 
         public void AddAttribute(AttributeDefinition attribute)
         {
             if (_attributes.Any(a => a.Name == attribute.Name && a.Id == attribute.Id))
             {
-                throw new Exception("Attribute with this name already exists");
+                throw new DomainException("Attribute with this name already exists");
             }
                 
             _attributes.Add(attribute);
@@ -50,15 +74,58 @@
             }
         }
 
-        public void Update(string name, string photo, string icon, string description, bool active, int displayOrder)
+        public void AddCategory(Category category)
         {
-            Name = name;
-            Photo = photo;
-            Icon = icon;
-            Description = description;
-            Active = active;
-            DisplayOrder = displayOrder;
-            ModifiedAt = DateTime.UtcNow;
+            if (_categories.Any(c => c.Id == category.Id))
+            {
+                throw new DomainException("Category is already assigned to this group.");
+            }
+                
+            category.AssignToGroup(this.Id);
+            _categories.Add(category);
+        }
+
+        public void RemoveCategory(Category category)
+        {
+            if (_categories.Contains(category))
+            {
+                category.AssignToGroup(null);
+                _categories.Remove(category);
+            }
+        }
+
+        private static void ValidateName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new DomainException("Name cannot be empty.");
+            }
+
+            if (name.Length > 100)
+            {
+                throw new DomainException("Name cannot exceed 100 characters.");
+            }
+        }
+
+        private static void ValidateDescription(string description)
+        {
+            if (description.Length > 500)
+            {
+                throw new DomainException("Description cannot exceed 500 characters.");
+            }
+        }
+
+        private static void ValidateDisplayOrder(int displayOrder)
+        {
+            if (displayOrder < 0)
+            {
+                throw new DomainException("DisplayOrder cannot be negative.");
+            }
+
+            if (displayOrder > 100) 
+            {
+                throw new DomainException("DisplayOrder cannot exceed 100.");
+            }
         }
     }
 }

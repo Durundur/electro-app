@@ -1,7 +1,7 @@
 ﻿using Infrastructure.Context;
 using Domain.Reposiotories;
-using Domain.Aggregates.ProductHierarchyAggregate;
 using Microsoft.EntityFrameworkCore;
+using Domain.Aggregates.ProductHierarchyAggregate;
 
 namespace Infrastructure.Reposiotories
 {

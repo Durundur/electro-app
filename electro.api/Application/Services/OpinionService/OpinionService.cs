@@ -31,18 +31,20 @@ namespace Application.Services.OpinionService
             return newOpinion;
         }
 
-        public async Task<Opinion> CreateOpinionReactionAsync(Guid userId, Guid opinionId, OpinionReactionType reactionType, CancellationToken cancellationToken)
+        public async Task<Opinion> CreateOpinionReactionAsync(Guid userId, Guid productId, Guid opinionId, OpinionReactionType reactionType, CancellationToken cancellationToken)
         {
-            var opinion = await _unitOfWork.OpinionRepository.GetByIdAsync(opinionId, cancellationToken);
+            var product = await _unitOfWork.ProductRepository.GetByIdAsync(productId, cancellationToken);
 
-            if (opinion == null)
+            if (product == null)
             {
-                throw new NotFoundException($"Opinion with Id '{opinionId}' was not found.");
+                throw new NotFoundException($"Product with Id '{product}' was not found.");
             }
 
-            var reaction = opinion.AddReaction(userId, reactionType);
+            product.AddOpinionReaction(opinionId, userId, reactionType);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            var opinion = product.Opinions.First(o => o.Id == opinionId);
 
             return opinion;
         }

@@ -19,6 +19,11 @@ namespace Rest.Application.Features.ProductCatalog.GetPromotionHighlight
             {
                 var product = await _productService.GetPromotionHighlightAsync(cancellationToken);
 
+                if(product == null)
+                {
+                    throw new NotFoundException("Promotion was not found");
+                }
+
                 return GetPromotionHighlightMapper.MapToGetPromotionHighlightResult(product);
             }
             catch (Exception ex)

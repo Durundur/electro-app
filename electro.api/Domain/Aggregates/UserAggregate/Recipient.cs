@@ -1,4 +1,6 @@
-﻿namespace Domain.Aggregates.UserAggregate
+﻿using Domain.Exceptions;
+
+namespace Domain.Aggregates.UserAggregate
 {
     public class Recipient
     {
@@ -53,7 +55,7 @@
             {
                 if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(surname))
                 {
-                    throw new ArgumentException("Personal recipient must have both a first name and surname");
+                    throw new DomainException("Personal recipient must have both a first name and surname");
                 }
 
                 FirstName = firstName;
@@ -65,7 +67,7 @@
             {
                 if (string.IsNullOrWhiteSpace(companyName) || string.IsNullOrWhiteSpace(taxIdentificationNumber))
                 {
-                    throw new ArgumentException("Company recipient must have both a company name and tax identification number");
+                    throw new DomainException("Company recipient must have both a company name and tax identification number");
                 }
 
                 CompanyName = companyName;
@@ -75,14 +77,8 @@
             }
             else
             {
-                throw new ArgumentException("Invalid recipient type");
+                throw new DomainException("Invalid recipient type");
             }
         }
-    }
-
-    public enum RecipientType
-    {
-        Personal,
-        Company
     }
 }

@@ -5,8 +5,6 @@ namespace Domain.ValueObjects
     public class Money
     {
         private static readonly HashSet<string> Currencies = new HashSet<string> { "PLN", "EUR", "USD", "GBP" };
-        private const int MaxDecimalPlaces = 2;
-
         public decimal Amount { get; private set; }
         public string Currency { get; private set; }
 

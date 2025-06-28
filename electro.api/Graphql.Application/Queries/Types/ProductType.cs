@@ -30,7 +30,7 @@ namespace Graphql.Application.Queries.Types
                .Resolve(context =>
                {
                    var product = context.Parent<Product>();
-                   return product.Promotion?.IsValid() == true ? product.Promotion : null;
+                   return product.Promotion?.IsCurrentlyActive == true ? product.Promotion : null;
                });
         }
     }

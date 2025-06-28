@@ -1,4 +1,6 @@
-﻿namespace Domain.Aggregates.ProductHierarchyAggregate
+﻿using Domain.Exceptions;
+
+namespace Domain.Aggregates.ProductHierarchyAggregate
 {
     public class AttributeDefinition
     {
@@ -11,29 +13,53 @@
 
         private AttributeDefinition() { }
 
-        public AttributeDefinition(string name, AttributeType type, bool isRequired, string description, bool isFilterable)
+        public static AttributeDefinition Create(string name, AttributeType type, bool isRequired, string description, bool isFilterable)
         {
-            Name = name;
-            Type = type;
-            IsRequired = isRequired;
-            Description = description;
-            IsFilterable = isFilterable;
+            ValidateName(name);
+            ValidateDescription(description);
+
+            return new AttributeDefinition
+            {
+                Id = Guid.NewGuid(),
+                Name = name,
+                Type = type,
+                IsRequired = isRequired,
+                Description = description,
+                IsFilterable = isFilterable
+            };
         }
 
         public void Update(string name, AttributeType type, bool isRequired, string description, bool isFilterable)
         {
+            ValidateName(name);
+            ValidateDescription(description);
+
             Name = name;
             Type = type;
             IsRequired = isRequired;
             Description = description;
             IsFilterable = isFilterable;
         }
-    }
 
-    public enum AttributeType
-    {
-        Text,
-        List,
-        Boolean
+        private static void ValidateName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new DomainException("Name cannot be empty.");
+            }
+
+            if (name.Length > 100)
+            {
+                throw new DomainException("Name cannot exceed 100 characters.");
+            }
+        }
+
+        private static void ValidateDescription(string description)
+        {
+            if (description.Length > 500)
+            {
+                throw new DomainException("Description cannot exceed 500 characters.");
+            }
+        }
     }
 }

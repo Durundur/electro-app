@@ -1,5 +1,4 @@
-﻿using Domain.Aggregates.ProductCatalogAggregate;
-using Domain.Aggregates.ProductHierarchyAggregate;
+﻿using Domain.Aggregates.ProductHierarchyAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

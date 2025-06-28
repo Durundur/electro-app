@@ -91,9 +91,7 @@ namespace Application.Services.CartService
                     continue;
                 }
 
-                var unitPrice = product.Promotion?.IsValid() == true ?
-                    product.Promotion.PromotionalPrice :
-                    product.Price;
+                var unitPrice = product.EffectivePrice;
 
                 var cartProduct = CartProduct.Create(product, productModel.Quantity, unitPrice);
                 resultProducts.Add(cartProduct);

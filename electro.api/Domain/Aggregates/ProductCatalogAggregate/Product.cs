@@ -23,24 +23,18 @@ namespace Domain.Aggregates.ProductCatalogAggregate
         public IReadOnlyCollection<string> Photos => _photos.AsReadOnly();
         public ProductPromotion? Promotion { get; private set; }
         public bool IsVisible => Status == ProductStatus.Active;
-        public bool IsAvailableToBuy => IsVisible && StockQuantity > 0;
-        public Money EffectivePrice => Promotion?.IsValid() == true ? Promotion.PromotionalPrice : Price;
+        public bool IsAvailableToBuy => Status == ProductStatus.Active && StockQuantity > 0;
+        public Money EffectivePrice => Promotion?.IsCurrentlyActive == true ? Promotion.PromotionalPrice : Price;
 
-        private Product()
-        {
-            _attributes = new List<AttributeValue>();
-            _opinions = new List<Opinion>();
-            _photos = new List<string>();
-        }
+        private Product() { }
 
         public static Product Create(string name, string description, Money price, int stockQuantity)
         {
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                throw new DomainException("Product name cannot be empty");
-            }
+            ValidateName(name);
+            ValidatePrice(price);
+            ValidateStockQuantity(stockQuantity);
 
-            var product = new Product
+            return new Product
             {
                 Id = Guid.NewGuid(),
                 Name = name,
@@ -49,12 +43,14 @@ namespace Domain.Aggregates.ProductCatalogAggregate
                 Status = ProductStatus.Draft,
                 StockQuantity = stockQuantity
             };
-
-            return product;
         }
 
         public void Update(string name, string description, Money price, ProductStatus status, int stockQuantity)
         {
+            ValidateName(name);
+            ValidatePrice(price);
+            ValidateStockQuantity(stockQuantity);
+
             Name = name;
             Description = description;
             Price = price;
@@ -70,8 +66,22 @@ namespace Domain.Aggregates.ProductCatalogAggregate
             }
 
             var opinion = Opinion.Create(userId, content, rating, authorDisplayName);
+
             _opinions.Add(opinion);
+
             return opinion;
+        }
+
+        public OpinionReaction AddOpinionReaction(Guid opinionId, Guid userId, OpinionReactionType reactionType)
+        {
+            var opinion = _opinions.FirstOrDefault(o => o.Id == opinionId);
+
+            if (opinion == null)
+            {
+                throw new DomainException($"Opinion with ID {opinionId} not found in product.");
+            }
+
+            return opinion.AddReaction(userId, reactionType);
         }
 
         public void AssignToGroup(Group group)
@@ -129,7 +139,6 @@ namespace Domain.Aggregates.ProductCatalogAggregate
             if (Status == ProductStatus.Discontinued)
             {
                 throw new DomainException("Cannot update stock for discontinued product");
-
             }
 
             if (newQuantity < 0)
@@ -197,7 +206,7 @@ namespace Domain.Aggregates.ProductCatalogAggregate
             }
         }
 
-        public void CreatePromotion(Money promotionalPrice, DateTime startDate, DateTime endDate, bool isActive)
+        public void CreatePromotion(Money promotionalPrice, DateTime startDate, DateTime endDate, bool isEnabled)
         {
             if (Promotion != null)
             {
@@ -205,7 +214,8 @@ namespace Domain.Aggregates.ProductCatalogAggregate
             }
 
             ValidatePromotionalPrice(promotionalPrice);
-            Promotion = ProductPromotion.Create(this.Id, promotionalPrice, startDate, endDate, isActive);
+
+            Promotion = ProductPromotion.Create(promotionalPrice, startDate, endDate, isEnabled);
         }
 
         public void UpdatePromotion(Money promotionalPrice, DateTime startDate, DateTime endDate, bool isActive)
@@ -216,12 +226,42 @@ namespace Domain.Aggregates.ProductCatalogAggregate
             }
 
             ValidatePromotionalPrice(promotionalPrice);
+
             Promotion.Update(promotionalPrice, startDate, endDate, isActive);
         }
 
         public void RemovePromotion()
         {
             Promotion = null;
+        }
+
+        private static void ValidateName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new DomainException("Product name cannot be empty.");
+            }
+
+            if (name.Length > 200)
+            {
+                throw new DomainException("Product name cannot exceed 200 characters.");
+            }
+        }
+
+        private static void ValidatePrice(Money price)
+        {
+            if (price == null)
+            {
+                throw new DomainException("Product price cannot be null.");
+            }
+        }
+
+        private static void ValidateStockQuantity(int stockQuantity)
+        {
+            if (stockQuantity < 0)
+            {
+                throw new DomainException("Stock quantity cannot be negative.");
+            }
         }
     }
 }

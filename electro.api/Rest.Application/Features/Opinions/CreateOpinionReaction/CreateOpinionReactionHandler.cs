@@ -24,7 +24,7 @@ namespace Rest.Application.Features.Opinions.CreateOpinionReaction
             }
             try
             {
-                var opinion = await _opinionService.CreateOpinionReactionAsync(_userContext.UserId, command.OpinionId, command.ReactionType, cancellationToken); 
+                var opinion = await _opinionService.CreateOpinionReactionAsync(_userContext.UserId, command.ProductId, command.OpinionId, command.ReactionType, cancellationToken); 
 
                 return CreateOpinionReactionMapper.MapToCreateOpinionReactionResult(opinion, command.ReactionType);
             }

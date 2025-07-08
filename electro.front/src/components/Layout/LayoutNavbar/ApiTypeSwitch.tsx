@@ -1,3 +1,4 @@
+'use client';
 import { FC } from "react";
 import { Button, Tooltip } from "@mui/material";
 import { useDispatch, useSelector } from "@/libs/Store";

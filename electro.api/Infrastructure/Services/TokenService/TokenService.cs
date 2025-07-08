@@ -17,7 +17,6 @@ namespace Infrastructure.Services.TokenService
         {
             _configuration = configuration;
         }
-
         
         public (string, DateTime) GenerateToken(IUser user, IList<string> roles)
         {

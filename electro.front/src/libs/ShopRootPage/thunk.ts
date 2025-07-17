@@ -37,7 +37,7 @@ export const getBestsellerProducts =
 								amount
 								currency
 							}
-							photos
+							mainPhoto
 							promotion {
 								promotionalPrice {
 									amount
@@ -68,7 +68,7 @@ const mapGraphQLResponseToGetBestsellerProductsResult = (data: RootPageBestselle
 				name: p.name,
 				amount: p.price.amount,
 				currency: p.price.currency,
-				photo: p.photos.length ? p.photos[0] : "",
+				photo: p.mainPhoto ?? "",
 				promotion: p.promotion?.promotionalPrice,
 			};
 		}),
@@ -90,7 +90,7 @@ export const getFeaturedProducts =
 								amount
 								currency
 							}
-							photos
+							mainPhoto
 							promotion {
 								promotionalPrice {
 									amount
@@ -121,7 +121,7 @@ const mapGraphQLResponseToGetFeaturedProductsResult = (data: RootPageFeaturedPro
 				name: p.name,
 				amount: p.price.amount,
 				currency: p.price.currency,
-				photo: p.photos.length ? p.photos[0] : "",
+				photo: p.mainPhoto ?? "",
 				promotion: p.promotion?.promotionalPrice,
 			};
 		}),
@@ -141,7 +141,7 @@ export const getPromotionHighlight = () => async (dispatch: AppDispatch) => {
 							amount
 							currency
 						}
-						photos
+						mainPhoto
 						promotion {
 							promotionalPrice {
 								amount
@@ -169,8 +169,7 @@ const mapGraphQLResponseToGetPromotionHighlightResult = (data: RootPagePromotion
 		name: data.promotionHighlightProduct.name,
 		amount: data.promotionHighlightProduct.price.amount,
 		currency: data.promotionHighlightProduct.price.currency,
-		photo: data.promotionHighlightProduct.photos.length ? data.promotionHighlightProduct.photos[0] : "",
+		photo: data.promotionHighlightProduct.mainPhoto ?? "",
 		promotion: data.promotionHighlightProduct.promotion?.promotionalPrice,
 	};
 };
-

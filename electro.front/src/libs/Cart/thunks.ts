@@ -75,7 +75,7 @@ export const fetchCart = (userId: string) => async (dispatch: AppDispatch) => {
 									amount
 									currency
 								}
-								photos
+								mainPhoto
 								name
 							}
 						}
@@ -106,7 +106,7 @@ const mapGraphQLResponseToGetCartResult = (data: CartPageCartQuery): GetCartResu
 				name: p.product.name,
 				quantity: p.quantity,
 				price: p.product.price,
-				photo: p.product.photos ? p.product.photos[0] : "",
+				photo: p.product.mainPhoto ?? "",
 				promotion: p.product.promotion?.promotionalPrice,
 			};
 		}),
@@ -141,7 +141,7 @@ export const validateCart = (cartToValidate: ValidateCartCommand) => async (disp
 										amount
 										currency
 									}
-									photos
+									mainPhoto
 									name
 								}
 							}
@@ -189,7 +189,7 @@ const mapGraphQlResponseToValidateCartResult = (data: CartPageValidateCartMutati
 				name: p.product.name,
 				quantity: p.quantity,
 				price: p.product.price,
-				photo: p.product.photos ? p.product.photos[0] : "",
+				photo: p.product.mainPhoto ?? "",
 				promotion: p.product.promotion?.promotionalPrice,
 			};
 		}),

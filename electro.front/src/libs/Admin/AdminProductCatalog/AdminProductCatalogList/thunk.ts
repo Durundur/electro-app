@@ -23,7 +23,7 @@ export const fetchProductCatalogList = (query: GetProductCatalogQuery) => async 
 								amount
 								currency
 							}
-							photos
+							mainPhoto
 							status
 							stockQuantity
 						}
@@ -57,7 +57,7 @@ const mapGraphQLResponseToGetProductCatalogResult = (data: AdminProductCatalogPa
 				name: p.name,
 				amount: p.price.amount,
 				currency: p.price.currency,
-				photo: p.photos.length ? p.photos[0] : "",
+				photo: p.mainPhoto ?? "",
 				status: mapProductStatusFromGraphQL(p.status),
 				stockQuantity: p.stockQuantity,
 			};

@@ -59,14 +59,13 @@ export const fetchProduct = (productId: string) => async (dispatch: AppDispatch)
 						opinionCount
 						promotion {
 							id
-							productId
 							startDate
 							endDate
 							promotionalPrice {
 								amount
 								currency
 							}
-							isActive
+							isEnabled
 						}
 						attributes {
 							value

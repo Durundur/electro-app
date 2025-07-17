@@ -50,7 +50,7 @@ export const fetchProducts = (params: IFetchProductsParams) => async (dispatch: 
 								amount
 								currency
 							}
-							photos
+							mainPhoto
 							status
 							averageOpinionRating
 							opinionCount
@@ -111,7 +111,7 @@ const mapGraphQLResponseToGetSearchProductsResult = (data: SearchPageProductsQue
 				amount: p.price.amount,
 				currency: p.price.currency,
 				name: p.name,
-				photo: p.photos.length ? p.photos[0] : "",
+				photo: p.mainPhoto ?? "",
 				averageOpinionRating: p.averageOpinionRating ?? undefined,
 				opinionCount: p.opinionCount ?? undefined,
 				status: mapProductStatusFromGraphQL(p.status),

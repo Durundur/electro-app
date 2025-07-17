@@ -43,7 +43,7 @@ export const getAccountOrders = (queryParams: IGetAccountOrdersQueryParams) => a
 								name
 								product {
 									id
-									photos
+									mainPhoto
 								}
 								price {
 									amount
@@ -87,7 +87,7 @@ const mapGraphQLResponseToGetUserOrdersResult = (data: AccountOrdersPageOrdersQu
 						id: p.id,
 						productId: p.product.id,
 						name: p.name,
-						photo: p.product.photos.length ? p.product.photos[0] : "",
+						photo: p.product.mainPhoto ?? "",
 						quantity: p.quantity,
 						price: p.price,
 					};
@@ -131,7 +131,7 @@ export const getAccountOrderDetails = (queryParams: IGetAccountOrderDetailsQuery
 							product {
 								id
 								name
-								photos
+								mainPhoto
 								price {
 									amount
 									currency
@@ -203,7 +203,7 @@ const mapGraphQLResponseToGetUserOrderDetailsResult = (data: AccountOrdersPageOr
 				id: p.id,
 				productId: p.product.id,
 				name: p.product.name,
-				photo: p.product.photos.length ? p.product.photos[0] : "",
+				photo: p.product.mainPhoto ?? "",
 				quantity: p.quantity,
 				price: p.product.price,
 				totalPrice: p.totalPrice,

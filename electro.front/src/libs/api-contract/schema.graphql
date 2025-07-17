@@ -137,12 +137,12 @@ type Mutation {
 
 type Opinion {
   userReaction: OpinionReactionType @cost(weight: "10")
+  likesCount: Int!
+  dislikesCount: Int!
   addReaction(
     userId: UUID!
     reactionType: OpinionReactionType!
   ): OpinionReaction!
-  likesCount: Int!
-  dislikesCount: Int!
   id: UUID!
   userId: UUID!
   content: String!
@@ -219,12 +219,18 @@ type Payment {
 type Product {
   averageOpinionRating: Float @cost(weight: "10")
   opinionCount: Int @cost(weight: "10")
+  promotion: ProductPromotion @cost(weight: "10")
   addOpinion(
     userId: UUID!
     content: String!
     rating: Float!
     authorDisplayName: String!
   ): Opinion!
+  addOpinionReaction(
+    opinionId: UUID!
+    userId: UUID!
+    reactionType: OpinionReactionType!
+  ): OpinionReaction!
   id: UUID!
   name: String!
   description: String!
@@ -237,20 +243,19 @@ type Product {
   attributes: [AttributeValue!]!
   opinions: [Opinion!]!
   photos: [String!]!
-  promotion: ProductPromotion
   isVisible: Boolean!
   isAvailableToBuy: Boolean!
   effectivePrice: Money!
+  mainPhoto: String
 }
 
 type ProductPromotion {
-  isValid: Boolean!
   id: UUID!
-  productId: UUID!
   promotionalPrice: Money!
   startDate: DateTime!
   endDate: DateTime!
-  isActive: Boolean!
+  isEnabled: Boolean!
+  isCurrentlyActive: Boolean!
 }
 
 type Query {
@@ -393,6 +398,7 @@ input CreateOpinionInput {
 }
 
 input CreateOpinionReactionInput {
+  productId: UUID!
   opinionId: UUID!
   reactionType: OpinionReactionType!
 }

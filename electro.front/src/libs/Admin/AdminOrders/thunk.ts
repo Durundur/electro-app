@@ -113,7 +113,7 @@ export const fetchAdminOrderDetails = (orderId: string) => async (dispatch: AppD
 							}
 							product {
 								id
-								photos
+								mainPhoto
 							}
 						}
 						payment {
@@ -181,7 +181,7 @@ const mapGraphQLResponseToGetUserOrderDetailsResult = (data: AdminOrdersPageOrde
 				id: p.id,
 				productId: p.product.id,
 				name: p.name,
-				photo: p.product.photos.length ? p.product.photos[0] : "",
+				photo: p.product.mainPhoto ?? "",
 				quantity: p.quantity,
 				price: p.price,
 				totalPrice: p.totalPrice,
@@ -248,7 +248,7 @@ export const getAdminOrderEdit = (orderId: string) => async (dispatch: AppDispat
 							}
 							product {
 								id
-								photos
+								mainPhoto
 							}
 						}
 						payment {
@@ -316,7 +316,7 @@ const mapGraphQLResponseToGetOrderDetailsResult = (data: AdminOrdersPageOrderQue
 				id: p.id,
 				productId: p.product.id,
 				name: p.name,
-				photo: p.product.photos.length ? p.product.photos[0] : "",
+				photo: p.product.mainPhoto ?? "",
 				quantity: p.quantity,
 				price: p.price,
 				totalPrice: p.totalPrice,
@@ -383,7 +383,7 @@ export const putAdminOrderEdit = (command: UpdateOrderCommand) => async (dispatc
 							}
 							product {
 								id
-								photos
+								mainPhoto
 							}
 						}
 						payment {
@@ -468,7 +468,7 @@ const mapGraphQLResponseToUpdateOrderResult = (data: AdminOrdersPageUpdateOrderM
 				id: p.id,
 				productId: p.product.id,
 				name: p.name,
-				photo: p.product.photos.length ? p.product.photos[0] : "",
+				photo: p.product.mainPhoto ?? "",
 				quantity: p.quantity,
 				price: p.price,
 				totalPrice: p.totalPrice,

@@ -106,6 +106,7 @@ export type CreateOpinionInput = {
 
 export type CreateOpinionReactionInput = {
   opinionId: Scalars['UUID']['input'];
+  productId: Scalars['UUID']['input'];
   reactionType: OpinionReactionType;
 };
 
@@ -521,6 +522,7 @@ export enum PaymentStatus {
 export type Product = {
   __typename?: 'Product';
   addOpinion: Opinion;
+  addOpinionReaction: OpinionReaction;
   attributes: Array<AttributeValue>;
   averageOpinionRating?: Maybe<Scalars['Float']['output']>;
   category?: Maybe<Category>;
@@ -530,6 +532,7 @@ export type Product = {
   id: Scalars['UUID']['output'];
   isAvailableToBuy: Scalars['Boolean']['output'];
   isVisible: Scalars['Boolean']['output'];
+  mainPhoto?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
   opinionCount?: Maybe<Scalars['Int']['output']>;
   opinions: Array<Opinion>;
@@ -549,13 +552,19 @@ export type ProductAddOpinionArgs = {
   userId: Scalars['UUID']['input'];
 };
 
+
+export type ProductAddOpinionReactionArgs = {
+  opinionId: Scalars['UUID']['input'];
+  reactionType: OpinionReactionType;
+  userId: Scalars['UUID']['input'];
+};
+
 export type ProductPromotion = {
   __typename?: 'ProductPromotion';
   endDate: Scalars['DateTime']['output'];
   id: Scalars['UUID']['output'];
-  isActive: Scalars['Boolean']['output'];
-  isValid: Scalars['Boolean']['output'];
-  productId: Scalars['UUID']['output'];
+  isCurrentlyActive: Scalars['Boolean']['output'];
+  isEnabled: Scalars['Boolean']['output'];
   promotionalPrice: Money;
   startDate: Scalars['DateTime']['output'];
 };
@@ -829,14 +838,14 @@ export type AccountOrdersPageOrdersQueryVariables = Exact<{
 }>;
 
 
-export type AccountOrdersPageOrdersQuery = { __typename?: 'Query', userOrders: { __typename?: 'PaginatedResultOfOrder', page: number, pageSize: number, totalPages: number, items: Array<{ __typename?: 'Order', id: any, status: OrderStatus, number: number, createdAt: any, totalPrice: { __typename?: 'Money', amount: any, currency: string }, products: Array<{ __typename?: 'OrderProduct', id: any, quantity: number, name: string, product: { __typename?: 'Product', id: any, photos: Array<string> }, price: { __typename?: 'Money', amount: any, currency: string } }> }> } };
+export type AccountOrdersPageOrdersQuery = { __typename?: 'Query', userOrders: { __typename?: 'PaginatedResultOfOrder', page: number, pageSize: number, totalPages: number, items: Array<{ __typename?: 'Order', id: any, status: OrderStatus, number: number, createdAt: any, totalPrice: { __typename?: 'Money', amount: any, currency: string }, products: Array<{ __typename?: 'OrderProduct', id: any, quantity: number, name: string, product: { __typename?: 'Product', id: any, mainPhoto?: string | null }, price: { __typename?: 'Money', amount: any, currency: string } }> }> } };
 
 export type AccountOrdersPageOrderQueryVariables = Exact<{
   orderId: Scalars['UUID']['input'];
 }>;
 
 
-export type AccountOrdersPageOrderQuery = { __typename?: 'Query', userOrder: { __typename?: 'Order', id: any, number: number, status: OrderStatus, createdAt: any, updatedAt: any, totalPrice: { __typename?: 'Money', amount: any, currency: string }, products: Array<{ __typename?: 'OrderProduct', id: any, quantity: number, totalPrice: { __typename?: 'Money', amount: any, currency: string }, product: { __typename?: 'Product', id: any, name: string, photos: Array<string>, price: { __typename?: 'Money', amount: any, currency: string } } }>, payment: { __typename?: 'Payment', id: any, method: PaymentMethod, status: PaymentStatus, paidAt?: any | null, cost: { __typename?: 'Money', amount: any, currency: string } }, delivery: { __typename?: 'Delivery', id: any, method: DeliveryMethod, status: DeliveryStatus, trackingNumber?: string | null, shippedAt?: any | null, deliveredAt?: any | null, cost: { __typename?: 'Money', amount: any, currency: string } }, recipient: { __typename?: 'Recipient', type: RecipientType, firstName?: string | null, surname?: string | null, companyName?: string | null, taxIdentificationNumber?: string | null, phoneNumber: string, street: string, houseNumber: string, postalCode: string, city: string } } };
+export type AccountOrdersPageOrderQuery = { __typename?: 'Query', userOrder: { __typename?: 'Order', id: any, number: number, status: OrderStatus, createdAt: any, updatedAt: any, totalPrice: { __typename?: 'Money', amount: any, currency: string }, products: Array<{ __typename?: 'OrderProduct', id: any, quantity: number, totalPrice: { __typename?: 'Money', amount: any, currency: string }, product: { __typename?: 'Product', id: any, name: string, mainPhoto?: string | null, price: { __typename?: 'Money', amount: any, currency: string } } }>, payment: { __typename?: 'Payment', id: any, method: PaymentMethod, status: PaymentStatus, paidAt?: any | null, cost: { __typename?: 'Money', amount: any, currency: string } }, delivery: { __typename?: 'Delivery', id: any, method: DeliveryMethod, status: DeliveryStatus, trackingNumber?: string | null, shippedAt?: any | null, deliveredAt?: any | null, cost: { __typename?: 'Money', amount: any, currency: string } }, recipient: { __typename?: 'Recipient', type: RecipientType, firstName?: string | null, surname?: string | null, companyName?: string | null, taxIdentificationNumber?: string | null, phoneNumber: string, street: string, houseNumber: string, postalCode: string, city: string } } };
 
 export type AdminOrdersPageOrdersQueryVariables = Exact<{
   page: Scalars['Int']['input'];
@@ -851,14 +860,14 @@ export type AdminOrdersPageOrderQueryVariables = Exact<{
 }>;
 
 
-export type AdminOrdersPageOrderQuery = { __typename?: 'Query', order: { __typename?: 'Order', id: any, number: number, status: OrderStatus, createdAt: any, updatedAt: any, totalPrice: { __typename?: 'Money', amount: any, currency: string }, products: Array<{ __typename?: 'OrderProduct', id: any, quantity: number, name: string, price: { __typename?: 'Money', amount: any, currency: string }, totalPrice: { __typename?: 'Money', amount: any, currency: string }, product: { __typename?: 'Product', id: any, photos: Array<string> } }>, payment: { __typename?: 'Payment', id: any, method: PaymentMethod, status: PaymentStatus, paidAt?: any | null, cost: { __typename?: 'Money', amount: any, currency: string } }, delivery: { __typename?: 'Delivery', id: any, method: DeliveryMethod, status: DeliveryStatus, trackingNumber?: string | null, shippedAt?: any | null, deliveredAt?: any | null, cost: { __typename?: 'Money', amount: any, currency: string } }, recipient: { __typename?: 'Recipient', type: RecipientType, firstName?: string | null, surname?: string | null, companyName?: string | null, taxIdentificationNumber?: string | null, phoneNumber: string, street: string, houseNumber: string, postalCode: string, city: string } } };
+export type AdminOrdersPageOrderQuery = { __typename?: 'Query', order: { __typename?: 'Order', id: any, number: number, status: OrderStatus, createdAt: any, updatedAt: any, totalPrice: { __typename?: 'Money', amount: any, currency: string }, products: Array<{ __typename?: 'OrderProduct', id: any, quantity: number, name: string, price: { __typename?: 'Money', amount: any, currency: string }, totalPrice: { __typename?: 'Money', amount: any, currency: string }, product: { __typename?: 'Product', id: any, mainPhoto?: string | null } }>, payment: { __typename?: 'Payment', id: any, method: PaymentMethod, status: PaymentStatus, paidAt?: any | null, cost: { __typename?: 'Money', amount: any, currency: string } }, delivery: { __typename?: 'Delivery', id: any, method: DeliveryMethod, status: DeliveryStatus, trackingNumber?: string | null, shippedAt?: any | null, deliveredAt?: any | null, cost: { __typename?: 'Money', amount: any, currency: string } }, recipient: { __typename?: 'Recipient', type: RecipientType, firstName?: string | null, surname?: string | null, companyName?: string | null, taxIdentificationNumber?: string | null, phoneNumber: string, street: string, houseNumber: string, postalCode: string, city: string } } };
 
 export type AdminOrdersPageUpdateOrderMutationVariables = Exact<{
   input: UpdateOrderInput;
 }>;
 
 
-export type AdminOrdersPageUpdateOrderMutation = { __typename?: 'Mutation', updateOrder: { __typename?: 'Order', id: any, number: number, status: OrderStatus, createdAt: any, updatedAt: any, totalPrice: { __typename?: 'Money', amount: any, currency: string }, products: Array<{ __typename?: 'OrderProduct', id: any, quantity: number, name: string, price: { __typename?: 'Money', amount: any, currency: string }, totalPrice: { __typename?: 'Money', amount: any, currency: string }, product: { __typename?: 'Product', id: any, photos: Array<string> } }>, payment: { __typename?: 'Payment', id: any, method: PaymentMethod, status: PaymentStatus, paidAt?: any | null, cost: { __typename?: 'Money', amount: any, currency: string } }, delivery: { __typename?: 'Delivery', id: any, method: DeliveryMethod, status: DeliveryStatus, trackingNumber?: string | null, shippedAt?: any | null, deliveredAt?: any | null, cost: { __typename?: 'Money', amount: any, currency: string } }, recipient: { __typename?: 'Recipient', type: RecipientType, firstName?: string | null, surname?: string | null, companyName?: string | null, taxIdentificationNumber?: string | null, phoneNumber: string, street: string, houseNumber: string, postalCode: string, city: string } } };
+export type AdminOrdersPageUpdateOrderMutation = { __typename?: 'Mutation', updateOrder: { __typename?: 'Order', id: any, number: number, status: OrderStatus, createdAt: any, updatedAt: any, totalPrice: { __typename?: 'Money', amount: any, currency: string }, products: Array<{ __typename?: 'OrderProduct', id: any, quantity: number, name: string, price: { __typename?: 'Money', amount: any, currency: string }, totalPrice: { __typename?: 'Money', amount: any, currency: string }, product: { __typename?: 'Product', id: any, mainPhoto?: string | null } }>, payment: { __typename?: 'Payment', id: any, method: PaymentMethod, status: PaymentStatus, paidAt?: any | null, cost: { __typename?: 'Money', amount: any, currency: string } }, delivery: { __typename?: 'Delivery', id: any, method: DeliveryMethod, status: DeliveryStatus, trackingNumber?: string | null, shippedAt?: any | null, deliveredAt?: any | null, cost: { __typename?: 'Money', amount: any, currency: string } }, recipient: { __typename?: 'Recipient', type: RecipientType, firstName?: string | null, surname?: string | null, companyName?: string | null, taxIdentificationNumber?: string | null, phoneNumber: string, street: string, houseNumber: string, postalCode: string, city: string } } };
 
 export type AdminProductCatalogPageProductsQueryVariables = Exact<{
   page: Scalars['Int']['input'];
@@ -866,14 +875,14 @@ export type AdminProductCatalogPageProductsQueryVariables = Exact<{
 }>;
 
 
-export type AdminProductCatalogPageProductsQuery = { __typename?: 'Query', catalogProducts: { __typename?: 'PaginatedResultOfProduct', page: number, pageSize: number, totalPages: number, items: Array<{ __typename?: 'Product', id: any, name: string, photos: Array<string>, status: ProductStatus, stockQuantity: number, price: { __typename?: 'Money', amount: any, currency: string } }> } };
+export type AdminProductCatalogPageProductsQuery = { __typename?: 'Query', catalogProducts: { __typename?: 'PaginatedResultOfProduct', page: number, pageSize: number, totalPages: number, items: Array<{ __typename?: 'Product', id: any, name: string, mainPhoto?: string | null, status: ProductStatus, stockQuantity: number, price: { __typename?: 'Money', amount: any, currency: string } }> } };
 
 export type AdminProductPageProductQueryVariables = Exact<{
   id: Scalars['UUID']['input'];
 }>;
 
 
-export type AdminProductPageProductQuery = { __typename?: 'Query', product?: { __typename?: 'Product', id: any, name: string, description: string, photos: Array<string>, status: ProductStatus, stockQuantity: number, averageOpinionRating?: number | null, opinionCount?: number | null, price: { __typename?: 'Money', amount: any, currency: string }, group?: { __typename?: 'Group', id: number } | null, category?: { __typename?: 'Category', id: number } | null, subCategory?: { __typename?: 'SubCategory', id: number } | null, promotion?: { __typename?: 'ProductPromotion', id: any, productId: any, startDate: any, endDate: any, isActive: boolean, promotionalPrice: { __typename?: 'Money', amount: any, currency: string } } | null, attributes: Array<{ __typename?: 'AttributeValue', value: string, isPrimary: boolean, attributeDefinition: { __typename?: 'AttributeDefinition', id: any, name: string, type: AttributeType } }> } | null };
+export type AdminProductPageProductQuery = { __typename?: 'Query', product?: { __typename?: 'Product', id: any, name: string, description: string, photos: Array<string>, status: ProductStatus, stockQuantity: number, averageOpinionRating?: number | null, opinionCount?: number | null, price: { __typename?: 'Money', amount: any, currency: string }, group?: { __typename?: 'Group', id: number } | null, category?: { __typename?: 'Category', id: number } | null, subCategory?: { __typename?: 'SubCategory', id: number } | null, promotion?: { __typename?: 'ProductPromotion', id: any, startDate: any, endDate: any, isEnabled: boolean, promotionalPrice: { __typename?: 'Money', amount: any, currency: string } } | null, attributes: Array<{ __typename?: 'AttributeValue', value: string, isPrimary: boolean, attributeDefinition: { __typename?: 'AttributeDefinition', id: any, name: string, type: AttributeType } }> } | null };
 
 export type AdminProductPageProductHierarchyQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -995,14 +1004,14 @@ export type CartPageCartQueryVariables = Exact<{
 }>;
 
 
-export type CartPageCartQuery = { __typename?: 'Query', cart: { __typename?: 'Cart', id: any, totalQuantity: number, totalPrice: { __typename?: 'Money', amount: any, currency: string }, products: Array<{ __typename?: 'CartProduct', quantity: number, product: { __typename?: 'Product', id: any, photos: Array<string>, name: string, promotion?: { __typename?: 'ProductPromotion', promotionalPrice: { __typename?: 'Money', amount: any, currency: string } } | null, price: { __typename?: 'Money', amount: any, currency: string } } }> } };
+export type CartPageCartQuery = { __typename?: 'Query', cart: { __typename?: 'Cart', id: any, totalQuantity: number, totalPrice: { __typename?: 'Money', amount: any, currency: string }, products: Array<{ __typename?: 'CartProduct', quantity: number, product: { __typename?: 'Product', id: any, mainPhoto?: string | null, name: string, promotion?: { __typename?: 'ProductPromotion', promotionalPrice: { __typename?: 'Money', amount: any, currency: string } } | null, price: { __typename?: 'Money', amount: any, currency: string } } }> } };
 
 export type CartPageValidateCartMutationVariables = Exact<{
   input: ValidateCartInput;
 }>;
 
 
-export type CartPageValidateCartMutation = { __typename?: 'Mutation', validateCart: { __typename?: 'ValidateCartType', errors: Array<string>, cart: { __typename?: 'Cart', id: any, totalQuantity: number, totalPrice: { __typename?: 'Money', amount: any, currency: string }, products: Array<{ __typename?: 'CartProduct', quantity: number, product: { __typename?: 'Product', id: any, photos: Array<string>, name: string, promotion?: { __typename?: 'ProductPromotion', promotionalPrice: { __typename?: 'Money', amount: any, currency: string } } | null, price: { __typename?: 'Money', amount: any, currency: string } } }> } } };
+export type CartPageValidateCartMutation = { __typename?: 'Mutation', validateCart: { __typename?: 'ValidateCartType', errors: Array<string>, cart: { __typename?: 'Cart', id: any, totalQuantity: number, totalPrice: { __typename?: 'Money', amount: any, currency: string }, products: Array<{ __typename?: 'CartProduct', quantity: number, product: { __typename?: 'Product', id: any, mainPhoto?: string | null, name: string, promotion?: { __typename?: 'ProductPromotion', promotionalPrice: { __typename?: 'Money', amount: any, currency: string } } | null, price: { __typename?: 'Money', amount: any, currency: string } } }> } } };
 
 export type CartPageRecipientsQueryVariables = Exact<{
   userId: Scalars['UUID']['input'];
@@ -1043,7 +1052,7 @@ export type ProductPageProductQueryVariables = Exact<{
 }>;
 
 
-export type ProductPageProductQuery = { __typename?: 'Query', product?: { __typename?: 'Product', id: any, name: string, description: string, photos: Array<string>, status: ProductStatus, stockQuantity: number, averageOpinionRating?: number | null, opinionCount?: number | null, price: { __typename?: 'Money', amount: any, currency: string }, group?: { __typename?: 'Group', id: number } | null, category?: { __typename?: 'Category', id: number } | null, subCategory?: { __typename?: 'SubCategory', id: number } | null, promotion?: { __typename?: 'ProductPromotion', id: any, productId: any, startDate: any, endDate: any, isActive: boolean, isValid: boolean, promotionalPrice: { __typename?: 'Money', amount: any, currency: string } } | null, attributes: Array<{ __typename?: 'AttributeValue', value: string, isPrimary: boolean, attributeDefinition: { __typename?: 'AttributeDefinition', id: any, name: string, type: AttributeType } }> } | null };
+export type ProductPageProductQuery = { __typename?: 'Query', product?: { __typename?: 'Product', id: any, name: string, description: string, photos: Array<string>, status: ProductStatus, stockQuantity: number, averageOpinionRating?: number | null, opinionCount?: number | null, price: { __typename?: 'Money', amount: any, currency: string }, group?: { __typename?: 'Group', id: number } | null, category?: { __typename?: 'Category', id: number } | null, subCategory?: { __typename?: 'SubCategory', id: number } | null, promotion?: { __typename?: 'ProductPromotion', id: any, startDate: any, endDate: any, isEnabled: boolean, promotionalPrice: { __typename?: 'Money', amount: any, currency: string } } | null, attributes: Array<{ __typename?: 'AttributeValue', value: string, isPrimary: boolean, attributeDefinition: { __typename?: 'AttributeDefinition', id: any, name: string, type: AttributeType } }> } | null };
 
 export type ProductPageOpinionsQueryVariables = Exact<{
   productId: Scalars['UUID']['input'];
@@ -1089,7 +1098,7 @@ export type SearchPageProductsQueryVariables = Exact<{
 }>;
 
 
-export type SearchPageProductsQuery = { __typename?: 'Query', searchProducts: { __typename?: 'PaginatedResultOfProduct', page: number, pageSize: number, totalPages: number, items: Array<{ __typename?: 'Product', id: any, name: string, photos: Array<string>, status: ProductStatus, averageOpinionRating?: number | null, opinionCount?: number | null, price: { __typename?: 'Money', amount: any, currency: string }, attributes: Array<{ __typename?: 'AttributeValue', value: string, isPrimary: boolean, attributeDefinition: { __typename?: 'AttributeDefinition', id: any, name: string, type: AttributeType } }>, promotion?: { __typename?: 'ProductPromotion', promotionalPrice: { __typename?: 'Money', amount: any, currency: string } } | null }> } };
+export type SearchPageProductsQuery = { __typename?: 'Query', searchProducts: { __typename?: 'PaginatedResultOfProduct', page: number, pageSize: number, totalPages: number, items: Array<{ __typename?: 'Product', id: any, name: string, mainPhoto?: string | null, status: ProductStatus, averageOpinionRating?: number | null, opinionCount?: number | null, price: { __typename?: 'Money', amount: any, currency: string }, attributes: Array<{ __typename?: 'AttributeValue', value: string, isPrimary: boolean, attributeDefinition: { __typename?: 'AttributeDefinition', id: any, name: string, type: AttributeType } }>, promotion?: { __typename?: 'ProductPromotion', promotionalPrice: { __typename?: 'Money', amount: any, currency: string } } | null }> } };
 
 export type SeachPageFiltersQueryVariables = Exact<{
   groupId?: InputMaybe<Scalars['Int']['input']>;
@@ -1110,19 +1119,19 @@ export type RootPageBestsellerProductsQueryVariables = Exact<{
 }>;
 
 
-export type RootPageBestsellerProductsQuery = { __typename?: 'Query', bestsellerProducts: Array<{ __typename?: 'Product', id: any, name: string, photos: Array<string>, price: { __typename?: 'Money', amount: any, currency: string }, promotion?: { __typename?: 'ProductPromotion', promotionalPrice: { __typename?: 'Money', amount: any, currency: string } } | null }> };
+export type RootPageBestsellerProductsQuery = { __typename?: 'Query', bestsellerProducts: Array<{ __typename?: 'Product', id: any, name: string, mainPhoto?: string | null, price: { __typename?: 'Money', amount: any, currency: string }, promotion?: { __typename?: 'ProductPromotion', promotionalPrice: { __typename?: 'Money', amount: any, currency: string } } | null }> };
 
 export type RootPageFeaturedProductsQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
-export type RootPageFeaturedProductsQuery = { __typename?: 'Query', featuredProducts: Array<{ __typename?: 'Product', id: any, name: string, photos: Array<string>, price: { __typename?: 'Money', amount: any, currency: string }, promotion?: { __typename?: 'ProductPromotion', promotionalPrice: { __typename?: 'Money', amount: any, currency: string } } | null }> };
+export type RootPageFeaturedProductsQuery = { __typename?: 'Query', featuredProducts: Array<{ __typename?: 'Product', id: any, name: string, mainPhoto?: string | null, price: { __typename?: 'Money', amount: any, currency: string }, promotion?: { __typename?: 'ProductPromotion', promotionalPrice: { __typename?: 'Money', amount: any, currency: string } } | null }> };
 
 export type RootPagePromotionHightlightQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type RootPagePromotionHightlightQuery = { __typename?: 'Query', promotionHighlightProduct: { __typename?: 'Product', id: any, name: string, photos: Array<string>, price: { __typename?: 'Money', amount: any, currency: string }, promotion?: { __typename?: 'ProductPromotion', promotionalPrice: { __typename?: 'Money', amount: any, currency: string } } | null } };
+export type RootPagePromotionHightlightQuery = { __typename?: 'Query', promotionHighlightProduct: { __typename?: 'Product', id: any, name: string, mainPhoto?: string | null, price: { __typename?: 'Money', amount: any, currency: string }, promotion?: { __typename?: 'ProductPromotion', promotionalPrice: { __typename?: 'Money', amount: any, currency: string } } | null } };
 
 export class TypedDocumentString<TResult, TVariables>
   extends String
@@ -1161,7 +1170,7 @@ export const AccountOrdersPageOrdersDocument = new TypedDocumentString(`
         name
         product {
           id
-          photos
+          mainPhoto
         }
         price {
           amount
@@ -1197,7 +1206,7 @@ export const AccountOrdersPageOrderDocument = new TypedDocumentString(`
       product {
         id
         name
-        photos
+        mainPhoto
         price {
           amount
           currency
@@ -1285,7 +1294,7 @@ export const AdminOrdersPageOrderDocument = new TypedDocumentString(`
       }
       product {
         id
-        photos
+        mainPhoto
       }
     }
     payment {
@@ -1351,7 +1360,7 @@ export const AdminOrdersPageUpdateOrderDocument = new TypedDocumentString(`
       }
       product {
         id
-        photos
+        mainPhoto
       }
     }
     payment {
@@ -1401,7 +1410,7 @@ export const AdminProductCatalogPageProductsDocument = new TypedDocumentString(`
         amount
         currency
       }
-      photos
+      mainPhoto
       status
       stockQuantity
     }
@@ -1437,14 +1446,13 @@ export const AdminProductPageProductDocument = new TypedDocumentString(`
     opinionCount
     promotion {
       id
-      productId
       startDate
       endDate
       promotionalPrice {
         amount
         currency
       }
-      isActive
+      isEnabled
     }
     attributes {
       value
@@ -1735,7 +1743,7 @@ export const CartPageCartDocument = new TypedDocumentString(`
           amount
           currency
         }
-        photos
+        mainPhoto
         name
       }
     }
@@ -1766,7 +1774,7 @@ export const CartPageValidateCartDocument = new TypedDocumentString(`
             amount
             currency
           }
-          photos
+          mainPhoto
           name
         }
       }
@@ -1866,15 +1874,13 @@ export const ProductPageProductDocument = new TypedDocumentString(`
     opinionCount
     promotion {
       id
-      productId
       startDate
       endDate
       promotionalPrice {
         amount
         currency
       }
-      isActive
-      isValid
+      isEnabled
     }
     attributes {
       value
@@ -1969,7 +1975,7 @@ export const SearchPageProductsDocument = new TypedDocumentString(`
         amount
         currency
       }
-      photos
+      mainPhoto
       status
       averageOpinionRating
       opinionCount
@@ -2036,7 +2042,7 @@ export const RootPageBestsellerProductsDocument = new TypedDocumentString(`
       amount
       currency
     }
-    photos
+    mainPhoto
     promotion {
       promotionalPrice {
         amount
@@ -2055,7 +2061,7 @@ export const RootPageFeaturedProductsDocument = new TypedDocumentString(`
       amount
       currency
     }
-    photos
+    mainPhoto
     promotion {
       promotionalPrice {
         amount
@@ -2074,7 +2080,7 @@ export const RootPagePromotionHightlightDocument = new TypedDocumentString(`
       amount
       currency
     }
-    photos
+    mainPhoto
     promotion {
       promotionalPrice {
         amount

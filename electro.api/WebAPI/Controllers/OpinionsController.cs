@@ -64,12 +64,13 @@ namespace WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<CreateOpinionReactionResult>> CreateOpinionReaction([FromRoute] Guid id, [FromRoute] OpinionReactionType reactionType)
+        public async Task<ActionResult<CreateOpinionReactionResult>> CreateOpinionReaction([FromRoute] Guid id, [FromRoute] OpinionReactionType reactionType, [FromQuery] Guid productId)
         {
             var command = new CreateOpinionReactionCommand
             {
                 OpinionId = id,
-                ReactionType = reactionType
+                ReactionType = reactionType,
+                ProductId = productId
             };
             var response = await _mediator.Send(command);
             return Ok(response);

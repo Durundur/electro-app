@@ -239,7 +239,7 @@ const mapGraphQLResponseToGetProductOpinionsStatsResult = (data: ProductPageOpin
 	};
 };
 
-export const createOpinionReaction = (opinionId: string, reaction: OpinionReactionType) => async (dispatch: AppDispatch) => {
+export const createOpinionReaction = (opinionId: string, productId: string, reaction: OpinionReactionType) => async (dispatch: AppDispatch) => {
 	try {
 		dispatch(createOpinionReactionStart());
 		if (ApiClient.apiType() === "graphql") {
@@ -255,6 +255,7 @@ export const createOpinionReaction = (opinionId: string, reaction: OpinionReacti
 			const variables: ProductPageCreateOpinionReactionMutationVariables = {
 				input: {
 					opinionId,
+					productId,
 					reactionType: mapOpinionReactionTypeToGraphQL(reaction),
 				},
 			};
@@ -270,7 +271,8 @@ export const createOpinionReaction = (opinionId: string, reaction: OpinionReacti
 				})
 			);
 		} else {
-			const response = await ApiClient.post<CreateOpinionReactionResult>(`/api/opinions/${opinionId}/reactions/${reaction}`);
+			
+			const response = await ApiClient.post<CreateOpinionReactionResult>(`/api/opinions/${opinionId}/reactions/${reaction}?productId=${productId}`);
 			dispatch(createOpinionReactionSuccess());
 			dispatch(
 				updateOpinionReaction({

@@ -14,10 +14,11 @@ const OpinionCard: FC<OpinionCardProps> = ({ opinion }) => {
 
 	const isLoading = useSelector((state) => state.ProductPageStore.createOpinionReaction.isLoading);
 	const isLoggedIn = useSelector((state) => state.AuthStore.auth.isAuthenticated);
+	const productId = useSelector((state) => state.ProductPageStore.product.data?.id);
 
 	const handleRate = async (action: OpinionReactionType) => {
-		if (!opinion.id || isLoading || !isLoggedIn) return;
-		dispatch(createOpinionReaction(opinion.id, action));
+		if (!opinion.id || !productId || isLoading || !isLoggedIn) return;
+		dispatch(createOpinionReaction(opinion.id, productId, action));
 	};
 
 	const isLiked = opinion.reactionType === OpinionReactionType.Like;

@@ -37,6 +37,7 @@ namespace Infrastructure.Configurations.ProductCatalog
             builder.Ignore(p => p.IsVisible);
             builder.Ignore(p => p.IsAvailableToBuy);
             builder.Ignore(p => p.EffectivePrice);
+            builder.Ignore(p => p.MainPhoto);
         }
     }
 }

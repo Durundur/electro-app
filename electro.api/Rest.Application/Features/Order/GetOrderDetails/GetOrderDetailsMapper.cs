@@ -26,7 +26,7 @@
                 Id = orderProduct.Id,
                 ProductId = orderProduct.Product.Id,
                 Name = orderProduct.Product.Name,
-                Photo = orderProduct.Product.Photos.FirstOrDefault(),
+                Photo = orderProduct.Product.MainPhoto,
                 Quantity = orderProduct.Quantity,
                 Price = orderProduct.Price
             };

@@ -11,7 +11,7 @@ namespace Rest.Application.Features.ProductCatalog.GetPromotionHighlight
                 Name = product.Name,
                 Amount = product.Price.Amount,
                 Currency = product.Price.Currency,
-                Photo = product.Photos.FirstOrDefault(),
+                Photo = product.MainPhoto,
                 Promotion = product.EffectivePrice,
             };
         }

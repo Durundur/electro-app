@@ -14,7 +14,7 @@
                 Id = product.Id,
                 Name = product.Name,
                 Price = product.Price,
-                Photo = product.Photos.FirstOrDefault(),
+                Photo = product.MainPhoto,
                 Status = product.Status,
                 StockQuantity = product.StockQuantity,
             };

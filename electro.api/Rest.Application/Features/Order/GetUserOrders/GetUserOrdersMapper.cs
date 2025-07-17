@@ -20,7 +20,7 @@ namespace Rest.Application.Features.Order.GetUserOrders
                     Price = orderProduct.Price,
                     Quantity = orderProduct.Quantity,
                     Name = orderProduct.Name,
-                    Photo = orderProduct.Product.Photos.FirstOrDefault()
+                    Photo = orderProduct.Product.MainPhoto
                 }).ToList(),
             }).ToList();
         }

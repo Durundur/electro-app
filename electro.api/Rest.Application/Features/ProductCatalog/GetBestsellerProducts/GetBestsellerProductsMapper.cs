@@ -18,7 +18,7 @@ namespace Rest.Application.Features.ProductCatalog.GetBestsellerProducts
                 Name = product.Name,
                 Amount = product.Price.Amount,
                 Currency = product.Price.Currency,
-                Photo = product.Photos.FirstOrDefault(),
+                Photo = product.MainPhoto,
                 Promotion = product?.Promotion?.IsCurrentlyActive == true ? product.Promotion.PromotionalPrice : null,
             };
         }

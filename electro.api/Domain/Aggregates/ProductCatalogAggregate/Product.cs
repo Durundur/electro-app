@@ -25,6 +25,7 @@ namespace Domain.Aggregates.ProductCatalogAggregate
         public bool IsVisible => Status == ProductStatus.Active;
         public bool IsAvailableToBuy => Status == ProductStatus.Active && StockQuantity > 0;
         public Money EffectivePrice => Promotion?.IsCurrentlyActive == true ? Promotion.PromotionalPrice : Price;
+        public string? MainPhoto => _photos.FirstOrDefault();
 
         private Product() { }
 

@@ -20,7 +20,7 @@ namespace Rest.Application.Features.ProductCatalog.GetSimilarProducts
                 Name = similarProduct.Name,
                 Amount = similarProduct.Price.Amount,
                 Currency = similarProduct.Price.Currency,
-                Photo = similarProduct.Photos.FirstOrDefault(),
+                Photo = similarProduct.MainPhoto,
                 Promotion = similarProduct?.Promotion?.IsCurrentlyActive == true ? similarProduct.Promotion.PromotionalPrice : null,
             };
         }

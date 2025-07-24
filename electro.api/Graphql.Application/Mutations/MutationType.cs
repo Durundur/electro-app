@@ -6,7 +6,7 @@ namespace Graphql.Application.Mutations
     {
         protected override void Configure(IObjectTypeDescriptor<Mutation> descriptor)
         {
-            
+
         }
     }
 }

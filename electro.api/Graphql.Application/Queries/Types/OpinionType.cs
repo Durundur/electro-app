@@ -13,7 +13,6 @@ namespace Graphql.Application.Queries.Types
                 .Type<EnumType<OpinionReactionType>>()
                 .Resolve(context =>
                 {
-                    
                     var opinion = context.Parent<Opinion>();
                     var userContext = context.Service<IUserContext>();
 

@@ -15,6 +15,10 @@ namespace Domain.Aggregates.OrderAggregate
 
         public static Payment Create(PaymentMethod method, Money cost)
         {
+            if (!Enum.IsDefined(typeof(PaymentMethod), method))
+                throw new DomainException($"Invalid payment method: {method}");
+
+
             if (cost.Amount <= 0)
                 throw new DomainException("Payment cost must be greater than zero.");
 

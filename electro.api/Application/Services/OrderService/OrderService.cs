@@ -4,9 +4,6 @@ using Domain.Aggregates.OrderAggregate;
 using Domain.Reposiotories;
 using Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Application.Services.OrderService
 {

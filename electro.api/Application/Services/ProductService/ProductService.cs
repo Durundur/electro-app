@@ -129,25 +129,19 @@ namespace Application.Services.ProductService
 
         public async Task<List<Product>> GetBestsellerProductsAsync(int limit, CancellationToken cancellationToken = default)
         {
-            var bestsellers = await _unitOfWork.OrderRepository.GetOrdersQuery()
-                .OrderByDescending(o => o.CreatedAt)
+            var products = await _unitOfWork.OrderRepository.GetOrdersQuery()
                 .SelectMany(o => o.Products)
-                .GroupBy(p => p.Product.Id)
+                .GroupBy(p => p.Product)
                 .Select(g => new
                 {
-                    ProductId = g.Key,
+                    Product = g.Key,
                     SoldCount = g.Count()
                 })
+                .Where(x => x.Product.Status == ProductStatus.Active && x.Product.StockQuantity > 0)
                 .OrderByDescending(x => x.SoldCount)
                 .Take(limit)
-                .ToListAsync(cancellationToken);
-
-            var productIds = bestsellers.Select(b => b.ProductId).ToList();
-
-            var products = await _unitOfWork.ProductRepository.GetProductsQuery()
+                .Select(x => x.Product)
                 .AsNoTracking()
-                .Where(p => productIds.Contains(p.Id))
-                .Where(p => p.Status == ProductStatus.Active && p.StockQuantity > 0)
                 .ToListAsync(cancellationToken);
 
             return products;

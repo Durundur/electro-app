@@ -20,12 +20,12 @@ namespace Rest.Application.Features.Order.GetUserOrders
         {
             try
             {
-                var (orders, totalOrders) = await _orderService.GetUserOrdersAsync(query.UserId, query.Page, query.PageSize, cancellationToken);
-
-                if (orders.Any(o => o.UserId != _userContext.UserId) || _userContext.IsAuthenticated && !_userContext.IsAdmin)
+                if (!_userContext.IsAdmin && query.UserId != _userContext.UserId)
                 {
-                    throw new UnauthorizedException("You do not have permission to access this order.");
+                    throw new UnauthorizedException("You do not have permission to access these orders.");
                 }
+
+                var (orders, totalOrders) = await _orderService.GetUserOrdersAsync(query.UserId, query.Page, query.PageSize, cancellationToken);
 
                 return new GetUserOrdersResult(
                    GetUserOrdersMapper.MapToGetUserOrders(orders).ToList(),

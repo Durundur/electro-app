@@ -41,17 +41,17 @@ namespace Graphql.Application.Queries
         }
 
         [Authorize]
-        public async Task<PaginatedResult<Order>> GetUserOrders([Service] IOrderService orderService, [Service] IUserContext userContext, int page = 1,
+        public async Task<PaginatedResult<Order>> GetUserOrders([Service] IOrderService orderService, [Service] IUserContext userContext, Guid userId, int page = 1,
             int pageSize = 10, CancellationToken cancellationToken = default)
         {
             try
             {
-                var (orders, totalOrders) = await orderService.GetUserOrdersAsync(userContext.UserId, page, pageSize, cancellationToken);
-
-                if (orders.Any(o => o.UserId != userContext.UserId) || userContext.IsAuthenticated && !userContext.IsAdmin)
+                if (!userContext.IsAdmin && userId != userContext.UserId)
                 {
-                    throw new UnauthorizedException("You do not have permission to access this orders.");
+                    throw new UnauthorizedException("You do not have permission to access these orders.");
                 }
+
+                var (orders, totalOrders) = await orderService.GetUserOrdersAsync(userContext.UserId, page, pageSize, cancellationToken);
 
                 return new PaginatedResult<Order>(orders, totalOrders, page, pageSize);
             }
@@ -68,7 +68,7 @@ namespace Graphql.Application.Queries
             {
                 var order = await orderService.GetOrderByIdAsync(orderId, cancellationToken);
 
-                if (order.UserId != userContext.UserId && !userContext.IsAdmin)
+                if (!userContext.IsAdmin && order.UserId != userContext.UserId)
                 {
                     throw new UnauthorizedException("You do not have permission to access this order.");
                 }

@@ -22,7 +22,7 @@ namespace Rest.Application.Features.Order.GetUserOrderDetails
             {
                 var order = await _orderService.GetOrderByIdAsync(request.OrderId, cancellationToken);
 
-                if (!_userContext.IsAdmin || _userContext.IsAuthenticated && order.UserId != _userContext.UserId)
+                if (!_userContext.IsAdmin && order.UserId != _userContext.UserId)
                 {
                     throw new UnauthorizedException("You do not have permission to access this order.");
                 }

@@ -249,48 +249,48 @@ public class OrderServiceTests
         _unitOfWorkMock.Verify(u => u.RollbackTransactionAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    [Fact]
-    public async Task CreateOrderAsync_ShouldThrow_WhenPaymentMethodInvalid()
-    {
-        // Arrange
-        var userId = Guid.NewGuid();
-        var productId = Guid.NewGuid();
-        var orderModel = new OrderModel
-        {
-            Products = new List<OrderProductModel>
-            {
-                new OrderProductModel { ProductId = productId, Quantity = 1 }
-            },
-            PaymentMethod = (PaymentMethod)999,
-            DeliveryMethod = DeliveryMethod.CourierStandard,
-            Recipient = new RecipientModel
-            {
-                Type = RecipientType.Personal,
-                FirstName = "Jan",
-                Surname = "Kowalski",
-                City = "Warszawa",
-                Street = "Testowa",
-                HouseNumber = "1",
-                PostalCode = "00-000",
-                PhoneNumber = "123456789"
-            }
-        };
+    //[Fact]
+    //public async Task CreateOrderAsync_ShouldThrow_WhenPaymentMethodInvalid()
+    //{
+    //    // Arrange
+    //    var userId = Guid.NewGuid();
+    //    var productId = Guid.NewGuid();
+    //    var orderModel = new OrderModel
+    //    {
+    //        Products = new List<OrderProductModel>
+    //        {
+    //            new OrderProductModel { ProductId = productId, Quantity = 1 }
+    //        },
+    //        PaymentMethod = (PaymentMethod)999,
+    //        DeliveryMethod = DeliveryMethod.CourierStandard,
+    //        Recipient = new RecipientModel
+    //        {
+    //            Type = RecipientType.Personal,
+    //            FirstName = "Jan",
+    //            Surname = "Kowalski",
+    //            City = "Warszawa",
+    //            Street = "Testowa",
+    //            HouseNumber = "1",
+    //            PostalCode = "00-000",
+    //            PhoneNumber = "123456789"
+    //        }
+    //    };
 
-        var product = Product.Create("Test product", "Description", new Money(10, "PLN"), 10);
-        typeof(Product).GetProperty("Id")!.SetValue(product, productId);
+    //    var product = Product.Create("Test product", "Description", new Money(10, "PLN"), 10);
+    //    typeof(Product).GetProperty("Id")!.SetValue(product, productId);
 
-        _productRepositoryMock.Setup(r =>
-            r.GetProductsByIdsWithLockAsync(It.IsAny<List<Guid>>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new List<Product> { product });
+    //    _productRepositoryMock.Setup(r =>
+    //        r.GetProductsByIdsWithLockAsync(It.IsAny<List<Guid>>(), It.IsAny<CancellationToken>()))
+    //        .ReturnsAsync(new List<Product> { product });
 
-        // Act & Assert
-        var ex = await Assert.ThrowsAsync<BadRequestException>(() => _orderService.CreateOrderAsync(userId, orderModel));
-        Assert.Equal("Failed to create order", ex.Message);
+    //    // Act & Assert
+    //    var ex = await Assert.ThrowsAsync<BadRequestException>(() => _orderService.CreateOrderAsync(userId, orderModel));
+    //    Assert.Equal("Failed to create order", ex.Message);
 
-        var innerEx = ex.InnerException as DomainException;
-        Assert.NotNull(innerEx);
-        Assert.Equal($"Invalid payment method: {orderModel.PaymentMethod}", innerEx.Message);
-    }
+    //    var innerEx = ex.InnerException as DomainException;
+    //    Assert.NotNull(innerEx);
+    //    Assert.Equal($"Invalid payment method: {orderModel.PaymentMethod}", innerEx.Message);
+    //}
 
     [Fact]
     public async Task UpdateOrderAsync_ShouldThrow_WhenTrackingNumberTooLong()

@@ -26,8 +26,8 @@ export const getAccountOrders = (queryParams: IGetAccountOrdersQueryParams) => a
 		dispatch(getAccountOrdersStart());
 		if (ApiClient.apiType() == "graphql") {
 			const AccountOrdersPageOrdersQuery = graphql(`
-				query AccountOrdersPageOrders($page: Int!, $pageSize: Int!) {
-					userOrders(page: $page, pageSize: $pageSize) {
+				query AccountOrdersPageOrders($userId: UUID!, $page: Int!, $pageSize: Int!) {
+					userOrders(userId: $userId, page: $page, pageSize: $pageSize) {
 						items {
 							id
 							status
@@ -58,6 +58,7 @@ export const getAccountOrders = (queryParams: IGetAccountOrdersQueryParams) => a
 				}
 			`);
 			const variables: AccountOrdersPageOrdersQueryVariables = {
+				userId: queryParams.userId,
 				page: queryParams.page,
 				pageSize: queryParams.pageSize,
 			};

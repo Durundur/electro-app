@@ -272,9 +272,11 @@ type Query {
   orders(page: Int! = 1, pageSize: Int! = 10): PaginatedResultOfOrder!
     @authorize(roles: ["Admin"])
     @cost(weight: "10")
-  userOrders(page: Int! = 1, pageSize: Int! = 10): PaginatedResultOfOrder!
-    @authorize
-    @cost(weight: "10")
+  userOrders(
+    userId: UUID!
+    page: Int! = 1
+    pageSize: Int! = 10
+  ): PaginatedResultOfOrder! @authorize @cost(weight: "10")
   userOrder(orderId: UUID!): Order! @authorize @cost(weight: "10")
   subCategory(id: Int!): SubCategory!
     @authorize(roles: ["Admin"])

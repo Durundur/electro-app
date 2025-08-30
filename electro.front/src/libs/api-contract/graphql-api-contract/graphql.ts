@@ -705,6 +705,7 @@ export type QueryUserOrderArgs = {
 export type QueryUserOrdersArgs = {
   page?: Scalars['Int']['input'];
   pageSize?: Scalars['Int']['input'];
+  userId: Scalars['UUID']['input'];
 };
 
 export type Recipient = {
@@ -833,6 +834,7 @@ export type ValidateCartType = {
 };
 
 export type AccountOrdersPageOrdersQueryVariables = Exact<{
+  userId: Scalars['UUID']['input'];
   page: Scalars['Int']['input'];
   pageSize: Scalars['Int']['input'];
 }>;
@@ -1153,8 +1155,8 @@ export class TypedDocumentString<TResult, TVariables>
 }
 
 export const AccountOrdersPageOrdersDocument = new TypedDocumentString(`
-    query AccountOrdersPageOrders($page: Int!, $pageSize: Int!) {
-  userOrders(page: $page, pageSize: $pageSize) {
+    query AccountOrdersPageOrders($userId: UUID!, $page: Int!, $pageSize: Int!) {
+  userOrders(userId: $userId, page: $page, pageSize: $pageSize) {
     items {
       id
       status
